@@ -1,8 +1,8 @@
-# 📍 감성일지도
+# 🗺️ 감성일지도
 
-<img height="250" src="https://placehold.co/250x250/EEE/31343C"></img>
+<img height="250" src="https://github.com/boostcampwm2023/iOS01-Maybe-Gamsung/assets/138548400/978d8b40-3ef2-4b7a-9597-05bd68c4816d"></img>
 > **_당신의 감성을 지도로 기억하다._** <br/>
-> **_개발기간: 2023.11.06_** ~
+> **_개발기간: 2023.11.06_** ~ <br/>
 
 <br/>
 
