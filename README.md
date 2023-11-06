@@ -22,3 +22,9 @@
 |[@yoondj98](https://github.com/yoondj98)|[@PushedGun](https://github.com/PushedGun)|[@SwiftyJunnos](https://github.com/SwiftyJunnos)|[@twoo1999](https://github.com/twoo1999)|[@vvans](https://github.com/vvans)|
 
 <br/>
+
+##  문서
+
+| 그라운드 룰 | 기획/디자인 | 템플릿 | 회의록 |
+| :-: | :-: | :-: | :-: |
+| 📚 [그라운드 룰](https://github.com/boostcampwm2023/iOS01-Maybe-Gamsung/wiki/%F0%9F%93%9A-%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C-%EB%A3%B0) | 🎨 [기획/디자인](https://www.figma.com/file/m3iCljtg84XAmVyy2RNdDj/UI-%EB%94%94%EC%9E%90%EC%9D%B8?type=design&node-id=2%3A3&mode=design&t=KBo7XQAG4SynBwk2-1)| 📃 [템플릿](https://github.com/boostcampwm2023/iOS01-Maybe-Gamsung/wiki/%F0%9F%93%83-%ED%83%AC%ED%94%8C%EB%A6%BF)| 📝 [회의록](https://plum-whippet-0d1.notion.site/0618a86927b342c0927d57826c4d685e?v=e0e955f12f0b41cab1c709ff6db06293&pvs=4) |
