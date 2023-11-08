@@ -1,0 +1,18 @@
+line_length:
+    warning: 180 #default: 120
+    error: 200
+force_cast: error
+force_try: error
+trailing_newline: warning
+trailing_whitespace:
+    severity: warning
+function_body_length:
+    warning: 50
+    error: 100
+type_name:
+    min_length:
+        warning: 3
+        error: 0
+    max_length:
+        warning: 40
+        error: 1000
