@@ -1,16 +1,28 @@
-# 🗺️ 감성일지도
+<h2 align="center">
+  <img src="https://github.com/boostcampwm2023/iOS01-Maybe-Gamsung/assets/138548400/9db434d9-146d-4b6d-9dc4-6f4edf02fbc5" width="200"> <br/>
+  <br>
+  🗺️ 감성일지도
+  <br>
+</h2>
 
-<img height="250" src="https://github.com/boostcampwm2023/iOS01-Maybe-Gamsung/assets/138548400/978d8b40-3ef2-4b7a-9597-05bd68c4816d"></img>
-> **_당신의 감성을 지도로 기억하다._** <br/>
-> **_네이버 부스트캠프 웹・모바일 8기 그룹 프로젝트_** <br/>
-> **_개발기간: 2023.11.06_** ~ <br/>
+<div align="center" style="color: gray;">
+  <i>당신의 감성을 지도로 기억하다.</i> <br>
+  <i>네이버 부스트캠프 웹・모바일 8기 그룹 프로젝트</i> <br>
+  <i>2023.11.06 ~ 2023.12.15</i> <br>
+</div>
 
 <br/>
 
-## ⭐️ 프로젝트 소개
+<h2 align="center">
+  <br>
+  ⭐️ 프로젝트 소개
+  <br>
+</h2>
 
-**Team.과열**은 지도에 관심을 갖고있는 사람들로 이루어져 있습니다.<br/>
-지도를 활용해서 평소 우리들의 일기에 담긴 감정을 표현하는 앱, **감성일지도**를 소개합니다.
+<div align="center" style="color: gray;">
+  <b>Team.과열</b>은 지도에 관심을 갖고있는 사람들로 이루어져 있습니다.<br/>
+  지도를 활용해서 평소 우리들의 일기에 담긴 감정을 표현하는 앱, <b>감성일지도</b>를 소개합니다.
+</div>
 
 <br/>
 
