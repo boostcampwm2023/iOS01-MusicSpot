@@ -6,3 +6,6 @@
 
 # 줄 바꿈 문자 관리
 --linebreaks lf #cr, lf, crlf
+
+# wrapMultilineStatementBraces 비활성화
+--disable wrapMultilineStatementBraces
