@@ -1,6 +1,6 @@
 # 한 라인 길이 제한
 line_length:
-    warning: 180 #default: 120
+    warning: 120 #default: 120
     error: 200
     
 # 강제 형변환
