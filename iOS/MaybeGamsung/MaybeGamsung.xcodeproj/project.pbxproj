@@ -16,7 +16,18 @@
 		DD10AA322AFB874C00F5828A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD10AA302AFB874C00F5828A /* Main.storyboard */; };
 		DD10AA342AFB874D00F5828A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD10AA332AFB874D00F5828A /* Assets.xcassets */; };
 		DD10AA372AFB874D00F5828A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD10AA352AFB874D00F5828A /* LaunchScreen.storyboard */; };
+		DD10AA452AFCF6FE00F5828A /* MaybeGamsungTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD10AA442AFCF6FE00F5828A /* MaybeGamsungTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DD10AA462AFCF6FE00F5828A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DD10AA1F2AFB874C00F5828A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD10AA262AFB874C00F5828A;
+			remoteInfo = MaybeGamsung;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		2179E5ED2AFB94D500746FD8 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
@@ -30,10 +41,19 @@
 		DD10AA332AFB874D00F5828A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DD10AA362AFB874D00F5828A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DD10AA382AFB874D00F5828A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DD10AA422AFCF6FE00F5828A /* MaybeGamsungTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MaybeGamsungTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD10AA442AFCF6FE00F5828A /* MaybeGamsungTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaybeGamsungTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		DD10AA242AFB874C00F5828A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD10AA3F2AFCF6FE00F5828A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -50,6 +70,7 @@
 				2179E5F12AFBA08700746FD8 /* .swiftformat */,
 				2179E5ED2AFB94D500746FD8 /* .swiftlint.yml */,
 				DD10AA292AFB874C00F5828A /* MaybeGamsung */,
+				DD10AA432AFCF6FE00F5828A /* MaybeGamsungTests */,
 				DD10AA282AFB874C00F5828A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -58,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				DD10AA272AFB874C00F5828A /* MaybeGamsung.app */,
+				DD10AA422AFCF6FE00F5828A /* MaybeGamsungTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -74,6 +96,14 @@
 				DD10AA382AFB874D00F5828A /* Info.plist */,
 			);
 			path = MaybeGamsung;
+			sourceTree = "<group>";
+		};
+		DD10AA432AFCF6FE00F5828A /* MaybeGamsungTests */ = {
+			isa = PBXGroup;
+			children = (
+				DD10AA442AFCF6FE00F5828A /* MaybeGamsungTests.swift */,
+			);
+			path = MaybeGamsungTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -98,6 +128,24 @@
 			productReference = DD10AA272AFB874C00F5828A /* MaybeGamsung.app */;
 			productType = "com.apple.product-type.application";
 		};
+		DD10AA412AFCF6FE00F5828A /* MaybeGamsungTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DD10AA4A2AFCF6FE00F5828A /* Build configuration list for PBXNativeTarget "MaybeGamsungTests" */;
+			buildPhases = (
+				DD10AA3E2AFCF6FE00F5828A /* Sources */,
+				DD10AA3F2AFCF6FE00F5828A /* Frameworks */,
+				DD10AA402AFCF6FE00F5828A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DD10AA472AFCF6FE00F5828A /* PBXTargetDependency */,
+			);
+			name = MaybeGamsungTests;
+			productName = MaybeGamsungTests;
+			productReference = DD10AA422AFCF6FE00F5828A /* MaybeGamsungTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -110,6 +158,10 @@
 				TargetAttributes = {
 					DD10AA262AFB874C00F5828A = {
 						CreatedOnToolsVersion = 15.0.1;
+					};
+					DD10AA412AFCF6FE00F5828A = {
+						CreatedOnToolsVersion = 15.0.1;
+						TestTargetID = DD10AA262AFB874C00F5828A;
 					};
 				};
 			};
@@ -127,6 +179,7 @@
 			projectRoot = "";
 			targets = (
 				DD10AA262AFB874C00F5828A /* MaybeGamsung */,
+				DD10AA412AFCF6FE00F5828A /* MaybeGamsungTests */,
 			);
 		};
 /* End PBXProject section */
@@ -142,6 +195,13 @@
 				DD10AA342AFB874D00F5828A /* Assets.xcassets in Resources */,
 				2179E5F42AFBA46300746FD8 /* .swift-version in Resources */,
 				DD10AA322AFB874C00F5828A /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD10AA402AFCF6FE00F5828A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,7 +259,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DD10AA3E2AFCF6FE00F5828A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD10AA452AFCF6FE00F5828A /* MaybeGamsungTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DD10AA472AFCF6FE00F5828A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD10AA262AFB874C00F5828A /* MaybeGamsung */;
+			targetProxy = DD10AA462AFCF6FE00F5828A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		DD10AA302AFB874C00F5828A /* Main.storyboard */ = {
@@ -406,6 +482,44 @@
 			};
 			name = Release;
 		};
+		DD10AA482AFCF6FE00F5828A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B3PWYBKFUK;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcmp8.MaybeGamsungTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MaybeGamsung.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MaybeGamsung";
+			};
+			name = Debug;
+		};
+		DD10AA492AFCF6FE00F5828A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = B3PWYBKFUK;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcmp8.MaybeGamsungTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MaybeGamsung.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MaybeGamsung";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -423,6 +537,15 @@
 			buildConfigurations = (
 				DD10AA3C2AFB874D00F5828A /* Debug */,
 				DD10AA3D2AFB874D00F5828A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DD10AA4A2AFCF6FE00F5828A /* Build configuration list for PBXNativeTarget "MaybeGamsungTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD10AA482AFCF6FE00F5828A /* Debug */,
+				DD10AA492AFCF6FE00F5828A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

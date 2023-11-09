@@ -1,0 +1,21 @@
+# workflow 의 이름
+name: Xcode Test
+
+on:
+  # Epic 브랜치에 push 나 pull request 이벤트가 일어났을때 해당 workflow 를 trigger
+  push:
+    branches: [ '**/epic/iOS/**' ]
+  pull_request:
+    branches: [ '**/epic/iOS/**' ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    # uses 키워드를 통해 Github Actions에서 기본으로 제공하는 액션을 사용 가능. 아래 액션은 repository 에 체크아웃하는 것
+    - uses: actions/checkout@v2
+    # shell 이용해서 하나의 command 수행
+    - name: 🛠 Start xcode build
+      run: |
+        xcodebuild clean test -project iOS/MaybeGamsung/MaybeGamsung.xcodeproj -scheme MaybeGamsung -destination 'platform=iOS Simulator,name=iPhone 11 Pro,OS=latest'
