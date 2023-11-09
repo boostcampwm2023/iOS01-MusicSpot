@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2179E5EE2AFB94D500746FD8 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 2179E5ED2AFB94D500746FD8 /* .swiftlint.yml */; };
+		2179E5F22AFBA08800746FD8 /* .swiftformat in Resources */ = {isa = PBXBuildFile; fileRef = 2179E5F12AFBA08700746FD8 /* .swiftformat */; };
+		2179E5F42AFBA46300746FD8 /* .swift-version in Resources */ = {isa = PBXBuildFile; fileRef = 2179E5F32AFBA46300746FD8 /* .swift-version */; };
 		DD10AA2B2AFB874C00F5828A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD10AA2A2AFB874C00F5828A /* AppDelegate.swift */; };
 		DD10AA2D2AFB874C00F5828A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD10AA2C2AFB874C00F5828A /* SceneDelegate.swift */; };
 		DD10AA2F2AFB874C00F5828A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD10AA2E2AFB874C00F5828A /* ViewController.swift */; };
@@ -16,6 +19,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2179E5ED2AFB94D500746FD8 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
+		2179E5F12AFBA08700746FD8 /* .swiftformat */ = {isa = PBXFileReference; explicitFileType = text.yaml; path = .swiftformat; sourceTree = "<group>"; };
+		2179E5F32AFBA46300746FD8 /* .swift-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-version"; sourceTree = "<group>"; };
 		DD10AA272AFB874C00F5828A /* MaybeGamsung.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MaybeGamsung.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD10AA2A2AFB874C00F5828A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DD10AA2C2AFB874C00F5828A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -40,6 +46,9 @@
 		DD10AA1E2AFB874C00F5828A = {
 			isa = PBXGroup;
 			children = (
+				2179E5F32AFBA46300746FD8 /* .swift-version */,
+				2179E5F12AFBA08700746FD8 /* .swiftformat */,
+				2179E5ED2AFB94D500746FD8 /* .swiftlint.yml */,
 				DD10AA292AFB874C00F5828A /* MaybeGamsung */,
 				DD10AA282AFB874C00F5828A /* Products */,
 			);
@@ -77,6 +86,8 @@
 				DD10AA232AFB874C00F5828A /* Sources */,
 				DD10AA242AFB874C00F5828A /* Frameworks */,
 				DD10AA252AFB874C00F5828A /* Resources */,
+				2179E5EF2AFB94ED00746FD8 /* Swift Lint */,
+				2179E5F02AFBA02700746FD8 /* Swift Format */,
 			);
 			buildRules = (
 			);
@@ -125,13 +136,57 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2179E5F22AFBA08800746FD8 /* .swiftformat in Resources */,
+				2179E5EE2AFB94D500746FD8 /* .swiftlint.yml in Resources */,
 				DD10AA372AFB874D00F5828A /* LaunchScreen.storyboard in Resources */,
 				DD10AA342AFB874D00F5828A /* Assets.xcassets in Resources */,
+				2179E5F42AFBA46300746FD8 /* .swift-version in Resources */,
 				DD10AA322AFB874C00F5828A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2179E5EF2AFB94ED00746FD8 /* Swift Lint */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Swift Lint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+		2179E5F02AFBA02700746FD8 /* Swift Format */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Swift Format";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\nif which swiftformat > /dev/null; then\n    swiftformat .\nelse\n    echo \"warning: SwiftFormat not installed, download from https://github.com/nicklockwood/SwiftFormat\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		DD10AA232AFB874C00F5828A /* Sources */ = {
@@ -293,6 +348,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = B3PWYBKFUK;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MaybeGamsung/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -325,6 +381,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = B3PWYBKFUK;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MaybeGamsung/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
