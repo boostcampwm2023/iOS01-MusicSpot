@@ -1,10 +1,11 @@
 # workflow 의 이름
 name: Xcode Test
 
+env:
+  PROJECT: 'MaybeGamsung'
+
 on:
-  # Epic 브랜치에 push 나 pull request 이벤트가 일어났을때 해당 workflow 를 trigger
-  push:
-    branches: [ '**/epic/iOS/**' ]
+  # Epic 브랜치에 pull request 이벤트가 일어났을때 해당 workflow 를 trigger
   pull_request:
     branches: [ '**/epic/iOS/**' ]
 
@@ -17,5 +18,10 @@ jobs:
     - uses: actions/checkout@v2
     # shell 이용해서 하나의 command 수행
     - name: 🛠 Start xcode build
+      env:
+        XCODEPROJ: "iOS/${{ env.PROJECT }}/${{ env.PROJECT }}.xcodeproj"
       run: |
-        xcodebuild clean test -project iOS/MaybeGamsung/MaybeGamsung.xcodeproj -scheme MaybeGamsung -destination 'platform=iOS Simulator,name=iPhone 11 Pro,OS=latest'
+        xcodebuild clean test
+        -project ${{ env.XCODEPROJ }}
+        -scheme ${{ env.PROJECT }}
+        -destination 'platform=iOS Simulator,name=${{ matrix.simulator }},OS=latest'
