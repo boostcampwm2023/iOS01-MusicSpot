@@ -1,12 +1,12 @@
 <h2 align="center">
-  <img src="https://github.com/boostcampwm2023/iOS01-Maybe-Gamsung/assets/138548400/9db434d9-146d-4b6d-9dc4-6f4edf02fbc5" width="200"> <br/>
+  <img src="https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/bfd918f2-5495-4b42-80a2-8612c8f4f524" width="200"> <br/>
   <br>
-  🗺️ 감성일지도
+  🎶 MusicSpot
   <br>
 </h2>
 
 <div align="center" style="color: gray;">
-  <i>당신의 감성을 지도로 기억하다.</i> <br>
+  <i>당신의 여정을 음악과 함께 기억하다.</i> <br>
   <i>네이버 부스트캠프 웹・모바일 8기 그룹 프로젝트</i> <br>
   <i>2023.11.06 ~ 2023.12.15</i> <br>
 </div>
@@ -21,7 +21,7 @@
 
 <div align="center" style="color: gray;">
   <b>Team.과열</b>은 지도에 관심을 갖고있는 사람들로 이루어져 있습니다.<br/>
-  지도를 활용해서 평소 우리들의 일기에 담긴 감정을 표현하는 앱, <b>감성일지도</b>를 소개합니다.
+  지도를 활용해서 음악과 함께 여정을 기록하는 앱, <b>MusicSpot</b>를 소개합니다.
 </div>
 
 <br/>
@@ -39,4 +39,4 @@
 
 | 그라운드 룰 | 기획/디자인 | 템플릿 | 회의록 |
 | :-: | :-: | :-: | :-: |
-| 📚 [그라운드 룰](https://github.com/boostcampwm2023/iOS01-Maybe-Gamsung/wiki/%F0%9F%93%9A-%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C-%EB%A3%B0) | 🎨 [기획/디자인](https://www.figma.com/file/m3iCljtg84XAmVyy2RNdDj/UI-%EB%94%94%EC%9E%90%EC%9D%B8?type=design&node-id=2%3A3&mode=design&t=KBo7XQAG4SynBwk2-1)| 📃 [템플릿](https://github.com/boostcampwm2023/iOS01-Maybe-Gamsung/wiki/%F0%9F%93%83-%ED%83%AC%ED%94%8C%EB%A6%BF)| 📝 [회의록](https://plum-whippet-0d1.notion.site/0618a86927b342c0927d57826c4d685e?v=e0e955f12f0b41cab1c709ff6db06293&pvs=4) |
+| 📚 [그라운드 룰](https://github.com/boostcampwm2023/iOS01-Maybe-Gamsung/wiki/%F0%9F%93%9A-%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C-%EB%A3%B0) | 🎨 [기획/디자인](https://www.figma.com/file/m3iCljtg84XAmVyy2RNdDj/UI-%EB%94%94%EC%9E%90%EC%9D%B8?type=design&node-id=789%3A1274&mode=design&t=5DxLFumMFIkZllqT-1)| 📃 [템플릿](https://github.com/boostcampwm2023/iOS01-Maybe-Gamsung/wiki/%F0%9F%93%83-%ED%83%AC%ED%94%8C%EB%A6%BF)| 📝 [회의록](https://musicspot.notion.site/0618a86927b342c0927d57826c4d685e?v=e0e955f12f0b41cab1c709ff6db06293&pvs=4) |
