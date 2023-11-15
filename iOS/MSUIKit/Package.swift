@@ -9,7 +9,7 @@ extension String {
     static let package = "MSUIKit"
     static let designSystem = "MSDesignSystem"
     static let components = "MSUIComponents"
-    
+
     var testTarget: String {
         return self + "Tests"
     }

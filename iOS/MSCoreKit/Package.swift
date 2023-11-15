@@ -11,7 +11,7 @@ extension String {
     static let networking = "MSNetworking"
     static let fetcher = "MSFetcher"
     static let cache = "MSCacheStorage"
-    
+
     var testTarget: String {
         return self + "Tests"
     }
@@ -44,7 +44,7 @@ let package = Package(
                     .target(name: .networking)
                 ]),
         .target(name: .cache),
-        
+
         // Tests
         .testTarget(name: .persistentStorage.testTarget,
                     dependencies: [.target(name: .persistentStorage)]),

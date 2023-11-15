@@ -10,7 +10,7 @@ extension String {
     static let foundationExt = "FoundationExt"
     static let logger = "MSLogger"
     static let userDefaults = "MSUserDefaults"
-    
+
     var testTarget: String {
         return self + "Tests"
     }
@@ -36,7 +36,7 @@ let package = Package(
         .target(name: .foundationExt),
         .target(name: .logger),
         .target(name: .userDefaults),
-        
+
         // Tests
         .testTarget(name: .logger.testTarget,
                     dependencies: [.target(name: .logger)]),

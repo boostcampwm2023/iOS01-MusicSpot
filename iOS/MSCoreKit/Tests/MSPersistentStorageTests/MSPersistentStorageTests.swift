@@ -7,7 +7,4 @@
 
 import XCTest
 
-final class MSPersistentStorageTests: XCTestCase {
-    
-}
-
+final class MSPersistentStorageTests: XCTestCase { }
