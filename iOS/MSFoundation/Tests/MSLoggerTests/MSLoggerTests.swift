@@ -9,5 +9,5 @@ import XCTest
 import MSLogger
 
 final class MSLoggerTests: XCTestCase {
-    
+
 }
