@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import MSLogger
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -17,7 +16,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                options connectionOptions: UIScene.ConnectionOptions) {
         guard let _ = (scene as? UIWindowScene) else { return }
         
-        print(logger)
     }
     
 }
