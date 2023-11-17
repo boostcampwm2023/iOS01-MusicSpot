@@ -7,9 +7,11 @@
 
 import Foundation
 
-struct SpotDTO {
+struct SpotDTO: Codable {
+    
     let spotIdentifier: UUID
     let cooredinate: [[Double]]
     let photo: Data?
     let w3w: String
+    
 }

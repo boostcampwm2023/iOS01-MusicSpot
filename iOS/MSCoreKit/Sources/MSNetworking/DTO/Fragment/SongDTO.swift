@@ -7,8 +7,10 @@
 
 import Foundation
 
-struct SongDTO {
+struct SongDTO: Codable {
+    
     let id: UUID
     let title: String
     let artwork: String
+    
 }

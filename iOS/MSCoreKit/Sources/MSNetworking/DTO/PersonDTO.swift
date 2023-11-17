@@ -7,9 +7,11 @@
 
 import Foundation
 
-struct PersonDTO {
+struct PersonDTO: Codable {
+    
     let personIdentifier: UUID
     let nickname: String
-    let journals: [JournalDTO]
+    let Journeys: [JourneyDTO]
     let email: String
+    
 }
