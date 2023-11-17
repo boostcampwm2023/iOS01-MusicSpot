@@ -18,5 +18,3 @@ public enum MSLogger {
     }
     
 }
-
-MSLogger.make(category: .network).
