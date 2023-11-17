@@ -9,7 +9,7 @@ import Foundation
 
 struct JourneyDTO: Codable {
     
-    let JourneyIdentifier: UUID
+    let journeyIdentifier: UUID
     let title: String
     let metaData: JourneyMetadataDTO
     let spots: [SpotDTO]

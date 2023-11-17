@@ -11,7 +11,7 @@ struct PersonDTO: Codable {
     
     let personIdentifier: UUID
     let nickname: String
-    let Journeys: [JourneyDTO]
+    let journeys: [JourneyDTO]
     let email: String
     
 }
