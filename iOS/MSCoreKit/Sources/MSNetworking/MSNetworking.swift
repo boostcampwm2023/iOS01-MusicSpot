@@ -9,11 +9,12 @@ import Combine
 
 public struct MSNetworking {
     
+    private let encoder = JSONEncoder()
     private let session: Session
     
-    func request<T: Decodable>(requestable: Requestable, type: T.Type) -> AnyPublisher<T, Error>? {
+    func request<T: Decodable>(router: Router, type: T.Type) -> AnyPublisher<T, Error>? {
         
-        guard let request: URLRequest = requestable.asURLRequest() else {
+        guard let request: URLRequest = router.asURLRequest() else {
             return nil
         }
         

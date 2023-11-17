@@ -1,5 +1,5 @@
 //
-//  Router.swift
+//  MSRouter.swift
 //  MSCoreKit
 //
 //  Created by 전민건 on 11/16/23.
@@ -11,17 +11,17 @@ public struct RouterType {
     
     private var encodable: Encodable?
     
-    //기능별 Router
-    public var getJourney: Router {
-        Router(baseURL: .none, pathURL: .none, method: .get, body: HTTPBody(content: encodable))
+    //기능별 MSRouter
+    public var getJourney: MSRouter {
+        MSRouter(baseURL: .none, pathURL: .none, method: .get, body: HTTPBody(content: encodable))
     }
-    public var getPerson: Router {
-        Router(baseURL: .none, pathURL: .none, method: .get, body: HTTPBody(content: encodable))
+    public var getPerson: MSRouter {
+        MSRouter(baseURL: .none, pathURL: .none, method: .get, body: HTTPBody(content: encodable))
     }
     
 }
 
-public struct Router: Requestable {
+public struct MSRouter: Router {
     
     let baseURL: APIbaseURL
     let pathURL: APIpathURL

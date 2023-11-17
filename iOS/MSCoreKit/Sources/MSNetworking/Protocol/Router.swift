@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol Requestable {
+protocol Router {
     
     var baseURL: APIbaseURL { get }
     var pathURL: APIpathURL { get }
