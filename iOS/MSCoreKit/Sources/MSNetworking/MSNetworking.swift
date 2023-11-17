@@ -7,7 +7,7 @@
 import Foundation
 import Combine
 
-struct MSNetworking {
+public struct MSNetworking {
     
     private let session: Session
     

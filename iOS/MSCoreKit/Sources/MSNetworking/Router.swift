@@ -7,21 +7,21 @@
 
 import Foundation
 
-struct RouterType {
+public struct RouterType {
     
     private var encodable: Encodable?
     
     //기능별 Router
-    var getJourney: Router {
+    public var getJourney: Router {
         Router(baseURL: .none, pathURL: .none, method: .get, body: HTTPBody(content: encodable))
     }
-    var getPerson: Router {
+    public var getPerson: Router {
         Router(baseURL: .none, pathURL: .none, method: .get, body: HTTPBody(content: encodable))
     }
     
 }
 
-struct Router: Requestable {
+public struct Router: Requestable {
     
     let baseURL: APIbaseURL
     let pathURL: APIpathURL
