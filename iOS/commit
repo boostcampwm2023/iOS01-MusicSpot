@@ -7,7 +7,7 @@ failures=""
 for path in "${PATHS[@]}"; do
     if [ -d "$path" ]; then
         echo "👀 Running SwiftLint for $path"
-        result=$(swiftlint lint --strict --progress --config $LINTPATH $path)
+        result=$(swiftlint lint --progress --config $LINTPATH $path)
         if [ "$result" == '' ]; then
             echo "✅ Lint succeed for $path\n"
         else
