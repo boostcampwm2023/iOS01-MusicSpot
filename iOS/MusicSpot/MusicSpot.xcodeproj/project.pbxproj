@@ -3,12 +3,10 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DD71E01A2B09CF740091DF2E /* MSUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = DD71E0192B09CF740091DF2E /* MSUIKit */; };
-		DD71E01E2B09D0C40091DF2E /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD71E01D2B09D0C40091DF2E /* TestView.swift */; };
 		DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */; };
 		DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */; };
 		DD73F8622B024C4B00EE9BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */; };
@@ -16,7 +14,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		DD71E01D2B09D0C40091DF2E /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		DD73F8552B024C4900EE9BF2 /* MusicSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -31,7 +28,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD71E01A2B09CF740091DF2E /* MSUIKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,7 +59,6 @@
 				DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */,
 				DD73F8632B024C4B00EE9BF2 /* LaunchScreen.storyboard */,
 				DD73F8662B024C4B00EE9BF2 /* Info.plist */,
-				DD71E01D2B09D0C40091DF2E /* TestView.swift */,
 			);
 			path = MusicSpot;
 			sourceTree = "<group>";
@@ -92,7 +87,6 @@
 			);
 			name = MusicSpot;
 			packageProductDependencies = (
-				DD71E0192B09CF740091DF2E /* MSUIKit */,
 			);
 			productName = MusicSpot;
 			productReference = DD73F8552B024C4900EE9BF2 /* MusicSpot.app */;
@@ -123,7 +117,6 @@
 			);
 			mainGroup = DD73F84C2B024C4900EE9BF2;
 			packageReferences = (
-				DD71E0162B09CF740091DF2E /* XCLocalSwiftPackageReference "../MSUIKit" */,
 			);
 			productRefGroup = DD73F8562B024C4900EE9BF2 /* Products */;
 			projectDirPath = "";
@@ -151,7 +144,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD71E01E2B09D0C40091DF2E /* TestView.swift in Sources */,
 				DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */,
 				DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */,
 			);
@@ -381,20 +373,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCLocalSwiftPackageReference section */
-		DD71E0162B09CF740091DF2E /* XCLocalSwiftPackageReference "../MSUIKit" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../MSUIKit;
-		};
-/* End XCLocalSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		DD71E0192B09CF740091DF2E /* MSUIKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MSUIKit;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DD73F84D2B024C4900EE9BF2 /* Project object */;
 }

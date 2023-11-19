@@ -7,8 +7,6 @@
 
 import UIKit
 
-import MSDesignSystem
-
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
@@ -20,9 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         defer { self.window = window }
         
-        MSFont.registerFonts()
-        
-        let testViewController = TestViewController()
+        let testViewController = UIViewController()
         window.rootViewController = testViewController
         window.makeKeyAndVisible()
     }
