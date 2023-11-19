@@ -14,6 +14,7 @@ final class TestViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.view.backgroundColor = .msColor(.primaryBackground)
         view.addSubview(stackView)
         
         NSLayoutConstraint.activate([
@@ -40,8 +41,9 @@ final class TestViewController: UIViewController {
     
     func makeLabel(_ font: MSFont, text: String) -> UILabel {
         let label = UILabel()
-        label.font = .msFont(font)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .msFont(font)
+        label.textColor = .msColor(.musicSpot)
         label.text = text
         return label
     }
