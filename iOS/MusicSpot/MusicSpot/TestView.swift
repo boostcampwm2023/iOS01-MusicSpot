@@ -16,10 +16,15 @@ final class TestViewController: UIViewController {
         
         self.view.backgroundColor = .msColor(.primaryBackground)
         view.addSubview(stackView)
+        view.addSubview(imageView)
         
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            imageView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 24.0),
+            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: 24.0),
+            imageView.heightAnchor.constraint(equalToConstant: 24.0)
         ])
         
         stackView.addArrangedSubview(makeLabel(.superTitle, text: "Super Title_34_Bold"))
@@ -37,6 +42,14 @@ final class TestViewController: UIViewController {
         stackView.spacing = 16
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
+    }()
+    
+    let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = .msColor(.primaryButtonBackground)
+        imageView.image = .msIcon(.close)
+        return imageView
     }()
     
     func makeLabel(_ font: MSFont, text: String) -> UILabel {
