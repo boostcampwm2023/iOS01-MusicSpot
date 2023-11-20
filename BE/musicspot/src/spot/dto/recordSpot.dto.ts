@@ -8,7 +8,7 @@ import {
 
 export class RecordSpotDTO {
   @IsString()
-  readonly journalId: string;
+  readonly journeyId: string;
   @IsArray()
   @ArrayMaxSize(2, { message: 'coordinate has only 2' })
   @ArrayMinSize(2, { message: 'coordinate has only 2' })

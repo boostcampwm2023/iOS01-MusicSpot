@@ -3,7 +3,7 @@ import { HydratedDocument } from 'mongoose';
 
 export type SpotDocument = HydratedDocument<Spot>;
 
-@Schema({ collection: 'spots' })
+@Schema({ collection: 'spot' })
 export class Spot {
   @Prop()
   journalId: string;
