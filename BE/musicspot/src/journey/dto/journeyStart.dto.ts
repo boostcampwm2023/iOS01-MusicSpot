@@ -6,7 +6,7 @@ import {
   IsString,
 } from 'class-validator';
 
-export class StartJournalDTO {
+export class StartJourneyDTO {
   @IsString()
   readonly title: string;
 
