@@ -173,10 +173,6 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
             guard translation.y < 0 else { return }
             
             let newConstant = -(self.configuration.minimizedHeight + translation.y.magnitude)
-            guard newConstant.magnitude < self.configuration.detentHeight else {
-                self.presentDetentedBottomSheet()
-                return
-            }
             self.topConstraints?.constant = newConstant
             self.view.layoutIfNeeded()
         }
