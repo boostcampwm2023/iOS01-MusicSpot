@@ -6,10 +6,9 @@ import {
   IsString,
 } from 'class-validator';
 
-export class StartJournalDTO {
+export class RecordSpotDTO {
   @IsString()
-  readonly title: string;
-
+  readonly journeyId: string;
   @IsArray()
   @ArrayMaxSize(2, { message: 'coordinate has only 2' })
   @ArrayMinSize(2, { message: 'coordinate has only 2' })
@@ -18,7 +17,4 @@ export class StartJournalDTO {
 
   @IsString()
   readonly timestamp: string;
-
-  @IsString()
-  readonly email: string;
 }

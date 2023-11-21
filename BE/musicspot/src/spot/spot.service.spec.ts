@@ -1,18 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SpotsService } from './spots.service';
+import { SpotService } from './spot.service';
 import mongoose from 'mongoose';
-import { Spot, SpotSchema } from './spots.schema';
+import { Spot, SpotSchema } from './spot.schema';
 import { getModelToken } from '@nestjs/mongoose';
 
-describe('SpotsService', () => {
-  let service: SpotsService;
+describe('SpotService', () => {
+  let service: SpotService;
   let spotModel;
   beforeEach(async () => {
     mongoose.connect('mongodb://192.168.174.128:27017/musicspotDB');
     spotModel = mongoose.model(Spot.name, SpotSchema);
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        SpotsService,
+        SpotService,
         {
           provide: getModelToken(Spot.name),
           useValue: spotModel,
@@ -20,7 +20,7 @@ describe('SpotsService', () => {
       ],
     }).compile();
 
-    service = module.get<SpotsService>(SpotsService);
+    service = module.get<SpotService>(SpotService);
   });
 
   it('spot 삽입 테스트', async () => {
