@@ -7,6 +7,8 @@
 
 import UIKit
 
+import MSUIKit
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
@@ -19,7 +21,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         defer { self.window = window }
         
         let testViewController = UIViewController()
-        window.rootViewController = testViewController
+        testViewController.view.backgroundColor = .msColor(.primaryBackground)
+        let bottomSheetViewController = UIViewController()
+        bottomSheetViewController.view.backgroundColor = .msColor(.primaryButtonBackground)
+        let bottomViewController = MSBottomSheetViewController(contentViewController: testViewController,
+                                                               bottomSheetViewController: bottomSheetViewController,
+                                                               configuration: .init(fullHeight: window.frame.height,
+                                                                                    detentHeight: 300.0,
+                                                                                    minimizedHeight: 100.0))
+        window.rootViewController = bottomViewController
         window.makeKeyAndVisible()
     }
 }
