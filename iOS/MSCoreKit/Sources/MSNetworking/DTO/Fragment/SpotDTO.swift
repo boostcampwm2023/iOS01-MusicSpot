@@ -10,7 +10,7 @@ import Foundation
 struct SpotDTO: Codable {
     
     let spotIdentifier: UUID
-    let cooredinate: [[Double]]
+    let coordinate: [Double]
     let photo: Data?
     let w3w: String
     
