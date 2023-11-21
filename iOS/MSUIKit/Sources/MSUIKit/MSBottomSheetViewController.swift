@@ -103,7 +103,11 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
         self.topConstraints?.constant = -self.configuration.detentHeight
         
         if animated {
-            UIView.animate(withDuration: 0.3) {
+            UIView.animate(withDuration: 0.5,
+                           delay: .zero,
+                           usingSpringWithDamping: 0.8,
+                           initialSpringVelocity: 0.5,
+                           options: [.curveEaseInOut]) {
                 self.view.layoutIfNeeded()
             } completion: { _ in
                 self.state = .detented
@@ -118,7 +122,11 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
         self.topConstraints?.constant = -self.configuration.minimizedHeight
         
         if animated {
-            UIView.animate(withDuration: 0.4) {
+            UIView.animate(withDuration: 0.5,
+                           delay: .zero,
+                           usingSpringWithDamping: 0.8,
+                           initialSpringVelocity: 0.5,
+                           options: [.curveEaseInOut]) {
                 self.view.layoutIfNeeded()
             } completion: { _ in
                 self.state = .minimized
