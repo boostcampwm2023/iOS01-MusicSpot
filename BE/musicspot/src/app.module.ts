@@ -2,15 +2,14 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { JournalsModule } from './journals/journals.module';
-import { JournalsController } from './journals/journals.controller';
-import { JournalsService } from './journals/journals.service';
-import { PersonModule } from './person/person.module';
+import { JourneyModule } from './journey/journey.module';
+
+import { UserModule } from './user/user.module';
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb://192.168.174.128:27017/musicspotDB'),
-    JournalsModule,
-    PersonModule,
+    JourneyModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

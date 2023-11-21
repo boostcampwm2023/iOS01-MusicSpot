@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-export type JournalDocument = HydratedDocument<Journal>;
+export type JourneyDocument = HydratedDocument<Journey>;
 
-@Schema({ collection: 'journals' })
-export class Journal {
+@Schema({ collection: 'journey' })
+export class Journey {
   @Prop()
   title: string;
 
@@ -15,4 +15,4 @@ export class Journal {
   coordinates: number[][];
 }
 
-export const JournalSchema = SchemaFactory.createForClass(Journal);
+export const JourneySchema = SchemaFactory.createForClass(Journey);
