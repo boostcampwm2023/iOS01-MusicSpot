@@ -6,12 +6,11 @@ import { Spot } from './spot.schema';
 import { RecordSpotDTO } from './dto/recordSpot.dto';
 import { Journey } from '../journey/journey.schema';
 import * as AWS from 'aws-sdk';
-import fs from 'fs';
-const endpoint = 'https://kr.object.ncloudstorage.com';
-const region = 'kr-standard';
-const access_key = '194C0D972294FBAFCE35';
-const secret_key = '1F6B29EFE66643E13693CE8D23AFD8897D8A1951';
 
+const endpoint = process.env.NCLOUD_ENDPOINT;
+const region = process.env.NCLOUD_REGION;
+const access_key = process.env.NCLOUD_ACCESS_KEY;
+const secret_key = process.env.NCLOUD_SECRET_KEY;
 @Injectable()
 export class SpotService {
   constructor(
