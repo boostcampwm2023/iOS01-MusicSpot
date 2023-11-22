@@ -12,7 +12,7 @@ describe('JourneysService', () => {
   let userModel;
   let journeyModel;
   beforeEach(async () => {
-    mongoose.connect('mongodb://192.168.174.128:27017/musicspotDB');
+    mongoose.connect('mongodb://localhost:27017/musicspotDB');
     userModel = mongoose.model(User.name, UserSchema);
     journeyModel = mongoose.model(Journey.name, JourneySchema);
 

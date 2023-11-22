@@ -8,7 +8,7 @@ describe('UserService', () => {
   let service: UserService;
   let userModel;
   beforeEach(async () => {
-    mongoose.connect('mongodb://192.168.174.128:27017/musicspotDB');
+    mongoose.connect('mongodb://localhost:27017/musicspotDB');
     userModel = mongoose.model(User.name, UserSchema);
     const module: TestingModule = await Test.createTestingModule({
       providers: [
