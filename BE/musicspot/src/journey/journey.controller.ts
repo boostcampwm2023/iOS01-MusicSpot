@@ -1,12 +1,12 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { JournalsService } from './journals.service';
-import { StartJournalDTO } from './dto/journalStart.dto';
+import { JourneyService } from './journey.service';
+import { StartJourneyDTO } from './dto/journeyStart.dto';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Journal } from './journals.schema';
-@Controller('journals')
-@ApiTags('journal 관련 API')
-export class JournalsController {
-  constructor(private journalsService: JournalsService) {}
+import { Journey } from './journey.schema';
+@Controller('journey')
+@ApiTags('journey 관련 API')
+export class JourneyController {
+  constructor(private journeyService: JourneyService) {}
 
   @ApiOperation({
     summary: '여정 시작을 눌렀을 시 실행되는 API',
@@ -15,10 +15,10 @@ export class JournalsController {
   })
   @ApiCreatedResponse({
     description: '생성된 여정 데이터를 반환',
-    type: Journal,
+    type: Journey,
   })
   @Post()
-  async create(@Body() startJournalDTO: StartJournalDTO) {
-    return await this.journalsService.create(startJournalDTO);
+  async create(@Body() startJourneyDTO: StartJourneyDTO) {
+    return await this.journeyService.create(startJourneyDTO);
   }
 }
