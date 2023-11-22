@@ -97,7 +97,9 @@ public class MSTextField: UITextField {
     //    // MARK: - UI Configuration
     //
     private func configureStyles() {
+        MSFont.registerFonts()
         self.font = .msFont(.caption)
+        
         self.layer.cornerRadius = Metric.cornerRadius
         self.backgroundColor = .msColor(.primaryBackground)
         
@@ -109,50 +111,49 @@ public class MSTextField: UITextField {
         NSLayoutConstraint.activate([
             self.heightAnchor.constraint(equalToConstant: Metric.height)
         ])
-        placeholderConfigureLayout()
+        self.configurePlaceholderLayout()
         
-        self.addSubview(leftImage)
-        self.addSubview(rightImage)
+        self.addSubview(self.leftImage)
+        self.addSubview(self.rightImage)
         
-        leftImageConfigureLayout()
-        rightImageConfigureLayout()
+        self.configureLeftImageLayout()
+        self.configureRightImageLayout()
     }
     
-    private func placeholderConfigureLayout() {
-        leftPlaceholderConfigureLayout()
-        rightPlaceholderConfigureLayout()
+    private func configurePlaceholderLayout() {
+        self.configureLeftPlaceholderLayout()
+        self.configureRightPlaceholderLayout()
     }
     
-    private func leftPlaceholderConfigureLayout() {
+    private func configureLeftPlaceholderLayout() {
         let extraInset: CGFloat = self.imageStyle == .none ? 0.0 : Metric.imageWidth + Metric.imageInset
         self.leftView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: Metric.leftInset + extraInset, height: 0.0))
         self.leftViewMode = .always
     }
     
-    private func rightPlaceholderConfigureLayout() {
+    private func configureRightPlaceholderLayout() {
         let extraInset: CGFloat = self.hasText ? Metric.imageWidth + Metric.imageInset : 0.0
         self.rightView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: Metric.rightInset + extraInset, height: 0.0))
         self.rightViewMode = .always
     }
     
-    private func leftImageConfigureLayout() {
-        print(self.subviews)
+    private func configureLeftImageLayout() {
         self.leftImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.leftImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Metric.leftInset),
-            leftImage.heightAnchor.constraint(equalToConstant: Metric.imageHeight),
-            leftImage.widthAnchor.constraint(equalToConstant: Metric.imageWidth),
-            leftImage.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            self.leftImage.heightAnchor.constraint(equalToConstant: Metric.imageHeight),
+            self.leftImage.widthAnchor.constraint(equalToConstant: Metric.imageWidth),
+            self.leftImage.centerYAnchor.constraint(equalTo: self.centerYAnchor)
         ])
     }
     
-    private func rightImageConfigureLayout() {
-        rightImage.translatesAutoresizingMaskIntoConstraints = false
+    private func configureRightImageLayout() {
+        self.rightImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            rightImage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Metric.imageInset),
-            rightImage.heightAnchor.constraint(equalToConstant: Metric.imageHeight),
-            rightImage.widthAnchor.constraint(equalToConstant: Metric.imageWidth),
-            rightImage.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            self.rightImage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Metric.imageInset),
+            self.rightImage.heightAnchor.constraint(equalToConstant: Metric.imageHeight),
+            self.rightImage.widthAnchor.constraint(equalToConstant: Metric.imageWidth),
+            self.rightImage.centerYAnchor.constraint(equalTo: self.centerYAnchor)
         ])
     }
     
@@ -163,8 +164,8 @@ public class MSTextField: UITextField {
 public extension MSTextField {
     
     func convertMode() {
-        configureRightImageStyle()
-        rightImageConfigureLayout()
+        self.configureRightImageStyle()
+        self.configureRightImageLayout()
     }
     
 }
@@ -174,8 +175,8 @@ public extension MSTextField {
 private extension MSTextField {
     
     private func configureImageStyle() {
-        configureLeftImageStyle()
-        configureRightImageStyle()
+        self.configureLeftImageStyle()
+        self.configureRightImageStyle()
     }
     
     private func configureLeftImageStyle() {
@@ -197,8 +198,8 @@ private extension MSTextField {
     }
     
     private func configureImages(color: UIColor) {
-        leftImage.tintColor = color
-        rightImage.tintColor = color
+        self.leftImage.tintColor = color
+        self.rightImage.tintColor = color
     }
     
 }
