@@ -9,8 +9,10 @@ import * as AWS from 'aws-sdk';
 
 const endpoint = process.env.NCLOUD_ENDPOINT;
 const region = process.env.NCLOUD_REGION;
-const access_key = process.env.NCLOUD_ACCESS_KEY;
-const secret_key = process.env.NCLOUD_SECRET_KEY;
+const accessKey = process.env.NCLOUD_ACCESS_KEY;
+const secretKey = process.env.NCLOUD_SECRET_KEY;
+const bucketName = process.env.BUCKET_NAME;
+
 @Injectable()
 export class SpotService {
   constructor(
@@ -22,19 +24,17 @@ export class SpotService {
       endpoint,
       region,
       credentials: {
-        accessKeyId: access_key,
-        secretAccessKey: secret_key,
+        accessKeyId: accessKey,
+        secretAccessKey: secretKey,
       },
     });
     const key = `${Date.now()}`;
     const result = await S3.putObject({
-      Bucket: 'music-spot-storage',
+      Bucket: bucketName,
       Key: key,
       Body: photoData,
     }).promise();
-    console.log(result);
-
-    return `https://kr.object.ncloudstorage.com/music-spot-storage/${key}`;
+    return `${endpoint}/${bucketName}/${key}`;
   }
   async insertToSpot(spotData) {
     const createdSpotData = await new this.spotModel(spotData).save();
