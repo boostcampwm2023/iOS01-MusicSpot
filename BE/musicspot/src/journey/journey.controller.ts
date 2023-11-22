@@ -22,7 +22,14 @@ export class JourneyController {
   async create(@Body() startJourneyDTO: StartJourneyDTO) {
     return await this.journeyService.create(startJourneyDTO);
   }
-
+  @ApiOperation({
+    summary: '여정 종료를 눌렀을 시 실행되는 API',
+    description: 'request로 id값이 필요합니다',
+  })
+  @ApiCreatedResponse({
+    description: '현재는 좌표 데이터의 길이를 반환, 추후 참 거짓으로 변경 예정',
+    type: Journey,
+  })
   @Post('end')
   async end(@Body() endJourneyDTO: EndJourneyDTO) {
     return await this.journeyService.end(endJourneyDTO);
