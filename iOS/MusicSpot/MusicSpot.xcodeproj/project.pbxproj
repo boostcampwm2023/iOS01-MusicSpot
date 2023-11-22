@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08100D492B0C7F63008B6A55 /* HomeMapScene in Frameworks */ = {isa = PBXBuildFile; productRef = 08100D482B0C7F63008B6A55 /* HomeMapScene */; };
 		DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */; };
 		DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */; };
 		DD73F8622B024C4B00EE9BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */; };
@@ -28,6 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08100D492B0C7F63008B6A55 /* HomeMapScene in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +89,7 @@
 			);
 			name = MusicSpot;
 			packageProductDependencies = (
+				08100D482B0C7F63008B6A55 /* HomeMapScene */,
 			);
 			productName = MusicSpot;
 			productReference = DD73F8552B024C4900EE9BF2 /* MusicSpot.app */;
@@ -117,6 +120,7 @@
 			);
 			mainGroup = DD73F84C2B024C4900EE9BF2;
 			packageReferences = (
+				08100D472B0C7F63008B6A55 /* XCLocalSwiftPackageReference "../HomeMapScene" */,
 			);
 			productRefGroup = DD73F8562B024C4900EE9BF2 /* Products */;
 			projectDirPath = "";
@@ -373,6 +377,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		08100D472B0C7F63008B6A55 /* XCLocalSwiftPackageReference "../HomeMapScene" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../HomeMapScene;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		08100D482B0C7F63008B6A55 /* HomeMapScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HomeMapScene;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DD73F84D2B024C4900EE9BF2 /* Project object */;
 }
