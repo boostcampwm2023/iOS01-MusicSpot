@@ -27,7 +27,11 @@ public final class JourneyListViewController: UIViewController {
         static let titleStackSpacing: CGFloat = 4.0
         static let collectionViewHorizontalInset: CGFloat = 10.0
         static let collectionViewVerticalInset: CGFloat = 24.0
+        static let interGroupSpacing: CGFloat = 5.0
         static let interSectionSpacing: CGFloat = 12.0
+        static let headerSize: CGFloat = 93.0
+        static let listHorizontalInset: CGFloat = 16.0
+        static let listVerticalInset: CGFloat = 20.0
     }
     
     // MARK: - Properties
@@ -147,15 +151,15 @@ private extension JourneyListViewController {
                                                        subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 5.0
+        section.interGroupSpacing = Metric.interGroupSpacing
         section.orthogonalScrollingBehavior = .continuous
-        section.contentInsets = NSDirectionalEdgeInsets(top: 5.0,
-                                                        leading: 16.0,
-                                                        bottom: 20.0,
-                                                        trailing: 16.0)
+        section.contentInsets = NSDirectionalEdgeInsets(top: Metric.interGroupSpacing,
+                                                        leading: Metric.listHorizontalInset,
+                                                        bottom: Metric.listVerticalInset,
+                                                        trailing: Metric.listHorizontalInset)
         
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                heightDimension: .estimated(93.0))
+                                                heightDimension: .estimated(Metric.headerSize))
         let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
                                                                  elementKind: UICollectionView.elementKindSectionHeader,
                                                                  alignment: .top)
