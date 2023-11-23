@@ -37,6 +37,14 @@ export class JourneyController {
     return await this.journeyService.end(endJourneyDTO);
   }
 
+  @ApiOperation({
+    summary: '여정 좌표 기록API',
+    description: '여정의 좌표를 기록합니다.',
+  })
+  @ApiCreatedResponse({
+    description: '생성된 여정 데이터를 반환',
+    type: Journey,
+  })
   @Post('record')
   async record(@Body() recordJourneyDTO: RecordJourneyDTO) {
     return await this.journeyService.pushCoordianteToJourney(recordJourneyDTO);
