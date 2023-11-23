@@ -7,9 +7,6 @@ import {
 } from 'class-validator';
 
 export class StartJourneyDTO {
-  @IsString()
-  readonly title: string;
-
   @IsArray()
   @ArrayMaxSize(2, { message: 'coordinate has only 2' })
   @ArrayMinSize(2, { message: 'coordinate has only 2' })
