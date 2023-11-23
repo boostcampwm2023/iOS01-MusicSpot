@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { SpotController } from './spot.controller';
-import { SpotService } from './spot.service';
+import { SpotController } from '../controller/spot.controller';
+import { SpotService } from '../service/spot.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Spot, SpotSchema } from './spot.schema';
-import { Journey, JourneySchema } from 'src/journey/journey.schema';
+import { Spot, SpotSchema } from '../schema/spot.schema';
+import { Journey, JourneySchema } from 'src/journey/schema/journey.schema';
 @Module({
   imports: [
     MongooseModule.forFeature([

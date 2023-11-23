@@ -1,9 +1,10 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { JourneyService } from './journey.service';
-import { StartJourneyDTO } from './dto/journeyStart.dto';
+import { JourneyService } from '../service/journey.service';
+import { StartJourneyDTO } from '.././dto/journeyStart.dto';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Journey } from './journey.schema';
-import { EndJourneyDTO } from './dto/journeyEnd.dto';
+import { Journey } from '../schema/journey.schema';
+import { EndJourneyDTO } from '.././dto/journeyEnd.dto';
+import { RecordJourneyDTO } from '.././dto/journeyRecord.dto';
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
@@ -19,7 +20,6 @@ export class JourneyController {
     description: '생성된 여정 데이터를 반환',
     type: Journey,
   })
-
   @Post('start')
   async create(@Body() startJourneyDTO: StartJourneyDTO) {
     return await this.journeyService.create(startJourneyDTO);
@@ -37,4 +37,16 @@ export class JourneyController {
     return await this.journeyService.end(endJourneyDTO);
   }
 
+  @ApiOperation({
+    summary: '여정 좌표 기록API',
+    description: '여정의 좌표를 기록합니다.',
+  })
+  @ApiCreatedResponse({
+    description: '생성된 여정 데이터를 반환',
+    type: Journey,
+  })
+  @Post('record')
+  async record(@Body() recordJourneyDTO: RecordJourneyDTO) {
+    return await this.journeyService.pushCoordianteToJourney(recordJourneyDTO);
+  }
 }

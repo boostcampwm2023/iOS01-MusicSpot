@@ -7,7 +7,15 @@ import {
   IsString,
 } from 'class-validator';
 
-export class StartJourneyDTO {
+export class RecordJourneyDTO {
+  @ApiProperty({
+    example: '655efda2fdc81cae36d20650',
+    description: '여정 id',
+    required: true,
+  })
+  @IsString()
+  readonly journeyId: string;
+
   @ApiProperty({
     example: [37.555946, 126.972384],
     description: '위치 좌표',
@@ -18,20 +26,4 @@ export class StartJourneyDTO {
   @ArrayMinSize(2, { message: 'coordinate has only 2' })
   @IsNumber({}, { each: true })
   readonly coordinate: number[];
-
-  @ApiProperty({
-    example: '2023-11-22T12:00:00Z',
-    description: 'timestamp',
-    required: true,
-  })
-  @IsString()
-  readonly timestamp: string;
-
-  @ApiProperty({
-    example: 'hello@gmail.com',
-    description: '이메일',
-    required: true,
-  })
-  @IsString()
-  readonly email: string;
 }

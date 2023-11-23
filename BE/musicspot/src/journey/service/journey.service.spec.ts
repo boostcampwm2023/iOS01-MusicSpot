@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JourneyService } from './journey.service';
 import mongoose from 'mongoose';
-import { User, UserSchema } from '../user/user.schema';
-import { Journey, JourneySchema } from './journey.schema';
+import { User, UserSchema } from '../../user/schema/user.schema';
+import { Journey, JourneySchema } from '../schema/journey.schema';
 import { getModelToken } from '@nestjs/mongoose';
-import { StartJourneyDTO } from './dto/journeyStart.dto';
-import { UserService } from '../user/user.service';
+import { StartJourneyDTO } from '../dto/journeyStart.dto';
+import { UserService } from '../../user/serivce/user.service';
 
 describe('JourneysService', () => {
   let service: JourneyService;
