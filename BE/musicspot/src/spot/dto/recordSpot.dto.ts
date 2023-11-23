@@ -17,4 +17,6 @@ export class RecordSpotDTO {
 
   @IsString()
   readonly timestamp: string;
+
+  readonly photoData: Buffer;
 }
