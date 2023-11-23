@@ -8,7 +8,9 @@ describe('UserService', () => {
   let service: UserService;
   let userModel;
   beforeEach(async () => {
-    mongoose.connect('mongodb://localhost:27017/musicspotDB');
+    mongoose.connect(
+      `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
+    );
     userModel = mongoose.model(User.name, UserSchema);
     const module: TestingModule = await Test.createTestingModule({
       providers: [

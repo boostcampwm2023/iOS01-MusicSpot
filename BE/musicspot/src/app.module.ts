@@ -7,7 +7,9 @@ import { JourneyModule } from './journey/journey.module';
 import { UserModule } from './user/user.module';
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/musicspotDB'),
+    MongooseModule.forRoot(
+      `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
+    ),
     JourneyModule,
     UserModule,
   ],
