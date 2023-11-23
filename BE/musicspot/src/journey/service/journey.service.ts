@@ -1,13 +1,13 @@
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
-import { StartJourneyDTO } from './dto/journeyStart.dto';
-import { Journey } from './journey.schema';
+import { StartJourneyDTO } from '../dto/journeyStart.dto';
+import { Journey } from '../schema/journey.schema';
 
-import { User } from '../user/user.schema';
-import { UserService } from '../user/user.service';
-import { EndJourneyDTO } from './dto/journeyEnd.dto';
-import { RecordJourneyDTO } from './dto/journeyRecord.dto';
+import { User } from '../../user/schema/user.schema';
+import { UserService } from '../../user/serivce/user.service';
+import { EndJourneyDTO } from '../dto/journeyEnd.dto';
+import { RecordJourneyDTO } from '../dto/journeyRecord.dto';
 
 @Injectable()
 export class JourneyService {

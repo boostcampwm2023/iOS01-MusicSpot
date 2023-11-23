@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { JourneyModule } from './journey/journey.module';
-import { SpotModule } from './spot/spot.module';
-import { UserModule } from './user/user.module';
+import { JourneyModule } from './journey/module/journey.module';
+import { SpotModule } from './spot/module/spot.module';
+import { UserModule } from './user/module/user.module';
 import * as dotenv from 'dotenv';
 dotenv.config();
 

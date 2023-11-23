@@ -2,9 +2,9 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 
 import { InjectModel } from '@nestjs/mongoose';
-import { Spot } from './spot.schema';
-import { RecordSpotDTO } from './dto/recordSpot.dto';
-import { Journey } from '../journey/journey.schema';
+import { Spot } from '../schema/spot.schema';
+import { RecordSpotDTO } from '../dto/recordSpot.dto';
+import { Journey } from '../../journey/schema/journey.schema';
 import * as AWS from 'aws-sdk';
 
 const endpoint = process.env.NCLOUD_ENDPOINT;

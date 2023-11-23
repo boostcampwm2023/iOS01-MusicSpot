@@ -6,10 +6,10 @@ import {
   UploadedFile,
 } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { RecordSpotDTO } from './dto/recordSpot.dto';
-import { SpotService } from './spot.service';
+import { RecordSpotDTO } from '../dto/recordSpot.dto';
+import { SpotService } from '../service/spot.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Spot } from './spot.schema';
+import { Spot } from '../schema/spot.schema';
 @Controller('spot')
 @ApiTags('spot 관련 API')
 export class SpotController {

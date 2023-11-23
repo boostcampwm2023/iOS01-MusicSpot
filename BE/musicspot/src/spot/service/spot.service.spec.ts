@@ -3,10 +3,10 @@ import * as path from 'path';
 import { Test, TestingModule } from '@nestjs/testing';
 import { SpotService } from './spot.service';
 import mongoose from 'mongoose';
-import { Spot, SpotSchema } from './spot.schema';
+import { Spot, SpotSchema } from './schema/spot.schema';
 import { getModelToken } from '@nestjs/mongoose';
 
-import { Journey, JourneySchema } from '../journey/journey.schema';
+import { Journey, JourneySchema } from '../journey/schema/journey.schema';
 import { ConfigBase } from 'aws-sdk/lib/config';
 describe('SpotService', () => {
   let service: SpotService;

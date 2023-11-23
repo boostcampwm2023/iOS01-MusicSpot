@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { JourneyController } from './journey.controller';
-import { JourneyService } from './journey.service';
+import { JourneyController } from '../controller/journey.controller';
+import { JourneyService } from '../service/journey.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { JourneySchema, Journey } from './journey.schema';
-import { UserService } from '../user/user.service';
-import { User, UserSchema } from 'src/user/user.schema';
-import { UserModule } from '../user/user.module';
+import { JourneySchema, Journey } from '../schema/journey.schema';
+import { UserService } from '../../user/serivce/user.service';
+import { User, UserSchema } from 'src/user/schema/user.schema';
+import { UserModule } from '../../user/module/user.module';
 
 @Module({
   imports: [
