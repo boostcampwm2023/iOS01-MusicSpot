@@ -36,7 +36,7 @@ public enum MSIcon: String {
 extension UIImage {
     
     public static func msIcon(_ icon: MSIcon) -> UIImage? {
-        return UIImage(named: icon.rawValue, in: .module, compatibleWith: .current)
+        return UIImage(named: icon.rawValue, in: .module, compatibleWith: .current)?.withRenderingMode(.alwaysTemplate)
     }
     
 }
