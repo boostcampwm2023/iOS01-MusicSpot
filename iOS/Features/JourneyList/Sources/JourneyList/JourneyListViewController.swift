@@ -75,7 +75,7 @@ final class JourneyListViewController: UIViewController {
 private extension JourneyListViewController {
     
     func configureCollectionView() {
-        let layout = UICollectionViewCompositionalLayout { section, _ in
+        let layout = UICollectionViewCompositionalLayout { _, _ in
             return self.configureSection()
         }
         
