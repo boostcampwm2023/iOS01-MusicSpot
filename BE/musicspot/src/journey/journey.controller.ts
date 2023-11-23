@@ -4,6 +4,7 @@ import { StartJourneyDTO } from './dto/journeyStart.dto';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Journey } from './journey.schema';
 import { EndJourneyDTO } from './dto/journeyEnd.dto';
+import { RecordJourneyDTO } from './dto/journeyRecord.dto';
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
@@ -19,7 +20,6 @@ export class JourneyController {
     description: '생성된 여정 데이터를 반환',
     type: Journey,
   })
-
   @Post('start')
   async create(@Body() startJourneyDTO: StartJourneyDTO) {
     return await this.journeyService.create(startJourneyDTO);
@@ -37,4 +37,8 @@ export class JourneyController {
     return await this.journeyService.end(endJourneyDTO);
   }
 
+  @Post('record')
+  async record(@Body() recordJourneyDTO: RecordJourneyDTO) {
+    return await this.journeyService.pushCoordianteToJourney(recordJourneyDTO);
+  }
 }
