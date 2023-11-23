@@ -5,6 +5,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { JourneyModule } from './journey/journey.module';
 import { SpotModule } from './spot/spot.module';
 import { UserModule } from './user/user.module';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 @Module({
   imports: [
     MongooseModule.forRoot(
