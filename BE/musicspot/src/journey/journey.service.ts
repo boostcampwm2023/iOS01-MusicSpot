@@ -3,29 +3,38 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 import { StartJourneyDTO } from './dto/journeyStart.dto';
 import { Journey } from './journey.schema';
+import { User } from '../user/user.schema';
 import { UserService } from '../user/user.service';
-import { User } from 'src/user/user.schema';
 import { EndJourneyDTO } from './dto/journeyEnd.dto';
 
 @Injectable()
 export class JourneyService {
   constructor(
     @InjectModel(Journey.name) private journeyModel: Model<Journey>,
-    @InjectModel(User.name) private personModel: Model<User>,
-    private userService: UserService,
+    @InjectModel(User.name) private userModel: Model<User>,
   ) {}
-
-  async create(startJourneyDTO: StartJourneyDTO): Promise<Journey> {
+  async insertJourneyData(startJourneyDTO: StartJourneyDTO) {
     const journeyData = {
       ...startJourneyDTO,
       spots: [],
       coordinates: [startJourneyDTO.coordinate],
     };
-    const createdJourney = new this.journeyModel(journeyData);
-    const returnData = await createdJourney.save();
-    const journeyId = returnData._id;
-    this.userService.appendJourneyIdToUser(startJourneyDTO.email, journeyId);
-    return returnData;
+    const createdJourneyData = new this.journeyModel(journeyData);
+    return await createdJourneyData.save();
+  }
+  async pushJourneyIdToUser(journeyId, userEmail) {
+    return await this.userModel.updateOne(
+      { email: userEmail },
+      { $push: { journeys: journeyId } },
+    );
+  }
+  async create(startJourneyDTO: StartJourneyDTO): Promise<Journey> {
+    const createdJourneyData = await this.insertJourneyData(startJourneyDTO);
+    const updateUserInfo = await this.pushJourneyIdToUser(
+      createdJourneyData._id,
+      startJourneyDTO.email,
+    );
+    return createdJourneyData;
   }
 
   async end(endJourneyDTO: EndJourneyDTO) {

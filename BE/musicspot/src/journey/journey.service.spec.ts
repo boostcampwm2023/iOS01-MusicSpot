@@ -11,7 +11,7 @@ describe('JourneysService', () => {
   let service: JourneyService;
   let userModel;
   let journeyModel;
-  beforeEach(async () => {
+  beforeAll(async () => {
     mongoose.connect(
       `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
     );
@@ -37,24 +37,28 @@ describe('JourneysService', () => {
   });
 
   it('journey 시작 테스트', async () => {
-    const insertData: StartJourneyDTO = {
-      title: 'test2',
-      coordinate: [100, 100],
-      timestamp: 'time test code',
-      email: 'test',
+    const coordinate = [37.675986, 126.776032];
+    const timestamp = '2023-11-22T15:30:00.000+09:00';
+    const email = 'test-email';
+
+    const createJourneyData: StartJourneyDTO = {
+      coordinate,
+      timestamp,
+      email,
     };
-    const dataLength = (await journeyModel.find().exec()).length;
-    const journeyLength = (await userModel.find({ email: 'test' }).exec())[0]
-      .journeys.length;
 
-    await service.create(insertData);
-    const nextDataLength = (await journeyModel.find().exec()).length;
-    const nextJourneyLength = (
-      await userModel.find({ email: 'test' }).exec()
-    )[0].journeys.length;
+    const createdJourneyData =
+      await service.insertJourneyData(createJourneyData);
+    expect(coordinate).toEqual(createdJourneyData.coordinates[0]);
+    expect(timestamp).toEqual(createdJourneyData.timestamp);
+    expect(createdJourneyData.spots).toEqual([]);
 
-    expect(dataLength + 1).toEqual(nextDataLength);
-    expect(journeyLength + 1).toEqual(nextJourneyLength);
+    const updateUserInfo = await service.pushJourneyIdToUser(
+      createdJourneyData._id,
+      email,
+    );
+    // console.log(createdUserData);
+    expect(updateUserInfo.modifiedCount).toEqual(1);
   });
 
   afterAll(async () => {
