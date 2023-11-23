@@ -1,5 +1,5 @@
 //
-//  JourneyListInfoHeaderView.swift
+//  JourneyInfoHeaderView.swift
 //  JourneyList
 //
 //  Created by 이창준 on 11/23/23.
@@ -9,7 +9,7 @@ import UIKit
 
 import MSDesignSystem
 
-final class JourneyListInfoHeaderView: UICollectionReusableView {
+final class JourneyInfoHeaderView: UICollectionReusableView {
     
     // MARK: - Constants
     
@@ -74,7 +74,7 @@ final class JourneyListInfoHeaderView: UICollectionReusableView {
     
     // MARK: - Functions
     
-    func update(_ info: String) {
+    func update(with journey: Journey) {
         self.titleLabel.text = ""
         self.dateLabel.text = ""
         self.w3wLabel.text = ""
@@ -84,7 +84,7 @@ final class JourneyListInfoHeaderView: UICollectionReusableView {
 
 // MARK: - UI Configuration
 
-private extension JourneyListInfoHeaderView {
+private extension JourneyInfoHeaderView {
     
     func configureLayout() {
         self.addSubview(self.titleLabelStack)
@@ -116,6 +116,6 @@ private extension JourneyListInfoHeaderView {
 @available(iOS 17.0, *)
 #Preview(traits: .fixedLayout(width: 341.0, height: 73.0)) {
     MSFont.registerFonts()
-    let header = JourneyListInfoHeaderView()
+    let header = JourneyInfoHeaderView()
     return header
 }

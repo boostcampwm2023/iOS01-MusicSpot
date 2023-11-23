@@ -1,5 +1,5 @@
 //
-//  JourneyListPhotoCell.swift
+//  SpotPhotoCell.swift
 //  JourneyList
 //
 //  Created by 이창준 on 11/23/23.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class JourneyListPhotoCell: UICollectionViewCell {
+final class SpotPhotoCell: UICollectionViewCell {
     
     // MARK: - Constants
     
@@ -38,9 +38,17 @@ final class JourneyListPhotoCell: UICollectionViewCell {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
     
+    // MARK: - Functions
+    
+    func update(with imageURL: String) {
+        
+    }
+    
 }
 
-private extension JourneyListPhotoCell {
+// MARK: - UI Configuration
+
+private extension SpotPhotoCell {
     
     func configureStyle() {
         self.layer.cornerRadius = Metric.cornerRadius
@@ -67,6 +75,6 @@ private extension JourneyListPhotoCell {
 
 @available(iOS 17.0, *)
 #Preview {
-    let cell = JourneyListPhotoCell()
+    let cell = SpotPhotoCell()
     return cell
 }

@@ -11,6 +11,10 @@ import MSDesignSystem
 
 final class JourneyListViewController: UIViewController {
     
+    typealias JourneyListDataSource = UICollectionViewDiffableDataSource<Journey, Spot>
+    typealias SpotPhotoCellRegistration = UICollectionView.CellRegistration<SpotPhotoCell, Spot>
+    typealias HeaderRegistration = UICollectionView.SupplementaryRegistration<JourneyInfoHeaderView>
+    
     // MARK: - Constants
     
     private enum Typo {
@@ -19,6 +23,14 @@ final class JourneyListViewController: UIViewController {
     
     private enum Metric {
         static let titleStackSpacing: CGFloat = 4.0
+    }
+    
+    // MARK: - Properties
+    
+    private var dataSource: JourneyListDataSource?
+    
+    private var currentSnapshot: NSDiffableDataSourceSnapshot<Journey, Spot>? {
+        return self.dataSource?.snapshot()
     }
     
     // MARK: - UI Components
@@ -66,6 +78,7 @@ final class JourneyListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.configureLayout()
+        self.configureCollectionView()
     }
     
 }
@@ -80,6 +93,7 @@ private extension JourneyListViewController {
         }
         
         self.collectionView.setCollectionViewLayout(layout, animated: false)
+        self.dataSource = self.configureDataSource()
     }
     
     func configureSection() -> NSCollectionLayoutSection {
@@ -100,6 +114,34 @@ private extension JourneyListViewController {
         section.boundarySupplementaryItems = [header]
         
         return section
+    }
+    
+    func configureDataSource() -> JourneyListDataSource {
+        let cellRegistration = SpotPhotoCellRegistration { cell, indexPath, itemIdentifier in
+            cell.update(with: itemIdentifier.images[indexPath.item])
+        }
+        
+        let headerRegistration = HeaderRegistration(elementKind: UICollectionView.elementKindSectionHeader,
+                                                    handler: { header, _, indexPath in
+            guard let journey = self.currentSnapshot?.sectionIdentifiers[indexPath.section] else {
+                return
+            }
+            header.update(with: journey)
+        })
+        
+        let dataSource = JourneyListDataSource(collectionView: self.collectionView,
+                                               cellProvider: { collectionView, indexPath, item in
+            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration,
+                                                                for: indexPath,
+                                                                item: item)
+        })
+        
+        dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
+            return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration,
+                                                                         for: indexPath)
+        }
+        
+        return dataSource
     }
     
 }
