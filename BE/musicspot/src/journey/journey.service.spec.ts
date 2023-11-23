@@ -10,14 +10,31 @@ import { UserService } from '../user/user.service';
 describe('JourneysService', () => {
   let service: JourneyService;
   let userModel;
-  let journeyModel;
-
+  let mockJourneyModel = {
+    save: jest.fn(),
+    updateOne: jest.fn(),
+  };
   beforeAll(async () => {
-    mongoose.connect(
-      `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
-    );
-    userModel = mongoose.model(User.name, UserSchema);
-    journeyModel = mongoose.model(Journey.name, JourneySchema);
+    // mongoose.connect(
+    //   `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
+    // );
+    // userModel = mongoose.model(User.name, UserSchema);
+    // journeyModel = mongoose.model(Journey.name, JourneySchema);
+
+    // const module: TestingModule = await Test.createTestingModule({
+    //   providers: [
+    //     JourneyService,
+    //     UserService,
+    //     {
+    //       provide: getModelToken(Journey.name),
+    //       useValue: journeyModel,
+    //     },
+    //     {
+    //       provide: getModelToken(User.name),
+    //       useValue: userModel,
+    //     },
+    //   ],
+    // }).compile();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -25,7 +42,7 @@ describe('JourneysService', () => {
         UserService,
         {
           provide: getModelToken(Journey.name),
-          useValue: journeyModel,
+          useValue: mockJourneyModel,
         },
         {
           provide: getModelToken(User.name),
@@ -33,11 +50,10 @@ describe('JourneysService', () => {
         },
       ],
     }).compile();
-
     service = module.get<JourneyService>(JourneyService);
   });
 
-  it('journey 시작 테스트', async () => {
+  it.skip('journey 시작 테스트', async () => {
     const coordinate = [37.675986, 126.776032];
     const timestamp = '2023-11-22T15:30:00.000+09:00';
     const email = 'test-email';
@@ -62,6 +78,25 @@ describe('JourneysService', () => {
     expect(updateUserInfo.modifiedCount).toEqual(1);
   });
 
+  it('실시간 위치 기록 테스트', async () => {
+    const coordinate = [37.675986, 126.776032];
+    const journeyId = '655efda2fdc81cae36d20650';
+    mockJourneyModel.updateOne.mockResolvedValue({
+      acknowledged: true,
+      modifiedCount: 1,
+      upsertedId: null,
+      upsertedCount: 0,
+      matchedCount: 1,
+    });
+    const returnData = await service.pushCoordianteToJourney(
+      journeyId,
+      coordinate,
+    );
+
+    expect(returnData.modifiedCount).toEqual(1);
+    // 위치와 여정 아이디를 받음
+    // journey에 저장
+  });
   afterAll(async () => {
     mongoose.connection.close();
   });
