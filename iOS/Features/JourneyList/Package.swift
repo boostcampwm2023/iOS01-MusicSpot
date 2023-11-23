@@ -13,8 +13,12 @@ let package = Package(
             name: "JourneyList",
             targets: ["JourneyList"])
     ],
+    dependencies: [
+        .package(name: "MSUIKit", path: "../../MSUIKit")
+    ],
     targets: [
         .target(
-            name: "JourneyList")
+            name: "JourneyList",
+            dependencies: ["MSUIKit"])
     ]
 )
