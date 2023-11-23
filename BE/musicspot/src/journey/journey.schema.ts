@@ -16,6 +16,7 @@ export class Journey {
 
   @Prop({ type: String })
   timestamp: string;
+
 }
 
 export const JourneySchema = SchemaFactory.createForClass(Journey);

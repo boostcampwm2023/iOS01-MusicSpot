@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 import { StartJourneyDTO } from './dto/journeyStart.dto';
 import { Journey } from './journey.schema';
+
 import { User } from '../user/user.schema';
 import { UserService } from '../user/user.service';
 import { EndJourneyDTO } from './dto/journeyEnd.dto';
@@ -14,6 +15,7 @@ export class JourneyService {
     @InjectModel(User.name) private userModel: Model<User>,
   ) {}
   async insertJourneyData(startJourneyDTO: StartJourneyDTO) {
+
     const journeyData = {
       ...startJourneyDTO,
       spots: [],

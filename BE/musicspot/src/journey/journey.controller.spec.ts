@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JourneyController } from './journey.controller';
+
 import { StartJourneyDTO } from './dto/journeyStart.dto';
 import { JourneyService } from './journey.service';
 import mongoose from 'mongoose';
@@ -29,6 +30,7 @@ describe('JourneyController', () => {
           useValue: userModel,
         },
       ],
+
     }).compile();
 
     controller = module.get<JourneyController>(JourneyController);
@@ -52,5 +54,6 @@ describe('JourneyController', () => {
 
   afterAll(async () => {
     mongoose.connection.close();
+
   });
 });
