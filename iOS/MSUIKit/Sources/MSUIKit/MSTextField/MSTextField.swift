@@ -65,9 +65,9 @@ public class MSTextField: UITextField {
         }
         
     }
-    //
-    //    // MARK: - Properties
-    //
+    
+    // MARK: - Properties
+    
     private var leftImage = UIImageView()
     private var rightImage = UIImageView()
     public var imageStyle: ImageStyle = .none {
@@ -81,9 +81,9 @@ public class MSTextField: UITextField {
             self.convertMode()
         }
     }
-    //
-    //    // MARK: - Initializer
-    //
+    
+    // MARK: - Initializer
+    
     private override init(frame: CGRect) {
         super.init(frame: frame)
         self.configureStyles()
@@ -93,9 +93,9 @@ public class MSTextField: UITextField {
     required init?(coder: NSCoder) {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
-    //
-    //    // MARK: - UI Configuration
-    //
+    
+    // MARK: - UI Configuration
+    
     private func configureStyles() {
         MSFont.registerFonts()
         self.font = .msFont(.caption)
