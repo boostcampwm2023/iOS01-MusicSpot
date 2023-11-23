@@ -1,10 +1,10 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { JourneyService } from './journey.service';
-import { StartJourneyDTO } from './dto/journeyStart.dto';
+import { JourneyService } from '../service/journey.service';
+import { StartJourneyDTO } from '.././dto/journeyStart.dto';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Journey } from './journey.schema';
-import { EndJourneyDTO } from './dto/journeyEnd.dto';
-import { RecordJourneyDTO } from './dto/journeyRecord.dto';
+import { Journey } from '../schema/journey.schema';
+import { EndJourneyDTO } from '.././dto/journeyEnd.dto';
+import { RecordJourneyDTO } from '.././dto/journeyRecord.dto';
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
