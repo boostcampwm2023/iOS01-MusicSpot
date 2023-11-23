@@ -135,6 +135,6 @@ private extension JourneyListViewController {
 @available(iOS 17, *)
 #Preview {
     MSFont.registerFonts()
-    let vc = JourneyListViewController()
-    return vc
+    let journeyListViewController = JourneyListViewController()
+    return journeyListViewController
 }
