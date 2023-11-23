@@ -5,15 +5,17 @@
 //  Created by 이창준 on 11/22/23.
 //
 
+import Combine
 import UIKit
 
 import MSDesignSystem
 
-final class JourneyListViewController: UIViewController {
+public final class JourneyListViewController: UIViewController {
     
-    typealias JourneyListDataSource = UICollectionViewDiffableDataSource<Journey, Spot>
-    typealias SpotPhotoCellRegistration = UICollectionView.CellRegistration<SpotPhotoCell, Spot>
+    typealias JourneyListDataSource = UICollectionViewDiffableDataSource<Journey, String>
+    typealias SpotPhotoCellRegistration = UICollectionView.CellRegistration<SpotPhotoCell, String>
     typealias HeaderRegistration = UICollectionView.SupplementaryRegistration<JourneyInfoHeaderView>
+    typealias JourneySnapshot = NSDiffableDataSourceSnapshot<Journey, String>
     
     // MARK: - Constants
     
@@ -23,15 +25,22 @@ final class JourneyListViewController: UIViewController {
     
     private enum Metric {
         static let titleStackSpacing: CGFloat = 4.0
+        static let collectionViewHorizontalInset: CGFloat = 10.0
+        static let collectionViewVerticalInset: CGFloat = 24.0
+        static let interSectionSpacing: CGFloat = 12.0
     }
     
     // MARK: - Properties
     
+    private var viewModel: JourneyListViewModel
+    
     private var dataSource: JourneyListDataSource?
     
-    private var currentSnapshot: NSDiffableDataSourceSnapshot<Journey, Spot>? {
+    private var currentSnapshot: JourneySnapshot? {
         return self.dataSource?.snapshot()
     }
+    
+    private var cancellables: Set<AnyCancellable> = []
     
     // MARK: - UI Components
     
@@ -61,24 +70,50 @@ final class JourneyListViewController: UIViewController {
     private let collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero,
                                               collectionViewLayout: UICollectionViewLayout())
+        collectionView.backgroundColor = .clear
+        collectionView.contentInset = UIEdgeInsets(top: Metric.collectionViewVerticalInset / 2,
+                                                   left: .zero,
+                                                   bottom: Metric.collectionViewVerticalInset,
+                                                   right: .zero)
         return collectionView
     }()
     
-    // MARK: - Life Cycle
+    // MARK: - Initializer
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    public init(viewModel: JourneyListViewModel,
+                nibName nibNameOrNil: String? = nil,
+                bundle nibBundleOrNil: Bundle? = nil) {
+        self.viewModel = viewModel
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        self.configureLayout()
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
     
-    override func viewDidLoad() {
+    // MARK: - Life Cycle
+    
+    public override func viewDidLoad() {
         super.viewDidLoad()
+        self.configureStyle()
         self.configureLayout()
         self.configureCollectionView()
+        self.bind()
+        self.viewModel.trigger(.viewNeedsLoaded)
+    }
+    
+    func bind() {
+        self.viewModel.state.journeys
+            .sink { journeys in
+                self.subtitleLabel.text = "현재 위치에 \(journeys.count)개의 여정이 있습니다."
+                var snapshot = JourneySnapshot()
+                snapshot.appendSections(journeys)
+                journeys.forEach { journey in
+                    snapshot.appendItems(journey.spot.images, toSection: journey)
+                }
+                self.dataSource?.apply(snapshot)
+            }
+            .store(in: &self.cancellables)
     }
     
 }
@@ -88,9 +123,14 @@ final class JourneyListViewController: UIViewController {
 private extension JourneyListViewController {
     
     func configureCollectionView() {
-        let layout = UICollectionViewCompositionalLayout { _, _ in
+        let config = UICollectionViewCompositionalLayoutConfiguration()
+        config.interSectionSpacing = Metric.interSectionSpacing
+        
+        let layout = UICollectionViewCompositionalLayout(sectionProvider: { _, _ in
             return self.configureSection()
-        }
+        }, configuration: config)
+        layout.register(JourneyListBackgroundView.self,
+                        forDecorationViewOfKind: JourneyListBackgroundView.reuseIdentifier)
         
         self.collectionView.setCollectionViewLayout(layout, animated: false)
         self.dataSource = self.configureDataSource()
@@ -101,24 +141,36 @@ private extension JourneyListViewController {
                                               heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(300))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(SpotPhotoCell.width),
+                                               heightDimension: .absolute(SpotPhotoCell.height))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
                                                        subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 5.0
+        section.orthogonalScrollingBehavior = .continuous
+        section.contentInsets = NSDirectionalEdgeInsets(top: 5.0,
+                                                        leading: 16.0,
+                                                        bottom: 20.0,
+                                                        trailing: 16.0)
         
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                heightDimension: .estimated(300.0))
-        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize)
+                                                heightDimension: .estimated(93.0))
+        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
+                                                                 elementKind: UICollectionView.elementKindSectionHeader,
+                                                                 alignment: .top)
         section.boundarySupplementaryItems = [header]
+        
+        let background = NSCollectionLayoutDecorationItem.background(
+            elementKind: JourneyListBackgroundView.reuseIdentifier)
+        section.decorationItems = [background]
         
         return section
     }
     
     func configureDataSource() -> JourneyListDataSource {
-        let cellRegistration = SpotPhotoCellRegistration { cell, indexPath, itemIdentifier in
-            cell.update(with: itemIdentifier.images[indexPath.item])
+        let cellRegistration = SpotPhotoCellRegistration { cell, _, itemIdentifier in
+            cell.update(with: itemIdentifier)
         }
         
         let headerRegistration = HeaderRegistration(elementKind: UICollectionView.elementKindSectionHeader,
@@ -150,6 +202,10 @@ private extension JourneyListViewController {
 
 private extension JourneyListViewController {
     
+    func configureStyle() {
+        self.view.backgroundColor = .msColor(.primaryBackground)
+    }
+    
     func configureLayout() {
         self.view.addSubview(self.titleStack)
         self.titleStack.translatesAutoresizingMaskIntoConstraints = false
@@ -165,10 +221,13 @@ private extension JourneyListViewController {
         self.view.addSubview(self.collectionView)
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.collectionView.topAnchor.constraint(equalTo: self.titleStack.bottomAnchor),
-            self.collectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            self.collectionView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            self.collectionView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
+            self.collectionView.topAnchor.constraint(equalTo: self.titleStack.bottomAnchor,
+                                                     constant: Metric.collectionViewVerticalInset / 2),
+            self.collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor,
+                                                         constant: Metric.collectionViewHorizontalInset),
+            self.collectionView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            self.collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,
+                                                          constant: -Metric.collectionViewHorizontalInset)
         ])
     }
     
@@ -177,6 +236,7 @@ private extension JourneyListViewController {
 @available(iOS 17, *)
 #Preview {
     MSFont.registerFonts()
-    let journeyListViewController = JourneyListViewController()
+    let journeyListViewModel = JourneyListViewModel()
+    let journeyListViewController = JourneyListViewController(viewModel: journeyListViewModel)
     return journeyListViewController
 }

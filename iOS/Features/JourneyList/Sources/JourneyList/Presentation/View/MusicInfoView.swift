@@ -7,7 +7,7 @@
 
 import UIKit
 
-import MSDesignSystem
+import MSUIKit
 
 final class MusicInfoView: UIView {
     
@@ -83,8 +83,18 @@ private extension MusicInfoView {
             self.stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
         
-        self.stackView.addArrangedSubview(self.iconImageView)
-        self.stackView.addArrangedSubview(self.musicInfoStackView)
+        [
+            Spacer(.horizontal),
+            self.iconImageView,
+            self.musicInfoStackView
+        ].forEach {
+            self.stackView.addArrangedSubview($0)
+        }
+        self.iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.iconImageView.widthAnchor.constraint(equalToConstant: 24.0),
+            self.iconImageView.heightAnchor.constraint(equalToConstant: 24.0)
+        ])
         
         [
             self.musicArtistLabel,
@@ -97,6 +107,7 @@ private extension MusicInfoView {
     
 }
 
+import MSDesignSystem
 @available(iOS 17.0, *)
 #Preview(traits: .fixedLayout(width: 341.0, height: 24.0)) {
     MSFont.registerFonts()

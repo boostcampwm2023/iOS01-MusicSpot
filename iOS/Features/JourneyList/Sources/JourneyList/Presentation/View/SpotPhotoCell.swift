@@ -11,9 +11,10 @@ final class SpotPhotoCell: UICollectionViewCell {
     
     // MARK: - Constants
     
+    static let width: CGFloat = 120.0
+    static let height: CGFloat = 150.0
+    
     private enum Metric {
-        static let width: CGFloat = 120.0
-        static let height: CGFloat = 150.0
         static let cornerRadius: CGFloat = 5.0
     }
     
@@ -56,11 +57,6 @@ private extension SpotPhotoCell {
     }
     
     func configureLayout() {
-        NSLayoutConstraint.activate([
-            self.widthAnchor.constraint(equalToConstant: Metric.width),
-            self.heightAnchor.constraint(equalToConstant: Metric.height)
-        ])
-        
         self.addSubview(self.imageView)
         self.imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

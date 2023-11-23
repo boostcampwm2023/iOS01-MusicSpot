@@ -21,10 +21,18 @@ final class JourneyInfoHeaderView: UICollectionReusableView {
     
     // MARK: - UI Components
     
+    private let contentStack: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = Metric.contentSpacing
+        return stackView
+    }()
+    
     private let titleLabelStack: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = Metric.labelStackSpacing
+        stackView.alignment = .leading
         return stackView
     }()
     
@@ -39,6 +47,7 @@ final class JourneyInfoHeaderView: UICollectionReusableView {
         let label = UILabel()
         label.font = .msFont(.subtitle)
         label.textColor = .msColor(.primaryTypo)
+        label.setContentHuggingPriority(.defaultHigh, for: .vertical)
         label.text = "여정 위치"
         return label
     }()
@@ -47,6 +56,7 @@ final class JourneyInfoHeaderView: UICollectionReusableView {
         let label = UILabel()
         label.font = .msFont(.caption)
         label.textColor = .msColor(.secondaryTypo)
+        label.setContentHuggingPriority(.defaultHigh, for: .vertical)
         label.text = "2023. 01. 01"
         return label
     }()
@@ -75,9 +85,9 @@ final class JourneyInfoHeaderView: UICollectionReusableView {
     // MARK: - Functions
     
     func update(with journey: Journey) {
-        self.titleLabel.text = ""
-        self.dateLabel.text = ""
-        self.w3wLabel.text = ""
+        self.titleLabel.text = journey.locatoin
+        self.dateLabel.text = journey.date
+        self.w3wLabel.text = nil
     }
     
 }
@@ -87,28 +97,24 @@ final class JourneyInfoHeaderView: UICollectionReusableView {
 private extension JourneyInfoHeaderView {
     
     func configureLayout() {
-        self.addSubview(self.titleLabelStack)
-        self.titleLabelStack.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(self.contentStack)
+        self.contentStack.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.titleLabelStack.topAnchor.constraint(equalTo: self.topAnchor),
-            self.titleLabelStack.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            self.titleLabelStack.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            self.titleLabelStack.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            self.contentStack.topAnchor.constraint(equalTo: self.topAnchor,
+                                                   constant: 20.0),
+            self.contentStack.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.contentStack.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            self.contentStack.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
+        
+        self.contentStack.addArrangedSubview(self.titleLabelStack)
+        self.contentStack.addArrangedSubview(self.musicInfoView)
         
         self.titleLabelStack.addArrangedSubview(self.titleLabel)
         self.titleLabelStack.addArrangedSubview(self.subLabelStack)
         
         self.subLabelStack.addArrangedSubview(self.dateLabel)
         self.subLabelStack.addArrangedSubview(self.w3wLabel)
-        
-        self.addSubview(self.musicInfoView)
-        self.musicInfoView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            self.musicInfoView.topAnchor.constraint(equalTo: self.titleLabelStack.bottomAnchor,
-                                                    constant: Metric.contentSpacing),
-            self.musicInfoView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
-        ])
     }
     
 }

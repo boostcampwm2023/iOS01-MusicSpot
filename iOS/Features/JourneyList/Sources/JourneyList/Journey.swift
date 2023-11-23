@@ -8,5 +8,7 @@
 import Foundation
 
 struct Journey: Hashable {
-    
+    let locatoin: String
+    let date: String
+    let spot: Spot
 }
