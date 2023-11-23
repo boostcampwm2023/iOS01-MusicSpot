@@ -16,7 +16,7 @@ public enum MSIcon: String {
     case arrowDown = "Down"
     case arrowRight = "Right"
     
-    case calendar = "Calender"
+    case calendar = "Calendar"
     case image = "Image"
     case location = "Location"
     case addLocation = "Location Add"
