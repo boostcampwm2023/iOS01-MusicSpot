@@ -18,7 +18,11 @@ extension String {
     }
     
     var path: String {
-        return "../" + self
+        return "../../" + self
+    }
+    
+    var featurePath: String {
+        return "../Features/" + self
     }
     
 }
