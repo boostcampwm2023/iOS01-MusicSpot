@@ -12,9 +12,9 @@ import MSUIKit
 
 public final class JourneyListViewController: UIViewController {
     
-    typealias JourneyListDataSource = UICollectionViewDiffableDataSource<Journey, String>
-    typealias SpotPhotoCellRegistration = UICollectionView.CellRegistration<JourneyCell, String>
-    typealias JourneySnapshot = NSDiffableDataSourceSnapshot<Journey, String>
+    typealias JourneyListDataSource = UICollectionViewDiffableDataSource<Int, Journey>
+    typealias SpotPhotoCellRegistration = UICollectionView.CellRegistration<JourneyCell, Journey>
+    typealias JourneySnapshot = NSDiffableDataSourceSnapshot<Int, Journey>
     
     // MARK: - Constants
     
@@ -26,11 +26,7 @@ public final class JourneyListViewController: UIViewController {
         static let titleStackSpacing: CGFloat = 4.0
         static let collectionViewHorizontalInset: CGFloat = 10.0
         static let collectionViewVerticalInset: CGFloat = 24.0
-        static let interGroupSpacing: CGFloat = 5.0
-        static let interSectionSpacing: CGFloat = 12.0
-        static let headerSize: CGFloat = 93.0
-        static let listHorizontalInset: CGFloat = 16.0
-        static let listVerticalInset: CGFloat = 20.0
+        static let interGroupSpacing: CGFloat = 12.0
     }
     
     // MARK: - Properties
@@ -106,10 +102,8 @@ public final class JourneyListViewController: UIViewController {
             .sink { journeys in
                 self.subtitleLabel.text = "현재 위치에 \(journeys.count)개의 여정이 있습니다."
                 var snapshot = JourneySnapshot()
-                snapshot.appendSections(journeys)
-                journeys.forEach { journey in
-                    snapshot.appendItems(journey.spot.images, toSection: journey)
-                }
+                snapshot.appendSections([.zero])
+                snapshot.appendItems(journeys, toSection: .zero)
                 self.dataSource?.apply(snapshot)
             }
             .store(in: &self.cancellables)
@@ -122,12 +116,9 @@ public final class JourneyListViewController: UIViewController {
 private extension JourneyListViewController {
     
     func configureCollectionView() {
-        let config = UICollectionViewCompositionalLayoutConfiguration()
-        config.interSectionSpacing = Metric.interSectionSpacing
-        
         let layout = UICollectionViewCompositionalLayout(sectionProvider: { _, _ in
             return self.configureSection()
-        }, configuration: config)
+        })
         
         self.collectionView.setCollectionViewLayout(layout, animated: false)
         self.dataSource = self.configureDataSource()
@@ -138,7 +129,7 @@ private extension JourneyListViewController {
                                               heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(373.0),
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                heightDimension: .absolute(268.0))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
                                                        subitems: [item])
@@ -151,7 +142,7 @@ private extension JourneyListViewController {
     
     func configureDataSource() -> JourneyListDataSource {
         let cellRegistration = SpotPhotoCellRegistration { cell, _, itemIdentifier in
-            cell.update(with: itemIdentifier)
+            // TODO: Cell 데이터 바인딩
         }
         
         let dataSource = JourneyListDataSource(collectionView: self.collectionView,
