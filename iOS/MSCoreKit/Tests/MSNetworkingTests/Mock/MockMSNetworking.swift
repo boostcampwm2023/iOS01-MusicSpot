@@ -13,7 +13,7 @@ import Combine
 public class MockMSNetworking {
     
     var expectedSuccessJourneyGetPublisher: Result<Data, any Error>.Publisher {
-        let journey = JourneyDTO(JourneyIdentifier: UUID(),
+        let journey = JourneyDTO(journeyIdentifier: UUID(),
                                  title: "",
                                  metaData: JourneyMetadataDTO(date: Date()),
                                  spots: [],
@@ -48,4 +48,3 @@ public class MockMSNetworking {
     }
     
 }
-
