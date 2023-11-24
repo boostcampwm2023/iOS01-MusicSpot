@@ -6,13 +6,17 @@
 //
 
 import UIKit
+import HomeMapScene
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
-
     func scene(_ scene: UIScene,
-               willConnectTo _: UISceneSession,
-               options _: UIScene.ConnectionOptions) {
-        guard (scene as? UIWindowScene) != nil else { return }
+               willConnectTo session: UISceneSession,
+               options connectionOptions: UIScene.ConnectionOptions) {
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        let window = UIWindow(windowScene: windowScene)
+        window.rootViewController = HomeMapViewController()
+        self.window = window
+        window.makeKeyAndVisible()
     }
 }
