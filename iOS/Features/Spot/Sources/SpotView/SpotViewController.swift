@@ -1,0 +1,223 @@
+//
+//  SpotViewController.swift
+//  Spot
+//
+//  Created by 전민건 on 11/22/23.
+//
+
+import UIKit
+
+import MSDesignSystem
+import MSLogger
+import MSUIKit
+
+public final class SpotViewController: UIViewController {
+    
+    // MARK: - Constants
+    
+    private enum Metrix {
+        
+        //image view
+        enum ImageView {
+            static var height: CGFloat = 486.0
+            static var inset: CGFloat = 4.0
+            static var defaultIndex: Int = 0
+        }
+        
+        //labels
+        enum TextLabel {
+            static var height: CGFloat = 24.0
+            static var topInset: CGFloat = 30.0
+        }
+        
+        enum SubTextLabel {
+            static var height: CGFloat = 42.0
+            static var topInset: CGFloat = 12.0
+        }
+        
+        //buttons
+        enum Button {
+            static var height: CGFloat = 120.0
+            static var width: CGFloat = 120.0
+            static var insetFromCenterX: CGFloat = 26.0
+            static var bottomInset: CGFloat = 55.0
+        }
+        
+    }
+    private enum Default {
+        
+        static let text: String = "이 사진을 스팟! 할까요?"
+        static let subText: String = "확정된 스팟은 변경할 수 없으며 \n 삭제만 가능합니다."
+        
+    }
+    
+    // MARK: - Properties
+    
+    private var imageView = UIImageView()
+    private let textView = UIView()
+    private let textLabel = UILabel()
+    private let subTextLabel = UILabel()
+    private let cancelButton = MSRectButton.large(isBrandColored: false)
+    private let completeButton = MSRectButton.large()
+    public var image: UIImage? {
+        didSet {
+            self.configureImageViewValue()
+        }
+    }
+    
+    // MARK: - Configure
+    
+    func configure() {
+        self.configureLayout()
+        self.configureStyle()
+        self.configureAction()
+        self.configureValue()
+    }
+    
+    // MARK: - UI Components: Layout
+    
+    private func configureLayout() {
+        self.configureImageViewLayout()
+        self.configureTextViewLayout()
+        self.configureLabelsLayout()
+        self.configureButtonsLayout()
+    }
+    
+    private func configureImageViewLayout() {
+        self.view.addSubview(self.imageView)
+        self.imageView.backgroundColor = .black
+        self.imageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.imageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.imageView.heightAnchor.constraint(equalToConstant: Metrix.ImageView.height),
+            self.imageView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            self.imageView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
+        ])
+    }
+    
+    private func configureTextViewLayout() {
+        self.view.addSubview(self.textView)
+        self.textView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.textView.topAnchor.constraint(equalTo: self.imageView.bottomAnchor),
+            self.textView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            self.textView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            self.textView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
+        ])
+    }
+    
+    private func configureLabelsLayout() {
+        let labels: [UILabel] = [self.textLabel, self.subTextLabel]
+        labels.forEach { label in
+            self.view.addSubview(label)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+            label.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            label.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            ])
+        }
+        NSLayoutConstraint.activate([
+            self.textLabel.heightAnchor.constraint(equalToConstant: Metrix.TextLabel.height),
+            self.subTextLabel.heightAnchor.constraint(equalToConstant: Metrix.SubTextLabel.height),
+            
+            self.textLabel.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: Metrix.TextLabel.topInset),
+            self.subTextLabel.topAnchor.constraint(equalTo: self.textLabel.bottomAnchor, constant: Metrix.SubTextLabel.topInset)
+        ])
+        self.subTextLabel.textAlignment = .center
+    }
+    
+    private func configureButtonsLayout() {
+        let buttons: [MSRectButton] = [self.cancelButton, self.completeButton]
+        buttons.forEach { button in
+            self.view.addSubview(button)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                button.heightAnchor.constraint(equalToConstant: Metrix.Button.height),
+                button.widthAnchor.constraint(equalToConstant: Metrix.Button.width),
+                button.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -Metrix.Button.bottomInset)
+            ])
+        }
+        NSLayoutConstraint.activate([
+            self.cancelButton.trailingAnchor.constraint(equalTo: self.view.centerXAnchor, constant: -Metrix.Button.insetFromCenterX),
+            self.completeButton.leadingAnchor.constraint(equalTo: self.view.centerXAnchor, constant: Metrix.Button.insetFromCenterX),
+        ])
+    }
+    
+    // MARK: - UI Components: Style
+    
+    private func configureStyle() {
+        MSFont.registerFonts()
+        self.view.backgroundColor = .msColor(.primaryBackground)
+        self.configureImageViewStyle()
+        self.configureLabelsStyle()
+        self.configureButtonsStyle()
+    }
+    
+    private func configureImageViewStyle() {
+        self.imageView.contentMode = .scaleAspectFill
+    }
+    
+    private func configureLabelsStyle() {
+        self.textLabel.font = .msFont(.subtitle)
+        self.subTextLabel.font = .msFont(.caption)
+        self.subTextLabel.textColor = .msColor(.secondaryTypo)
+    }
+    
+    private func configureButtonsStyle() {
+        self.cancelButton.image = .msIcon(.close)
+        self.completeButton.image = .msIcon(.check)
+    }
+    
+    // MARK: - Configure: Action
+    
+    private func configureAction() {
+        self.configureCancelAction()
+        self.configureCompleteAction()
+    }
+    
+    private func configureCancelAction() {
+        self.cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+    }
+    
+    private func configureCompleteAction() {
+        self.completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
+    }
+    
+    // MARK: - Configure: Value
+    
+    private func configureValue() {
+        self.configureImageViewValue()
+        self.configureLabelsValue()
+    }
+    
+    private func configureImageViewValue() {
+        self.imageView = UIImageView(image: self.image)
+    }
+    
+    private func configureLabelsValue() {
+        self.textLabel.text = Default.text
+        self.subTextLabel.text = Default.subText
+        
+        let multiLineConstant = 0
+        self.subTextLabel.numberOfLines = multiLineConstant
+    }
+    
+    // MARK: - Life Cycle
+    
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        self.configure()
+    }
+    
+    // MARK: - Functions: Action
+    
+    @objc private func cancelButtonTapped() {
+        
+    }
+    
+    @objc private func completeButtonTapped() {
+        
+    }
+    
+}
+
