@@ -23,7 +23,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         MSFont.registerFonts()
         
-        let testViewController = UIViewController()
+        let testViewModel = JourneyListViewModel()
+        let testViewController = JourneyListViewController(viewModel: testViewModel)
         window.rootViewController = testViewController
         window.makeKeyAndVisible()
     }

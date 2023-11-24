@@ -8,13 +8,12 @@
 import Combine
 import UIKit
 
-import MSDesignSystem
+import MSUIKit
 
 public final class JourneyListViewController: UIViewController {
     
     typealias JourneyListDataSource = UICollectionViewDiffableDataSource<Journey, String>
-    typealias SpotPhotoCellRegistration = UICollectionView.CellRegistration<SpotPhotoCell, String>
-    typealias HeaderRegistration = UICollectionView.SupplementaryRegistration<JourneyInfoHeaderView>
+    typealias SpotPhotoCellRegistration = UICollectionView.CellRegistration<JourneyCell, String>
     typealias JourneySnapshot = NSDiffableDataSourceSnapshot<Journey, String>
     
     // MARK: - Constants
@@ -75,10 +74,6 @@ public final class JourneyListViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero,
                                               collectionViewLayout: UICollectionViewLayout())
         collectionView.backgroundColor = .clear
-        collectionView.contentInset = UIEdgeInsets(top: Metric.collectionViewVerticalInset / 2,
-                                                   left: .zero,
-                                                   bottom: Metric.collectionViewVerticalInset,
-                                                   right: .zero)
         return collectionView
     }()
     
@@ -133,8 +128,6 @@ private extension JourneyListViewController {
         let layout = UICollectionViewCompositionalLayout(sectionProvider: { _, _ in
             return self.configureSection()
         }, configuration: config)
-        layout.register(JourneyListBackgroundView.self,
-                        forDecorationViewOfKind: JourneyListBackgroundView.reuseIdentifier)
         
         self.collectionView.setCollectionViewLayout(layout, animated: false)
         self.dataSource = self.configureDataSource()
@@ -145,29 +138,13 @@ private extension JourneyListViewController {
                                               heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(SpotPhotoCell.width),
-                                               heightDimension: .absolute(SpotPhotoCell.height))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(373.0),
+                                               heightDimension: .absolute(268.0))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
                                                        subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = Metric.interGroupSpacing
-        section.orthogonalScrollingBehavior = .continuous
-        section.contentInsets = NSDirectionalEdgeInsets(top: Metric.interGroupSpacing,
-                                                        leading: Metric.listHorizontalInset,
-                                                        bottom: Metric.listVerticalInset,
-                                                        trailing: Metric.listHorizontalInset)
-        
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                heightDimension: .estimated(Metric.headerSize))
-        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
-                                                                 elementKind: UICollectionView.elementKindSectionHeader,
-                                                                 alignment: .top)
-        section.boundarySupplementaryItems = [header]
-        
-        let background = NSCollectionLayoutDecorationItem.background(
-            elementKind: JourneyListBackgroundView.reuseIdentifier)
-        section.decorationItems = [background]
         
         return section
     }
@@ -177,25 +154,12 @@ private extension JourneyListViewController {
             cell.update(with: itemIdentifier)
         }
         
-        let headerRegistration = HeaderRegistration(elementKind: UICollectionView.elementKindSectionHeader,
-                                                    handler: { header, _, indexPath in
-            guard let journey = self.currentSnapshot?.sectionIdentifiers[indexPath.section] else {
-                return
-            }
-            header.update(with: journey)
-        })
-        
         let dataSource = JourneyListDataSource(collectionView: self.collectionView,
                                                cellProvider: { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration,
                                                                 for: indexPath,
                                                                 item: item)
         })
-        
-        dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
-            return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration,
-                                                                         for: indexPath)
-        }
         
         return dataSource
     }
@@ -226,7 +190,7 @@ private extension JourneyListViewController {
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.collectionView.topAnchor.constraint(equalTo: self.titleStack.bottomAnchor,
-                                                     constant: Metric.collectionViewVerticalInset / 2),
+                                                     constant: Metric.collectionViewVerticalInset),
             self.collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor,
                                                          constant: Metric.collectionViewHorizontalInset),
             self.collectionView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
@@ -237,6 +201,9 @@ private extension JourneyListViewController {
     
 }
 
+// MARK: - Preview
+
+import MSDesignSystem
 @available(iOS 17, *)
 #Preview {
     MSFont.registerFonts()

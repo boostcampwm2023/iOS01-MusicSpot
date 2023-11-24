@@ -1,15 +1,15 @@
 //
-//  JourneyInfoHeaderView.swift
-//  JourneyList
+//  JourneyInfoView.swift
+//  MSUIKit
 //
-//  Created by 이창준 on 11/23/23.
+//  Created by 이창준 on 11/24/23.
 //
 
 import UIKit
 
 import MSDesignSystem
 
-final class JourneyInfoHeaderView: UICollectionReusableView {
+final class JourneyInfoView: UIView {
     
     // MARK: - Constants
     
@@ -94,14 +94,13 @@ final class JourneyInfoHeaderView: UICollectionReusableView {
 
 // MARK: - UI Configuration
 
-private extension JourneyInfoHeaderView {
+private extension JourneyInfoView {
     
     func configureLayout() {
         self.addSubview(self.contentStack)
         self.contentStack.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.contentStack.topAnchor.constraint(equalTo: self.topAnchor,
-                                                   constant: 20.0),
+            self.contentStack.topAnchor.constraint(equalTo: self.topAnchor),
             self.contentStack.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             self.contentStack.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             self.contentStack.bottomAnchor.constraint(equalTo: self.bottomAnchor)
@@ -119,9 +118,11 @@ private extension JourneyInfoHeaderView {
     
 }
 
+// MARK: - Preview
+
 @available(iOS 17.0, *)
 #Preview(traits: .fixedLayout(width: 341.0, height: 73.0)) {
     MSFont.registerFonts()
-    let header = JourneyInfoHeaderView()
+    let header = JourneyInfoView()
     return header
 }

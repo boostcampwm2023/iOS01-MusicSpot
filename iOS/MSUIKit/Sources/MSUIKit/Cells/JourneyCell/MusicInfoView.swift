@@ -7,8 +7,6 @@
 
 import UIKit
 
-import MSUIKit
-
 final class MusicInfoView: UIView {
     
     // MARK: - UI Components
@@ -106,6 +104,8 @@ private extension MusicInfoView {
     }
     
 }
+
+// MARK: - Preview
 
 import MSDesignSystem
 @available(iOS 17.0, *)

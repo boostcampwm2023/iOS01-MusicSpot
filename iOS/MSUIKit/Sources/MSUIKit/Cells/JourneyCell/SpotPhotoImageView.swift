@@ -1,5 +1,5 @@
 //
-//  SpotPhotoCell.swift
+//  SpotPhotoImageView.swift
 //  JourneyList
 //
 //  Created by 이창준 on 11/23/23.
@@ -7,14 +7,13 @@
 
 import UIKit
 
-final class SpotPhotoCell: UICollectionViewCell {
+final class SpotPhotoImageView: UIView {
     
     // MARK: - Constants
     
-    static let width: CGFloat = 120.0
-    static let height: CGFloat = 150.0
-    
     private enum Metric {
+        static let width: CGFloat = 120.0
+        static let height: CGFloat = 150.0
         static let cornerRadius: CGFloat = 5.0
     }
     
@@ -49,7 +48,7 @@ final class SpotPhotoCell: UICollectionViewCell {
 
 // MARK: - UI Configuration
 
-private extension SpotPhotoCell {
+private extension SpotPhotoImageView {
     
     func configureStyle() {
         self.layer.cornerRadius = Metric.cornerRadius
@@ -57,6 +56,12 @@ private extension SpotPhotoCell {
     }
     
     func configureLayout() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.widthAnchor.constraint(equalToConstant: Metric.width),
+            self.heightAnchor.constraint(equalToConstant: Metric.height)
+        ])
+        
         self.addSubview(self.imageView)
         self.imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -69,8 +74,10 @@ private extension SpotPhotoCell {
     
 }
 
+// MARK: - Preview
+
 @available(iOS 17.0, *)
 #Preview {
-    let cell = SpotPhotoCell()
+    let cell = SpotPhotoImageView()
     return cell
 }
