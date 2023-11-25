@@ -113,6 +113,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Setup Xcode
+      if: ${{ !env.ACT }}
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.0.1'
+
     - name: 🧪 Test ${{ matrix.package }}
       run: |
         echo "🧪  Testing ${{ matrix.package }}"
