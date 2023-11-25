@@ -7,7 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		08100D492B0C7F63008B6A55 /* HomeMapScene in Frameworks */ = {isa = PBXBuildFile; productRef = 08100D482B0C7F63008B6A55 /* HomeMapScene */; };
+		08F5CC4F2B11FD9B00730B96 /* FoundationExt in Frameworks */ = {isa = PBXBuildFile; productRef = 08F5CC4E2B11FD9B00730B96 /* FoundationExt */; };
+		08F5CC512B11FD9B00730B96 /* MSLogger in Frameworks */ = {isa = PBXBuildFile; productRef = 08F5CC502B11FD9B00730B96 /* MSLogger */; };
+		08F5CC532B11FD9B00730B96 /* MSUserDefaults in Frameworks */ = {isa = PBXBuildFile; productRef = 08F5CC522B11FD9B00730B96 /* MSUserDefaults */; };
+		08F5CC562B11FDA400730B96 /* MSCacheStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 08F5CC552B11FDA400730B96 /* MSCacheStorage */; };
+		08F5CC582B11FDA400730B96 /* MSFetcher in Frameworks */ = {isa = PBXBuildFile; productRef = 08F5CC572B11FDA400730B96 /* MSFetcher */; };
+		08F5CC5A2B11FDA400730B96 /* MSNetworking in Frameworks */ = {isa = PBXBuildFile; productRef = 08F5CC592B11FDA400730B96 /* MSNetworking */; };
+		08F5CC5C2B11FDA400730B96 /* MSPersistentStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 08F5CC5B2B11FDA400730B96 /* MSPersistentStorage */; };
+		08F5CC5F2B11FDAC00730B96 /* MSDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 08F5CC5E2B11FDAC00730B96 /* MSDesignSystem */; };
+		08F5CC612B11FDAC00730B96 /* MSUIComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 08F5CC602B11FDAC00730B96 /* MSUIComponents */; };
+		08F5CC642B1262E700730B96 /* HomeMapScene in Frameworks */ = {isa = PBXBuildFile; productRef = 08F5CC632B1262E700730B96 /* HomeMapScene */; };
+		21B1B63D2B04C7CF00A63287 /* FoundationExt in Frameworks */ = {isa = PBXBuildFile; productRef = 21B1B63C2B04C7CF00A63287 /* FoundationExt */; };
+		21B1B63F2B04C7CF00A63287 /* MSLogger in Frameworks */ = {isa = PBXBuildFile; productRef = 21B1B63E2B04C7CF00A63287 /* MSLogger */; };
+		21B1B6412B04C7CF00A63287 /* MSUserDefaults in Frameworks */ = {isa = PBXBuildFile; productRef = 21B1B6402B04C7CF00A63287 /* MSUserDefaults */; };
 		DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */; };
 		DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */; };
 		DD73F8622B024C4B00EE9BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */; };
@@ -29,7 +41,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08100D492B0C7F63008B6A55 /* HomeMapScene in Frameworks */,
+				21B1B63F2B04C7CF00A63287 /* MSLogger in Frameworks */,
+				08F5CC642B1262E700730B96 /* HomeMapScene in Frameworks */,
+				08F5CC4F2B11FD9B00730B96 /* FoundationExt in Frameworks */,
+				21B1B6412B04C7CF00A63287 /* MSUserDefaults in Frameworks */,
+				21B1B63D2B04C7CF00A63287 /* FoundationExt in Frameworks */,
+				08F5CC612B11FDAC00730B96 /* MSUIComponents in Frameworks */,
+				08F5CC582B11FDA400730B96 /* MSFetcher in Frameworks */,
+				08F5CC532B11FD9B00730B96 /* MSUserDefaults in Frameworks */,
+				08F5CC5A2B11FDA400730B96 /* MSNetworking in Frameworks */,
+				08F5CC512B11FD9B00730B96 /* MSLogger in Frameworks */,
+				08F5CC5F2B11FDAC00730B96 /* MSDesignSystem in Frameworks */,
+				08F5CC5C2B11FDA400730B96 /* MSPersistentStorage in Frameworks */,
+				08F5CC562B11FDA400730B96 /* MSCacheStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,7 +65,6 @@
 			children = (
 				DD73F8572B024C4900EE9BF2 /* MusicSpot */,
 				DD73F8562B024C4900EE9BF2 /* Products */,
-				DD73F8C72B027EBD00EE9BF2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -65,13 +88,6 @@
 			path = MusicSpot;
 			sourceTree = "<group>";
 		};
-		DD73F8C72B027EBD00EE9BF2 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -89,7 +105,19 @@
 			);
 			name = MusicSpot;
 			packageProductDependencies = (
-				08100D482B0C7F63008B6A55 /* HomeMapScene */,
+				21B1B63C2B04C7CF00A63287 /* FoundationExt */,
+				21B1B63E2B04C7CF00A63287 /* MSLogger */,
+				21B1B6402B04C7CF00A63287 /* MSUserDefaults */,
+				08F5CC4E2B11FD9B00730B96 /* FoundationExt */,
+				08F5CC502B11FD9B00730B96 /* MSLogger */,
+				08F5CC522B11FD9B00730B96 /* MSUserDefaults */,
+				08F5CC552B11FDA400730B96 /* MSCacheStorage */,
+				08F5CC572B11FDA400730B96 /* MSFetcher */,
+				08F5CC592B11FDA400730B96 /* MSNetworking */,
+				08F5CC5B2B11FDA400730B96 /* MSPersistentStorage */,
+				08F5CC5E2B11FDAC00730B96 /* MSDesignSystem */,
+				08F5CC602B11FDAC00730B96 /* MSUIComponents */,
+				08F5CC632B1262E700730B96 /* HomeMapScene */,
 			);
 			productName = MusicSpot;
 			productReference = DD73F8552B024C4900EE9BF2 /* MusicSpot.app */;
@@ -120,7 +148,10 @@
 			);
 			mainGroup = DD73F84C2B024C4900EE9BF2;
 			packageReferences = (
-				08100D472B0C7F63008B6A55 /* XCLocalSwiftPackageReference "../Features/HomeMapScene" */,
+				08F5CC4D2B11FD9B00730B96 /* XCLocalSwiftPackageReference "../MSFoundation" */,
+				08F5CC542B11FDA400730B96 /* XCLocalSwiftPackageReference "../MSCoreKit" */,
+				08F5CC5D2B11FDAC00730B96 /* XCLocalSwiftPackageReference "../MSUIKit" */,
+				08F5CC622B1262E700730B96 /* XCLocalSwiftPackageReference "../Features/HomeMapScene" */,
 			);
 			productRefGroup = DD73F8562B024C4900EE9BF2 /* Products */;
 			projectDirPath = "";
@@ -385,16 +416,76 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		08100D472B0C7F63008B6A55 /* XCLocalSwiftPackageReference "../Features/HomeMapScene" */ = {
+		08F5CC4D2B11FD9B00730B96 /* XCLocalSwiftPackageReference "../MSFoundation" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MSFoundation;
+		};
+		08F5CC542B11FDA400730B96 /* XCLocalSwiftPackageReference "../MSCoreKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MSCoreKit;
+		};
+		08F5CC5D2B11FDAC00730B96 /* XCLocalSwiftPackageReference "../MSUIKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MSUIKit;
+		};
+		08F5CC622B1262E700730B96 /* XCLocalSwiftPackageReference "../Features/HomeMapScene" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Features/HomeMapScene;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		08100D482B0C7F63008B6A55 /* HomeMapScene */ = {
+		08F5CC4E2B11FD9B00730B96 /* FoundationExt */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FoundationExt;
+		};
+		08F5CC502B11FD9B00730B96 /* MSLogger */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSLogger;
+		};
+		08F5CC522B11FD9B00730B96 /* MSUserDefaults */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSUserDefaults;
+		};
+		08F5CC552B11FDA400730B96 /* MSCacheStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSCacheStorage;
+		};
+		08F5CC572B11FDA400730B96 /* MSFetcher */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSFetcher;
+		};
+		08F5CC592B11FDA400730B96 /* MSNetworking */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSNetworking;
+		};
+		08F5CC5B2B11FDA400730B96 /* MSPersistentStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSPersistentStorage;
+		};
+		08F5CC5E2B11FDAC00730B96 /* MSDesignSystem */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSDesignSystem;
+		};
+		08F5CC602B11FDAC00730B96 /* MSUIComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSUIComponents;
+		};
+		08F5CC632B1262E700730B96 /* HomeMapScene */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = HomeMapScene;
+		};
+		21B1B63C2B04C7CF00A63287 /* FoundationExt */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FoundationExt;
+		};
+		21B1B63E2B04C7CF00A63287 /* MSLogger */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSLogger;
+		};
+		21B1B6402B04C7CF00A63287 /* MSUserDefaults */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSUserDefaults;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
