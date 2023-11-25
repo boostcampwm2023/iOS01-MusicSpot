@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		DD3C7C532B10A68400779F0E /* JourneyList in Frameworks */ = {isa = PBXBuildFile; productRef = DD3C7C522B10A68400779F0E /* JourneyList */; };
+		DD3C7C562B10C65900779F0E /* SaveJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD3C7C552B10C65900779F0E /* SaveJourney */; };
 		DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */; };
 		DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */; };
 		DD73F8622B024C4B00EE9BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */; };
@@ -29,6 +30,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD3C7C562B10C65900779F0E /* SaveJourney in Frameworks */,
 				DD3C7C532B10A68400779F0E /* JourneyList in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -82,6 +84,7 @@
 			name = MusicSpot;
 			packageProductDependencies = (
 				DD3C7C522B10A68400779F0E /* JourneyList */,
+				DD3C7C552B10C65900779F0E /* SaveJourney */,
 			);
 			productName = MusicSpot;
 			productReference = DD73F8552B024C4900EE9BF2 /* MusicSpot.app */;
@@ -113,6 +116,7 @@
 			mainGroup = DD73F84C2B024C4900EE9BF2;
 			packageReferences = (
 				DD3C7C512B10A68400779F0E /* XCLocalSwiftPackageReference "../Features/JourneyList" */,
+				DD3C7C542B10C65900779F0E /* XCLocalSwiftPackageReference "../Features/SaveJourney" */,
 			);
 			productRefGroup = DD73F8562B024C4900EE9BF2 /* Products */;
 			projectDirPath = "";
@@ -375,12 +379,20 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Features/JourneyList;
 		};
+		DD3C7C542B10C65900779F0E /* XCLocalSwiftPackageReference "../Features/SaveJourney" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../Features/SaveJourney;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		DD3C7C522B10A68400779F0E /* JourneyList */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = JourneyList;
+		};
+		DD3C7C552B10C65900779F0E /* SaveJourney */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SaveJourney;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

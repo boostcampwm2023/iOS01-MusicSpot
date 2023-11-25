@@ -13,7 +13,7 @@ import MSUIKit
 public final class JourneyListViewController: UIViewController {
     
     typealias JourneyListDataSource = UICollectionViewDiffableDataSource<Int, Journey>
-    typealias SpotPhotoCellRegistration = UICollectionView.CellRegistration<JourneyCell, Journey>
+    typealias JourneyCellRegistration = UICollectionView.CellRegistration<JourneyCell, Journey>
     typealias JourneySnapshot = NSDiffableDataSourceSnapshot<Int, Journey>
     
     // MARK: - Constants
@@ -97,6 +97,8 @@ public final class JourneyListViewController: UIViewController {
         self.viewModel.trigger(.viewNeedsLoaded)
     }
     
+    // MARK: - Combine Binding
+    
     func bind() {
         self.viewModel.state.journeys
             .sink { journeys in
@@ -141,7 +143,7 @@ private extension JourneyListViewController {
     }
     
     func configureDataSource() -> JourneyListDataSource {
-        let cellRegistration = SpotPhotoCellRegistration { cell, _, itemIdentifier in
+        let cellRegistration = JourneyCellRegistration { cell, _, itemIdentifier in
             // TODO: Cell 데이터 바인딩
         }
         

@@ -9,12 +9,15 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(
-            name: "SaveJourney",
-            targets: ["SaveJourney"]),
+        .library(name: "SaveJourney",
+                 targets: ["SaveJourney"])
+    ],
+    dependencies: [
+        .package(name: "MSUIKit",
+                 path: "../../MSUIKit")
     ],
     targets: [
-        .target(
-            name: "SaveJourney")
+        .target(name: "SaveJourney",
+                dependencies: ["MSUIKit"])
     ]
 )
