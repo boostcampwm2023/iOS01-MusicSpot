@@ -16,9 +16,8 @@ export class SpotController {
   constructor(private spotService: SpotService) {}
 
   @ApiOperation({
-    summary: 'spot 기록 시 실행되는 API',
-    description:
-      'request로 여정 ID(string), 위치좌표([number, number]), timestamp(string), 유저 이메일(string)을 필요합니다.',
+    summary: 'spot 기록 API',
+    description: 'spot을 기록합니다.',
   })
   @ApiCreatedResponse({
     description: '생성된 spot 데이터를 반환',
