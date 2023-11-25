@@ -15,10 +15,6 @@ public final class RewindJourneyViewController: UIViewController {
     
     private enum Metrix {
         
-        //status view
-        enum StatusView {
-            static var height: CGFloat = 54.0
-        }
         //progress bar
         enum Progressbar {
             static var height: CGFloat = 4.0
@@ -43,7 +39,6 @@ public final class RewindJourneyViewController: UIViewController {
     // MARK: - Properties
 
     var stackView = UIStackView()
-    let statusView = UIView()
     var presentImageView = UIImageView()
     let musicView = MSMusicView()
     var progressViews: [MSProgressView]?
@@ -77,7 +72,6 @@ public final class RewindJourneyViewController: UIViewController {
     
     private func configureLayout() {
         self.configurePresentImageViewLayout()
-        self.configureStatusViewLayout()
         self.configureStackViewLayout()
         self.configureProgressbarsLayout()
         self.configureMusicViewLayout()
@@ -96,18 +90,6 @@ public final class RewindJourneyViewController: UIViewController {
         ])
     }
     
-    private func configureStatusViewLayout() {
-        self.view.addSubview(self.statusView)
-        
-        self.statusView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            self.statusView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.statusView.heightAnchor.constraint(equalToConstant: Metrix.StatusView.height),
-            self.statusView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.statusView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
-        ])
-    }
-    
     private func configureStackViewLayout() {
         self.view.addSubview(self.stackView)
         
@@ -117,7 +99,7 @@ public final class RewindJourneyViewController: UIViewController {
         
         self.stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.stackView.topAnchor.constraint(equalTo: self.statusView.bottomAnchor),
+            self.stackView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.stackView.heightAnchor.constraint(equalToConstant: Metrix.Progressbar.height),
             self.stackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: Metrix.StackView.inset),
             self.stackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -Metrix.StackView.inset)
