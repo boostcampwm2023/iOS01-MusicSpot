@@ -39,7 +39,7 @@ jobs:
         for package in $packages; do
           cd $package
           for scheme in $(xcodebuild -list | grep -E '^[[:space:]]*Schemes:' -A 10 | tail -n +2 | grep -v '^$'); do
-            if [[ $scheme != *"-Package" ]]; then
+            if [[ $scheme != *"-Package" ]] && [[ $scheme != *"Tests" ]]; then
               if [ "$first_entry" = true ]; then
                 first_entry=false
               else
