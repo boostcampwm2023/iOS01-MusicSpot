@@ -3,7 +3,6 @@ name: Music Spot Project
 on:
   push:
     branches: ["BE/release"]
-
 jobs:
   build:
     runs-on: ubuntu-latest
