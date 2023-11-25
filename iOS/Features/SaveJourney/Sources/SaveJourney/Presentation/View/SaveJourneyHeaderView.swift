@@ -11,6 +11,11 @@ import MSDesignSystem
 
 final class SaveJourneyHeaderView: UICollectionReusableView {
     
+    // MARK: - Constant
+    
+    static let elementKind = "SaveJourneyHeaderView"
+    static let estimatedHeight: CGFloat = 33.0
+    
     // MARK: - UI Components
     
     private let titleLabel: UILabel = {
@@ -32,6 +37,12 @@ final class SaveJourneyHeaderView: UICollectionReusableView {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
     
+    // MARK: - Functions
+    
+    func update(with title: String) {
+        self.titleLabel.text = title
+    }
+    
 }
 
 // MARK: - UI Configuration
@@ -42,7 +53,6 @@ private extension SaveJourneyHeaderView {
         self.addSubview(self.titleLabel)
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.titleLabel.topAnchor.constraint(equalTo: self.topAnchor),
             self.titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             self.titleLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor)

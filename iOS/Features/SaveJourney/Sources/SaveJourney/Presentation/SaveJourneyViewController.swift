@@ -12,13 +12,13 @@ import UIKit
 import MSUIKit
 
 enum SaveJourneySection {
-    case journey
+    case music
     case spot
 }
 
 enum SaveJourneyItem: Hashable {
-    case journey(Journey)
-    case spot(String)
+    case music(String)
+    case spot(Journey)
 }
 
 public final class SaveJourneyViewController: UIViewController {
@@ -28,14 +28,16 @@ public final class SaveJourneyViewController: UIViewController {
     typealias MusicCellRegistration = UICollectionView.CellRegistration<SaveJourneyMusicCell, String>
     typealias JourneyCellRegistration = UICollectionView.CellRegistration<JourneyCell, Journey>
     typealias SaveJourneySnapshot = NSDiffableDataSourceSnapshot<SaveJourneySection, SaveJourneyItem>
+    typealias MusicSnapshot = NSDiffableDataSourceSectionSnapshot<SaveJourneyItem>
+    typealias SpotSnapshot = NSDiffableDataSourceSectionSnapshot<SaveJourneyItem>
     
     // MARK: - Constants
     
     private enum Metric {
         static let horizontalInset: CGFloat = 24.0
         static let verticalInset: CGFloat = 12.0
-        static let headerHeight: CGFloat = 33.0
         static let innerGroupSpacing: CGFloat = 12.0
+        static let headerTopInset: CGFloat = 24.0
     }
     
     // MARK: - Properties
@@ -57,6 +59,10 @@ public final class SaveJourneyViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero,
                                               collectionViewLayout: UICollectionViewLayout())
         collectionView.backgroundColor = .clear
+        collectionView.contentInset = UIEdgeInsets(top: self.view.frame.width,
+                                                   left: .zero,
+                                                   bottom: .zero,
+                                                   right: .zero)
         collectionView.delegate = self
         return collectionView
     }()
@@ -92,16 +98,17 @@ public final class SaveJourneyViewController: UIViewController {
     func bind() {
         self.viewModel.state.music
             .sink { music in
-                print(music)
+                var snapshot = MusicSnapshot()
+                snapshot.append([.music(music)])
+                self.dataSource?.apply(snapshot, to: .music)
             }
             .store(in: &self.cancellables)
         
         self.viewModel.state.journeys
             .sink { journeys in
-                var snapshot = SaveJourneySnapshot()
-                snapshot.appendSections([.spot, .journey])
-                snapshot.appendItems(journeys.map { .journey($0) }, toSection: .journey)
-                self.dataSource?.apply(snapshot)
+                var snapshot = SpotSnapshot()
+                snapshot.append(journeys.map { .spot($0) })
+                self.dataSource?.apply(snapshot, to: .spot)
             }
             .store(in: &self.cancellables)
     }
@@ -113,8 +120,9 @@ public final class SaveJourneyViewController: UIViewController {
 private extension SaveJourneyViewController {
     
     func configureCollectionView() {
-        let layout = UICollectionViewCompositionalLayout(sectionProvider: { _, _ in
-            return self.configureSection()
+        let layout = UICollectionViewCompositionalLayout(sectionProvider: { sectionIndex, _ in
+            guard let section = self.dataSource?.sectionIdentifier(for: sectionIndex) else { return .none }
+            return self.configureSection(for: section)
         })
         layout.register(SaveJourneyBackgroundView.self,
                         forDecorationViewOfKind: SaveJourneyBackgroundView.elementKind)
@@ -123,13 +131,17 @@ private extension SaveJourneyViewController {
         self.dataSource = self.configureDataSource()
     }
     
-    func configureSection() -> NSCollectionLayoutSection {
+    func configureSection(for section: SaveJourneySection) -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                               heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
+        let groupHeight: NSCollectionLayoutDimension = switch section {
+        case .music: .estimated(SaveJourneyMusicCell.estimatedHeight)
+        case .spot: .estimated(JourneyCell.estimatedHeight)
+        }
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(268.0))
+                                               heightDimension: groupHeight)
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
                                                        subitems: [item])
         
@@ -141,10 +153,14 @@ private extension SaveJourneyViewController {
                                                         trailing: Metric.horizontalInset)
         
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                heightDimension: .estimated(Metric.headerHeight))
+                                                heightDimension: .absolute(SaveJourneyHeaderView.estimatedHeight))
         let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
-                                                                 elementKind: UICollectionView.elementKindSectionHeader,
+                                                                 elementKind: SaveJourneyHeaderView.elementKind,
                                                                  alignment: .top)
+        header.contentInsets = NSDirectionalEdgeInsets(top: -Metric.headerTopInset,
+                                                       leading: .zero,
+                                                       bottom: .zero,
+                                                       trailing: .zero)
         section.boundarySupplementaryItems = [header]
         
         let backgroundView = NSCollectionLayoutDecorationItem.background(
@@ -160,22 +176,22 @@ private extension SaveJourneyViewController {
         }
         
         let journeyCellRegistration = JourneyCellRegistration { cell, _, itemIdentifier in
-            cell.update(with: "skldfj")
+            cell.update(with: "여정")
         }
         
-        let headerRegistration = HeaderRegistration(elementKind: UICollectionView.elementKindSectionHeader,
+        let headerRegistration = HeaderRegistration(elementKind: SaveJourneyHeaderView.elementKind,
                                                     handler: { header, _, indexPath in
-            
+            header.update(with: "헤더")
         })
         
         let dataSource = SaveJourneyDataSource(collectionView: self.collectionView,
                                                cellProvider: { collectionView, indexPath, item in
             switch item {
-            case .spot(let music):
+            case .music(let music):
                 return collectionView.dequeueConfiguredReusableCell(using: musicCellRegistration,
                                                                     for: indexPath,
                                                                     item: music)
-            case .journey(let journey):
+            case .spot(let journey):
                 return collectionView.dequeueConfiguredReusableCell(using: journeyCellRegistration,
                                                                     for: indexPath,
                                                                     item: journey)
@@ -186,6 +202,10 @@ private extension SaveJourneyViewController {
             return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration,
                                                                          for: indexPath)
         }
+        
+        var snapshot = SaveJourneySnapshot()
+        snapshot.appendSections([.music, .spot])
+        dataSource.apply(snapshot)
         
         return dataSource
     }
@@ -198,7 +218,7 @@ extension SaveJourneyViewController: UICollectionViewDelegate {
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offset = scrollView.contentOffset
-        self.updateProfileViewLayout(by: offset, name: "dslkjf")
+        self.updateProfileViewLayout(by: offset, name: "Change Me!")
     }
     
     func updateProfileViewLayout(by offset: CGPoint, name: String) {
@@ -207,21 +227,13 @@ extension SaveJourneyViewController: UICollectionViewDelegate {
         let assistanceValue = collectionViewHeight - collectionViewContentInset
         let isContentBelowTopOfScreen = offset.y < 0
         
-        // 컨텐츠가 `ProfileView`의 최대 높이 범위(330) 안에 있는 경우
-        // ProfileView의 높이 변화
         if isContentBelowTopOfScreen {
             self.navigationItem.title = nil
             self.mapViewHeightConstraint?.constant = assistanceValue + offset.y.magnitude
-        }
-        // 컨텐츠의 최상단(`GiftStatsHeader`)이 화면의 상단보다 위에 있는 경우
-        // contentInset은 `.zero`로 고정하고 ProfileView는 숨겨짐
-        else if !isContentBelowTopOfScreen {
+        } else if !isContentBelowTopOfScreen {
             self.navigationItem.title = name
             self.mapViewHeightConstraint?.constant = 0
-        }
-        // 스크롤뷰가 허용 범위보다 더 스크롤 됐을 경우
-        // ProfileView의 크기를 더 크게
-        else {
+        } else {
             self.mapViewHeightConstraint?.constant = offset.y.magnitude
         }
     }

@@ -13,6 +13,8 @@ final class SaveJourneyMusicCell: UICollectionViewCell {
     
     // MARK: - Constants
     
+    static let estimatedHeight: CGFloat = 152.0
+    
     private enum Metric {
         static let cornerRadius: CGFloat = 12.0
         static let imageViewCornerRadius: CGFloat = 5.0
@@ -28,6 +30,7 @@ final class SaveJourneyMusicCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = Metric.imageViewCornerRadius
         imageView.clipsToBounds = true
+        imageView.backgroundColor = .systemBlue
         return imageView
     }()
     
@@ -35,6 +38,7 @@ final class SaveJourneyMusicCell: UICollectionViewCell {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = Metric.stackViewSpacing
+        stackView.alignment = .leading
         return stackView
     }()
     
@@ -56,7 +60,7 @@ final class SaveJourneyMusicCell: UICollectionViewCell {
         let label = UILabel()
         label.font = .msFont(.caption)
         label.textColor = .msColor(.primaryTypo)
-        label.text = "Super Shy"
+        label.text = "NewJeans"
         return label
     }()
     
@@ -94,6 +98,9 @@ private extension SaveJourneyMusicCell {
         self.addSubview(self.albumArtImageView)
         self.albumArtImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
+            self.albumArtImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            self.albumArtImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor,
+                                                            constant: 12.0),
             self.albumArtImageView.widthAnchor.constraint(equalToConstant: Metric.imageViewSize),
             self.albumArtImageView.heightAnchor.constraint(equalToConstant: Metric.imageViewSize)
         ])
@@ -101,7 +108,7 @@ private extension SaveJourneyMusicCell {
         self.addSubview(self.stackView)
         self.stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.stackView.topAnchor.constraint(equalTo: self.albumArtImageView.topAnchor),
+            self.stackView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             self.stackView.leadingAnchor.constraint(equalTo: self.albumArtImageView.trailingAnchor,
                                                     constant: 12.0),
             self.stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor,

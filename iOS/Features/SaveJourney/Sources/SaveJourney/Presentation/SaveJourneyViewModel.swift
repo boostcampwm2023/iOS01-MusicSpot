@@ -16,19 +16,15 @@ public final class SaveJourneyViewModel {
     public struct State {
         var music = CurrentValueSubject<String, Never>("")
         var journeys = CurrentValueSubject<[Journey], Never>([])
-        
-        public init() { }
     }
     
     // MARK: - Properties
     
-    public var state: State
+    public var state = State()
     
     // MARK: - Initializer
     
-    public init(state: State = State()) {
-        self.state = state
-    }
+    public init() { }
     
     // MARK: - Functions
     

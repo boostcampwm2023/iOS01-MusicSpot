@@ -11,6 +11,10 @@ import MSDesignSystem
 
 public final class JourneyCell: UICollectionViewCell {
     
+    // MARK: - Constants
+    
+    public static let estimatedHeight: CGFloat = 268.0
+    
     // MARK: - UI Components
     
     private let infoView = JourneyInfoView()
