@@ -1,5 +1,8 @@
 name: Xcode_build_test
 
+env:
+  PACKAGE: MSCoreKit MSFoundation MSUIKit
+
 on:
   push:
     branches: ['iOS/epic/xcode-ci']
@@ -32,7 +35,7 @@ jobs:
         cd iOS
         matrix="{\"include\":["
         first_entry=true
-        for package in MSCoreKit MSFoundation MSUIKit; do
+        for package in ${{ env.PACKAGE }}; do
           cd $package
           for scheme in $(xcodebuild -list | grep -E '^[[:space:]]*Schemes:' -A 10 | tail -n +2 | grep -v '^$'); do
             if [[ $scheme != *"-Package" ]]; then
@@ -64,7 +67,7 @@ jobs:
         matrix+="]}"
         echo "matrix=$matrix" >> $GITHUB_OUTPUT
 
-  build-and-test:
+  xcode-build:
     needs: prepare-matrix
     runs-on: macos-13
     strategy:
@@ -91,10 +94,17 @@ jobs:
           -destination 'platform=iOS Simulator,OS=17.0.1,name=iPhone 15 Pro' \
           clean build
 
-    - name: 🧪 Test ${{ matrix.scheme }}
-      if: ${{ contains(matrix.scheme, 'Tests') }}
+
+  xcode-test:
+    runs-on: macos-13
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{ env.PACKAGE }}
+    steps:
+    - name: 🧪 Test ${{ matrix.package }}
       run: |
-        echo "🧪  Testing ${{ matrix.package }} - Scheme: ${{ matrix.scheme }}"
+        echo "🧪  Testing ${{ matrix.package }}"
         cd iOS/${{ matrix.package }}
         xcodebuild \
           -scheme ${{ matrix.package }}-Package \
