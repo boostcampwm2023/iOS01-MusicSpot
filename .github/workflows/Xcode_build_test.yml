@@ -11,7 +11,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: macos-latest
+    runs-on: macos-13
     env:
       working-directory: ./iOS
     strategy:
@@ -24,7 +24,7 @@ jobs:
     - name: Xcode Setup
       uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '15.0.1'
+        xcode-version: latest
     
     - name: Build ${{ matrix.package }}
       run: xcodebuild \
