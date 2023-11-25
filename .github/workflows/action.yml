@@ -1,46 +1,36 @@
-# name: musicspot github actions
+name: iOS01 Music Spot Project
 
-# on:
-#     pull_request:
-#         branches: ["BE/release"]
-#         types: ["closed"]
-# jobs:
-#     deploy:
-#         runs-on: ubuntu-latest
+on:
+  push:
+    branches: ["BE/release"]
+  pull_request:
+    branches: ["BE/release"]
+    types: [closed]
 
-#         steps:
-#             - name: Checkout repository
-#               uses: actions/checkout@v2
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the Docker image
+        run: |
+          docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_TOKEN}}
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{github.sha}} ./
+          docker images
+          docker push ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}:${{github.sha}}
 
-#             - name: Set up Node.js
-#               uses: actions/setup-node@v2
-#               with:
-#                   node-version: "20"
-
-#             - name: Install dependencies
-#               run: |
-#                   cd BE
-#                   cd musicspot
-#                   npm install
-
-#             - name: Build Docker image
-#               run: docker build -t musicspot:latest ./BE/musicspot
-
-#             - name: Login to Docker Hub
-#               run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-
-#             - name: Push Docker image to Docker Hub
-#               run: docker push musicspot
-
-#             - name: SSH into Ubuntu server and pull the latest image
-#               uses: appleboy/ssh-action@master
-#               with:
-#                   host: ${{ secrets.SERVER_IP }}
-#                   username: ${{ secrets.SERVER_USERNAME }}
-#                   password: ${{ secrets.PASSWORD }}
-#                   script: |
-#                       docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-#                       docker pull musicspot
-#                       docker stop musicspot || true
-#                       docker rm musicspot || true
-#                       docker run -e SSH_HOST=${{ secrets.SSH_HOST }} -e SSH_PORT=${{ secrets.SSH_PORT }} -e SSH_USER=${{ secrets.SSH_USER }} -e SSH_PASSWORD=${{ secrets.SSH_PASSWORD }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e DB_NAME=${{ secrets.DB_NAME }} -e DB_HOST=${{ secrets.DB_HOST }} -e SECRET_KEY=${{ secrets.SECRET_KEY }} -v /images:/images -v /images/profile:/images/profile -v /images/story:/images/story -d -p 3000:3000 --name heatpick-container geomgichoi/heatpick
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            cd compose
+            sudo docker rm -f $(sudo docker ps -qa)
+            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{github.sha}}
+            sudo docker tag ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{github.sha}} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO}}:latest
+            sudo docker compose up -d
+            sudo docker image prune -af
