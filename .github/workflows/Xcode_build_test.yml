@@ -29,6 +29,7 @@ jobs:
     - name: Generate matrix
       id: set-matrix
       run: |
+        cd iOS
         matrix="{\"include\":["
         first_entry=true
         for package in MSCoreKit MSFoundation MSUIKit; do
@@ -68,6 +69,7 @@ jobs:
       if: ${{ !contains(matrix.scheme, 'Tests') }}
       run: |
         echo "🛠️  Building ${{ matrix.package }} - Scheme: ${{ matrix.scheme }}"
+        cd iOS/${{ matrix.package }}
         xcodebuild \
           -scheme ${{ matrix.scheme }} \
           -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
@@ -77,6 +79,7 @@ jobs:
       if: ${{ contains(matrix.scheme, 'Tests') }}
       run: |
         echo "🧪  Testing ${{ matrix.package }} - Scheme: ${{ matrix.scheme }}"
+        cd iOS/${{ matrix.package }}
         xcodebuild clean test \
           -scheme ${{ matrix.scheme }} \
           -destination 'platform=iOS Simulator,name=iPhone 14 Pro'

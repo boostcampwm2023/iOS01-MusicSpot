@@ -8,6 +8,4 @@
 import XCTest
 import MSUserDefaults
 
-final class MSUserDefaultsTests: XCTestCase {
-    
-}
+final class MSUserDefaultsTests: XCTestCase { }
