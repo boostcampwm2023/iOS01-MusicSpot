@@ -47,7 +47,7 @@ jobs:
           cd ..
         done
         matrix+="]}"
-        echo "::set-output name=matrix:: $matrix"
+        echo "{matrix}=$matrix" >> $GITHUB_OUTPUT
 
   build-and-test:
     needs: prepare-matrix
@@ -82,4 +82,4 @@ jobs:
         cd iOS/${{ matrix.package }}
         xcodebuild clean test \
           -scheme ${{ matrix.scheme }} \
-          -destination 'platform=iOS Simulator,name=iPhone 14 Pro'
+          -destination 'platform=iOS Simulator,name=iPhone 15 Pro'
