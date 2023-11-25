@@ -29,6 +29,15 @@ public final class SaveJourneyViewController: UIViewController {
     typealias JourneyCellRegistration = UICollectionView.CellRegistration<JourneyCell, Journey>
     typealias SaveJourneySnapshot = NSDiffableDataSourceSnapshot<SaveJourneySection, SaveJourneyItem>
     
+    // MARK: - Constants
+    
+    private enum Metric {
+        static let horizontalInset: CGFloat = 24.0
+        static let verticalInset: CGFloat = 12.0
+        static let headerHeight: CGFloat = 33.0
+        static let innerGroupSpacing: CGFloat = 12.0
+    }
+    
     // MARK: - Properties
     
     private let viewModel: SaveJourneyViewModel
@@ -120,18 +129,19 @@ private extension SaveJourneyViewController {
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .absolute(268.0))
+                                               heightDimension: .estimated(268.0))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
                                                        subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 12.0,
-                                                        leading: 24.0,
-                                                        bottom: 12.0,
-                                                        trailing: 24.0)
+        section.interGroupSpacing = Metric.innerGroupSpacing
+        section.contentInsets = NSDirectionalEdgeInsets(top: Metric.verticalInset,
+                                                        leading: Metric.horizontalInset,
+                                                        bottom: Metric.verticalInset,
+                                                        trailing: Metric.horizontalInset)
         
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                heightDimension: .estimated(33.0))
+                                                heightDimension: .estimated(Metric.headerHeight))
         let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
                                                                  elementKind: UICollectionView.elementKindSectionHeader,
                                                                  alignment: .top)
