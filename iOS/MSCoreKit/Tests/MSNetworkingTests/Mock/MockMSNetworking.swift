@@ -24,10 +24,10 @@ public class MockMSNetworking {
         guard let jsonData = try? JSONEncoder().encode(journey) else {
             return Just(Data()).setFailureType(to: Error.self)
         }
-
+        
         let request = Just(jsonData)
             .setFailureType(to: Error.self)
-
+        
         return request
     }
     
@@ -41,11 +41,10 @@ public class MockMSNetworking {
         }
         
         return publisher.tryMap { result -> T in
-                let value = try JSONDecoder().decode(T.self, from: result)
-                return value
-            }
-            .eraseToAnyPublisher()
+            let value = try JSONDecoder().decode(T.self, from: result)
+            return value
+        }
+        .eraseToAnyPublisher()
     }
     
 }
-
