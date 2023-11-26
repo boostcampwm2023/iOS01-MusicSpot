@@ -3,10 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		21B1B63D2B04C7CF00A63287 /* FoundationExt in Frameworks */ = {isa = PBXBuildFile; productRef = 21B1B63C2B04C7CF00A63287 /* FoundationExt */; };
+		21B1B63F2B04C7CF00A63287 /* MSLogger in Frameworks */ = {isa = PBXBuildFile; productRef = 21B1B63E2B04C7CF00A63287 /* MSLogger */; };
+		21B1B6412B04C7CF00A63287 /* MSUserDefaults in Frameworks */ = {isa = PBXBuildFile; productRef = 21B1B6402B04C7CF00A63287 /* MSUserDefaults */; };
+		21B1B6442B04D64A00A63287 /* MSNetwork in Frameworks */ = {isa = PBXBuildFile; productRef = 21B1B6432B04D64A00A63287 /* MSNetwork */; };
 		DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */; };
 		DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */; };
 		DD73F8622B024C4B00EE9BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */; };
@@ -28,18 +32,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21B1B63F2B04C7CF00A63287 /* MSLogger in Frameworks */,
+				21B1B6412B04C7CF00A63287 /* MSUserDefaults in Frameworks */,
+				21B1B63D2B04C7CF00A63287 /* FoundationExt in Frameworks */,
+				21B1B6442B04D64A00A63287 /* MSNetwork in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2137DBFD2B063A1500395C06 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		DD73F84C2B024C4900EE9BF2 = {
 			isa = PBXGroup;
 			children = (
 				DD73F8572B024C4900EE9BF2 /* MusicSpot */,
 				DD73F8562B024C4900EE9BF2 /* Products */,
-				DD73F8C72B027EBD00EE9BF2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -63,13 +77,6 @@
 			path = MusicSpot;
 			sourceTree = "<group>";
 		};
-		DD73F8C72B027EBD00EE9BF2 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -87,6 +94,10 @@
 			);
 			name = MusicSpot;
 			packageProductDependencies = (
+				21B1B63C2B04C7CF00A63287 /* FoundationExt */,
+				21B1B63E2B04C7CF00A63287 /* MSLogger */,
+				21B1B6402B04C7CF00A63287 /* MSUserDefaults */,
+				21B1B6432B04D64A00A63287 /* MSNetwork */,
 			);
 			productName = MusicSpot;
 			productReference = DD73F8552B024C4900EE9BF2 /* MusicSpot.app */;
@@ -117,6 +128,8 @@
 			);
 			mainGroup = DD73F84C2B024C4900EE9BF2;
 			packageReferences = (
+				21B1B63B2B04C7CF00A63287 /* XCLocalSwiftPackageReference "../MSFoundation" */,
+				21B1B6422B04D64A00A63287 /* XCLocalSwiftPackageReference "../MSNetwork" */,
 			);
 			productRefGroup = DD73F8562B024C4900EE9BF2 /* Products */;
 			projectDirPath = "";
@@ -373,6 +386,36 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		21B1B63B2B04C7CF00A63287 /* XCLocalSwiftPackageReference "../MSFoundation" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MSFoundation;
+		};
+		21B1B6422B04D64A00A63287 /* XCLocalSwiftPackageReference "../MSNetwork" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MSNetwork;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		21B1B63C2B04C7CF00A63287 /* FoundationExt */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FoundationExt;
+		};
+		21B1B63E2B04C7CF00A63287 /* MSLogger */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSLogger;
+		};
+		21B1B6402B04C7CF00A63287 /* MSUserDefaults */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSUserDefaults;
+		};
+		21B1B6432B04D64A00A63287 /* MSNetwork */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSNetwork;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DD73F84D2B024C4900EE9BF2 /* Project object */;
 }
