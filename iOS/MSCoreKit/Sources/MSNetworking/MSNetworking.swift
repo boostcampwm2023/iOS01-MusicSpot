@@ -12,7 +12,18 @@ public struct MSNetworking {
     
     // MARK: - Properties
     
-    private let encoder = JSONEncoder()
+    private let encoder: JSONEncoder = {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        return encoder
+    }()
+    
+    private let decoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        return decoder
+    }()
+    
     private let session: Session
     
     // MARK: - Initializer
@@ -23,21 +34,24 @@ public struct MSNetworking {
     
     // MARK: - Functions
     
-    public func request<T: Decodable>(router: Router) -> AnyPublisher<T, Error>? {
-        guard let request = router.request else { return nil }
+    public func request<T: Decodable>(_ type: T.Type, router: Router) -> AnyPublisher<T, Error> {
+        guard let request = router.request else {
+            return Fail(error: MSNetworkError.invalidRouter).eraseToAnyPublisher()
+        }
         
         return session
             .dataTaskPublisher(for: request)
-            .tryMap { result -> T in
-                let value = try JSONDecoder().decode(T.self, from: result.data)
-                guard let response = result.response as? HTTPURLResponse else {
-                    throw MSNetworkError.noResponse
+            .tryMap { data, response -> Data in
+                guard let response = response as? HTTPURLResponse else {
+                    throw MSNetworkError.unknownResponse
                 }
-                guard (200...299).contains(response.statusCode) else {
-                    throw MSNetworkError.responseCode
+                guard 200..<300 ~= response.statusCode else {
+                    throw MSNetworkError.invalidStatusCode(statusCode: response.statusCode,
+                                                           description: response.description)
                 }
-                return value
+                return data
             }
+            .decode(type: T.self, decoder: self.decoder)
             .eraseToAnyPublisher()
     }
     

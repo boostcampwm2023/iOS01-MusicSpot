@@ -9,7 +9,8 @@ import Foundation
 
 enum MSNetworkError: Error {
     
-    case noResponse
-    case responseCode
+    case invalidRouter
+    case unknownResponse
+    case invalidStatusCode(statusCode: Int, description: String)
     
 }
