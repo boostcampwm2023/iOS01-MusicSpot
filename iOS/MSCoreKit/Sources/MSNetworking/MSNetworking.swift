@@ -4,10 +4,13 @@
 //
 //  Created by 전민건 on 11/16/23.
 //
+
 import Foundation
 import Combine
 
 public struct MSNetworking {
+    
+    // MARK: - Properties
     
     private let encoder = JSONEncoder()
     private let session: Session
@@ -20,7 +23,7 @@ public struct MSNetworking {
     
     // MARK: - Functions
     
-    public func request<T: Decodable>(router: Router) -> AnyPublisher<T, Error>? {
+    public func request<T: Decodable>(router: Router, type: T.Type) -> AnyPublisher<T, Error>? {
         guard let request: URLRequest = router.asURLRequest() else {
             return nil
         }
@@ -39,4 +42,5 @@ public struct MSNetworking {
             }
             .eraseToAnyPublisher()
     }
+    
 }

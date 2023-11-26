@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol Router {
+public protocol Router {
     
     var baseURL: APIbaseURL { get }
     var pathURL: APIpathURL { get }
@@ -15,4 +15,5 @@ protocol Router {
     var body: HTTPBody { get }
     
     func asURLRequest() -> URLRequest?
+    
 }
