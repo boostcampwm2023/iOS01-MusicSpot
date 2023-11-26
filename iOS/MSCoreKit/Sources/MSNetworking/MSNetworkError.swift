@@ -7,10 +7,11 @@
 
 import Foundation
 
-enum MSNetworkError: Error {
+public enum MSNetworkError: Error {
     
     case invalidRouter
     case unknownResponse
     case invalidStatusCode(statusCode: Int, description: String)
+    case timeout
     
 }

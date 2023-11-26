@@ -10,6 +10,8 @@ import Combine
 
 public struct MSNetworking {
     
+    public typealias TimeoutInterval = DispatchQueue.SchedulerTimeType.Stride
+    
     // MARK: - Properties
     
     private let encoder: JSONEncoder = {
@@ -34,13 +36,16 @@ public struct MSNetworking {
     
     // MARK: - Functions
     
-    public func request<T: Decodable>(_ type: T.Type, router: Router) -> AnyPublisher<T, Error> {
+    public func request<T: Decodable>(_ type: T.Type,
+                                      router: Router,
+                                      timeoutInterval: TimeoutInterval = .seconds(3)) -> AnyPublisher<T, Error> {
         guard let request = router.request else {
             return Fail(error: MSNetworkError.invalidRouter).eraseToAnyPublisher()
         }
         
         return session
             .dataTaskPublisher(for: request)
+            .timeout(timeoutInterval, scheduler: DispatchQueue.global())
             .tryMap { data, response -> Data in
                 guard let response = response as? HTTPURLResponse else {
                     throw MSNetworkError.unknownResponse
