@@ -23,7 +23,7 @@ public struct MSNetworking {
     
     // MARK: - Functions
     
-    public func request<T: Decodable>(router: Router, type: T.Type) -> AnyPublisher<T, Error>? {
+    public func request<T: Decodable>(router: Router) -> AnyPublisher<T, Error>? {
         guard let request: URLRequest = router.asURLRequest() else {
             return nil
         }

@@ -11,6 +11,9 @@
       location = "group:MSUIKit/../MusicSpot/MusicSpot.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:MSData">
+   </FileRef>
+   <FileRef
       location = "group:MSCoreKit">
    </FileRef>
    <FileRef

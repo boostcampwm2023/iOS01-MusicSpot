@@ -43,6 +43,7 @@
 			children = (
 				DD73F8572B024C4900EE9BF2 /* MusicSpot */,
 				DD73F8562B024C4900EE9BF2 /* Products */,
+				DDE77E1D2B1320B9005927B0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -64,6 +65,13 @@
 				DD73F8662B024C4B00EE9BF2 /* Info.plist */,
 			);
 			path = MusicSpot;
+			sourceTree = "<group>";
+		};
+		DDE77E1D2B1320B9005927B0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

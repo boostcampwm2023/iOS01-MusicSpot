@@ -197,10 +197,12 @@ private extension JourneyListViewController {
 // MARK: - Preview
 
 import MSDesignSystem
+import MSNetworking
 @available(iOS 17, *)
 #Preview {
     MSFont.registerFonts()
-    let journeyListViewModel = JourneyListViewModel()
+    let session = URLSession(configuration: .default)
+    let journeyListViewModel = JourneyListViewModel(networking: MSNetworking(session: session))
     let journeyListViewController = JourneyListViewController(viewModel: journeyListViewModel)
     return journeyListViewController
 }

@@ -14,11 +14,16 @@ let package = Package(
             targets: ["JourneyList"])
     ],
     dependencies: [
-        .package(name: "MSUIKit", path: "../../MSUIKit")
+        .package(name: "MSData",
+                 path: "../../MSData"),
+        .package(name: "MSUIKit",
+                 path: "../../MSUIKit"),
+        .package(name: "MSNetworking",
+                 path: "../../MSCoreKit")
     ],
     targets: [
         .target(
             name: "JourneyList",
-            dependencies: ["MSUIKit"])
+            dependencies: ["MSData", "MSUIKit", "MSNetworking"])
     ]
 )
