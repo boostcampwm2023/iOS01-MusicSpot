@@ -24,9 +24,7 @@ public struct MSNetworking {
     // MARK: - Functions
     
     public func request<T: Decodable>(router: Router) -> AnyPublisher<T, Error>? {
-        guard let request: URLRequest = router.asURLRequest() else {
-            return nil
-        }
+        guard let request = router.request else { return nil }
         
         return session
             .dataTaskPublisher(for: request)

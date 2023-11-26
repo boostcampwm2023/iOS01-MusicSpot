@@ -13,6 +13,4 @@ public protocol Session {
     
 }
 
-extension URLSession: Session {
-    
-}
+extension URLSession: Session { }
