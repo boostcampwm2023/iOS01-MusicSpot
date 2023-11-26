@@ -36,7 +36,7 @@ let package = Package(
                     .process("../MSDesignSystem/Resources")
                 ]),
         .target(name: .uiKit,
-                dependencies: [.target(name: .designSystem)])
+                dependencies: ["MSDesignSystem"]),
         
         // Tests
         .testTarget(name: .designSystem.testTarget,
