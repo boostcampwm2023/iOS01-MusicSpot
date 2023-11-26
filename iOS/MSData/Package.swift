@@ -19,7 +19,7 @@ let package = Package(
     targets: [
         .target(name: "MSData",
                 dependencies: ["MSNetworking"],
-                resources: [.process("../../Resources/APIInfo.plist")]),
+                resources: [.process("Resources")]),
         .testTarget(name: "MSDataTests",
                     dependencies: ["MSData"])
     ]

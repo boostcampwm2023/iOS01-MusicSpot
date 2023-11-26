@@ -101,6 +101,7 @@ public final class JourneyListViewController: UIViewController {
     
     func bind() {
         self.viewModel.state.journeys
+            .receive(on: DispatchQueue.main)
             .sink { journeys in
                 self.subtitleLabel.text = "현재 위치에 \(journeys.count)개의 여정이 있습니다."
                 var snapshot = JourneySnapshot()
@@ -196,13 +197,14 @@ private extension JourneyListViewController {
 
 // MARK: - Preview
 
+import MSData
 import MSDesignSystem
 import MSNetworking
 @available(iOS 17, *)
 #Preview {
     MSFont.registerFonts()
-    let session = URLSession(configuration: .default)
-    let journeyListViewModel = JourneyListViewModel(networking: MSNetworking(session: session))
-    let journeyListViewController = JourneyListViewController(viewModel: journeyListViewModel)
-    return journeyListViewController
+    let journeyRepository = JourneyRepositoryImplementation()
+    let testViewModel = JourneyListViewModel(repository: journeyRepository)
+    let testViewController = JourneyListViewController(viewModel: testViewModel)
+    return testViewController
 }

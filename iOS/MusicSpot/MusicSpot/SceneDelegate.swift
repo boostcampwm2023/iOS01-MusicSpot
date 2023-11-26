@@ -24,7 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         MSFont.registerFonts()
         
-        let journeyRepository = JourneyRepositoryImpl()
+        let journeyRepository = JourneyRepositoryImplementation()
         let testViewModel = JourneyListViewModel(repository: journeyRepository)
         let testViewController = JourneyListViewController(viewModel: testViewModel)
         window.rootViewController = testViewController
