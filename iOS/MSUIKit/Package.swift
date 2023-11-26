@@ -39,6 +39,8 @@ let package = Package(
                 dependencies: [.target(name: .designSystem)])
         
         // Tests
+        .testTarget(name: .designSystem.testTarget,
+                   dependencies: ["MSDesignSystem"])
     ],
     swiftLanguageVersions: [.v5]
 )

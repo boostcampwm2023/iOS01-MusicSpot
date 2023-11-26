@@ -34,6 +34,9 @@ let package = Package(
         .library(name: .cache,
                  targets: [.cache])
     ],
+    dependencies: [
+        .package(path: "../MSFoundation")
+    ],
     targets: [
         // Codes
         .target(name: .persistentStorage),
@@ -43,17 +46,20 @@ let package = Package(
                     .target(name: .persistentStorage),
                     .target(name: .networking)
                 ]),
-        .target(name: .cache),
+        .target(name: .cache,
+                dependencies: [
+                    .product(name: "MSUserDefaults", package: "MSFoundation")
+                ]),
 
         // Tests
         .testTarget(name: .persistentStorage.testTarget,
-                    dependencies: [.target(name: .persistentStorage)]),
+                    dependencies: ["MSPersistentStorage"]),
         .testTarget(name: .networking.testTarget,
-                    dependencies: [.target(name: .networking)]),
+                    dependencies: ["MSNetworking"]),
         .testTarget(name: .fetcher.testTarget,
-                    dependencies: [.target(name: .fetcher)]),
+                    dependencies: ["MSFetcher"]),
         .testTarget(name: .cache.testTarget,
-                    dependencies: [.target(name: .cache)])
+                    dependencies: ["MSCacheStorage"])
     ],
     swiftLanguageVersions: [.v5]
 )

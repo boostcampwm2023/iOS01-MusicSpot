@@ -8,5 +8,4 @@
 import XCTest
 
 final class MSCacheStorageTests: XCTestCase {
-
 }
