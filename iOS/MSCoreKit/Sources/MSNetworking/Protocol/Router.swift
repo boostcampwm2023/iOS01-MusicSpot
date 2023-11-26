@@ -13,7 +13,7 @@ public protocol Router {
     var pathURL: String { get }
     var method: HTTPMethod { get }
     var body: HTTPBody? { get }
-    var headers: HTTPHeaders { get }
+    var headers: HTTPHeaders? { get }
     
     var request: URLRequest? { get }
     
@@ -21,7 +21,7 @@ public protocol Router {
 
 extension Router {
     
-    var request: URLRequest? {
+    public var request: URLRequest? {
         guard let baseURL = URL(string: self.baseURL) else { return nil }
         let url = baseURL.appendingPathComponent(self.pathURL)
         
@@ -30,8 +30,10 @@ extension Router {
         if let body = self.body {
             request.httpBody = body.data()
         }
-        self.headers.forEach { key, value in
-            request.addValue(value, forHTTPHeaderField: key)
+        if let headers = self.headers {
+            headers.forEach { key, value in
+                request.addValue(value, forHTTPHeaderField: key)
+            }
         }
         
         return request
