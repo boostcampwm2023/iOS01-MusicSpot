@@ -11,6 +11,7 @@ force_try: error
 trailing_newline: warning
 trailing_whitespace:
     severity: warning
+    ignores_empty_lines: true
     
 # 함수 길이 제한
 function_body_length:
