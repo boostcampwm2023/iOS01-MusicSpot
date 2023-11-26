@@ -7,6 +7,8 @@
 
 import Combine
 
+import MSData
+
 public final class JourneyListViewModel {
     
     public enum Action {
@@ -21,12 +23,12 @@ public final class JourneyListViewModel {
     
     // MARK: - Properties
     
-    public var state: State
+    public var state = State()
     
     // MARK: - Initializer
     
-    public init(state: State = State()) {
-        self.state = state
+    public init(repository: JourneyRepository) {
+        
     }
     
     // MARK: - Functions

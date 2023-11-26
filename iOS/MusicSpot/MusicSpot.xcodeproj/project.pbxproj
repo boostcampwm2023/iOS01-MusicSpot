@@ -84,6 +84,13 @@
 			path = MusicSpot;
 			sourceTree = "<group>";
 		};
+		DDE77E1D2B1320B9005927B0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */

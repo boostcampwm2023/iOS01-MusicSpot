@@ -12,8 +12,15 @@ public struct MSNetworking {
     private let encoder = JSONEncoder()
     private let session: Session
     
-    func request<T: Decodable>(router: Router, type: T.Type) -> AnyPublisher<T, Error>? {
-        
+    // MARK: - Initializer
+    
+    public init(session: Session) {
+        self.session = session
+    }
+    
+    // MARK: - Functions
+    
+    public func request<T: Decodable>(router: Router) -> AnyPublisher<T, Error>? {
         guard let request: URLRequest = router.asURLRequest() else {
             return nil
         }
