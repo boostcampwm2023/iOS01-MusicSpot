@@ -25,10 +25,12 @@ public final class JourneyListViewModel {
     
     public var state = State()
     
+    private let repository: JourneyRepository
+    
     // MARK: - Initializer
     
     public init(repository: JourneyRepository) {
-        
+        self.repository = repository
     }
     
     // MARK: - Functions

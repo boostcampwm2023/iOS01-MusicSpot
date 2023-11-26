@@ -5,7 +5,7 @@
 //  Created by 이창준 on 11/26/23.
 //
 
-import Foundation
+import MSNetworking
 
 public protocol JourneyRepository {
     
@@ -13,6 +13,14 @@ public protocol JourneyRepository {
 
 public struct JourneyRepositoryImpl: JourneyRepository {
     
-    public init() { }
+    // MARK: - Properties
+    
+    private let router: JourneyRouter
+    
+    // MARK: - Initializer
+    
+    public init(router: JourneyRouter) {
+        self.router = router
+    }
     
 }
