@@ -17,9 +17,15 @@
       location = "group:MSCoreKit">
    </FileRef>
    <FileRef
-      location = "group:MSUIKit">
+      location = "group:MusicSpot/MusicSpot.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:MSCoreKit">
    </FileRef>
    <FileRef
       location = "group:MSFoundation">
+   </FileRef>
+   <FileRef
+      location = "group:MSUIKit">
    </FileRef>
 </Workspace>

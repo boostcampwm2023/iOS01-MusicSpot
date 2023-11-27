@@ -63,8 +63,13 @@ public enum MSFont {
 
 public extension UIFont {
     
-    static func msFont(_ font: MSFont) -> UIFont {
-        return font.font()!
+    static func msFont(_ font: MSFont) -> UIFont? {
+        if let font = font.font() {
+            return font
+        } else {
+            print("can't find msFont. use default font")
+            return nil
+        }
     }
     
 }
