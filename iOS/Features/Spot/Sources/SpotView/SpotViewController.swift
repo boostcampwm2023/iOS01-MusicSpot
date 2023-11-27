@@ -179,11 +179,17 @@ public final class SpotViewController: UIViewController {
     }
     
     private func configureCancelAction() {
-        self.cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        let cancelButtonAction = UIAction(handler: { _ in
+            self.cancelButtonTapped()
+        })
+        self.cancelButton.addAction(cancelButtonAction, for: .touchUpInside)
     }
     
     private func configureCompleteAction() {
-        self.completeButton.addTarget(self, action: #selector(completeButtonTapped), for: .touchUpInside)
+        let completeButtonAction = UIAction(handler: { _ in
+            self.completeButtonTapped()
+        })
+        self.completeButton.addAction(completeButtonAction, for: .touchUpInside)
     }
     
     // MARK: - Configure: Value
@@ -212,13 +218,13 @@ public final class SpotViewController: UIViewController {
         self.configure()
     }
     
-    // MARK: - Functions: Action
+    // MARK: Actions
     
-    @objc private func cancelButtonTapped() {
+    private func cancelButtonTapped() {
         
     }
     
-    @objc private func completeButtonTapped() {
+    private func completeButtonTapped() {
         
     }
     
