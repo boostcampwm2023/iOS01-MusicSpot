@@ -68,8 +68,6 @@ export class JourneyService {
     return journeyList;
   }
   async findMinMaxCoordinates(journeys, minCoordinate, maxCoordinate) {
-    let minCoordinates = [];
-    let maxCoordinates = [];
     let journeyList = [];
     for (let i = 0; i < journeys.length; i++) {
       let journey = await this.journeyModel.findById(journeys[i]).exec();

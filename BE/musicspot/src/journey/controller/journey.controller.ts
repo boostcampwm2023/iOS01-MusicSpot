@@ -59,6 +59,6 @@ export class JourneyController {
   })
   @Post('check')
   async check(@Body() checkJourneyDTO: CheckJourneyDTO) {
-    return true;
+    return await this.journeyService.checkJourney(checkJourneyDTO);
   }
 }
