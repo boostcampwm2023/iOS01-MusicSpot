@@ -97,10 +97,31 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - id: set-matrix
-        run: |
-          matrix="{\"package\": $PACKAGES_JSON}"
-          echo "matrix=$matrix" >> $GITHUB_OUTPUT
+    - uses: actions/checkout@v4
+
+    - name: Setup Xcode
+      if: ${{ !env.ACT }}
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.0.1'
+
+    - name: Generate test matrix
+      id: generate-test-matrix
+      run: |
+        matrix="{\"include\":["
+        first_entry=true
+        for scheme in $(xcodebuild -workspace ${{ env.WORKSPACE }} -list | grep -A 100 "Schemes:" | grep -v "Schemes:" | sed '/^$/d' | sed 's/^[ \t]*//'); do
+          if [[ $scheme == *"Tests" ]]; then
+            if [ "$first_entry" = true ]; then
+              first_entry=false
+            else
+              matrix+=","
+            fi
+            matrix+="{\"scheme\":\"$scheme\"}"
+          fi
+        done
+        matrix+="]}"
+        echo "matrix=$matrix" >> $GITHUB_OUTPUT
 
   xcode-test:
     needs: prepare-test-matrix
@@ -125,4 +146,4 @@ jobs:
           -scheme ${{ matrix.package }}-Package \
           -sdk 'iphonesimulator' \
           -destination 'platform=iOS Simulator,OS=17.0.1,name=iPhone 15 Pro' \
-          clean test
+          test
