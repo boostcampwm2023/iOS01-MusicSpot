@@ -10,11 +10,11 @@ import Foundation
 public struct JourneyDTO: Codable, Identifiable {
     
     public let id: UUID
-    let title: String
-    let metaData: JourneyMetadataDTO
-    let spots: [SpotDTO]
-    let coordinates: [CoordinateDTO]
-    let song: SongDTO
-    let lineColor: String
+    public let title: String
+    public let metaData: JourneyMetadataDTO
+    public let spots: [SpotDTO]
+    public let coordinates: [CoordinateDTO]
+    public let song: SongDTO
+    public let lineColor: String
     
 }

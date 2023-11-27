@@ -10,7 +10,7 @@ import Foundation
 public struct SongDTO: Codable, Identifiable {
     
     public let id: UUID
-    let title: String
-    let artwork: String
+    public let title: String
+    public let artwork: String
     
 }

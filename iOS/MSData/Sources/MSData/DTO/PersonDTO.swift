@@ -10,8 +10,8 @@ import Foundation
 public struct PersonDTO: Codable, Identifiable {
     
     public let id: UUID
-    let nickname: String
-    let journeys: [JourneyDTO]
-    let email: String
+    public let nickname: String
+    public let journeys: [JourneyDTO]
+    public let email: String
     
 }
