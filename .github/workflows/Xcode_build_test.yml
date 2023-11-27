@@ -75,6 +75,8 @@ jobs:
     outputs:
       matrix: ${{ steps.generate-test-matrix.outputs.matrix }}
     steps:
+    - uses: actions/checkout@v4
+    
     - name: Generate test matrix
       id: generate-test-matrix
       run: |
