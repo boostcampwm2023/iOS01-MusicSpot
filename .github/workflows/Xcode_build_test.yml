@@ -1,7 +1,7 @@
 name: Xcode_build_test
 
 env:
-  PACKAGES_JSON: '["MSCoreKit", "MSFoundation", "MSUIKit"]'
+  WORKSPACE: iOS/MusicSpot.xcworkspace
 
 on:
   pull_request:
@@ -14,7 +14,7 @@ jobs:
   prepare-matrix:
     runs-on: macos-13
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix: ${{ steps.generate-matrix.outputs.matrix }}
     steps:
     - uses: actions/checkout@v4
 
@@ -24,45 +24,21 @@ jobs:
       with:
         xcode-version: '15.0.1'
 
-    - name: Install jq
-      run: brew install jq
-
     - name: Generate matrix
-      id: set-matrix
+      id: generate-matrix
       run: |
-        cd iOS
         matrix="{\"include\":["
-        packages=$(echo $PACKAGES_JSON | jq -r '.[]')
         first_entry=true
-        for package in $packages; do
-          cd $package
-          for scheme in $(xcodebuild -list | grep -E '^[[:space:]]*Schemes:' -A 10 | tail -n +2 | grep -v '^$'); do
-            if [[ $scheme != *"-Package" ]] && [[ $scheme != *"Tests" ]]; then
-              if [ "$first_entry" = true ]; then
-                first_entry=false
-              else
-                matrix+=","
-              fi
-              matrix+="{\"package\":\"$package\", \"scheme\":\"$scheme\"}"
+        for scheme in $(xcodebuild -workspace ${{ env.WORKSPACE }} -list | grep -A 100 "Schemes:" | grep -v "Schemes:" | sed '/^$/d' | sed 's/^[ \t]*//'); do
+          if [[ $scheme != *"-Package" ]] && [[ $scheme != *"Tests" ]]; then
+            if [ "$first_entry" = true ]; then
+              first_entry=false
+            else
+              matrix+=","
             fi
-          done
-          cd ..
+            matrix+="{\"scheme\":\"$scheme\"}"
+          fi
         done
-        # cd Features
-        # for package in JourneyList SaveJourney; do
-        #   cd $package
-        #     for scheme in $(xcodebuild -list | grep -E '^[[:space:]]*Schemes:' -A 10 | tail -n +2 | grep -v '^$'); do
-        #     if [[ $scheme != *"-Package" ]]; then
-        #       if [ "$first_entry" = true ]; then
-        #         first_entry=false
-        #       else
-        #         matrix+=","
-        #       fi
-        #       matrix+="{\"package\":\"$package\", \"scheme\":\"$scheme\"}"
-        #     fi
-        #   done
-        #   cd ..
-        # done
         matrix+="]}"
         echo "matrix=$matrix" >> $GITHUB_OUTPUT
 
@@ -82,11 +58,10 @@ jobs:
         xcode-version: '15.0.1'
     
     - name: 🛠️ Build ${{ matrix.scheme }}
-      if: ${{ !contains(matrix.scheme, 'Tests') }}
       run: |
-        echo "🛠️  Building ${{ matrix.package }} - Scheme: ${{ matrix.scheme }}"
-        cd iOS/${{ matrix.package }}
+        echo "🛠️  Building ${{ matrix.scheme }}"
         xcodebuild \
+          -workspace ${{ env.WORKSPACE }} \
           -scheme ${{ matrix.scheme }} \
           -sdk 'iphonesimulator' \
           -destination 'platform=iOS Simulator,OS=17.0.1,name=iPhone 15 Pro' \
@@ -95,7 +70,7 @@ jobs:
   prepare-test-matrix:
     runs-on: macos-13
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix: ${{ steps.generate-test-matrix.outputs.matrix }}
     steps:
     - uses: actions/checkout@v4
 
@@ -138,12 +113,12 @@ jobs:
       with:
         xcode-version: '15.0.1'
 
-    - name: 🧪 Test ${{ matrix.package }}
+    - name: 🧪 Test ${{ matrix.scheme }}
       run: |
-        echo "🧪  Testing ${{ matrix.package }}"
-        cd iOS/${{ matrix.package }}
+        echo "🧪  Testing ${{ matrix.scheme }}"
         xcodebuild \
-          -scheme ${{ matrix.package }}-Package \
+          -workspace ${{ env.WORKSPACE }} \
+          -scheme ${{ matrix.scheme }} \
           -sdk 'iphonesimulator' \
           -destination 'platform=iOS Simulator,OS=17.0.1,name=iPhone 15 Pro' \
           test
