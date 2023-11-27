@@ -124,4 +124,4 @@ jobs:
           -scheme ${{ matrix.scheme }} \
           -sdk 'iphonesimulator' \
           -destination 'platform=iOS Simulator,OS=17.0.1,name=iPhone 15 Pro' \
-          clean test
+          test
