@@ -13,52 +13,53 @@ public final class RewindJourneyViewController: UIViewController {
     
     // MARK: - Constants
     
-    private enum Metrix {
+    private enum Metric {
         
-        //progress bar
+        // progress bar
         enum Progressbar {
-            static var height: CGFloat = 4.0
-            static var inset: CGFloat = 4.0
-            static var defaultIndex: Int = 0
+            
+            static let height: CGFloat = 4.0
+            static let inset: CGFloat = 4.0
+            static let defaultIndex: Int = 0
+            
         }
         
-        //stackView
+        // stackView
         enum StackView {
-            static var inset: CGFloat = 12.0
+            
+            static let inset: CGFloat = 12.0
+            
         }
         
-        //musicView
+        // musicView
         enum MusicView {
-            static var height: CGFloat = 69.0
-            static var inset: CGFloat = 12.0
-            static var bottomInset: CGFloat = 34.0
+            
+            static let height: CGFloat = 69.0
+            static let inset: CGFloat = 12.0
+            static let bottomInset: CGFloat = 34.0
+            
         }
         
     }
     
     // MARK: - Properties
 
-    var stackView = UIStackView()
-    var presentImageView = UIImageView()
-    let musicView = MSMusicView()
-    var progressViews: [MSProgressView]?
-    var preHighlightenProgressView: MSProgressView?
-    let leftTouchView = UIButton()
-    let rightTouchView = UIButton()
+    private let stackView = UIStackView()
+    private let presentImageView = UIImageView()
+    private let musicView = MSMusicView()
+    private var progressViews: [MSProgressView]?
+    private var preHighlightenProgressView: MSProgressView?
+    private let leftTouchView = UIButton()
+    private let rightTouchView = UIButton()
     
     public var images: [UIImage]?
-    var presentImageIndex: Int? {
+    private var presentImageIndex: Int? {
         didSet {
-            guard let index = self.presentImageIndex, 
-                  let images else { return }
-            self.presentImageView.image = images[index]
-            self.progressViews?[index].isHighlight = true
-            self.preHighlightenProgressView?.isHighlight = false
-            self.preHighlightenProgressView = self.progressViews?[index]
+            self.changeProgressViews()
         }
     }
     
-    // MARK: - UI Components
+    // MARK: - UI Configuration
     
     func configure() {
         self.configureLayout()
@@ -68,7 +69,7 @@ public final class RewindJourneyViewController: UIViewController {
         self.musicView.configure()
     }
     
-    // MARK: - UI Components: Layout
+    // MARK: - UI Configuration: Layout
     
     private func configureLayout() {
         self.configurePresentImageViewLayout()
@@ -94,16 +95,17 @@ public final class RewindJourneyViewController: UIViewController {
         self.view.addSubview(self.stackView)
         
         self.stackView.axis = .horizontal
-        self.stackView.spacing = Metrix.Progressbar.inset
+        self.stackView.spacing = Metric.Progressbar.inset
         self.stackView.distribution = .fillEqually
         
         self.stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.stackView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            self.stackView.heightAnchor.constraint(equalToConstant: Metrix.Progressbar.height),
-            self.stackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: Metrix.StackView.inset),
-            self.stackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -Metrix.StackView.inset)
-        ])
+            self.stackView.heightAnchor.constraint(equalToConstant: Metric.Progressbar.height),
+            self.stackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor,
+                                                    constant: Metric.StackView.inset),
+            self.stackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,
+                                                     constant: -Metric.StackView.inset)])
     }
     
     private func configureProgressbarsLayout() {
@@ -123,10 +125,13 @@ public final class RewindJourneyViewController: UIViewController {
 
         self.musicView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.musicView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -Metrix.MusicView.bottomInset),
-            self.musicView.heightAnchor.constraint(equalToConstant: Metrix.MusicView.height),
-            self.musicView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: Metrix.MusicView.inset),
-            self.musicView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -Metrix.MusicView.inset)
+            self.musicView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor,
+                                                   constant: -Metric.MusicView.bottomInset),
+            self.musicView.heightAnchor.constraint(equalToConstant: Metric.MusicView.height),
+            self.musicView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor,
+                                                    constant: Metric.MusicView.inset),
+            self.musicView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,
+                                                     constant: -Metric.MusicView.inset)
         ])
     }
     
@@ -148,10 +153,9 @@ public final class RewindJourneyViewController: UIViewController {
         ])
     }
     
-    // MARK: - UI Components: Style
+    // MARK: - UI Configuration: Style
     
     private func configureStyle() {
-        
         self.configurePresentImageViewStyle()
         self.configureProgressbarsStyle()
     }
@@ -161,10 +165,10 @@ public final class RewindJourneyViewController: UIViewController {
     }
     
     private func configureProgressbarsStyle() {
-        self.presentImageIndex = Metrix.Progressbar.defaultIndex
+        self.presentImageIndex = Metric.Progressbar.defaultIndex
     }
     
-    // MARK: - Configure: Action
+    // MARK: - Configuration: Action
     
     private func configureAction() {
         self.configureLeftTouchViewAction()
@@ -179,6 +183,22 @@ public final class RewindJourneyViewController: UIViewController {
         self.rightTouchView.addTarget(self, action: #selector(rightTouchViewTapped), for: .touchUpInside)
     }
     
+    private func changeProgressViews() {
+        guard let presentIndex = self.presentImageIndex,
+              let images else { return }
+        
+        self.presentImageView.image = images[presentIndex]
+        self.preHighlightenProgressView = self.progressViews?[presentIndex]
+        self.preHighlightenProgressView?.isHighlight = false
+        
+        let minIndex = 0
+        let maxIndex = images.count - 1
+        
+        for index in minIndex...maxIndex {
+            self.progressViews?[index].isHighlight = index <= presentIndex ? true : false
+        }
+    }
+    
     // MARK: - Life Cycle
     
     public override func viewDidLoad() {
@@ -187,7 +207,7 @@ public final class RewindJourneyViewController: UIViewController {
         self.configure()
     }
     
-    // MARK: - Functions: Action
+    // MARK: - Actions
     
     @objc private func leftTouchViewTapped() {
         guard let presentImageIndex else {
@@ -212,9 +232,13 @@ public final class RewindJourneyViewController: UIViewController {
 }
 
 // MARK: - Preview
+
 @available(iOS 17, *)
 #Preview {
-    let vc = RewindJourneyViewController()
-    vc.images = [UIImage(systemName: "pencil")!, UIImage(systemName: "pencil")!, UIImage(systemName: "pencil")!]
-    return vc
+    MSFont.registerFonts()
+    let viewController = RewindJourneyViewController()
+    viewController.images = [UIImage(systemName: "pencil")!,
+                             UIImage(systemName: "pencil")!,
+                             UIImage(systemName: "pencil")!]
+    return viewController
 }
