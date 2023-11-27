@@ -15,32 +15,32 @@ public final class SpotViewController: UIViewController {
     
     // MARK: - Constants
     
-    private enum Metrix {
+    private enum Metric {
         
-        //image view
+        // image view
         enum ImageView {
-            static var height: CGFloat = 486.0
-            static var inset: CGFloat = 4.0
-            static var defaultIndex: Int = 0
+            static let height: CGFloat = 486.0
+            static let inset: CGFloat = 4.0
+            static let defaultIndex: Int = 0
         }
         
-        //labels
+        // labels
         enum TextLabel {
-            static var height: CGFloat = 24.0
-            static var topInset: CGFloat = 30.0
+            static let height: CGFloat = 24.0
+            static let topInset: CGFloat = 30.0
         }
         
         enum SubTextLabel {
-            static var height: CGFloat = 42.0
-            static var topInset: CGFloat = 12.0
+            static let height: CGFloat = 42.0
+            static let topInset: CGFloat = 12.0
         }
         
-        //buttons
+        // buttons
         enum Button {
-            static var height: CGFloat = 120.0
-            static var width: CGFloat = 120.0
-            static var insetFromCenterX: CGFloat = 26.0
-            static var bottomInset: CGFloat = 55.0
+            static let height: CGFloat = 120.0
+            static let width: CGFloat = 120.0
+            static let insetFromCenterX: CGFloat = 26.0
+            static let bottomInset: CGFloat = 55.0
         }
         
     }
@@ -89,7 +89,7 @@ public final class SpotViewController: UIViewController {
         self.imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.imageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            self.imageView.heightAnchor.constraint(equalToConstant: Metrix.ImageView.height),
+            self.imageView.heightAnchor.constraint(equalToConstant: Metric.ImageView.height),
             self.imageView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             self.imageView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
         ])
@@ -112,16 +112,17 @@ public final class SpotViewController: UIViewController {
             self.view.addSubview(label)
             label.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            label.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            label.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
             ])
         }
         NSLayoutConstraint.activate([
-            self.textLabel.heightAnchor.constraint(equalToConstant: Metrix.TextLabel.height),
-            self.subTextLabel.heightAnchor.constraint(equalToConstant: Metrix.SubTextLabel.height),
+            self.textLabel.heightAnchor.constraint(equalToConstant: Metric.TextLabel.height),
+            self.subTextLabel.heightAnchor.constraint(equalToConstant: Metric.SubTextLabel.height),
             
-            self.textLabel.topAnchor.constraint(equalTo: self.imageView.bottomAnchor, constant: Metrix.TextLabel.topInset),
-            self.subTextLabel.topAnchor.constraint(equalTo: self.textLabel.bottomAnchor, constant: Metrix.SubTextLabel.topInset)
+            self.textLabel.topAnchor.constraint(equalTo: self.imageView.bottomAnchor,
+                                                constant: Metric.TextLabel.topInset),
+            self.subTextLabel.topAnchor.constraint(equalTo: self.textLabel.bottomAnchor,
+                                                   constant: Metric.SubTextLabel.topInset)
         ])
         self.subTextLabel.textAlignment = .center
     }
@@ -132,14 +133,17 @@ public final class SpotViewController: UIViewController {
             self.view.addSubview(button)
             button.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                button.heightAnchor.constraint(equalToConstant: Metrix.Button.height),
-                button.widthAnchor.constraint(equalToConstant: Metrix.Button.width),
-                button.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -Metrix.Button.bottomInset)
+                button.heightAnchor.constraint(equalToConstant: Metric.Button.height),
+                button.widthAnchor.constraint(equalToConstant: Metric.Button.width),
+                button.bottomAnchor.constraint(equalTo: self.view.bottomAnchor,
+                                               constant: -Metric.Button.bottomInset)
             ])
         }
         NSLayoutConstraint.activate([
-            self.cancelButton.trailingAnchor.constraint(equalTo: self.view.centerXAnchor, constant: -Metrix.Button.insetFromCenterX),
-            self.completeButton.leadingAnchor.constraint(equalTo: self.view.centerXAnchor, constant: Metrix.Button.insetFromCenterX),
+            self.cancelButton.trailingAnchor.constraint(equalTo: self.view.centerXAnchor,
+                                                        constant: -Metric.Button.insetFromCenterX),
+            self.completeButton.leadingAnchor.constraint(equalTo: self.view.centerXAnchor,
+                                                         constant: Metric.Button.insetFromCenterX)
         ])
     }
     
@@ -220,4 +224,3 @@ public final class SpotViewController: UIViewController {
     }
     
 }
-
