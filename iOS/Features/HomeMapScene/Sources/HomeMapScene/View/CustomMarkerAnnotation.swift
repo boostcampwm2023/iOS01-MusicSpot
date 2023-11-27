@@ -1,5 +1,5 @@
 //
-//  HotSpotAnnotation.swift
+//  CustomMarkerAnnotation.swift
 //
 //
 //  Created by 윤동주 on 11/23/23.
@@ -9,12 +9,7 @@ import Foundation
 import CoreLocation
 import MapKit
 
-struct Coordinate {
-    var latitude: String
-    var longitude: String
-}
-
-class HotSpot: NSObject, MKAnnotation {
+class CustomMarkerAnnotation: NSObject, MKAnnotation {
 
     // MARK: - Properties
 
@@ -33,9 +28,5 @@ class HotSpot: NSObject, MKAnnotation {
         self.coordinate = coordinate
         self.timestamp = timestamp
         self.photo = photo
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

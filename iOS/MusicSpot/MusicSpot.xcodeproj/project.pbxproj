@@ -17,6 +17,8 @@
 		08F5CC5F2B11FDAC00730B96 /* MSDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 08F5CC5E2B11FDAC00730B96 /* MSDesignSystem */; };
 		08F5CC612B11FDAC00730B96 /* MSUIComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 08F5CC602B11FDAC00730B96 /* MSUIComponents */; };
 		08F5CC642B1262E700730B96 /* HomeMapScene in Frameworks */ = {isa = PBXBuildFile; productRef = 08F5CC632B1262E700730B96 /* HomeMapScene */; };
+		08F5CC672B139C2100730B96 /* HomeMapScene in Frameworks */ = {isa = PBXBuildFile; productRef = 08F5CC662B139C2100730B96 /* HomeMapScene */; };
+		08F5CCA62B14990E00730B96 /* HomeMapScene in Frameworks */ = {isa = PBXBuildFile; productRef = 08F5CCA52B14990E00730B96 /* HomeMapScene */; };
 		21B1B63D2B04C7CF00A63287 /* FoundationExt in Frameworks */ = {isa = PBXBuildFile; productRef = 21B1B63C2B04C7CF00A63287 /* FoundationExt */; };
 		21B1B63F2B04C7CF00A63287 /* MSLogger in Frameworks */ = {isa = PBXBuildFile; productRef = 21B1B63E2B04C7CF00A63287 /* MSLogger */; };
 		21B1B6412B04C7CF00A63287 /* MSUserDefaults in Frameworks */ = {isa = PBXBuildFile; productRef = 21B1B6402B04C7CF00A63287 /* MSUserDefaults */; };
@@ -44,10 +46,12 @@
 				21B1B63F2B04C7CF00A63287 /* MSLogger in Frameworks */,
 				08F5CC642B1262E700730B96 /* HomeMapScene in Frameworks */,
 				08F5CC4F2B11FD9B00730B96 /* FoundationExt in Frameworks */,
+				08F5CCA62B14990E00730B96 /* HomeMapScene in Frameworks */,
 				21B1B6412B04C7CF00A63287 /* MSUserDefaults in Frameworks */,
 				21B1B63D2B04C7CF00A63287 /* FoundationExt in Frameworks */,
 				08F5CC612B11FDAC00730B96 /* MSUIComponents in Frameworks */,
 				08F5CC582B11FDA400730B96 /* MSFetcher in Frameworks */,
+				08F5CC672B139C2100730B96 /* HomeMapScene in Frameworks */,
 				08F5CC532B11FD9B00730B96 /* MSUserDefaults in Frameworks */,
 				08F5CC5A2B11FDA400730B96 /* MSNetworking in Frameworks */,
 				08F5CC512B11FD9B00730B96 /* MSLogger in Frameworks */,
@@ -118,6 +122,8 @@
 				08F5CC5E2B11FDAC00730B96 /* MSDesignSystem */,
 				08F5CC602B11FDAC00730B96 /* MSUIComponents */,
 				08F5CC632B1262E700730B96 /* HomeMapScene */,
+				08F5CC662B139C2100730B96 /* HomeMapScene */,
+				08F5CCA52B14990E00730B96 /* HomeMapScene */,
 			);
 			productName = MusicSpot;
 			productReference = DD73F8552B024C4900EE9BF2 /* MusicSpot.app */;
@@ -151,7 +157,7 @@
 				08F5CC4D2B11FD9B00730B96 /* XCLocalSwiftPackageReference "../MSFoundation" */,
 				08F5CC542B11FDA400730B96 /* XCLocalSwiftPackageReference "../MSCoreKit" */,
 				08F5CC5D2B11FDAC00730B96 /* XCLocalSwiftPackageReference "../MSUIKit" */,
-				08F5CC622B1262E700730B96 /* XCLocalSwiftPackageReference "../Features/HomeMapScene" */,
+				08F5CCA42B14990E00730B96 /* XCLocalSwiftPackageReference "../Features/HomeMapScene" */,
 			);
 			productRefGroup = DD73F8562B024C4900EE9BF2 /* Products */;
 			projectDirPath = "";
@@ -428,7 +434,7 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../MSUIKit;
 		};
-		08F5CC622B1262E700730B96 /* XCLocalSwiftPackageReference "../Features/HomeMapScene" */ = {
+		08F5CCA42B14990E00730B96 /* XCLocalSwiftPackageReference "../Features/HomeMapScene" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Features/HomeMapScene;
 		};
@@ -472,6 +478,14 @@
 			productName = MSUIComponents;
 		};
 		08F5CC632B1262E700730B96 /* HomeMapScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HomeMapScene;
+		};
+		08F5CC662B139C2100730B96 /* HomeMapScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HomeMapScene;
+		};
+		08F5CCA52B14990E00730B96 /* HomeMapScene */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = HomeMapScene;
 		};
