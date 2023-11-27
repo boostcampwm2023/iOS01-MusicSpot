@@ -1,0 +1,128 @@
+name: Xcode_build_test
+
+env:
+  PACKAGES_JSON: '["MSCoreKit", "MSFoundation", "MSUIKit"]'
+
+on:
+  pull_request:
+    branches:
+      - 'iOS/release'
+      - 'iOS/epic/**'
+    types: [assigned, labeled, opened, synchronize, reopened]
+
+jobs:
+  prepare-matrix:
+    runs-on: macos-13
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Xcode
+      if: ${{ !env.ACT }}
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.0.1'
+
+    - name: Install jq
+      run: brew install jq
+
+    - name: Generate matrix
+      id: set-matrix
+      run: |
+        cd iOS
+        matrix="{\"include\":["
+        packages=$(echo $PACKAGES_JSON | jq -r '.[]')
+        first_entry=true
+        for package in $packages; do
+          cd $package
+          for scheme in $(xcodebuild -list | grep -E '^[[:space:]]*Schemes:' -A 10 | tail -n +2 | grep -v '^$'); do
+            if [[ $scheme != *"-Package" ]] && [[ $scheme != *"Tests" ]]; then
+              if [ "$first_entry" = true ]; then
+                first_entry=false
+              else
+                matrix+=","
+              fi
+              matrix+="{\"package\":\"$package\", \"scheme\":\"$scheme\"}"
+            fi
+          done
+          cd ..
+        done
+        # cd Features
+        # for package in JourneyList SaveJourney; do
+        #   cd $package
+        #     for scheme in $(xcodebuild -list | grep -E '^[[:space:]]*Schemes:' -A 10 | tail -n +2 | grep -v '^$'); do
+        #     if [[ $scheme != *"-Package" ]]; then
+        #       if [ "$first_entry" = true ]; then
+        #         first_entry=false
+        #       else
+        #         matrix+=","
+        #       fi
+        #       matrix+="{\"package\":\"$package\", \"scheme\":\"$scheme\"}"
+        #     fi
+        #   done
+        #   cd ..
+        # done
+        matrix+="]}"
+        echo "matrix=$matrix" >> $GITHUB_OUTPUT
+
+  xcode-build:
+    needs: prepare-matrix
+    runs-on: macos-13
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.prepare-matrix.outputs.matrix)}}
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Xcode
+      if: ${{ !env.ACT }}
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.0.1'
+    
+    - name: 🛠️ Build ${{ matrix.scheme }}
+      if: ${{ !contains(matrix.scheme, 'Tests') }}
+      run: |
+        echo "🛠️  Building ${{ matrix.package }} - Scheme: ${{ matrix.scheme }}"
+        cd iOS/${{ matrix.package }}
+        xcodebuild \
+          -scheme ${{ matrix.scheme }} \
+          -sdk 'iphonesimulator' \
+          -destination 'platform=iOS Simulator,OS=17.0.1,name=iPhone 15 Pro' \
+          clean build
+
+  prepare-test-matrix:
+    runs-on: macos-13
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        run: |
+          matrix="{\"package\": $PACKAGES_JSON}"
+          echo "matrix=$matrix" >> $GITHUB_OUTPUT
+
+  xcode-test:
+    needs: prepare-test-matrix
+    runs-on: macos-13
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.prepare-test-matrix.outputs.matrix)}}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Xcode
+      if: ${{ !env.ACT }}
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.0.1'
+
+    - name: 🧪 Test ${{ matrix.package }}
+      run: |
+        echo "🧪  Testing ${{ matrix.package }}"
+        cd iOS/${{ matrix.package }}
+        xcodebuild \
+          -scheme ${{ matrix.package }}-Package \
+          -sdk 'iphonesimulator' \
+          -destination 'platform=iOS Simulator,OS=17.0.1,name=iPhone 15 Pro' \
+          clean test

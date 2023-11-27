@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "MSFoundation"
-               BuildableName = "MSFoundation"
-               BlueprintName = "MSFoundation"
+               BlueprintIdentifier = "MSCacheStorage"
+               BuildableName = "MSCacheStorage"
+               BlueprintName = "MSCacheStorage"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -49,9 +49,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "MSFoundation"
-            BuildableName = "MSFoundation"
-            BlueprintName = "MSFoundation"
+            BlueprintIdentifier = "MSCacheStorage"
+            BuildableName = "MSCacheStorage"
+            BlueprintName = "MSCacheStorage"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>
