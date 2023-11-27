@@ -7,6 +7,10 @@
 
 import UIKit
 
+import JourneyList
+import MSData
+import MSDesignSystem
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
@@ -18,7 +22,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         defer { self.window = window }
         
-        let testViewController = UIViewController()
+        MSFont.registerFonts()
+        
+        let journeyRepository = JourneyRepositoryImplementation()
+        let testViewModel = JourneyListViewModel(repository: journeyRepository)
+        let testViewController = JourneyListViewController(viewModel: testViewModel)
         window.rootViewController = testViewController
         window.makeKeyAndVisible()
     }

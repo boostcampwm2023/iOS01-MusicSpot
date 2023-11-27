@@ -12,6 +12,10 @@ public struct MSNetworking {
     
     public typealias TimeoutInterval = DispatchQueue.SchedulerTimeType.Stride
     
+    // MARK: - Constants
+    
+    public static let dispatchQueueLabel = "com.MSNetworking.MSCoreKit.MusicSpot"
+    
     // MARK: - Properties
     
     private let encoder: JSONEncoder = {
@@ -27,11 +31,13 @@ public struct MSNetworking {
     }()
     
     private let session: Session
+    public let queue: DispatchQueue
     
     // MARK: - Initializer
     
     public init(session: Session) {
         self.session = session
+        self.queue = DispatchQueue(label: MSNetworking.dispatchQueueLabel, qos: .background)
     }
     
     // MARK: - Functions
@@ -45,7 +51,7 @@ public struct MSNetworking {
         
         return session
             .dataTaskPublisher(for: request)
-            .timeout(timeoutInterval, scheduler: DispatchQueue.global())
+            .timeout(timeoutInterval, scheduler: self.queue)
             .tryMap { data, response -> Data in
                 guard let response = response as? HTTPURLResponse else {
                     throw MSNetworkError.unknownResponse

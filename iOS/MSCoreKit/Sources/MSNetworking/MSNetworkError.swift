@@ -15,3 +15,22 @@ public enum MSNetworkError: Error {
     case timeout
     
 }
+
+extension MSNetworkError: Equatable {
+    
+    public static func == (lhs: MSNetworkError, rhs: MSNetworkError) -> Bool {
+        switch (lhs, rhs) {
+        case (.invalidRouter, .invalidRouter):
+            return true
+        case (.unknownResponse, .unknownResponse):
+            return true
+        case let (.invalidStatusCode(lhsStatusCode, _), .invalidStatusCode(rhsStatusCode, _)):
+            return lhsStatusCode == rhsStatusCode
+        case (.timeout, .timeout):
+            return true
+        default:
+            return false
+        }
+    }
+    
+}

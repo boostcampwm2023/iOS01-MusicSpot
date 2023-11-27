@@ -11,6 +11,8 @@
 		DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */; };
 		DD73F8622B024C4B00EE9BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */; };
 		DD73F8652B024C4B00EE9BF2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8632B024C4B00EE9BF2 /* LaunchScreen.storyboard */; };
+		DDE77E192B131FFE005927B0 /* MSDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = DDE77E182B131FFE005927B0 /* MSDesignSystem */; };
+		DDE77E1C2B13200B005927B0 /* JourneyList in Frameworks */ = {isa = PBXBuildFile; productRef = DDE77E1B2B13200B005927B0 /* JourneyList */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDE77E192B131FFE005927B0 /* MSDesignSystem in Frameworks */,
+				DDE77E1C2B13200B005927B0 /* JourneyList in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -39,6 +43,7 @@
 			children = (
 				DD73F8572B024C4900EE9BF2 /* MusicSpot */,
 				DD73F8562B024C4900EE9BF2 /* Products */,
+				DDE77E1D2B1320B9005927B0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -62,6 +67,13 @@
 			path = MusicSpot;
 			sourceTree = "<group>";
 		};
+		DDE77E1D2B1320B9005927B0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -79,6 +91,8 @@
 			);
 			name = MusicSpot;
 			packageProductDependencies = (
+				DDE77E182B131FFE005927B0 /* MSDesignSystem */,
+				DDE77E1B2B13200B005927B0 /* JourneyList */,
 			);
 			productName = MusicSpot;
 			productReference = DD73F8552B024C4900EE9BF2 /* MusicSpot.app */;
@@ -109,6 +123,8 @@
 			);
 			mainGroup = DD73F84C2B024C4900EE9BF2;
 			packageReferences = (
+				DDE77E172B131FFE005927B0 /* XCLocalSwiftPackageReference "../MSUIKit" */,
+				DDE77E1A2B13200B005927B0 /* XCLocalSwiftPackageReference "../Features/JourneyList" */,
 			);
 			productRefGroup = DD73F8562B024C4900EE9BF2 /* Products */;
 			projectDirPath = "";
@@ -365,6 +381,28 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		DDE77E172B131FFE005927B0 /* XCLocalSwiftPackageReference "../MSUIKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MSUIKit;
+		};
+		DDE77E1A2B13200B005927B0 /* XCLocalSwiftPackageReference "../Features/JourneyList" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../Features/JourneyList;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DDE77E182B131FFE005927B0 /* MSDesignSystem */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSDesignSystem;
+		};
+		DDE77E1B2B13200B005927B0 /* JourneyList */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = JourneyList;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DD73F84D2B024C4900EE9BF2 /* Project object */;
 }

@@ -33,7 +33,7 @@ let package = Package(
         // Codes
         .target(name: .designSystem,
                 resources: [
-                    .process("../MSDesignSystem/Resources")
+                    .process("../\(String.designSystem)/Resources")
                 ]),
         .target(name: .uiKit,
                 dependencies: ["MSDesignSystem"]),
