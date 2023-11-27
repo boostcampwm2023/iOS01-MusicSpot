@@ -215,6 +215,6 @@ public final class RewindJourneyViewController: UIViewController {
 @available(iOS 17, *)
 #Preview {
     let vc = RewindJourneyViewController()
-    vc.images = [UIImage(systemName: "pencil")!, UIImage(systemName: "pencil.fill")!, UIImage(systemName: "pencil.circle.fill")!]
+    vc.images = [UIImage(systemName: "pencil")!, UIImage(systemName: "pencil")!, UIImage(systemName: "pencil")!]
     return vc
 }
