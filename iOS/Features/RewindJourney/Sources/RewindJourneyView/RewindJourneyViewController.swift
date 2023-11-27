@@ -210,3 +210,11 @@ public final class RewindJourneyViewController: UIViewController {
     }
     
 }
+
+// MARK: - Preview
+@available(iOS 17, *)
+#Preview {
+    let vc = RewindJourneyViewController()
+    vc.images = [UIImage(systemName: "pencil")!, UIImage(systemName: "pencil.fill")!, UIImage(systemName: "pencil.circle.fill")!]
+    return vc
+}
