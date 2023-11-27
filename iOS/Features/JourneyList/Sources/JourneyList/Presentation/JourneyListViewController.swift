@@ -143,14 +143,46 @@ private extension JourneyListViewController {
         return section
     }
     
+    private func fetchImage(url: URL) async throws -> Data {
+        let request = URLRequest(url: url)
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let statusCode = (response as? HTTPURLResponse)?.statusCode,
+              (200...299).contains(statusCode) else { throw NSError(domain: "fetch error", code: 1004) }
+        
+        return data
+    }
+    
     func configureDataSource() -> JourneyListDataSource {
+        // TODO: 최적화 & 캐싱
         let cellRegistration = JourneyCellRegistration { cell, _, itemIdentifier in
             let cellModel = JourneyCellModel(location: itemIdentifier.location,
                                              date: itemIdentifier.date,
                                              songTitle: itemIdentifier.song.title,
                                              songArtist: itemIdentifier.song.artist)
             cell.update(with: cellModel)
-//            cell.updateImages(images: itemIdentifier.spot.photoURLs)
+            let photoURLs = itemIdentifier.spots
+                .flatMap { $0.photoURLs }
+                .compactMap { URL(string: $0) }
+            
+            Task {
+                cell.addImageView(count: photoURLs.count)
+                
+                await withTaskGroup(of: (index: Int, imageData: Data).self) { group in
+                    for (index, photoURL) in photoURLs.enumerated() {
+                        group.addTask(priority: .background) { [weak self] in
+                            guard let imageData = try? await self?.fetchImage(url: photoURL) else {
+                                return (0, Data())
+                            }
+                            return (index, imageData)
+                        }
+                    }
+                    
+                    for await (index, imageData) in group {
+                        cell.updateImages(imageData: imageData, atIndex: index)
+                    }
+                }
+            }
         }
       
         let dataSource = JourneyListDataSource(collectionView: self.collectionView,

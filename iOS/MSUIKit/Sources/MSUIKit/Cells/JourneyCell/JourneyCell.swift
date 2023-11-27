@@ -46,6 +46,12 @@ public final class JourneyCell: UICollectionViewCell {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
     
+    public override func prepareForReuse() {
+        self.spotImageStack.arrangedSubviews.forEach {
+            $0.removeFromSuperview()
+        }
+    }
+    
     // MARK: - Functions
     
     public func update(with model: JourneyCellModel) {
@@ -55,12 +61,24 @@ public final class JourneyCell: UICollectionViewCell {
                              artist: model.song.artist)
     }
     
-    public func updateImages(images: [Data]) {
-        images.forEach { data in
+    @MainActor
+    public func addImageView(count: Int) {
+        (1...count).forEach { _ in
             let imageView = SpotPhotoImageView()
-            imageView.update(with: data)
             self.spotImageStack.addArrangedSubview(imageView)
         }
+    }
+    
+    @MainActor
+    public func updateImages(imageData: Data, atIndex index: Int) {
+        guard self.spotImageStack.arrangedSubviews.count > index else {
+            return
+        }
+        guard let imageView = self.spotImageStack.arrangedSubviews[index] as? SpotPhotoImageView else {
+            return
+        }
+        
+        imageView.update(with: imageData)
     }
     
 }
