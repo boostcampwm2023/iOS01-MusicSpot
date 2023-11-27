@@ -4,9 +4,6 @@ env:
   WORKSPACE: iOS/MusicSpot.xcworkspace
 
 on:
-  push:
-    branches:
-      - 'iOS/task/JourneyList-Business-Logic'
   pull_request:
     branches:
       - 'iOS/release'
