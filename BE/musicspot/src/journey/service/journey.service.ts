@@ -55,9 +55,22 @@ export class JourneyService {
       { $push: { coordinates: coordinate } },
     );
   }
-  async findMinMaxCoordinates(journeys) {
+
+  async checkJourney(checkJourneyDTO: CheckJourneyDTO) {
+    const { userId, minCoordinate, maxCoordinate } = checkJourneyDTO;
+    const user = await this.userModel.findById(userId).exec();
+    const journeys = user.journeys;
+    const journeyList = await this.findMinMaxCoordinates(
+      journeys,
+      minCoordinate,
+      maxCoordinate,
+    );
+    return journeyList;
+  }
+  async findMinMaxCoordinates(journeys, minCoordinate, maxCoordinate) {
     let minCoordinates = [];
     let maxCoordinates = [];
+    let journeyList = [];
     for (let i = 0; i < journeys.length; i++) {
       let journey = await this.journeyModel.findById(journeys[i]).exec();
       let minX = Infinity;
@@ -70,24 +83,15 @@ export class JourneyService {
         maxX = Math.max(maxX, x);
         maxY = Math.max(maxY, y);
       });
-      minCoordinates.push([minX, minY]);
-      maxCoordinates.push([maxX, maxY]);
+      if (
+        minX > minCoordinate[0] &&
+        minY > minCoordinate[1] &&
+        maxX < maxCoordinate[0] &&
+        maxY < maxCoordinate[1]
+      ) {
+        journeyList.push(journey.coordinates);
+      }
     }
-    return [minCoordinates, maxCoordinates];
-  }
-
-  async checkJourney(checkJourneyDTO: CheckJourneyDTO) {
-    const { userId, minCoordinate, maxCoordinate } = checkJourneyDTO;
-    const user = await this.userModel.findById(userId).exec();
-    const journeys = user.journeys;
-    const [minCoordinates, maxCoordinates] =
-      await this.findMinMaxCoordinates(journeys);
-
-    //좌표 두개에 대한 알맞은 범위를 탐색
-    // const { journeyId, coordinate } = recordJourneyDTO;
-    // return await this.journeyModel.updateOne(
-    //   { _id: journeyId },
-    //   { $push: { coordinates: coordinate } },
-    // );
+    return journeyList;
   }
 }
