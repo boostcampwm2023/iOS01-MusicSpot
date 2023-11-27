@@ -37,7 +37,7 @@ let package = Package(
     products: [
         .library(
             name: .rewindJourneyView,
-            targets: [.rewindJourneyView]),
+            targets: [.rewindJourneyView])
     ],
     dependencies: [
         .package(path: .msUIKit.path),
@@ -50,10 +50,8 @@ let package = Package(
             dependencies: [
                 .product(name: .msUIKit, package: .msUIKit),
                 .product(name: .msDesignsystem, package: .msUIKit),
-                .product(name: .msLogger, package: .msFoundation)]),
+                .product(name: .msLogger, package: .msFoundation)])
         
         // Tests
     ]
 )
-
-
