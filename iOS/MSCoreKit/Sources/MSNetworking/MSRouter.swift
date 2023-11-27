@@ -11,7 +11,7 @@ public struct RouterType {
     
     private var encodable: Encodable?
     
-    //기능별 MSRouter
+    // 기능별 MSRouter
     public var getJourney: MSRouter {
         MSRouter(baseURL: .none, pathURL: .none, method: .get, body: HTTPBody(content: encodable))
     }
