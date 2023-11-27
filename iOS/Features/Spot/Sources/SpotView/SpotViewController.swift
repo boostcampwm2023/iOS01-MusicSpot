@@ -53,7 +53,7 @@ public final class SpotViewController: UIViewController {
     
     // MARK: - Properties
     
-    private var imageView = UIImageView()
+    private let imageView = UIImageView()
     private let textView = UIView()
     private let textLabel = UILabel()
     private let subTextLabel = UILabel()
@@ -194,7 +194,7 @@ public final class SpotViewController: UIViewController {
     }
     
     private func configureImageViewValue() {
-        self.imageView = UIImageView(image: self.image)
+        self.imageView.image = self.image
     }
     
     private func configureLabelsValue() {
