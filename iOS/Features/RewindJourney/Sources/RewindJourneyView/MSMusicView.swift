@@ -15,18 +15,18 @@ final class MSMusicView: UIProgressView {
     
     // MARK: - Constants
     
-    private enum Metrix {
+    private enum Metric {
         
         static var verticalInset: CGFloat = 8.0
         static var horizonalInset: CGFloat = 12.0
         static var cornerRadius: CGFloat = 8.0
         
-        //albumart view
+        // albumart view
         enum AlbumArtView {
             static var height: CGFloat = 52.0
             static var width: CGFloat = 52.0
         }
-        //title view
+        // title view
         enum TitleView {
             static var height: CGFloat = 4.0
             static var inset: CGFloat = 4.0
@@ -34,7 +34,7 @@ final class MSMusicView: UIProgressView {
             static var subTitleHight: CGFloat = 20.0
         }
         
-        //playtime view
+        // playtime view
         enum PlayTimeView {
             static var width: CGFloat = 67.0
             static var verticalInset: CGFloat = 22.0
@@ -46,38 +46,38 @@ final class MSMusicView: UIProgressView {
     
     private enum Default {
         
-        //titleView
+        // titleView
         enum TitleView {
             static var title: String = "Attention"
             static var subTitle: String = "NewJeans"
             static var defaultIndex: Int = 0
         }
         
-        //stackView
+        // stackView
         enum PlayTime {
             static var time: String = "00 : 00"
         }
         
     }
     
-    // MARK: - Properties
+    // MARK: - UI Components
     
     private var albumArtView = UIImageView()
-    private var titleView = UIStackView()
+    private var titleStackView = UIStackView()
     private var titleLabel = UILabel()
     private var subTitleLabel = UILabel()
-    private var playTimeView = UIStackView()
+    private var playTimeStackView = UIStackView()
     private var playTimeLabel = UILabel()
     private let playTimeIconView = UIImageView(image: .msIcon(.voice))
     
-    // MARK: - UI Components
+    // MARK: - UI Configuration
     
     public func configure() {
         self.configureLayout()
         self.configureStyle()
     }
     
-    // MARK: - UI Components: layout
+    // MARK: - UI Configuration: layout
     
     private func configureLayout() {
         self.configureAlbumArtViewLayout()
@@ -89,54 +89,60 @@ final class MSMusicView: UIProgressView {
         self.addSubview(self.albumArtView)
         self.albumArtView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.albumArtView.topAnchor.constraint(equalTo: self.topAnchor, constant: Metrix.verticalInset),
-            self.albumArtView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -Metrix.verticalInset),
-            self.albumArtView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Metrix.horizonalInset),
-            self.albumArtView.widthAnchor.constraint(equalToConstant: Metrix.AlbumArtView.width)
+            self.albumArtView.topAnchor.constraint(equalTo: self.topAnchor, constant: Metric.verticalInset),
+            self.albumArtView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -Metric.verticalInset),
+            self.albumArtView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Metric.horizonalInset),
+            self.albumArtView.widthAnchor.constraint(equalToConstant: Metric.AlbumArtView.width)
         ])
     }
 
     private func configureTitleViewLayout() {
-        self.addSubview(self.titleView)
-        self.titleView.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(self.titleStackView)
+        self.titleStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.titleView.topAnchor.constraint(equalTo: self.topAnchor, constant: Metrix.verticalInset),
-            self.titleView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -Metrix.verticalInset),
-            self.titleView.leadingAnchor.constraint(equalTo: self.albumArtView.trailingAnchor, constant: Metrix.horizonalInset),
-            self.titleView.trailingAnchor.constraint(equalTo: self.playTimeView.leadingAnchor, constant: -Metrix.horizonalInset),
+            self.titleStackView.topAnchor.constraint(equalTo: self.topAnchor,
+                                                constant: Metric.verticalInset),
+            self.titleStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor,
+                                                   constant: -Metric.verticalInset),
+            self.titleStackView.leadingAnchor.constraint(equalTo: self.albumArtView.trailingAnchor,
+                                                    constant: Metric.horizonalInset),
+            self.titleStackView.trailingAnchor.constraint(equalTo: self.playTimeStackView.leadingAnchor,
+                                                     constant: -Metric.horizonalInset)
         ])
         
-        self.titleView.addArrangedSubview(self.titleLabel)
-        self.titleView.addArrangedSubview(self.subTitleLabel)
+        self.titleStackView.addArrangedSubview(self.titleLabel)
+        self.titleStackView.addArrangedSubview(self.subTitleLabel)
         
-        self.titleView.axis = .vertical
-        self.titleView.spacing = Metrix.TitleView.inset
+        self.titleStackView.axis = .vertical
+        self.titleStackView.spacing = Metric.TitleView.inset
     }
     
     private func configurePlayTimeViewLayout() {
-        self.addSubview(self.playTimeView)
-        self.playTimeView.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(self.playTimeStackView)
+        self.playTimeStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.playTimeView.topAnchor.constraint(equalTo: self.topAnchor, constant: Metrix.PlayTimeView.verticalInset),
-            self.playTimeView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -Metrix.PlayTimeView.verticalInset),
-            self.playTimeView.widthAnchor.constraint(equalToConstant: Metrix.PlayTimeView.width),
-            self.playTimeView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Metrix.horizonalInset)
+            self.playTimeStackView.topAnchor.constraint(equalTo: self.topAnchor,
+                                                   constant: Metric.PlayTimeView.verticalInset),
+            self.playTimeStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor,
+                                                      constant: -Metric.PlayTimeView.verticalInset),
+            self.playTimeStackView.widthAnchor.constraint(equalToConstant: Metric.PlayTimeView.width),
+            self.playTimeStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor,
+                                                        constant: -Metric.horizonalInset)
         ])
         
-        self.playTimeView.addArrangedSubview(self.playTimeIconView)
-        self.playTimeView.addArrangedSubview(self.playTimeLabel)
+        self.playTimeStackView.addArrangedSubview(self.playTimeIconView)
+        self.playTimeStackView.addArrangedSubview(self.playTimeLabel)
         
-        self.playTimeView.axis = .horizontal
-        self.playTimeView.spacing = Metrix.PlayTimeView.horizonalInset
-        self.titleView.distribution = .fill
+        self.playTimeStackView.axis = .horizontal
+        self.playTimeStackView.spacing = Metric.PlayTimeView.horizonalInset
+        self.titleStackView.distribution = .fill
     }
     
-    // MARK: - UI Components: style
+    // MARK: - UI Configuration: style
     
     private func configureStyle() {
-        MSFont.registerFonts()
         self.clipsToBounds = true
-        self.layer.cornerRadius = Metrix.cornerRadius
+        self.layer.cornerRadius = Metric.cornerRadius
         self.trackTintColor = .msColor(.secondaryBackground)
         self.progressTintColor = .msColor(.musicSpot)
         self.progress = 0.4
@@ -165,6 +171,3 @@ final class MSMusicView: UIProgressView {
     }
     
 }
-
-
-

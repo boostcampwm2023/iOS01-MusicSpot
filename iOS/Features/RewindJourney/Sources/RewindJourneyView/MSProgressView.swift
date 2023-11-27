@@ -11,17 +11,16 @@ public final class MSProgressView: UIProgressView {
     
     // MARK: - Properties
     
-    public var percentage: Float = 0.0 {
+    internal var percentage: Float = 0.0 {
         didSet {
             syncProgress(percentage: percentage)
         }
     }
-    public var isHighlight: Bool = false {
+    internal var isHighlight: Bool = false {
         didSet {
             self.percentage = self.isHighlight ? 1.0 : 0.0
         }
     }
-    
     
     // MARK: - Configure
     
