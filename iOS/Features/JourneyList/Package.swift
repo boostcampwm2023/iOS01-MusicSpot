@@ -22,7 +22,6 @@ let package = Package(
     ],
     targets: [
         .target(name: "JourneyList",
-                dependencies: ["MSData", "MSUIKit", "MSNetworking"],
-                resources: [.process("MockJourney.json")])
+                dependencies: ["MSData", "MSUIKit", "MSNetworking"])
     ]
 )
