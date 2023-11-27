@@ -7,14 +7,14 @@
 
 import Foundation
 
-struct JourneyDTO: Codable {
+public struct JourneyDTO: Codable, Identifiable {
     
-    let journeyIdentifier: UUID
+    public let id: UUID
     let title: String
     let metaData: JourneyMetadataDTO
     let spots: [SpotDTO]
     let coordinates: [CoordinateDTO]
-    let song: SongDTO?
+    let song: SongDTO
     let lineColor: String
     
 }
