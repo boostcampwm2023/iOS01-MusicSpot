@@ -14,10 +14,10 @@ final class MSNetworkingTests: XCTestCase {
     private var subscriber: Set<AnyCancellable> = []
     
     func test_get_JourneyDTO_성공() {
-        //Arrange
+        // Arrange
         let getJourneyRouter = MockRouterType().getJourney
         
-        //Act
+        // Act
         mockNetworking.request(mockRouter: getJourneyRouter, type: JourneyDTO.self)
             .sink { response in
                 switch response {
@@ -26,10 +26,10 @@ final class MSNetworkingTests: XCTestCase {
                 default:
                     return
                 }
-            } receiveValue: { JourneyDTO in
+            } receiveValue: { journeyDTO in
                 
-                //Assert
-                XCTAssertNotNil(JourneyDTO)
+                // Assert
+                XCTAssertNotNil(journeyDTO)
             }
             .store(in: &subscriber)
     }
