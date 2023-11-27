@@ -10,7 +10,7 @@ import Foundation
 public struct SpotDTO: Codable, Identifiable {
     
     public let id: UUID
-    let coordinate: [Double]
-    let photoURLs: [String]
+    public let coordinate: [Double]
+    public let photoURLs: [String]
     
 }

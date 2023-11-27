@@ -9,6 +9,6 @@ import Foundation
 
 public struct JourneyMetadataDTO: Codable {
     
-    let date: Date
+    public let date: Date
     
 }
