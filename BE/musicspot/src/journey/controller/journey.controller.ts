@@ -5,7 +5,7 @@ import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Journey } from '../schema/journey.schema';
 import { EndJourneyDTO } from '.././dto/journeyEnd.dto';
 import { RecordJourneyDTO } from '.././dto/journeyRecord.dto';
-import { SelectJourneyDTO } from '../dto/journeySelect.dto';
+import { CheckJourneyDTO } from '../dto/journeyCheck.dto';
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
@@ -57,8 +57,8 @@ export class JourneyController {
     description: '생성된 여정 데이터를 반환',
     type: Journey,
   })
-  @Post('select')
-  async select(@Body() selectJourneyDTO: SelectJourneyDTO) {
+  @Post('check')
+  async check(@Body() checkJourneyDTO: CheckJourneyDTO) {
     return true;
   }
 }

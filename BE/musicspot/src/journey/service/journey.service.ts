@@ -54,4 +54,12 @@ export class JourneyService {
       { $push: { coordinates: coordinate } },
     );
   }
+
+  async checkJourney(checkJourneyDTO: CheckJourneyDTO) {
+    // const { journeyId, coordinate } = recordJourneyDTO;
+    // return await this.journeyModel.updateOne(
+    //   { _id: journeyId },
+    //   { $push: { coordinates: coordinate } },
+    // );
+  }
 }

@@ -7,7 +7,7 @@ import {
   IsString,
 } from 'class-validator';
 
-export class SelectJourneyDTO {
+export class CheckJourneyDTO {
   @ApiProperty({
     example: [37.555946, 126.972384],
     description: '위치 좌표',
