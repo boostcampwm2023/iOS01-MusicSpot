@@ -80,7 +80,7 @@ jobs:
       run: |
         matrix="{\"include\":["
         first_entry=true
-        for scheme in $(xcodebuild -workspace ${{ env.WORKSPACE }} -list | grep -E '^[[:space:]]*Schemes:' -A 10 | tail -n +2 | grep -v '^$'); do
+        for scheme in $(xcodebuild -workspace ${{ env.WORKSPACE }} -list | grep -A 100 "Schemes:" | grep -v "Schemes:" | sed '/^$/d' | sed 's/^[ \t]*//'); do
           if [[ $scheme == *"Tests" ]]; then
             if [ "$first_entry" = true ]; then
               first_entry=false
