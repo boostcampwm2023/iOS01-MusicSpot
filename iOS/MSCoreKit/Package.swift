@@ -53,13 +53,13 @@ let package = Package(
 
         // Tests
         .testTarget(name: .persistentStorage.testTarget,
-                    dependencies: [.target(name: .persistentStorage)]),
+                    dependencies: ["MSPersistentStorage"]),
         .testTarget(name: .networking.testTarget,
-                    dependencies: [.target(name: .networking)]),
+                    dependencies: ["MSNetworking"]),
         .testTarget(name: .fetcher.testTarget,
-                    dependencies: [.target(name: .fetcher)]),
+                    dependencies: ["MSFetcher"]),
         .testTarget(name: .cache.testTarget,
-                    dependencies: [.target(name: .cache)])
+                    dependencies: ["MSCacheStorage"])
     ],
     swiftLanguageVersions: [.v5]
 )
