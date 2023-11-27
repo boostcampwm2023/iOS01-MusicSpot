@@ -40,12 +40,6 @@ public final class JourneyCell: UICollectionViewCell {
         super.init(frame: frame)
         self.configureStyles()
         self.configureLayout()
-        
-        (1...10).forEach { _ in
-            let imageView = SpotPhotoImageView()
-            imageView.backgroundColor = .systemBlue
-            self.spotImageStack.addArrangedSubview(imageView)
-        }
     }
     
     public required init?(coder: NSCoder) {
@@ -54,8 +48,19 @@ public final class JourneyCell: UICollectionViewCell {
     
     // MARK: - Functions
     
-    public func update(with data: String) {
-        
+    public func update(with model: JourneyCellModel) {
+        self.infoView.update(location: model.location,
+                             date: model.date,
+                             title: model.song.title,
+                             artist: model.song.artist)
+    }
+    
+    public func updateImages(images: [Data]) {
+        images.forEach { data in
+            let imageView = SpotPhotoImageView()
+            imageView.update(with: data)
+            self.spotImageStack.addArrangedSubview(imageView)
+        }
     }
     
 }

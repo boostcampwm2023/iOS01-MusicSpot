@@ -11,11 +11,7 @@ import Foundation
 import MSNetworking
 
 public protocol JourneyRepository {
-    func fetchJourneyList() async -> Result<[Journey], Error>
-}
-
-public struct Journey: Codable {
-    
+    func fetchJourneyList() async -> Result<[JourneyDTO], Error>
 }
 
 public struct JourneyRepositoryImplementation: JourneyRepository {
@@ -32,10 +28,26 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     
     // MARK: - Functions
     
-    public func fetchJourneyList() async -> Result<[Journey], Error> {
+    public func fetchJourneyList() async -> Result<[JourneyDTO], Error> {
+        #if DEBUG
+        guard let jsonURL = Bundle.module.url(forResource: "MockJourney", withExtension: "json") else {
+            return .failure((MSNetworkError.invalidRouter))
+        }
+        do {
+            let jsonData = try Data(contentsOf: jsonURL)
+            let decoder = JSONDecoder()
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            decoder.dateDecodingStrategy = .formatted(dateFormatter)
+            let journeys = try decoder.decode([JourneyDTO].self, from: jsonData)
+            return .success(journeys)
+        } catch {
+            print(error)
+        }
+        #else
         return await withCheckedContinuation { continuation in
             var cancellable: AnyCancellable?
-            cancellable = self.networking.request([Journey].self, router: JourneyRouter.journeyList)
+            cancellable = self.networking.request([JourneyDTO].self, router: JourneyRouter.journeyList)
                 .sink { completion in
                     switch completion {
                     case .finished:
@@ -49,6 +61,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                     cancellable?.cancel()
                 }
         }
+        #endif
     }
     
 }

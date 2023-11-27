@@ -9,9 +9,8 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(
-            name: "JourneyList",
-            targets: ["JourneyList"])
+        .library(name: "JourneyList",
+                 targets: ["JourneyList"])
     ],
     dependencies: [
         .package(name: "MSData",
@@ -22,8 +21,8 @@ let package = Package(
                  path: "../../MSCoreKit")
     ],
     targets: [
-        .target(
-            name: "JourneyList",
-            dependencies: ["MSData", "MSUIKit", "MSNetworking"])
+        .target(name: "JourneyList",
+                dependencies: ["MSData", "MSUIKit", "MSNetworking"],
+                resources: [.process("MockJourney.json")])
     ]
 )

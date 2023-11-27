@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Foundation
 
 import MSData
 
@@ -40,22 +41,13 @@ public final class JourneyListViewModel {
         case .viewNeedsLoaded:
             Task {
                 let result = await self.repository.fetchJourneyList()
+                
                 switch result {
-                case .success:
-                    self.state.journeys.send([Journey(locatoin: "여정 위치",
-                                                      date: "2023. 01. 01",
-                                                      spot: Spot(images: ["sdlkj", "sdklfj"])),
-                                              Journey(locatoin: "여정 위치",
-                                                      date: "2023. 01. 02",
-                                                      spot: Spot(images: ["slkjc", "llskl", "llskldf", "llskl5", "llskl12"]))])
+                case .success(let journeys):
+                    let journeys = journeys.map { Journey(dto: $0) }
+                    self.state.journeys.send(journeys)
                 case .failure(let error):
                     print(error)
-                    self.state.journeys.send([Journey(locatoin: "여정 위치",
-                                                      date: "2023. 01. 01",
-                                                      spot: Spot(images: ["sdlkj", "sdklfj"])),
-                                              Journey(locatoin: "여정 위치",
-                                                      date: "2023. 01. 02",
-                                                      spot: Spot(images: ["slkjc", "llskl", "llskldf", "llskl5", "llskl12"]))])
                 }
             }
         }

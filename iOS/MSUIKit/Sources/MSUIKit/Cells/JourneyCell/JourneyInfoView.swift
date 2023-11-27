@@ -43,7 +43,7 @@ final class JourneyInfoView: UIView {
         return stackView
     }()
     
-    private let titleLabel: UILabel = {
+    private let locationTitleLabel: UILabel = {
         let label = UILabel()
         label.font = .msFont(.subtitle)
         label.textColor = .msColor(.primaryTypo)
@@ -84,10 +84,15 @@ final class JourneyInfoView: UIView {
     
     // MARK: - Functions
     
-    func update(with journey: Journey) {
-        self.titleLabel.text = journey.locatoin
-        self.dateLabel.text = journey.date
-        self.w3wLabel.text = nil
+    func update(location: String,
+                date: Date,
+                w3w: String = "",
+                title: String,
+                artist: String) {
+        self.locationTitleLabel.text = location
+        self.dateLabel.text = date.formatted(date: .abbreviated, time: .omitted)
+        self.w3wLabel.text = w3w
+        self.musicInfoView.update(artist: artist, title: title)
     }
     
 }
@@ -109,7 +114,7 @@ private extension JourneyInfoView {
         self.contentStack.addArrangedSubview(self.titleLabelStack)
         self.contentStack.addArrangedSubview(self.musicInfoView)
         
-        self.titleLabelStack.addArrangedSubview(self.titleLabel)
+        self.titleLabelStack.addArrangedSubview(self.locationTitleLabel)
         self.titleLabelStack.addArrangedSubview(self.subLabelStack)
         
         self.subLabelStack.addArrangedSubview(self.dateLabel)
