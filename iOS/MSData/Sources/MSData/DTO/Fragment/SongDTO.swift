@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct SongDTO: Codable {
+public struct SongDTO: Codable, Identifiable {
     
-    let id: UUID
+    public let id: UUID
     let title: String
     let artwork: String
     

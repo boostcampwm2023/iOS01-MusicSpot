@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct JourneyMetadataDTO: Codable {
+public struct JourneyMetadataDTO: Codable {
     
     let date: Date
     
