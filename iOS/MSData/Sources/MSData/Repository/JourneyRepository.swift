@@ -62,6 +62,8 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                 }
         }
         #endif
+        
+        return .failure(MSNetworkError.unknownResponse)
     }
     
 }
