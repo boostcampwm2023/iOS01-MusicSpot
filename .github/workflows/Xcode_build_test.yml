@@ -100,10 +100,30 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
+<<<<<<< HEAD
       - id: set-matrix
         run: |
           matrix="{\"package\": $PACKAGES_JSON}"
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
+=======
+    - name: Generate test matrix
+      id: generate-test-matrix
+      run: |
+        matrix="{\"include\":["
+        first_entry=true
+        for scheme in $(xcodebuild -workspace ${{ env.WORKSPACE }} -list | grep -A 100 "Schemes:" | grep -v "Schemes:" | sed '/^$/d' | sed 's/^[ \t]*//'); do
+          if [[ $scheme == *"Tests" ]]; then
+            if [ "$first_entry" = true ]; then
+              first_entry=false
+            else
+              matrix+=","
+            fi
+            matrix+="{\"scheme\":\"$scheme\"}"
+          fi
+        done
+        matrix+="]}"
+        echo "matrix=$matrix" >> $GITHUB_OUTPUT
+>>>>>>> 3d5762a (:construction_worker: grep 수정)
 
   xcode-test:
     needs: prepare-test-matrix
