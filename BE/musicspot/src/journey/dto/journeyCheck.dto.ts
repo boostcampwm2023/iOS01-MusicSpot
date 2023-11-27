@@ -9,6 +9,14 @@ import {
 
 export class CheckJourneyDTO {
   @ApiProperty({
+    example: '655efda2fdc81cae36d20650',
+    description: '유저 id',
+    required: true,
+  })
+  @IsString()
+  readonly userId: string;
+
+  @ApiProperty({
     example: [37.555946, 126.972384],
     description: '위치 좌표',
     required: true,
@@ -17,21 +25,16 @@ export class CheckJourneyDTO {
   @ArrayMaxSize(2, { message: 'coordinate has only 2' })
   @ArrayMinSize(2, { message: 'coordinate has only 2' })
   @IsNumber({}, { each: true })
-  readonly coordinate: number[];
+  readonly minCoordinate: number[];
 
   @ApiProperty({
-    example: '2023-11-22T12:00:00Z',
-    description: 'timestamp',
+    example: [37.555946, 126.972384],
+    description: '위치 좌표',
     required: true,
   })
-  @IsString()
-  readonly timestamp: string;
-
-  @ApiProperty({
-    example: 'hello@gmail.com',
-    description: '이메일',
-    required: true,
-  })
-  @IsString()
-  readonly email: string;
+  @IsArray()
+  @ArrayMaxSize(2, { message: 'coordinate has only 2' })
+  @ArrayMinSize(2, { message: 'coordinate has only 2' })
+  @IsNumber({}, { each: true })
+  readonly maxCoordinate: number[];
 }
