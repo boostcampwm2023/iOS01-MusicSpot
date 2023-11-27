@@ -22,7 +22,6 @@ final class SpotPhotoImageView: UIView {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.backgroundColor = .systemBlue
         return imageView
     }()
     
@@ -40,8 +39,8 @@ final class SpotPhotoImageView: UIView {
     
     // MARK: - Functions
     
-    func update(with imageURL: String) {
-        
+    func update(with imageData: Data) {
+        self.imageView.image = UIImage(data: imageData)
     }
     
 }

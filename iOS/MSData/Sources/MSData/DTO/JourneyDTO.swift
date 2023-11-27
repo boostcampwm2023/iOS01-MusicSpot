@@ -10,7 +10,7 @@ import Foundation
 public struct JourneyDTO: Codable, Identifiable {
     
     public let id: UUID
-    public let title: String
+    public let location: String
     public let metaData: JourneyMetadataDTO
     public let spots: [SpotDTO]
     public let coordinates: [CoordinateDTO]

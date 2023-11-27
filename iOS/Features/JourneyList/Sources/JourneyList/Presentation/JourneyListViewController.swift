@@ -144,7 +144,12 @@ private extension JourneyListViewController {
     
     func configureDataSource() -> JourneyListDataSource {
         let cellRegistration = JourneyCellRegistration { cell, _, itemIdentifier in
-            // TODO: Cell 데이터 바인딩
+            let cellModel = JourneyCellModel(location: itemIdentifier.location,
+                                             date: itemIdentifier.date,
+                                             songTitle: itemIdentifier.song.title,
+                                             songArtist: itemIdentifier.song.artist)
+            cell.update(with: cellModel)
+//            cell.updateImages(images: itemIdentifier.spot.photoURLs)
         }
         
         let dataSource = JourneyListDataSource(collectionView: self.collectionView,
@@ -176,8 +181,12 @@ private extension JourneyListViewController {
             self.titleStack.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
         ])
         
-        self.titleStack.addArrangedSubview(self.titleLabel)
-        self.titleStack.addArrangedSubview(self.subtitleLabel)
+        [
+            self.titleLabel,
+            self.subtitleLabel
+        ].forEach {
+            self.titleStack.addArrangedSubview($0)
+        }
         
         self.view.addSubview(self.collectionView)
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false

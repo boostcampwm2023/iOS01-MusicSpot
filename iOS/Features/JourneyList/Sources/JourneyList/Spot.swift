@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct Spot: Hashable {
+struct Spot: Decodable {
     
-    let images: [String]
+    let photoURLs: [String]
     
 }
