@@ -8,12 +8,18 @@
       location = "group:Features/JourneyList">
    </FileRef>
    <FileRef
+      location = "group:Features/SaveJourney">
+   </FileRef>
+   <FileRef
+      location = "group:MusicSpot/MusicSpot.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:MSCoreKit">
    </FileRef>
    <FileRef
-      location = "group:MSUIKit">
+      location = "group:MSFoundation">
    </FileRef>
    <FileRef
-      location = "group:MSFoundation">
+      location = "group:MSUIKit">
    </FileRef>
 </Workspace>
