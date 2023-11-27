@@ -152,7 +152,7 @@ private extension JourneyListViewController {
             cell.update(with: cellModel)
 //            cell.updateImages(images: itemIdentifier.spot.photoURLs)
         }
-        
+      
         let dataSource = JourneyListDataSource(collectionView: self.collectionView,
                                                cellProvider: { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration,
