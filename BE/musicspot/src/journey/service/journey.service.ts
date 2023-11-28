@@ -5,7 +5,6 @@ import { StartJourneyDTO } from '../dto/journeyStart.dto';
 import { Journey } from '../schema/journey.schema';
 
 import { User } from '../../user/schema/user.schema';
-import { UserService } from '../../user/serivce/user.service';
 import { EndJourneyDTO } from '../dto/journeyEnd.dto';
 import { RecordJourneyDTO } from '../dto/journeyRecord.dto';
 
@@ -52,10 +51,6 @@ export class JourneyService {
         { new: true },
       )
       .lean();
-    // const journeyId = endJourneyDTO._id;
-    // const journey = await this.journeyModel.findById(journeyId).exec();
-    // //check 참 조건인지 확인
-    // return journey.coordinates.length;
   }
 
   async pushCoordianteToJourney(recordJourneyDTO: RecordJourneyDTO) {

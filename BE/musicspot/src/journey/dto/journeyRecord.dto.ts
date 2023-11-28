@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  ArrayMaxSize,
-  ArrayMinSize,
-  IsArray,
-  IsNumber,
-  IsString,
-} from 'class-validator';
+import { IsString } from 'class-validator';
 import { IsCoordinate } from '../../common/decorator/coordinate.decorator';
 export class RecordJourneyDTO {
   @ApiProperty({

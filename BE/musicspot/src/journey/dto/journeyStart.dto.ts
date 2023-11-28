@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  ArrayMaxSize,
-  ArrayMinSize,
-  IsArray,
-  IsNumber,
-  IsString,
-} from 'class-validator';
+import { IsString, IsDateString } from 'class-validator';
 import { IsCoordinate } from '../../common/decorator/coordinate.decorator';
 export class StartJourneyDTO {
   @ApiProperty({
@@ -23,7 +17,7 @@ export class StartJourneyDTO {
     description: 'timestamp',
     required: true,
   })
-  @IsString()
+  @IsDateString()
   readonly timestamp: string;
 
   @ApiProperty({

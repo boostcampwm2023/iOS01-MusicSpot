@@ -1,11 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  ArrayMaxSize,
-  ArrayMinSize,
-  IsArray,
-  IsNumber,
-  IsString,
-} from 'class-validator';
+import { IsDateString, IsString } from 'class-validator';
+import { IsCoordinate } from '../../common/decorator/coordinate.decorator';
 
 export class RecordSpotDTO {
   @ApiProperty({
@@ -21,10 +16,9 @@ export class RecordSpotDTO {
     description: '위치 좌표',
     required: true,
   })
-  @IsArray()
-  @ArrayMaxSize(2, { message: 'coordinate has only 2' })
-  @ArrayMinSize(2, { message: 'coordinate has only 2' })
-  @IsNumber({}, { each: true })
+  @IsCoordinate({
+    message: '배열의 각 요소는 양수여야 하고 두 개의 요소만 허용됩니다.',
+  })
   readonly coordinate: number[];
 
   @ApiProperty({
@@ -32,7 +26,7 @@ export class RecordSpotDTO {
     description: 'timestamp',
     required: true,
   })
-  @IsString()
+  @IsDateString()
   readonly timestamp: string;
   @ApiProperty({
     example: 'base64-encoded-binary-image-data', // Update this with a valid base64-encoded image data

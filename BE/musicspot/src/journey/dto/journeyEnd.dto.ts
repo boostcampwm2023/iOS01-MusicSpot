@@ -1,14 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  ArrayMaxSize,
-  ArrayMinSize,
-  IsArray,
-  IsNumber,
-  IsString,
-  IsDateString,
-  IsPositive,
-  Min,
-} from 'class-validator';
+import { IsString, IsDateString } from 'class-validator';
 import { IsCoordinate } from '../../common/decorator/coordinate.decorator';
 export class EndJourneyDTO {
   @ApiProperty({
