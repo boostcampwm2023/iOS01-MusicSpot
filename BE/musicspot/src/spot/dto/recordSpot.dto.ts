@@ -28,10 +28,11 @@ export class RecordSpotDTO {
   })
   @IsDateString()
   readonly timestamp: string;
-  @ApiProperty({
-    example: 'base64-encoded-binary-image-data', // Update this with a valid base64-encoded image data
-    description: 'Buffer',
-    required: true,
-  })
-  readonly photoData: Buffer;
+
+  // @ApiProperty({
+  //   example: 'base64-encoded-binary-image-data', // Update this with a valid base64-encoded image data
+  //   description: 'Buffer',
+  //   required: true,
+  // })
+  // readonly photoData: Buffer;
 }
