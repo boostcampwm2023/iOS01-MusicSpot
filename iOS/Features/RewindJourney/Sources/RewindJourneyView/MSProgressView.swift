@@ -16,9 +16,9 @@ public final class MSProgressView: UIProgressView {
             syncProgress(percentage: percentage)
         }
     }
-    internal var isHighlight: Bool = false {
+    internal var isHighlighted: Bool = false {
         didSet {
-            self.percentage = self.isHighlight ? 1.0 : 0.0
+            self.percentage = self.isHighlighted ? 1.0 : 0.0
         }
     }
     

@@ -189,13 +189,13 @@ public final class RewindJourneyViewController: UIViewController {
         
         self.presentImageView.image = images[presentIndex]
         self.preHighlightenProgressView = self.progressViews?[presentIndex]
-        self.preHighlightenProgressView?.isHighlight = false
+        self.preHighlightenProgressView?.isHighlighted = false
         
         let minIndex = 0
         let maxIndex = images.count - 1
         
         for index in minIndex...maxIndex {
-            self.progressViews?[index].isHighlight = index <= presentIndex ? true : false
+            self.progressViews?[index].isHighlighted = index <= presentIndex ? true : false
         }
     }
     
