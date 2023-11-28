@@ -29,7 +29,7 @@ public final class MSImageCacheStorage: CacheStorage {
     // MARK: - Functions
     
     /// 캐싱된 데이터를 불러옵니다.
-    public func data(forKey key: String, etag: String? = nil) async -> NSData? {
+    public func data(forKey key: NSString) async -> NSData? {
         // Memory Cache
         if let memoryData = self.memory.object(forKey: key as NSString) { // memory hit
             return memoryData
@@ -38,7 +38,7 @@ public final class MSImageCacheStorage: CacheStorage {
         // Disk Cache
         if let cacheURL = self.cacheURL(forCache: "\(key).cache"),
            let diskData = self.disk.contents(atPath: cacheURL.path) { // disk hit
-            return try? self.decoder.decode(MSCacheableData.self, from: diskData)
+            
         }
         
         return nil
