@@ -6,6 +6,8 @@ import { Spot } from '../schema/spot.schema';
 import { RecordSpotDTO } from '../dto/recordSpot.dto';
 import { Journey } from '../../journey/schema/journey.schema';
 import * as AWS from 'aws-sdk';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const endpoint = process.env.NCLOUD_ENDPOINT;
 const region = process.env.NCLOUD_REGION;
@@ -34,7 +36,7 @@ export class SpotService {
       Key: key,
       Body: file.buffer,
     }).promise();
-    console.log(result);
+
     return `${endpoint}/${bucketName}/${key}`;
   }
   async insertToSpot(spotData) {
