@@ -46,6 +46,8 @@ export class JourneyController {
   })
   @Post('record')
   async record(@Body() recordJourneyDTO: RecordJourneyDTO) {
-    return await this.journeyService.pushCoordianteToJourney(recordJourneyDTO);
+    const returnData =
+      await this.journeyService.pushCoordianteToJourney(recordJourneyDTO);
+    return returnData;
   }
 }
