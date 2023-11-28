@@ -13,8 +13,6 @@ let package = Package(
                  targets: ["RecordJourney"])
     ],
     targets: [
-        .target(name: "RecordJourney"),
-        .testTarget(name: "RecordJourneyTests",
-                    dependencies: ["RecordJourney"])
+        .target(name: "RecordJourney")
     ]
 )

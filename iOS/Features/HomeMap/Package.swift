@@ -13,8 +13,6 @@ let package = Package(
                  targets: ["HomeMap"])
     ],
     targets: [
-        .target(name: "HomeMap"),
-        .testTarget(name: "HomeMapTests",
-                    dependencies: ["HomeMap"])
+        .target(name: "HomeMap")
     ]
 )

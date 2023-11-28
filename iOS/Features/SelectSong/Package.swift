@@ -13,8 +13,6 @@ let package = Package(
                  targets: ["SelectSong"])
     ],
     targets: [
-        .target(name: "SelectSong"),
-        .testTarget(name: "SelectSongTests",
-                    dependencies: ["SelectSong"])
+        .target(name: "SelectSong")
     ]
 )

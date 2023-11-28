@@ -1,7 +1,7 @@
 import XCTest
-@testable import RecordJourney
+@testable import MSData
 
-final class RecordJourneyTests: XCTestCase {
+final class MSDataTests: XCTestCase {
     func testExample() throws {
         // XCTest Documentation
         // https://developer.apple.com/documentation/xctest

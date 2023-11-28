@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "MSLogger"
-               BuildableName = "MSLogger"
-               BlueprintName = "MSLogger"
+               BlueprintIdentifier = "MSUserDefaults"
+               BuildableName = "MSUserDefaults"
+               BlueprintName = "MSUserDefaults"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -33,9 +33,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "MSLoggerTests"
-               BuildableName = "MSLoggerTests"
-               BlueprintName = "MSLoggerTests"
+               BlueprintIdentifier = "MSUserDefaultsTests"
+               BuildableName = "MSUserDefaultsTests"
+               BlueprintName = "MSUserDefaultsTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
@@ -61,9 +61,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "MSLogger"
-            BuildableName = "MSLogger"
-            BlueprintName = "MSLogger"
+            BlueprintIdentifier = "MSUserDefaults"
+            BuildableName = "MSUserDefaults"
+            BlueprintName = "MSUserDefaults"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>
