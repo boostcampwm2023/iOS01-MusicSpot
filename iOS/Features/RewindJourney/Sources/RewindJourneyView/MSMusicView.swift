@@ -17,29 +17,29 @@ final class MSMusicView: UIProgressView {
     
     private enum Metric {
         
-        static var verticalInset: CGFloat = 8.0
-        static var horizonalInset: CGFloat = 12.0
-        static var cornerRadius: CGFloat = 8.0
+        static let verticalInset: CGFloat = 8.0
+        static let horizonalInset: CGFloat = 12.0
+        static let cornerRadius: CGFloat = 8.0
         
         // albumart view
         enum AlbumArtView {
-            static var height: CGFloat = 52.0
-            static var width: CGFloat = 52.0
+            static let height: CGFloat = 52.0
+            static let width: CGFloat = 52.0
         }
         // title view
         enum TitleView {
-            static var height: CGFloat = 4.0
-            static var inset: CGFloat = 4.0
-            static var titleHight: CGFloat = 24.0
-            static var subTitleHight: CGFloat = 20.0
+            static let height: CGFloat = 4.0
+            static let inset: CGFloat = 4.0
+            static let titleHight: CGFloat = 24.0
+            static let subTitleHight: CGFloat = 20.0
         }
         
         // playtime view
         enum PlayTimeView {
-            static var width: CGFloat = 67.0
-            static var verticalInset: CGFloat = 22.0
-            static var horizonalInset: CGFloat = 4.0
-            static var conponentsHeight: CGFloat = 24.0
+            static let width: CGFloat = 67.0
+            static let verticalInset: CGFloat = 22.0
+            static let horizonalInset: CGFloat = 4.0
+            static let conponentsHeight: CGFloat = 24.0
         }
         
     }
@@ -48,26 +48,26 @@ final class MSMusicView: UIProgressView {
         
         // titleView
         enum TitleView {
-            static var title: String = "Attention"
-            static var subTitle: String = "NewJeans"
-            static var defaultIndex: Int = 0
+            static let title: String = "Attention"
+            static let subTitle: String = "NewJeans"
+            static let defaultIndex: Int = 0
         }
         
         // stackView
         enum PlayTime {
-            static var time: String = "00 : 00"
+            static let time: String = "00 : 00"
         }
         
     }
     
     // MARK: - UI Components
     
-    private var albumArtView = UIImageView()
-    private var titleStackView = UIStackView()
-    private var titleLabel = UILabel()
-    private var subTitleLabel = UILabel()
-    private var playTimeStackView = UIStackView()
-    private var playTimeLabel = UILabel()
+    private let albumArtView = UIImageView()
+    private let titleStackView = UIStackView()
+    private let titleLabel = UILabel()
+    private let subTitleLabel = UILabel()
+    private let playTimeStackView = UIStackView()
+    private let playTimeLabel = UILabel()
     private let playTimeIconView = UIImageView(image: .msIcon(.voice))
     
     // MARK: - UI Configuration
