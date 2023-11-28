@@ -1,4 +1,10 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { JourneyService } from '../service/journey.service';
 import { StartJourneyDTO } from '.././dto/journeyStart.dto';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -60,6 +66,7 @@ export class JourneyController {
     type: Journey,
   })
   @Post('check')
+  @UsePipes(ValidationPipe) //유효성 체크
   async check(@Body() checkJourneyDTO: CheckJourneyDTO) {
     return await this.journeyService.checkJourney(checkJourneyDTO);
   }
