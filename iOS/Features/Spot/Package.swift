@@ -7,7 +7,7 @@ import PackageDescription
 
 extension String {
     static let package = "Spot"
-    static let spotView = "SpotView"
+    static let spot = "Spot"
     static let msUIKit = "MSUIKit"
     static let msFoundation = "MSFoundation"
     static let msDesignsystem = "MSDesignSystem"
@@ -31,8 +31,8 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(name: .spotView,
-                 targets: [.spotView])
+        .library(name: .spot,
+                 targets: [.spot])
     ],
     dependencies: [
         .package(path: .msUIKit.path),
@@ -40,7 +40,7 @@ let package = Package(
     ],
     targets: [
         // Codes
-        .target(name: .spotView,
+        .target(name: .spot,
                 dependencies: [
                     .product(name: .msUIKit, package: .msUIKit),
                     .product(name: .msDesignsystem, package: .msUIKit),
