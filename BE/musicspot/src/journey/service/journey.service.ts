@@ -41,17 +41,27 @@ export class JourneyService {
   }
 
   async end(endJourneyDTO: EndJourneyDTO) {
-    const journeyId = endJourneyDTO._id;
-    const journey = await this.journeyModel.findById(journeyId).exec();
-    //check 참 조건인지 확인
-    return journey.coordinates.length;
+    const journeyId = endJourneyDTO.journeyId;
+    return await this.journeyModel
+      .findOneAndUpdate(
+        { _id: journeyId },
+        {
+          $set: { title: endJourneyDTO.title },
+          $push: { coordinates: endJourneyDTO.coordinate },
+        },
+        { new: true },
+      )
+      .lean();
+    // const journeyId = endJourneyDTO._id;
+    // const journey = await this.journeyModel.findById(journeyId).exec();
+    // //check 참 조건인지 확인
+    // return journey.coordinates.length;
   }
 
   async pushCoordianteToJourney(recordJourneyDTO: RecordJourneyDTO) {
     const { journeyId, coordinate } = recordJourneyDTO;
-    return await this.journeyModel.updateOne(
-      { _id: journeyId },
-      { $push: { coordinates: coordinate } },
-    );
+    return await this.journeyModel
+      .updateOne({ _id: journeyId }, { $push: { coordinates: coordinate } })
+      .lean();
   }
 }
