@@ -63,6 +63,11 @@ final class MSMusicView: UIProgressView {
     // MARK: - UI Components
     
     private let albumArtView = UIImageView()
+    public var albumArtImage: UIImage? {
+        didSet {
+            self.albumArtView.image = albumArtImage
+        }
+    }
     private let titleStackView = UIStackView()
     private let titleLabel = UILabel()
     private let subTitleLabel = UILabel()
@@ -147,13 +152,8 @@ final class MSMusicView: UIProgressView {
         self.progressTintColor = .msColor(.musicSpot)
         self.progress = 0.4
         
-        self.configureAlbumArtViewStyle()
         self.configureTitleViewStyle()
         self.configurePlayTimeViewStyle()
-    }
-    
-    private func configureAlbumArtViewStyle() {
-        self.albumArtView.backgroundColor = .blue
     }
     
     private func configureTitleViewStyle() {
@@ -170,4 +170,14 @@ final class MSMusicView: UIProgressView {
         self.playTimeIconView.tintColor = .msColor(.secondaryTypo)
     }
     
+}
+
+// MARK: - Preview
+
+@available(iOS 17, *)
+#Preview {
+    MSFont.registerFonts()
+    let musicView = MSMusicView()
+    musicView.albumArtImage = UIImage(systemName: "pencil")
+    return musicView
 }
