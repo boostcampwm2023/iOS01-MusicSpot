@@ -7,7 +7,7 @@ import PackageDescription
 
 extension String {
     static let package = "RewindJourney"
-    static let rewindJourneyView = "RewindJourneyView"
+    static let rewindJourney = "RewindJourney"
     static let msUIKit = "MSUIKit"
     static let msFoundation = "MSFoundation"
     static let msDesignsystem = "MSDesignSystem"
@@ -35,8 +35,8 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(name: .rewindJourneyView,
-                 targets: [.rewindJourneyView])
+        .library(name: .rewindJourney,
+                 targets: [.rewindJourney])
     ],
     dependencies: [
         .package(path: .msUIKit.path),
@@ -44,7 +44,7 @@ let package = Package(
     ],
     targets: [
         // Codes
-        .target(name: .rewindJourneyView,
+        .target(name: .rewindJourney,
                 dependencies: [
                     .product(name: .msUIKit, package: .msUIKit),
                     .product(name: .msDesignsystem, package: .msUIKit),
