@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -30,8 +30,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDE77E192B131FFE005927B0 /* MSDesignSystem in Frameworks */,
-				DDE77E1C2B13200B005927B0 /* JourneyList in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,8 +89,6 @@
 			);
 			name = MusicSpot;
 			packageProductDependencies = (
-				DDE77E182B131FFE005927B0 /* MSDesignSystem */,
-				DDE77E1B2B13200B005927B0 /* JourneyList */,
 			);
 			productName = MusicSpot;
 			productReference = DD73F8552B024C4900EE9BF2 /* MusicSpot.app */;
@@ -123,8 +119,6 @@
 			);
 			mainGroup = DD73F84C2B024C4900EE9BF2;
 			packageReferences = (
-				DDE77E172B131FFE005927B0 /* XCLocalSwiftPackageReference "../MSUIKit" */,
-				DDE77E1A2B13200B005927B0 /* XCLocalSwiftPackageReference "../Features/JourneyList" */,
 			);
 			productRefGroup = DD73F8562B024C4900EE9BF2 /* Products */;
 			projectDirPath = "";
@@ -381,28 +375,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCLocalSwiftPackageReference section */
-		DDE77E172B131FFE005927B0 /* XCLocalSwiftPackageReference "../MSUIKit" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../MSUIKit;
-		};
-		DDE77E1A2B13200B005927B0 /* XCLocalSwiftPackageReference "../Features/JourneyList" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Features/JourneyList;
-		};
-/* End XCLocalSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		DDE77E182B131FFE005927B0 /* MSDesignSystem */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MSDesignSystem;
-		};
-		DDE77E1B2B13200B005927B0 /* JourneyList */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = JourneyList;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DD73F84D2B024C4900EE9BF2 /* Project object */;
 }
