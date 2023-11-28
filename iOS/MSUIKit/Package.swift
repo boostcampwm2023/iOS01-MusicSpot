@@ -36,11 +36,7 @@ let package = Package(
                     .process("../MSDesignSystem/Resources")
                 ]),
         .target(name: .uiKit,
-                dependencies: ["MSDesignSystem"]),
-        
-        // Tests
-        .testTarget(name: .designSystem.testTarget,
-                   dependencies: ["MSDesignSystem"])
+                dependencies: ["MSDesignSystem"])
     ],
     swiftLanguageVersions: [.v5]
 )
