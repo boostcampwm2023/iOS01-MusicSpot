@@ -18,6 +18,9 @@ public enum MSColor: String {
     case secondaryTypo = "Typo Secondary"
     case secondaryButtonTypo = "Button Typo Secondary"
     
+    case componentBackground = "Component Background"
+    case componentTypo = "Component Typo"
+    
     case musicSpot = "MusicSpot"
 }
 
