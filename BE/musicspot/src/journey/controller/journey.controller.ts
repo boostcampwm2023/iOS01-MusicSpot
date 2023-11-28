@@ -5,6 +5,7 @@ import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Journey } from '../schema/journey.schema';
 import { EndJourneyDTO } from '.././dto/journeyEnd.dto';
 import { RecordJourneyDTO } from '.././dto/journeyRecord.dto';
+import { CheckJourneyDTO } from '../dto/journeyCheck.dto';
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
@@ -49,5 +50,17 @@ export class JourneyController {
     const returnData =
       await this.journeyService.pushCoordianteToJourney(recordJourneyDTO);
     return returnData;
+  }
+  @ApiOperation({
+    summary: '여정 조회 API',
+    description: '해당 범위 내의 여정들을 반환합니다.',
+  })
+  @ApiCreatedResponse({
+    description: '범위에 있는 여정의 기록들을 반환',
+    type: Journey,
+  })
+  @Post('check')
+  async check(@Body() checkJourneyDTO: CheckJourneyDTO) {
+    return await this.journeyService.checkJourney(checkJourneyDTO);
   }
 }
