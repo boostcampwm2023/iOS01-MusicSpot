@@ -120,6 +120,12 @@ public final class JourneyListViewController: UIViewController {
             .store(in: &self.cancellables)
     }
     
+    // MARK: - Functions
+    
+    public func fetchJourneys(from coordinate: Coordinate) {
+        self.viewModel.trigger(.fetchJourney(at: coordinate))
+    }
+    
 }
 
 // MARK: - CollectionView
