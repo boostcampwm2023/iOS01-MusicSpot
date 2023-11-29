@@ -133,7 +133,7 @@ private extension JourneyListViewController {
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .absolute(268.0))
+                                               heightDimension: .estimated(JourneyCell.estimatedHeight))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
                                                        subitems: [item])
         
