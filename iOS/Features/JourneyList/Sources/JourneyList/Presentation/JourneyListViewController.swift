@@ -8,6 +8,7 @@
 import Combine
 import UIKit
 
+import MSCacheStorage
 import MSUIKit
 
 public final class JourneyListViewController: UIViewController {
@@ -33,6 +34,8 @@ public final class JourneyListViewController: UIViewController {
     }
     
     // MARK: - Properties
+    
+    private let cache: MSCacheStorage
     
     private var viewModel: JourneyListViewModel
     
@@ -79,9 +82,11 @@ public final class JourneyListViewController: UIViewController {
     // MARK: - Initializer
     
     public init(viewModel: JourneyListViewModel,
+                cache: MSCacheStorage = MSCacheStorage(),
                 nibName nibNameOrNil: String? = nil,
                 bundle nibBundleOrNil: Bundle? = nil) {
         self.viewModel = viewModel
+        self.cache = cache
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -151,14 +156,16 @@ private extension JourneyListViewController {
         let (data, response) = try await URLSession.shared.data(for: request)
         
         guard let statusCode = (response as? HTTPURLResponse)?.statusCode,
-              (200...299).contains(statusCode) else { throw NSError(domain: "fetch error", code: 1004) }
+              (200...299).contains(statusCode) else {
+            throw NSError(domain: "fetch error", code: 1004)
+        }
         
         return data
     }
     
     func configureDataSource() -> JourneyListDataSource {
         // TODO: 최적화 & 캐싱
-        let cellRegistration = JourneyCellRegistration { cell, _, itemIdentifier in
+        let cellRegistration = JourneyCellRegistration { cell, indexPath, itemIdentifier in
             let cellModel = JourneyCellModel(location: itemIdentifier.location,
                                              date: itemIdentifier.date,
                                              songTitle: itemIdentifier.song.title,
@@ -173,11 +180,18 @@ private extension JourneyListViewController {
                 
                 await withTaskGroup(of: (index: Int, imageData: Data).self) { group in
                     for (index, photoURL) in photoURLs.enumerated() {
+                        let key = "\(indexPath.section)-\(indexPath.item)-\(index)"
                         group.addTask(priority: .background) { [weak self] in
-                            guard let imageData = try? await self?.fetchImage(url: photoURL) else {
-                                return (0, Data())
+                            if let cachedData = self?.cache.data(forKey: key) {
+                                return (index, cachedData)
                             }
-                            return (index, imageData)
+                            
+                            if let imageData = try? await self?.fetchImage(url: photoURL) {
+                                self?.cache.cache(imageData, forKey: key)
+                                return (index, imageData)
+                            }
+                            
+                            return (0, Data())
                         }
                     }
                     

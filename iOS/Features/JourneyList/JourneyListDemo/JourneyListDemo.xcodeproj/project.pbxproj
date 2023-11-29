@@ -21,7 +21,6 @@
 		DDAA4D8B2B1734FB002F0748 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DDAA4D8E2B1734FB002F0748 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DDAA4D902B1734FB002F0748 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DDAA4E2B2B178E05002F0748 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,12 +103,11 @@
 			};
 			buildConfigurationList = DDAA4D7A2B1734F9002F0748 /* Build configuration list for PBXProject "JourneyListDemo" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = ko;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
-				ko,
 			);
 			mainGroup = DDAA4D762B1734F9002F0748;
 			packageReferences = (
@@ -153,7 +151,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				DDAA4D8E2B1734FB002F0748 /* Base */,
-				DDAA4E2B2B178E05002F0748 /* ko */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
