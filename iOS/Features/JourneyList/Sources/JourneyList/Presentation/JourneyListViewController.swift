@@ -20,6 +20,9 @@ public final class JourneyListViewController: UIViewController {
     
     private enum Typo {
         static let title: String = "지난 여정"
+        static func subtitle(numberOfJourneys: Int) -> String {
+            return "현재 위치에 \(numberOfJourneys)개의 여정이 있습니다."
+        }
     }
     
     private enum Metric {
@@ -62,7 +65,7 @@ public final class JourneyListViewController: UIViewController {
         let label = UILabel()
         label.font = .msFont(.caption)
         label.textColor = .msColor(.secondaryTypo)
-        label.text = "현재 위치에 0개의 여정이 있습니다."
+        label.text = Typo.subtitle(numberOfJourneys: 0)
         return label
     }()
     
@@ -103,7 +106,7 @@ public final class JourneyListViewController: UIViewController {
         self.viewModel.state.journeys
             .receive(on: DispatchQueue.main)
             .sink { journeys in
-                self.subtitleLabel.text = "현재 위치에 \(journeys.count)개의 여정이 있습니다."
+                self.subtitleLabel.text = Typo.subtitle(numberOfJourneys: journeys.count)
                 var snapshot = JourneySnapshot()
                 snapshot.appendSections([.zero])
                 snapshot.appendItems(journeys, toSection: .zero)
