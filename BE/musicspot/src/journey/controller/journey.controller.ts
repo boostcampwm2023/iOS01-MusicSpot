@@ -20,6 +20,7 @@ import { Journey } from '../schema/journey.schema';
 import { EndJourneyDTO } from '.././dto/journeyEnd.dto';
 import { RecordJourneyDTO } from '.././dto/journeyRecord.dto';
 import { CheckJourneyDTO } from '../dto/journeyCheck.dto';
+import { EndJourneyResponseDTO } from '../dto/journeyEndResponse.dto';
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
@@ -28,23 +29,24 @@ export class JourneyController {
 
   @ApiOperation({
     summary: '여정 시작 API',
-    description: '여정 기록을 시작합니다..',
+    description: '여정 기록을 시작합니다.',
   })
   @ApiCreatedResponse({
     description: '생성된 여정 데이터를 반환',
     type: Journey,
   })
   @Post('start')
-  async create(@Body() startJourneyDTO: StartJourneyDTO) {
+  async create(@Body() startJourneyDTO: StartJourneyDTO): Promise<Journey> {
     return await this.journeyService.create(startJourneyDTO);
   }
+
   @ApiOperation({
     summary: '여정 종료 API',
     description: '여정을 종료합니다.',
   })
   @ApiCreatedResponse({
     description: '현재는 좌표 데이터의 길이를 반환, 추후 참 거짓으로 변경 예정',
-    type: Journey,
+    type: EndJourneyResponseDTO,
   })
   @Post('end')
   async end(@Body() endJourneyDTO: EndJourneyDTO) {

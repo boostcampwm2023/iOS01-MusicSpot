@@ -28,6 +28,11 @@ export class EndJourneyDTO {
   @IsDateString()
   readonly timestamp: string;
 
+  @ApiProperty({
+    example: '여정 제목',
+    description: '여정 제목',
+    required: true,
+  })
   @IsString()
   readonly title: string;
 }
