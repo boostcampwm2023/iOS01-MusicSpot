@@ -8,10 +8,7 @@
       location = "container:"
       name = "Features">
       <FileRef
-         location = "group:Features/HomeMap">
-      </FileRef>
-      <FileRef
-         location = "group:Features/RecordJourney">
+         location = "group:Features/Home">
       </FileRef>
       <FileRef
          location = "group:Features/Spot">

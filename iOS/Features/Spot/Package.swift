@@ -5,21 +5,32 @@ import PackageDescription
 
 // MARK: - Constants
 
-extension String {
-    static let package = "Spot"
-    static let spot = "Spot"
-    static let msUIKit = "MSUIKit"
-    static let msFoundation = "MSFoundation"
-    static let msDesignsystem = "MSDesignSystem"
-    static let msLogger = "MSLogger"
+private extension String {
+    
+    static let package = "FeatureSpot"
     
     var testTarget: String {
         return self + "Tests"
     }
     
-    var path: String {
+    var fromRootPath: String {
         return "../../" + self
     }
+    
+}
+
+private enum Target {
+    
+    static let spot = "Spot"
+    
+}
+
+private enum Dependency {
+    
+    static let msUIKit = "MSUIKit"
+    static let msFoundation = "MSFoundation"
+    static let msDesignsystem = "MSDesignSystem"
+    static let msLogger = "MSLogger"
     
 }
 
@@ -31,22 +42,24 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(name: .spot,
-                 targets: [.spot])
+        .library(name: Target.spot,
+                 targets: [Target.spot])
     ],
     dependencies: [
-        .package(path: .msUIKit.path),
-        .package(path: .msFoundation.path)
+        .package(name: Dependency.msUIKit,
+                 path: Dependency.msUIKit.fromRootPath),
+        .package(name: Dependency.msFoundation,
+                 path: Dependency.msFoundation.fromRootPath)
     ],
     targets: [
-        // Codes
-        .target(name: .spot,
+        .target(name: Target.spot,
                 dependencies: [
-                    .product(name: .msUIKit, package: .msUIKit),
-                    .product(name: .msDesignsystem, package: .msUIKit),
-                    .product(name: .msLogger, package: .msFoundation)
+                    .product(name: Dependency.msUIKit,
+                             package: Dependency.msUIKit),
+                    .product(name: Dependency.msDesignsystem,
+                             package: Dependency.msUIKit),
+                    .product(name: Dependency.msLogger,
+                             package: Dependency.msFoundation)
                 ])
-        
-        // Tests
     ]
 )
