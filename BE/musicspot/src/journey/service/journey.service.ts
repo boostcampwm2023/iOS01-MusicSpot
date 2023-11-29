@@ -91,7 +91,7 @@ export class JourneyService {
         }
       }
       if (chk) {
-        journeyList.push(journey.coordinates);
+        journeyList.push(journey);
       }
     }
     return journeyList;

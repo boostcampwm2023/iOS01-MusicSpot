@@ -21,6 +21,7 @@ import { EndJourneyDTO } from '.././dto/journeyEnd.dto';
 import { RecordJourneyDTO } from '.././dto/journeyRecord.dto';
 import { CheckJourneyDTO } from '../dto/journeyCheck.dto';
 import { EndJourneyResponseDTO } from '../dto/journeyEndResponse.dto';
+import { CheckJourneyResponseDTO } from '../dto/journeyCheckResponse.dto';
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
@@ -95,7 +96,7 @@ export class JourneyController {
   })
   @ApiCreatedResponse({
     description: '범위에 있는 여정의 기록들을 반환',
-    type: Journey,
+    type: CheckJourneyResponseDTO,
   })
   @Get('check')
   @UsePipes(ValidationPipe)
@@ -118,7 +119,7 @@ export class JourneyController {
   })
   @ApiCreatedResponse({
     description: '범위에 있는 여정의 기록들을 반환',
-    type: Journey,
+    type: CheckJourneyResponseDTO,
   })
   @Post('check')
   @UsePipes(ValidationPipe) //유효성 체크
