@@ -17,7 +17,7 @@ public protocol CacheStorage {
     
     // MARK: - Functions
     
-    func data(forKey key: Key) async -> Value?
+    func data(forKey key: Key) -> Value?
     func cache(_ value: Value, forKey key: Key) -> CacheResult
     func cleanDisk() throws
     

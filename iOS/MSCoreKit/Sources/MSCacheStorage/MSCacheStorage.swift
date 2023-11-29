@@ -41,7 +41,7 @@ public final class MSCacheStorage: CacheStorage {
     /// - Parameters:
     ///   - key: 캐싱된 데이터를 찾기 위한 캐시 Key
     /// - Returns: 캐싱된 데이터를 반환합니다. 데이터가 없을 경우 `nil` 값을 반환합니다.
-    public func data(forKey key: Key) async -> Value? {
+    public func data(forKey key: Key) -> Value? {
         // Memory Cache
         if let memoryData = self.memory.object(forKey: key as NSString) { // memory hit
             return memoryData as Data
@@ -134,26 +134,33 @@ public final class MSCacheStorage: CacheStorage {
 private extension MSCacheStorage {
     
     var cacheDirectoryURL: URL? {
+        let directoryURL: URL?
         if #available(iOS 16.0, *) {
-            return try? self.disk.url(for: .cachesDirectory,
-                                      in: .userDomainMask,
-                                      appropriateFor: .cachesDirectory,
-                                      create: true)
+            let cacheDirectoryURL = try? self.disk.url(for: .cachesDirectory,
+                                                       in: .userDomainMask,
+                                                       appropriateFor: .cachesDirectory,
+                                                       create: false)
+            directoryURL = cacheDirectoryURL?
+                .appending(path: Constants.appBundleIdentifier, directoryHint: .isDirectory)
         } else {
-            return self.disk
+            let cacheDirectoryURL = self.disk
                 .urls(for: .cachesDirectory, in: .userDomainMask)
                 .first
+            directoryURL = cacheDirectoryURL?
+                .appendingPathComponent(Constants.appBundleIdentifier, isDirectory: true)
         }
+        
+        guard let directoryURL else { return nil }
+        try? self.disk.createDirectory(at: directoryURL, withIntermediateDirectories: true)
+        return directoryURL
     }
     
     func cacheURL(forCache cache: String, fileExtension: String = "cache") -> URL? {
         if #available(iOS 16.0, *) {
             return self.cacheDirectoryURL?
-                .appending(path: Constants.appName, directoryHint: .isDirectory)
                 .appending(component: "\(cache).\(fileExtension)", directoryHint: .notDirectory)
         } else {
             return self.cacheDirectoryURL?
-                .appendingPathComponent(Constants.appName, isDirectory: true)
                 .appendingPathComponent("\(cache).\(fileExtension)")
         }
     }
