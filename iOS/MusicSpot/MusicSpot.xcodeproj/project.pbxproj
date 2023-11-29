@@ -3,10 +3,33 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08BA0C6D2B15526F00BD0829 /* MSCacheStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 08BA0C6C2B15526F00BD0829 /* MSCacheStorage */; };
+		08BA0C6F2B15526F00BD0829 /* MSFetcher in Frameworks */ = {isa = PBXBuildFile; productRef = 08BA0C6E2B15526F00BD0829 /* MSFetcher */; };
+		08BA0C712B15526F00BD0829 /* MSNetworking in Frameworks */ = {isa = PBXBuildFile; productRef = 08BA0C702B15526F00BD0829 /* MSNetworking */; };
+		08BA0C732B15526F00BD0829 /* MSPersistentStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 08BA0C722B15526F00BD0829 /* MSPersistentStorage */; };
+		08BA0C762B15527500BD0829 /* MSDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 08BA0C752B15527500BD0829 /* MSDesignSystem */; };
+		08BA0C782B15527500BD0829 /* MSUIComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 08BA0C772B15527500BD0829 /* MSUIComponents */; };
+		08BA0C7B2B15527E00BD0829 /* FoundationExt in Frameworks */ = {isa = PBXBuildFile; productRef = 08BA0C7A2B15527E00BD0829 /* FoundationExt */; };
+		08BA0C7D2B15527E00BD0829 /* MSLogger in Frameworks */ = {isa = PBXBuildFile; productRef = 08BA0C7C2B15527E00BD0829 /* MSLogger */; };
+		08BA0C7F2B15527E00BD0829 /* MSUserDefaults in Frameworks */ = {isa = PBXBuildFile; productRef = 08BA0C7E2B15527E00BD0829 /* MSUserDefaults */; };
+		08BA0C812B15533A00BD0829 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BA0C802B15533A00BD0829 /* AppCoordinator.swift */; };
+		08BA0CDB2B15D38400BD0829 /* RewindCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BA0CDA2B15D38400BD0829 /* RewindCoordinator.swift */; };
+		08BA0CDE2B15D57600BD0829 /* HomeMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BA0CDD2B15D57600BD0829 /* HomeMapViewController.swift */; };
+		08BA0CE02B15D6AB00BD0829 /* RewindViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BA0CDF2B15D6AB00BD0829 /* RewindViewController.swift */; };
+		08BA0CE22B15D72800BD0829 /* HomeMapCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BA0CE12B15D72800BD0829 /* HomeMapCoordinator.swift */; };
+		08BA0CE42B15DAAA00BD0829 /* SettingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BA0CE32B15DAAA00BD0829 /* SettingCoordinator.swift */; };
+		08BA0CE62B15DBD000BD0829 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BA0CE52B15DBD000BD0829 /* SettingViewController.swift */; };
+		08BA0CE82B15EB8300BD0829 /* SpotCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BA0CE72B15EB8300BD0829 /* SpotCoordinator.swift */; };
+		08BA0CEA2B15EBDC00BD0829 /* SpotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BA0CE92B15EBDC00BD0829 /* SpotViewController.swift */; };
+		08BA0CEC2B1660CD00BD0829 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BA0CEB2B1660CD00BD0829 /* Coordinator.swift */; };
+		08BA0CF02B17693E00BD0829 /* SearchMusicCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BA0CEF2B17693E00BD0829 /* SearchMusicCoordinator.swift */; };
+		08BA0CF22B17699B00BD0829 /* SearchMusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BA0CF12B17699B00BD0829 /* SearchMusicViewController.swift */; };
+		08BA0CF42B176A8300BD0829 /* SaveJourneyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BA0CF32B176A8300BD0829 /* SaveJourneyViewController.swift */; };
+		08BA0CF62B176B2F00BD0829 /* SaveJourneyCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BA0CF52B176B2F00BD0829 /* SaveJourneyCoordinator.swift */; };
 		DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */; };
 		DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */; };
 		DD73F8622B024C4B00EE9BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */; };
@@ -14,6 +37,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		08BA0C802B15533A00BD0829 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		08BA0CDA2B15D38400BD0829 /* RewindCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewindCoordinator.swift; sourceTree = "<group>"; };
+		08BA0CDD2B15D57600BD0829 /* HomeMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMapViewController.swift; sourceTree = "<group>"; };
+		08BA0CDF2B15D6AB00BD0829 /* RewindViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewindViewController.swift; sourceTree = "<group>"; };
+		08BA0CE12B15D72800BD0829 /* HomeMapCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMapCoordinator.swift; sourceTree = "<group>"; };
+		08BA0CE32B15DAAA00BD0829 /* SettingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingCoordinator.swift; sourceTree = "<group>"; };
+		08BA0CE52B15DBD000BD0829 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		08BA0CE72B15EB8300BD0829 /* SpotCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotCoordinator.swift; sourceTree = "<group>"; };
+		08BA0CE92B15EBDC00BD0829 /* SpotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotViewController.swift; sourceTree = "<group>"; };
+		08BA0CEB2B1660CD00BD0829 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		08BA0CEF2B17693E00BD0829 /* SearchMusicCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMusicCoordinator.swift; sourceTree = "<group>"; };
+		08BA0CF12B17699B00BD0829 /* SearchMusicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMusicViewController.swift; sourceTree = "<group>"; };
+		08BA0CF32B176A8300BD0829 /* SaveJourneyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveJourneyViewController.swift; sourceTree = "<group>"; };
+		08BA0CF52B176B2F00BD0829 /* SaveJourneyCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveJourneyCoordinator.swift; sourceTree = "<group>"; };
 		DD73F8552B024C4900EE9BF2 /* MusicSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -28,12 +65,49 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08BA0C7D2B15527E00BD0829 /* MSLogger in Frameworks */,
+				08BA0C782B15527500BD0829 /* MSUIComponents in Frameworks */,
+				08BA0C6F2B15526F00BD0829 /* MSFetcher in Frameworks */,
+				08BA0C732B15526F00BD0829 /* MSPersistentStorage in Frameworks */,
+				08BA0C7B2B15527E00BD0829 /* FoundationExt in Frameworks */,
+				08BA0C762B15527500BD0829 /* MSDesignSystem in Frameworks */,
+				08BA0C6D2B15526F00BD0829 /* MSCacheStorage in Frameworks */,
+				08BA0C7F2B15527E00BD0829 /* MSUserDefaults in Frameworks */,
+				08BA0C712B15526F00BD0829 /* MSNetworking in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		089F29782B154CF10065E77B /* MSCoordinator */ = {
+			isa = PBXGroup;
+			children = (
+				08BA0C802B15533A00BD0829 /* AppCoordinator.swift */,
+				08BA0CDA2B15D38400BD0829 /* RewindCoordinator.swift */,
+				08BA0CE12B15D72800BD0829 /* HomeMapCoordinator.swift */,
+				08BA0CE32B15DAAA00BD0829 /* SettingCoordinator.swift */,
+				08BA0CE72B15EB8300BD0829 /* SpotCoordinator.swift */,
+				08BA0CEB2B1660CD00BD0829 /* Coordinator.swift */,
+				08BA0CEF2B17693E00BD0829 /* SearchMusicCoordinator.swift */,
+				08BA0CF52B176B2F00BD0829 /* SaveJourneyCoordinator.swift */,
+			);
+			path = MSCoordinator;
+			sourceTree = "<group>";
+		};
+		08BA0CDC2B15D54D00BD0829 /* TempViewController */ = {
+			isa = PBXGroup;
+			children = (
+				08BA0CDD2B15D57600BD0829 /* HomeMapViewController.swift */,
+				08BA0CDF2B15D6AB00BD0829 /* RewindViewController.swift */,
+				08BA0CE52B15DBD000BD0829 /* SettingViewController.swift */,
+				08BA0CE92B15EBDC00BD0829 /* SpotViewController.swift */,
+				08BA0CF12B17699B00BD0829 /* SearchMusicViewController.swift */,
+				08BA0CF32B176A8300BD0829 /* SaveJourneyViewController.swift */,
+			);
+			path = TempViewController;
+			sourceTree = "<group>";
+		};
 		DD73F84C2B024C4900EE9BF2 = {
 			isa = PBXGroup;
 			children = (
@@ -54,6 +128,8 @@
 		DD73F8572B024C4900EE9BF2 /* MusicSpot */ = {
 			isa = PBXGroup;
 			children = (
+				08BA0CDC2B15D54D00BD0829 /* TempViewController */,
+				089F29782B154CF10065E77B /* MSCoordinator */,
 				DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */,
 				DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */,
 				DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */,
@@ -87,6 +163,15 @@
 			);
 			name = MusicSpot;
 			packageProductDependencies = (
+				08BA0C6C2B15526F00BD0829 /* MSCacheStorage */,
+				08BA0C6E2B15526F00BD0829 /* MSFetcher */,
+				08BA0C702B15526F00BD0829 /* MSNetworking */,
+				08BA0C722B15526F00BD0829 /* MSPersistentStorage */,
+				08BA0C752B15527500BD0829 /* MSDesignSystem */,
+				08BA0C772B15527500BD0829 /* MSUIComponents */,
+				08BA0C7A2B15527E00BD0829 /* FoundationExt */,
+				08BA0C7C2B15527E00BD0829 /* MSLogger */,
+				08BA0C7E2B15527E00BD0829 /* MSUserDefaults */,
 			);
 			productName = MusicSpot;
 			productReference = DD73F8552B024C4900EE9BF2 /* MusicSpot.app */;
@@ -117,6 +202,9 @@
 			);
 			mainGroup = DD73F84C2B024C4900EE9BF2;
 			packageReferences = (
+				08BA0C6B2B15526F00BD0829 /* XCLocalSwiftPackageReference "../MSCoreKit" */,
+				08BA0C742B15527500BD0829 /* XCLocalSwiftPackageReference "../MSUIKit" */,
+				08BA0C792B15527E00BD0829 /* XCLocalSwiftPackageReference "../MSFoundation" */,
 			);
 			productRefGroup = DD73F8562B024C4900EE9BF2 /* Products */;
 			projectDirPath = "";
@@ -144,8 +232,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08BA0CEA2B15EBDC00BD0829 /* SpotViewController.swift in Sources */,
+				08BA0C812B15533A00BD0829 /* AppCoordinator.swift in Sources */,
+				08BA0CE02B15D6AB00BD0829 /* RewindViewController.swift in Sources */,
 				DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */,
+				08BA0CF42B176A8300BD0829 /* SaveJourneyViewController.swift in Sources */,
+				08BA0CE22B15D72800BD0829 /* HomeMapCoordinator.swift in Sources */,
+				08BA0CF62B176B2F00BD0829 /* SaveJourneyCoordinator.swift in Sources */,
 				DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */,
+				08BA0CE62B15DBD000BD0829 /* SettingViewController.swift in Sources */,
+				08BA0CDB2B15D38400BD0829 /* RewindCoordinator.swift in Sources */,
+				08BA0CF22B17699B00BD0829 /* SearchMusicViewController.swift in Sources */,
+				08BA0CEC2B1660CD00BD0829 /* Coordinator.swift in Sources */,
+				08BA0CDE2B15D57600BD0829 /* HomeMapViewController.swift in Sources */,
+				08BA0CE82B15EB8300BD0829 /* SpotCoordinator.swift in Sources */,
+				08BA0CF02B17693E00BD0829 /* SearchMusicCoordinator.swift in Sources */,
+				08BA0CE42B15DAAA00BD0829 /* SettingCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -373,6 +475,60 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		08BA0C6B2B15526F00BD0829 /* XCLocalSwiftPackageReference "../MSCoreKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MSCoreKit;
+		};
+		08BA0C742B15527500BD0829 /* XCLocalSwiftPackageReference "../MSUIKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MSUIKit;
+		};
+		08BA0C792B15527E00BD0829 /* XCLocalSwiftPackageReference "../MSFoundation" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MSFoundation;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		08BA0C6C2B15526F00BD0829 /* MSCacheStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSCacheStorage;
+		};
+		08BA0C6E2B15526F00BD0829 /* MSFetcher */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSFetcher;
+		};
+		08BA0C702B15526F00BD0829 /* MSNetworking */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSNetworking;
+		};
+		08BA0C722B15526F00BD0829 /* MSPersistentStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSPersistentStorage;
+		};
+		08BA0C752B15527500BD0829 /* MSDesignSystem */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSDesignSystem;
+		};
+		08BA0C772B15527500BD0829 /* MSUIComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSUIComponents;
+		};
+		08BA0C7A2B15527E00BD0829 /* FoundationExt */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FoundationExt;
+		};
+		08BA0C7C2B15527E00BD0829 /* MSLogger */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSLogger;
+		};
+		08BA0C7E2B15527E00BD0829 /* MSUserDefaults */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSUserDefaults;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DD73F84D2B024C4900EE9BF2 /* Project object */;
 }
