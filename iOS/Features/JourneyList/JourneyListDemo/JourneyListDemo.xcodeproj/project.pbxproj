@@ -11,7 +11,7 @@
 		DDAA4D852B1734F9002F0748 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA4D842B1734F9002F0748 /* SceneDelegate.swift */; };
 		DDAA4D8C2B1734FB002F0748 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DDAA4D8B2B1734FB002F0748 /* Assets.xcassets */; };
 		DDAA4D8F2B1734FB002F0748 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DDAA4D8D2B1734FB002F0748 /* LaunchScreen.storyboard */; };
-		DDAA4E272B17375F002F0748 /* JourneyList in Frameworks */ = {isa = PBXBuildFile; productRef = DDAA4E262B17375F002F0748 /* JourneyList */; };
+		DDAA4E2A2B174271002F0748 /* JourneyList in Frameworks */ = {isa = PBXBuildFile; productRef = DDAA4E292B174271002F0748 /* JourneyList */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,7 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDAA4E272B17375F002F0748 /* JourneyList in Frameworks */,
+				DDAA4E2A2B174271002F0748 /* JourneyList in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,7 +80,7 @@
 			);
 			name = JourneyListDemo;
 			packageProductDependencies = (
-				DDAA4E262B17375F002F0748 /* JourneyList */,
+				DDAA4E292B174271002F0748 /* JourneyList */,
 			);
 			productName = JourneyListDemo;
 			productReference = DDAA4D7F2B1734F9002F0748 /* JourneyListDemo.app */;
@@ -111,7 +111,7 @@
 			);
 			mainGroup = DDAA4D762B1734F9002F0748;
 			packageReferences = (
-				DDAA4E252B17375F002F0748 /* XCLocalSwiftPackageReference ".." */,
+				DDAA4E282B174271002F0748 /* XCLocalSwiftPackageReference ".." */,
 			);
 			productRefGroup = DDAA4D802B1734F9002F0748 /* Products */;
 			projectDirPath = "";
@@ -361,14 +361,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		DDAA4E252B17375F002F0748 /* XCLocalSwiftPackageReference ".." */ = {
+		DDAA4E282B174271002F0748 /* XCLocalSwiftPackageReference ".." */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ..;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		DDAA4E262B17375F002F0748 /* JourneyList */ = {
+		DDAA4E292B174271002F0748 /* JourneyList */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = JourneyList;
 		};

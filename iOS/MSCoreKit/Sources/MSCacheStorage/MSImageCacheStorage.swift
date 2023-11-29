@@ -38,7 +38,7 @@ public final class MSImageCacheStorage: CacheStorage {
         // Disk Cache
         if let cacheURL = self.cacheURL(forCache: "\(key).cache"),
            let diskData = self.disk.contents(atPath: cacheURL.path) { // disk hit
-            
+            return NSData(data: diskData)
         }
         
         return nil
