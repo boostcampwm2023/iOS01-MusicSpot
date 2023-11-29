@@ -33,7 +33,7 @@ public final class MSCacheStorage: CacheStorage {
         self.disk = fileManager
     }
     
-    // MARK: - Functions
+    // MARK: - Read
     
     /// 캐싱된 데이터를 불러옵니다.
     /// **메모리** 캐시에서 값을 우선적으로 찾은 후, 존재하면 해당 값을 반환합니다.
@@ -55,6 +55,8 @@ public final class MSCacheStorage: CacheStorage {
         
         return nil
     }
+    
+    // MARK: - Create
     
     /// 데이터를 캐싱합니다.
     /// - Parameters:
@@ -92,6 +94,8 @@ public final class MSCacheStorage: CacheStorage {
         return .success
     }
     
+    // MARK: - Delete
+    
     /// 캐싱된 데이터를 제거합니다.
     /// - Parameters:
     ///   - key: 제거할 캐시를 찾기 위한 캐시 Key
@@ -121,7 +125,35 @@ public final class MSCacheStorage: CacheStorage {
         return .success
     }
     
-    public func cleanDisk() throws {
+    // MARK: - Clean
+    
+    /// 캐싱된 데이터를 삭제합니다.
+    /// - Parameters:
+    ///   - target: 삭제할 대상을 선택합니다.
+    ///     - `.all`: **디스크와 메모리** 캐시를 모두 삭제합니다.
+    ///     - `.disk`: **디스크**에 저장된 캐시를 모두 삭제합니다.
+    ///     - `.memory`: **메모리**에 저장된 캐시를 모두 삭제합니다.
+    public func clean(_ target: CacheStorageTarget) throws {
+        switch target {
+        case .all:
+            try self.cleanAll()
+        case .memory:
+            self.cleanMemory()
+        case .disk:
+            try self.cleanDisk()
+        }
+    }
+    
+    private func cleanAll() throws {
+        self.cleanMemory()
+        try self.cleanDisk()
+    }
+    
+    private func cleanMemory() {
+        self.memory.removeAllObjects()
+    }
+    
+    private func cleanDisk() throws {
         if let path = self.cacheDirectoryURL?.path {
             try self.disk.removeItem(atPath: path)
         }
@@ -135,6 +167,7 @@ private extension MSCacheStorage {
     
     var cacheDirectoryURL: URL? {
         let directoryURL: URL?
+        
         if #available(iOS 16.0, *) {
             let cacheDirectoryURL = try? self.disk.url(for: .cachesDirectory,
                                                        in: .userDomainMask,
@@ -151,17 +184,24 @@ private extension MSCacheStorage {
         }
         
         guard let directoryURL else { return nil }
-        try? self.disk.createDirectory(at: directoryURL, withIntermediateDirectories: true)
+        do {
+            try self.disk.createDirectory(at: directoryURL, withIntermediateDirectories: true)
+        } catch {
+            return nil
+        }
+        
         return directoryURL
     }
     
     func cacheURL(forCache cache: String, fileExtension: String = "cache") -> URL? {
         if #available(iOS 16.0, *) {
             return self.cacheDirectoryURL?
-                .appending(component: "\(cache).\(fileExtension)", directoryHint: .notDirectory)
+                .appending(component: cache, directoryHint: .notDirectory)
+                .appendingPathExtension(fileExtension)
         } else {
             return self.cacheDirectoryURL?
-                .appendingPathComponent("\(cache).\(fileExtension)")
+                .appendingPathComponent(cache)
+                .appendingPathComponent(fileExtension, isDirectory: false)
         }
     }
     

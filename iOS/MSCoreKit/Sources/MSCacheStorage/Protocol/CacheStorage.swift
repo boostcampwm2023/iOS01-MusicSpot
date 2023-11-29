@@ -19,6 +19,14 @@ public protocol CacheStorage {
     
     func data(forKey key: Key) -> Value?
     func cache(_ value: Value, forKey key: Key) -> CacheResult
-    func cleanDisk() throws
+    func remove(forKey key: Key) -> CacheResult
     
+    func clean(_ target: CacheStorageTarget) throws
+    
+}
+
+public enum CacheStorageTarget {
+    case all
+    case memory
+    case disk
 }
