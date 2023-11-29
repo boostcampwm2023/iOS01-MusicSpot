@@ -7,10 +7,6 @@
 
 import UIKit
 
-import JourneyList
-import MSData
-import MSDesignSystem
-
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     // MARK: - Properties
@@ -26,11 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         defer { self.window = window }
         
-        MSFont.registerFonts()
-        
-        let journeyRepository = JourneyRepositoryImplementation()
-        let testViewModel = JourneyListViewModel(repository: journeyRepository)
-        let testViewController = JourneyListViewController(viewModel: testViewModel)
+        let testViewController = UIViewController()
         window.rootViewController = testViewController
         window.makeKeyAndVisible()
     }
