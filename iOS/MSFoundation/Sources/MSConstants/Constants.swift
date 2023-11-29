@@ -9,6 +9,6 @@ import Foundation
 
 public enum Constants {
     
-    static let appName = "MusicSpot"
+    public static let appName = "MusicSpot"
     
 }

@@ -7,5 +7,7 @@
 
 import XCTest
 
+@testable import MSCacheStorage
+
 final class MSCacheStorageTests: XCTestCase {
 }
