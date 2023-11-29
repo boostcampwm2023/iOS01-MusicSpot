@@ -15,4 +15,5 @@ public enum MSLogCategory: String {
     case checkJourney
     case login
     case setting
+    case camera
 }

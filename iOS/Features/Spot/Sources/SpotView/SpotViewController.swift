@@ -150,6 +150,8 @@ public final class SpotViewController: UIViewController {
     // MARK: - UI Components: Style
     
     private func configureStyle() {
+        
+        MSFont.registerFonts()
         self.view.backgroundColor = .msColor(.primaryBackground)
         self.configureImageViewStyle()
         self.configureLabelsStyle()
@@ -234,7 +236,6 @@ public final class SpotViewController: UIViewController {
 
 @available(iOS 17, *)
 #Preview {
-    MSFont.registerFonts()
     let viewController = SpotViewController()
     return viewController
 }
