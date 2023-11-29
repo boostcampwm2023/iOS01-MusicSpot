@@ -36,6 +36,11 @@ public final class MSCacheStorage: CacheStorage {
     // MARK: - Functions
     
     /// 캐싱된 데이터를 불러옵니다.
+    /// **메모리** 캐시에서 값을 우선적으로 찾은 후, 존재하면 해당 값을 반환합니다.
+    /// 그 후에 **디스크** 캐시에서 값을 찾아 존재할 경우 반환합니다.
+    /// - Parameters:
+    ///   - key: 캐싱된 데이터를 찾기 위한 캐시 Key
+    /// - Returns: 캐싱된 데이터를 반환합니다. 데이터가 없을 경우 `nil` 값을 반환합니다.
     public func data(forKey key: Key) async -> Value? {
         // Memory Cache
         if let memoryData = self.memory.object(forKey: key as NSString) { // memory hit
@@ -51,6 +56,15 @@ public final class MSCacheStorage: CacheStorage {
         return nil
     }
     
+    /// 데이터를 캐싱합니다.
+    /// - Parameters:
+    ///   - value: 캐싱할 데이터
+    ///   - key: 데이터를 캐싱하기 위한 캐시 Key
+    /// - Returns:
+    /// 캐싱 결과를 반환합니다.
+    /// 성공했을 경우 `.success`를,
+    /// 메모리 캐싱 중 오류가 발생할 경우 `.memoryFail`을,
+    /// 디스크 캐싱 중 오류가 발생할 경우 `.diskFail`을 반환합니다.
     @discardableResult
     public func cache(_ value: Value, forKey key: Key) -> CacheResult {
         // Memory Cache
@@ -65,17 +79,27 @@ public final class MSCacheStorage: CacheStorage {
         guard let cacheURL = self.cacheURL(forCache: key) else {
             return .diskFail
         }
+        let cacheURLString: String
         if #available(iOS 16.0, *) {
-            let fileCreated = self.disk.createFile(atPath: cacheURL.path(), contents: value)
-            if !fileCreated { return .diskFail }
+            cacheURLString = cacheURL.path()
         } else {
-            let fileCreated = self.disk.createFile(atPath: cacheURL.path, contents: value)
-            if !fileCreated { return .diskFail }
+            cacheURLString = cacheURL.path
+        }
+        if self.disk.createFile(atPath: cacheURLString, contents: value) == false {
+            return .diskFail
         }
         
         return .success
     }
     
+    /// 캐싱된 데이터를 제거합니다.
+    /// - Parameters:
+    ///   - key: 제거할 캐시를 찾기 위한 캐시 Key
+    /// - Returns:
+    /// 캐시 값을 제거한 결과를 반환합니다.
+    /// 성공했을 경우 `.success`를,
+    /// 메모리 캐싱 중 오류가 발생할 경우 `.memoryFail`을,
+    /// 디스크 캐싱 중 오류가 발생할 경우 `.diskFail`을 반환합니다.
     @discardableResult
     public func remove(forKey key: Key) -> CacheResult {
         // Memory Cache
@@ -85,12 +109,13 @@ public final class MSCacheStorage: CacheStorage {
         }
         
         // Disk Cache
-        if let cacheURL = self.cacheURL(forCache: key) {
-            do {
-                try self.disk.removeItem(at: cacheURL)
-            } catch {
-                return .diskFail
-            }
+        guard let cacheURL = self.cacheURL(forCache: key) else {
+            return .diskFail
+        }
+        do {
+            try self.disk.removeItem(at: cacheURL)
+        } catch {
+            return .diskFail
         }
         
         return .success
