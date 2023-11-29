@@ -7,12 +7,12 @@
 
 import UIKit
 
-protocol RewindViewControllerDelegate {
+protocol RewindViewControllerDelegate: AnyObject {
     func goHomeMap()
 }
 
 class RewindViewController: UIViewController {
-    
+
     var delegate: RewindViewControllerDelegate?
 
     var label: UILabel = {
@@ -20,13 +20,13 @@ class RewindViewController: UIViewController {
         label.text = "Rewind"
         return label
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .red
         view.addSubview(label)
     }
-    
+
     @objc
     func navigateToHomeMap() {
         self.delegate?.goHomeMap()

@@ -7,26 +7,26 @@
 
 import UIKit
 
-protocol SettingCoordinatorDelegate {
+protocol SettingCoordinatorDelegate: AnyObject {
     func navigateToHomeMap(coordinator: SettingCoordinator)
 }
 
-class SettingCoordinator: Coordinator, SettingViewControllerDelegate  {
-    
+final class SettingCoordinator: Coordinator, SettingViewControllerDelegate {
+
     // MARK: - Properties
 
     var navigationController: UINavigationController
-    
+
     var childCoordinators: [Coordinator] = []
-    
+
     var delegate: SettingCoordinatorDelegate?
-    
+
     // MARK: - Initializer
 
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
-    
+
     // MARK: - Functions
 
     func start() {
@@ -34,7 +34,7 @@ class SettingCoordinator: Coordinator, SettingViewControllerDelegate  {
         settingViewController.delegate = self
         navigationController.pushViewController(settingViewController, animated: true)
     }
-    
+
     func goHomeMap() {
         delegate?.navigateToHomeMap(coordinator: self)
     }

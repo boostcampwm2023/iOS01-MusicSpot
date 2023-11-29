@@ -7,13 +7,13 @@
 
 import UIKit
 
-protocol SearchMusicViewControllerDelegate {
+protocol SearchMusicViewControllerDelegate: AnyObject {
     func goHomeMap()
     func goSaveJourney()
 }
 
 class SearchMusicViewController: UIViewController {
-    
+
     var delegate: SearchMusicViewControllerDelegate?
 
     var label: UILabel = {
@@ -21,18 +21,18 @@ class SearchMusicViewController: UIViewController {
         label.text = "SearchMusic"
         return label
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .red
         view.addSubview(label)
     }
-    
+
     @objc
     func navigateToHomeMap() {
         self.delegate?.goHomeMap()
     }
-    
+
     @objc
     func navigateToSaveJourney() {
         self.delegate?.goSaveJourney()

@@ -7,12 +7,12 @@
 
 import UIKit
 
-protocol SettingViewControllerDelegate {
+protocol SettingViewControllerDelegate: AnyObject {
     func goHomeMap()
 }
 
 class SettingViewController: UIViewController {
-    
+
     var delegate: SettingViewControllerDelegate?
 
     var label: UILabel = {
@@ -20,13 +20,13 @@ class SettingViewController: UIViewController {
         label.text = "Setting"
         return label
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .red
         view.addSubview(label)
     }
-    
+
     @objc
     func navigateToHomeMap() {
         self.delegate?.goHomeMap()

@@ -7,26 +7,26 @@
 
 import UIKit
 
-protocol SpotCoordinatorDelegate {
+protocol SpotCoordinatorDelegate: AnyObject {
     func navigateToHomeMap(coordinator: SpotCoordinator)
     func navigateToSearchMusic(coordinator: SpotCoordinator)
 }
 
-class SpotCoordinator: Coordinator, SpotViewControllerDelegate {
+final class SpotCoordinator: Coordinator, SpotViewControllerDelegate {
     // MARK: - Properties
 
     var navigationController: UINavigationController
-    
+
     var childCoordinators: [Coordinator] = []
-    
+
     var delegate: SpotCoordinatorDelegate?
-    
+
     // MARK: - Initializer
 
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
-    
+
     // MARK: - Functions
 
     func start() {
@@ -34,13 +34,12 @@ class SpotCoordinator: Coordinator, SpotViewControllerDelegate {
         spotViewController.delegate = self
         navigationController.pushViewController(spotViewController, animated: true)
     }
-    
+
     func goHomeMap() {
         delegate?.navigateToHomeMap(coordinator: self)
     }
-    
+
     func goSearchMusic() {
         delegate?.navigateToSearchMusic(coordinator: self)
     }
-    
 }

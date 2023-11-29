@@ -7,13 +7,15 @@
 
 import UIKit
 
-protocol SaveJourneyViewControllerDelegate {
+protocol SaveJourneyViewControllerDelegate: AnyObject {
     func goHomeMap()
     func goSearchMusic()
 }
 
 class SaveJourneyViewController: UIViewController {
-    
+
+    // MARK: - Properties
+
     var delegate: SaveJourneyViewControllerDelegate?
 
     var label: UILabel = {
@@ -21,18 +23,22 @@ class SaveJourneyViewController: UIViewController {
         label.text = "SaveJourney"
         return label
     }()
-    
+
+    // MARK: - Life Cycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .red
         view.addSubview(label)
     }
-    
+
+    // MARK: - Functions
+
     @objc
     func navigateToHomeMap() {
         self.delegate?.goHomeMap()
     }
-    
+
     @objc
     func navigateToSearchMusic() {
         self.delegate?.goSearchMusic()
