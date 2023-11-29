@@ -201,7 +201,7 @@ private extension MSCacheStorage {
         } else {
             return self.cacheDirectoryURL?
                 .appendingPathComponent(cache)
-                .appendingPathComponent(fileExtension, isDirectory: false)
+                .appendingPathExtension(fileExtension)
         }
     }
     
