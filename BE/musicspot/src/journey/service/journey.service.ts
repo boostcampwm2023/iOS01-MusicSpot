@@ -8,6 +8,7 @@ import { User } from '../../user/schema/user.schema';
 import { EndJourneyDTO } from '../dto/journeyEnd.dto';
 import { RecordJourneyDTO } from '../dto/journeyRecord.dto';
 import { CheckJourneyDTO } from '../dto/journeyCheck.dto';
+import { JourneyNotFoundException } from '../../filters/journey.exception';
 
 @Injectable()
 export class JourneyService {
@@ -26,10 +27,12 @@ export class JourneyService {
     return await createdJourneyData.save();
   }
   async pushJourneyIdToUser(journeyId, userEmail) {
-    return await this.userModel.updateOne(
+    const result = await this.userModel.findOneAndUpdate(
       { email: userEmail },
       { $push: { journeys: journeyId } },
+      { new: true },
     );
+    return result;
   }
   async create(startJourneyDTO: StartJourneyDTO): Promise<Journey> {
     const createdJourneyData = await this.insertJourneyData(startJourneyDTO);
@@ -42,7 +45,7 @@ export class JourneyService {
 
   async end(endJourneyDTO: EndJourneyDTO) {
     const journeyId = endJourneyDTO.journeyId;
-    return await this.journeyModel
+    const updatedJourney = await this.journeyModel
       .findOneAndUpdate(
         { _id: journeyId },
         {
@@ -52,13 +55,25 @@ export class JourneyService {
         { new: true },
       )
       .lean();
+
+    if (!updatedJourney) {
+      throw new JourneyNotFoundException();
+    }
+    return updatedJourney;
   }
 
   async pushCoordianteToJourney(recordJourneyDTO: RecordJourneyDTO) {
     const { journeyId, coordinate } = recordJourneyDTO;
-    return await this.journeyModel
-      .updateOne({ _id: journeyId }, { $push: { coordinates: coordinate } })
+    const updatedJourney = await this.journeyModel
+      .findOneAndUpdate(
+        { _id: journeyId },
+        { $push: { coordinates: coordinate } },
+      )
       .lean();
+    if (!updatedJourney) {
+      throw new JourneyNotFoundException();
+    }
+    return updatedJourney;
   }
 
   async checkJourney(checkJourneyDTO: CheckJourneyDTO) {
