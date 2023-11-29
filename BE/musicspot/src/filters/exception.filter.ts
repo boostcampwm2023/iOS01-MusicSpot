@@ -22,6 +22,7 @@ export class AllExceptionFilter implements ExceptionFilter {
       statusCode: err.statusCode,
       timestamp: err.timestamp,
       path: err.path,
+      message: err.message,
     });
   }
 }

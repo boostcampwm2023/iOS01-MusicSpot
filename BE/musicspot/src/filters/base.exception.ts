@@ -12,4 +12,5 @@ export class BaseException extends HttpException implements IBaseException {
   statusCode: number;
   timestamp: string;
   path: string;
+  message: string;
 }
