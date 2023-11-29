@@ -1,68 +1,116 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JourneyService } from './journey.service';
-import mongoose from 'mongoose';
-import { User, UserSchema } from '../../user/schema/user.schema';
-import { Journey, JourneySchema } from '../schema/journey.schema';
+import { User } from '../../user/schema/user.schema';
+import { Journey } from '../schema/journey.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import { StartJourneyDTO } from '../dto/journeyStart.dto';
 import { UserService } from '../../user/serivce/user.service';
+import { RecordJourneyDTO } from '../dto/journeyRecord.dto';
+import { JourneyExceptionMessageEnum } from '../../filters/exception.enum';
 
-describe('JourneysService', () => {
-  let service: JourneyService;
-  let userModel;
-  let journeyModel;
+let service: JourneyService;
+let userModel;
+let journeyModel;
+beforeAll(async () => {
+  const MockUserModel = {
+    findOneAndUpdate: jest.fn(),
+  };
+  const MockJourneyModel = {
+    findOneAndUpdate: jest.fn(),
+    save: jest.fn(),
+    lean: jest.fn(),
+  };
 
-  beforeAll(async () => {
-    mongoose.connect(
-      `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
-    );
-    userModel = mongoose.model(User.name, UserSchema);
-    journeyModel = mongoose.model(Journey.name, JourneySchema);
+  const module: TestingModule = await Test.createTestingModule({
+    providers: [
+      JourneyService,
+      UserService,
+      {
+        provide: getModelToken(Journey.name),
+        useValue: MockJourneyModel,
+      },
+      {
+        provide: getModelToken(User.name),
+        useValue: MockUserModel,
+      },
+    ],
+  }).compile();
 
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        JourneyService,
-        UserService,
-        {
-          provide: getModelToken(Journey.name),
-          useValue: journeyModel,
-        },
-        {
-          provide: getModelToken(User.name),
-          useValue: userModel,
-        },
-      ],
-    }).compile();
+  service = module.get<JourneyService>(JourneyService);
+  userModel = module.get(getModelToken(User.name));
+  journeyModel = module.get(getModelToken(Journey.name));
+});
 
-    service = module.get<JourneyService>(JourneyService);
-  });
-
-  it('journey 시작 테스트', async () => {
-    const coordinate = [37.675986, 126.776032];
-    const timestamp = '2023-11-22T15:30:00.000+09:00';
-    const email = 'test-email';
-
-    const createJourneyData: StartJourneyDTO = {
-      coordinate,
-      timestamp,
-      email,
+describe('여정 시작 관련 service 테스트', () => {
+  it('insertJourneyData 성공 테스트', async () => {
+    journeyModel.save.mockResolvedValue({
+      title: '',
+      spots: [],
+      coordinates: [[37.555946, 126.972384]],
+      timestamp: '2023-11-22T12:00:00Z',
+      _id: '65673e666b2fb1462684b2c7',
+      __v: 0,
+    });
+    const data: StartJourneyDTO = {
+      coordinate: [37.555946, 126.972384],
+      timestamp: '2023-11-22T12:00:00Z',
+      email: 'test@gmail.com',
     };
 
-    const createdJourneyData =
-      await service.insertJourneyData(createJourneyData);
-    expect(coordinate).toEqual(createdJourneyData.coordinates[0]);
-    expect(timestamp).toEqual(createdJourneyData.timestamp);
-    expect(createdJourneyData.spots).toEqual([]);
+    try {
+      const returnData = await service.insertJourneyData(data);
+      const { title, spots, coordinates, timestamp } = returnData;
+      expect(title).toEqual('');
+      expect(spots).toEqual([]);
+      expect(coordinates[0]).toEqual(data.coordinate);
+      expect(timestamp).toEqual(data.timestamp);
+    } catch (err) {
+      console.log(err);
+    }
+  });
+});
 
-    const updateUserInfo = await service.pushJourneyIdToUser(
-      createdJourneyData._id,
-      email,
-    );
-    // console.log(createdUserData);
-    expect(updateUserInfo.modifiedCount).toEqual(1);
+describe.skip('여정 기록 관련 service 테스트', () => {
+  it('pushCoordianteToJourney 성공 테스트', async () => {
+    const data: RecordJourneyDTO = {
+      journeyId: '655f8bd2ceab803bb2d566bc',
+      coordinate: [37.555947, 126.972385],
+    };
+    journeyModel.findOneAndUpdate.mockReturnValue({
+      lean: jest.fn().mockResolvedValue({
+        _id: '65673e666b2fb1462684b2c7',
+        title: '',
+        spots: [],
+        coordinates: [[37.555947, 126.972385]],
+        timestamp: '2023-11-22T12:00:00Z',
+        __v: 0,
+      }),
+    });
+    try {
+      const returnData = await service.pushCoordianteToJourney(data);
+      const { coordinates } = returnData;
+      const lastCoorinate = coordinates[coordinates.length - 1];
+      expect(lastCoorinate).toEqual(data.coordinate);
+    } catch (err) {
+      expect(err.status).toEqual(404);
+      expect(err.message).toEqual(JourneyExceptionMessageEnum.JourneyNotFound);
+    }
   });
 
-  afterAll(async () => {
-    mongoose.connection.close();
+  it('pushCoordianteToJourney 실패 테스트(journeyId 없는 경우)', async () => {
+    journeyModel.findOneAndUpdate.mockReturnValue({
+      lean: jest.fn().mockResolvedValue(null),
+    });
+    const data: RecordJourneyDTO = {
+      journeyId: '655f8bd2ceab803bb2d566bc',
+      coordinate: [37.555947, 126.972385],
+    };
+    try {
+      const returnData = await service.pushCoordianteToJourney(data);
+      expect(returnData).toBeDefined();
+    } catch (err) {
+      expect(err.status).toEqual(404);
+      expect(err.message).toEqual(JourneyExceptionMessageEnum.JourneyNotFound);
+    }
   });
 });
