@@ -9,12 +9,19 @@ import UIKit
 
 final class MusicInfoView: UIView {
     
+    // MARK: - Constants
+    
+    private enum Metric {
+        static let spacing: CGFloat = 8.0
+        static let iconSize: CGFloat = 24.0
+    }
+    
     // MARK: - UI Components
     
     private let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
-        stackView.spacing = 8.0
+        stackView.spacing = Metric.spacing
         return stackView
     }()
     
@@ -27,14 +34,15 @@ final class MusicInfoView: UIView {
     private let iconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = .msIcon(.voice)
+        imageView.tintColor = .msColor(.primaryTypo)
         return imageView
     }()
     
-    private let musicTitleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .msFont(.caption)
+        label.font = .msFont(.boldCaption)
         label.textColor = .msColor(.primaryTypo)
-        label.text = "Attention"
+        label.text = "Title"
         return label
     }()
     
@@ -46,11 +54,11 @@ final class MusicInfoView: UIView {
         return label
     }()
     
-    private let musicArtistLabel: UILabel = {
+    private let artistLabel: UILabel = {
         let label = UILabel()
-        label.font = .msFont(.boldCaption)
+        label.font = .msFont(.caption)
         label.textColor = .msColor(.primaryTypo)
-        label.text = "New Jeans"
+        label.text = "Artist"
         return label
     }()
     
@@ -63,6 +71,13 @@ final class MusicInfoView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
+    }
+    
+    // MARK: - Functions
+    
+    func update(artist: String, title: String) {
+        self.artistLabel.text = artist
+        self.titleLabel.text = title
     }
     
 }
@@ -90,14 +105,14 @@ private extension MusicInfoView {
         }
         self.iconImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.iconImageView.widthAnchor.constraint(equalToConstant: 24.0),
-            self.iconImageView.heightAnchor.constraint(equalToConstant: 24.0)
+            self.iconImageView.widthAnchor.constraint(equalToConstant: Metric.iconSize),
+            self.iconImageView.heightAnchor.constraint(equalToConstant: Metric.iconSize)
         ])
         
         [
-            self.musicArtistLabel,
+            self.titleLabel,
             self.dividerLabel,
-            self.musicTitleLabel
+            self.artistLabel
         ].forEach {
             self.musicInfoStackView.addArrangedSubview($0)
         }

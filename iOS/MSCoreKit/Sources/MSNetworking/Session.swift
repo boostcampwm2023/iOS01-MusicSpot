@@ -7,12 +7,10 @@
 
 import Foundation
 
-protocol Session {
+public protocol Session {
     
     func dataTaskPublisher(for request: URLRequest) -> URLSession.DataTaskPublisher
     
 }
 
-extension URLSession: Session {
-    
-}
+extension URLSession: Session { }

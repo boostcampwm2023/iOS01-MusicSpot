@@ -7,6 +7,8 @@
 
 import UIKit
 
+import MSDesignSystem
+
 final class SpotPhotoImageView: UIView {
     
     // MARK: - Constants
@@ -22,7 +24,6 @@ final class SpotPhotoImageView: UIView {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.backgroundColor = .systemBlue
         return imageView
     }()
     
@@ -40,8 +41,8 @@ final class SpotPhotoImageView: UIView {
     
     // MARK: - Functions
     
-    func update(with imageURL: String) {
-        
+    func update(with imageData: Data) {
+        self.imageView.image = UIImage(data: imageData)
     }
     
 }
@@ -51,6 +52,7 @@ final class SpotPhotoImageView: UIView {
 private extension SpotPhotoImageView {
     
     func configureStyle() {
+        self.backgroundColor = .msColor(.secondaryBackground)
         self.layer.cornerRadius = Metric.cornerRadius
         self.clipsToBounds = true
     }

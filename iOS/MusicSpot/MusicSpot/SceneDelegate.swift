@@ -6,6 +6,9 @@
 //
 
 import UIKit
+import NavigateMap
+
+import MSDesignSystem
 
 import MSDesignSystem
 
@@ -16,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
     // MARK: - Functions
-
+    
     func scene(_ scene: UIScene,
                willConnectTo _: UISceneSession,
                options _: UIScene.ConnectionOptions) {
@@ -24,10 +27,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         defer { self.window = window }
         
-        MSFont.registerFonts()
+        let musicSpotNavigationController = UINavigationController()
+        let appCoordinator = AppCoordinator(navigationController: musicSpotNavigationController)
+        window.rootViewController = musicSpotNavigationController
         
-        let testViewController = UIViewController()
-        window.rootViewController = testViewController
+        appCoordinator.start()
+        
         window.makeKeyAndVisible()
     }
     
