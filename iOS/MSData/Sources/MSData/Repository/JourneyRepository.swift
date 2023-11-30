@@ -5,13 +5,16 @@
 //  Created by 이창준 on 11/26/23.
 //
 
+import Combine
+import Foundation
+
 import MSNetworking
 
 public protocol JourneyRepository {
     func fetchJourneyList() async -> Result<[JourneyDTO], Error>
 }
 
-public struct JourneyRepositoryImpl: JourneyRepository {
+public struct JourneyRepositoryImplementation: JourneyRepository {
     
     // MARK: - Properties
     
@@ -26,7 +29,7 @@ public struct JourneyRepositoryImpl: JourneyRepository {
     // MARK: - Functions
     
     public func fetchJourneyList() async -> Result<[JourneyDTO], Error> {
-        #if DEBUG
+#if DEBUG
         guard let jsonURL = Bundle.module.url(forResource: "MockJourney", withExtension: "json") else {
             return .failure((MSNetworkError.invalidRouter))
         }
@@ -41,7 +44,7 @@ public struct JourneyRepositoryImpl: JourneyRepository {
         } catch {
             print(error)
         }
-        #else
+#else
         return await withCheckedContinuation { continuation in
             var cancellable: AnyCancellable?
             cancellable = self.networking.request([JourneyDTO].self, router: JourneyRouter.journeyList)
@@ -58,7 +61,9 @@ public struct JourneyRepositoryImpl: JourneyRepository {
                     cancellable?.cancel()
                 }
         }
-        #endif
+#endif
+        
+        return .failure(MSNetworkError.unknownResponse)
     }
     
 }

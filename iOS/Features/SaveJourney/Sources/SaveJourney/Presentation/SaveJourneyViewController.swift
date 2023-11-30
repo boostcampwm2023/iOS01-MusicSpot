@@ -79,6 +79,7 @@ public final class SaveJourneyViewController: UIViewController {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.spacing = Metric.buttonSpacing
+        stackView.alignment = .center
         return stackView
     }()
     
