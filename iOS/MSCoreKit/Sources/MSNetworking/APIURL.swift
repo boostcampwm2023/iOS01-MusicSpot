@@ -8,11 +8,15 @@
 import Foundation
 
 enum APIbaseURL: String {
+    
     // base URL 추가
     case none = ""
+	
 }
 
 enum APIpathURL: String {
+    
     // path URL 추가
     case none = ""
+	
 }
