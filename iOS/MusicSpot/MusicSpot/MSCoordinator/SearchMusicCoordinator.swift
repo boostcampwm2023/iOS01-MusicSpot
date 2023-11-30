@@ -8,8 +8,8 @@
 import UIKit
 
 protocol SearchMusicCoordinatorDelegate: AnyObject {
-    func navigateToHomeMap(coordinator: SearchMusicCoordinator)
-    func navigateToSaveJourney(coordinator: SearchMusicCoordinator)
+    func popToHomeMap(coordinator: SearchMusicCoordinator)
+    func pushToSaveJourney(coordinator: SearchMusicCoordinator)
 }
 
 final class SearchMusicCoordinator: Coordinator, SearchMusicViewControllerDelegate {
@@ -37,10 +37,10 @@ final class SearchMusicCoordinator: Coordinator, SearchMusicViewControllerDelega
     }
 
     func goHomeMap() {
-        delegate?.navigateToHomeMap(coordinator: self)
+        delegate?.popToHomeMap(coordinator: self)
     }
 
     func goSaveJourney() {
-        delegate?.navigateToSaveJourney(coordinator: self)
+        delegate?.pushToSaveJourney(coordinator: self)
     }
 }

@@ -8,7 +8,7 @@
 import UIKit
 
 protocol SettingCoordinatorDelegate: AnyObject {
-    func navigateToHomeMap(coordinator: SettingCoordinator)
+    func popToHomeMap(coordinator: SettingCoordinator)
 }
 
 final class SettingCoordinator: Coordinator, SettingViewControllerDelegate {
@@ -36,6 +36,6 @@ final class SettingCoordinator: Coordinator, SettingViewControllerDelegate {
     }
 
     func goHomeMap() {
-        delegate?.navigateToHomeMap(coordinator: self)
+        delegate?.popToHomeMap(coordinator: self)
     }
 }

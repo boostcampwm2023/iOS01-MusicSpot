@@ -8,8 +8,8 @@
 import UIKit
 
 protocol SpotCoordinatorDelegate: AnyObject {
-    func navigateToHomeMap(coordinator: SpotCoordinator)
-    func navigateToSearchMusic(coordinator: SpotCoordinator)
+    func popToHomeMap(coordinator: SpotCoordinator)
+    func pushToSearchMusic(coordinator: SpotCoordinator)
 }
 
 final class SpotCoordinator: Coordinator, SpotViewControllerDelegate {
@@ -36,10 +36,10 @@ final class SpotCoordinator: Coordinator, SpotViewControllerDelegate {
     }
 
     func goHomeMap() {
-        delegate?.navigateToHomeMap(coordinator: self)
+        delegate?.popToHomeMap(coordinator: self)
     }
 
     func goSearchMusic() {
-        delegate?.navigateToSearchMusic(coordinator: self)
+        delegate?.pushToSearchMusic(coordinator: self)
     }
 }

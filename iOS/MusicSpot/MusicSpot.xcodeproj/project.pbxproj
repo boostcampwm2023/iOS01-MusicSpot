@@ -79,14 +79,14 @@
 		08CBF86F2B18468E007D3797 /* MSCoordinator */ = {
 			isa = PBXGroup;
 			children = (
-				08CBF8702B18468E007D3797 /* SaveJourneyCoordinator.swift */,
-				08CBF8712B18468E007D3797 /* AppCoordinator.swift */,
-				08CBF8722B18468E007D3797 /* RewindCoordinator.swift */,
-				08CBF8732B18468E007D3797 /* HomeMapCoordinator.swift */,
-				08CBF8742B18468E007D3797 /* SettingCoordinator.swift */,
-				08CBF8752B18468E007D3797 /* SpotCoordinator.swift */,
-				08CBF8762B18468E007D3797 /* SearchMusicCoordinator.swift */,
 				08CBF8772B18468E007D3797 /* Coordinator.swift */,
+				08CBF8712B18468E007D3797 /* AppCoordinator.swift */,
+				08CBF8732B18468E007D3797 /* HomeMapCoordinator.swift */,
+				08CBF8752B18468E007D3797 /* SpotCoordinator.swift */,
+				08CBF8722B18468E007D3797 /* RewindCoordinator.swift */,
+				08CBF8742B18468E007D3797 /* SettingCoordinator.swift */,
+				08CBF8762B18468E007D3797 /* SearchMusicCoordinator.swift */,
+				08CBF8702B18468E007D3797 /* SaveJourneyCoordinator.swift */,
 			);
 			path = MSCoordinator;
 			sourceTree = "<group>";

@@ -8,9 +8,9 @@
 import UIKit
 
 protocol HomeMapCoordinatorDelegate: AnyObject {
-    func navigateToSpot(coordinator: HomeMapCoordinator)
-    func navigateToRewind(coordinator: HomeMapCoordinator)
-    func navigateToSetting(coordinator: HomeMapCoordinator)
+    func pushToSpot(coordinator: HomeMapCoordinator)
+    func pushToRewind(coordinator: HomeMapCoordinator)
+    func pushToSetting(coordinator: HomeMapCoordinator)
 }
 
 final class HomeMapCoordinator: Coordinator, HomeMapViewControllerDelegate {
@@ -38,14 +38,14 @@ final class HomeMapCoordinator: Coordinator, HomeMapViewControllerDelegate {
     }
 
     func goSpot() {
-        delegate?.navigateToSpot(coordinator: self)
+        delegate?.pushToSpot(coordinator: self)
     }
 
     func goRewind() {
-        delegate?.navigateToRewind(coordinator: self)
+        delegate?.pushToRewind(coordinator: self)
     }
 
     func goSetting() {
-        delegate?.navigateToSetting(coordinator: self)
+        delegate?.pushToSetting(coordinator: self)
     }
 }

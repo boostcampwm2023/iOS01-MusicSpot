@@ -8,7 +8,7 @@
 import UIKit
 
 protocol RewindCoordinatorDelegate: AnyObject {
-    func navigateToHomeMap(coordinator: RewindCoordinator)
+    func popToHomeMap(coordinator: RewindCoordinator)
 }
 
 final class RewindCoordinator: Coordinator, RewindViewControllerDelegate {
@@ -36,6 +36,6 @@ final class RewindCoordinator: Coordinator, RewindViewControllerDelegate {
     }
 
     func goHomeMap() {
-        delegate?.navigateToHomeMap(coordinator: self)
+        delegate?.popToHomeMap(coordinator: self)
     }
 }

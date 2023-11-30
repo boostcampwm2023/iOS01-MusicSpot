@@ -7,13 +7,7 @@
 
 import UIKit
 
-final class AppCoordinator: Coordinator,
-                                HomeMapCoordinatorDelegate,
-                                SpotCoordinatorDelegate,
-                                RewindCoordinatorDelegate,
-                                SettingCoordinatorDelegate,
-                                SearchMusicCoordinatorDelegate,
-                            SaveJourneyCoordinatorDelegate {
+final class AppCoordinator: Coordinator {
 
     // MARK: - Properties
 
@@ -35,8 +29,27 @@ final class AppCoordinator: Coordinator,
         self.childCoordinators.append(homeMapCoordinator)
         homeMapCoordinator.start()
     }
+}
 
-    func navigateToSpot(coordinator: HomeMapCoordinator) {
+extension AppCoordinator {
+    
+    /// 현재 ViewController 아래에 깔린 ViewController 내에서 HomeMapViewController를 찾는 함수
+    private func findHomeMapViewController() {
+        guard let homeMapViewController = navigationController.viewControllers.first(where: { $0 is HomeMapViewController }) else {
+            navigationController.setViewControllers([HomeMapViewController()], animated: true)
+            return
+        }
+
+        navigationController.popToViewController(homeMapViewController, animated: true)
+    }
+}
+
+// MARK: - HomeMapCoordinatorDelegate
+
+extension AppCoordinator: HomeMapCoordinatorDelegate {
+    
+    /// From: HomeMap, To: Spot
+    func pushToSpot(coordinator: HomeMapCoordinator) {
         let spotCoordinator = SpotCoordinator(navigationController: navigationController)
         spotCoordinator.delegate = self
 
@@ -44,7 +57,8 @@ final class AppCoordinator: Coordinator,
         spotCoordinator.start()
     }
 
-    func navigateToRewind(coordinator: HomeMapCoordinator) {
+    /// From: HomeMap, To: Rewind
+    func pushToRewind(coordinator: HomeMapCoordinator) {
         let rewindCoordinator = RewindCoordinator(navigationController: navigationController)
         rewindCoordinator.delegate = self
 
@@ -52,74 +66,85 @@ final class AppCoordinator: Coordinator,
         rewindCoordinator.start()
     }
 
-    func navigateToSetting(coordinator: HomeMapCoordinator) {
+    /// From: HomeMap, To: Setting
+    func pushToSetting(coordinator: HomeMapCoordinator) {
         let settingCoordinator = SettingCoordinator(navigationController: navigationController)
         settingCoordinator.delegate = self
 
         self.childCoordinators.append(settingCoordinator)
         settingCoordinator.start()
     }
+}
 
-    func navigateToHomeMap(coordinator: SpotCoordinator) {
+// MARK: - SpotCoordinatorDelegate
+
+extension AppCoordinator: SpotCoordinatorDelegate {
+    
+    /// From: Spot, To: HomeMap
+    func popToHomeMap(coordinator: SpotCoordinator) {
         removeChildCoordinator(child: coordinator)
         navigationController.popViewController(animated: true)
     }
-
-    func navigateToHomeMap(coordinator: RewindCoordinator) {
-        removeChildCoordinator(child: coordinator)
-        navigationController.popViewController(animated: true)
-    }
-
-    func navigateToHomeMap(coordinator: SettingCoordinator) {
-        navigationController.popViewController(animated: true)
-    }
-
-    // MARK: - From: Spot
-
-    func navigateToSearchMusic(coordinator: SpotCoordinator) {
+    
+    /// From: Spot, To: SearchMusic
+    func pushToSearchMusic(coordinator: SpotCoordinator) {
         let searchMusicCoordinator = SearchMusicCoordinator(navigationController: navigationController)
         searchMusicCoordinator.delegate = self
         self.childCoordinators.append(searchMusicCoordinator)
         searchMusicCoordinator.start()
     }
+}
 
-    // MARK: - From: SearchMusic
+// MARK: - SearchMusicCoordinatorDelegate
 
-    func navigateToHomeMap(coordinator: SearchMusicCoordinator) {
-        guard let homeMapViewController = navigationController.viewControllers.first(where: {
-            $0 is HomeMapViewController
-        }) else {
-            navigationController.setViewControllers([HomeMapViewController()], animated: true)
-            return
-        }
-
-        while navigationController.topViewController !== homeMapViewController {
-            navigationController.popViewController(animated: true)
-        }
+extension AppCoordinator: SearchMusicCoordinatorDelegate {
+    
+    /// From: SearchMusic, To: HomeMap
+    func popToHomeMap(coordinator: SearchMusicCoordinator) {
+        findHomeMapViewController()
     }
 
-    func navigateToSaveJourney(coordinator: SearchMusicCoordinator) {
+    /// From: SearchMusic, To: SaveJourney
+    func pushToSaveJourney(coordinator: SearchMusicCoordinator) {
         let saveJourneyCoordinator = SaveJourneyCoordinator(navigationController: navigationController)
         saveJourneyCoordinator.delegate = self
         self.childCoordinators.append(saveJourneyCoordinator)
         saveJourneyCoordinator.start()
     }
+}
 
-    // MARK: - From: SaveJourney
-    func navigateToHomeMap(coordinator: SaveJourneyCoordinator) {
-        guard let homeMapViewController = navigationController.viewControllers.first(where: {
-            $0 is HomeMapViewController
-        }) else {
-            navigationController.setViewControllers([HomeMapViewController()], animated: true)
-            return
-        }
+// MARK: - RewindCoordinatorDelegate
 
-        while navigationController.topViewController !== homeMapViewController {
-            navigationController.popViewController(animated: true)
-        }
+extension AppCoordinator: RewindCoordinatorDelegate {
+    
+    /// From: Rewind, To: HomeMap
+    func popToHomeMap(coordinator: RewindCoordinator) {
+        removeChildCoordinator(child: coordinator)
+        navigationController.popViewController(animated: true)
+    }
+}
+
+// MARK: - SettingCoordinatorDelegate
+
+extension AppCoordinator: SettingCoordinatorDelegate {
+    
+    /// From: Setting, To: HomeMap
+    func popToHomeMap(coordinator: SettingCoordinator) {
+        navigationController.popViewController(animated: true)
+    }
+}
+
+// MARK: - SaveJourneyCoordinatorDelegate
+
+extension AppCoordinator: SaveJourneyCoordinatorDelegate {
+    
+    /// From: SaveJourney, To: HomeMap
+    func popToHomeMap(coordinator: SaveJourneyCoordinator) {
+        findHomeMapViewController()
     }
 
-    func navigateToSearchMusic(coordinator: SaveJourneyCoordinator) {
+    /// From: SaveJourney, To: SearchMusic
+    func popToSearchMusic(coordinator: SaveJourneyCoordinator) {
         let searchMusicCoordinator = SearchMusicCoordinator(navigationController: navigationController)
         searchMusicCoordinator.delegate = self
         self.childCoordinators.append(searchMusicCoordinator)
