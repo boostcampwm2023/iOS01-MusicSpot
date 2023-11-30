@@ -27,10 +27,18 @@ private enum Target {
 
 private enum Dependency {
     
+    // package
     static let msUIKit = "MSUIKit"
     static let msFoundation = "MSFoundation"
+    static let msCoreKit = "MSCoreKit"
+    
+    // library
     static let msDesignsystem = "MSDesignSystem"
     static let msLogger = "MSLogger"
+    static let msNetworking = "MSNetworking"
+    
+    // package = library
+    static let msData = "MSData"
     
 }
 
@@ -49,7 +57,9 @@ let package = Package(
         .package(name: Dependency.msUIKit,
                  path: Dependency.msUIKit.fromRootPath),
         .package(name: Dependency.msFoundation,
-                 path: Dependency.msFoundation.fromRootPath)
+                 path: Dependency.msFoundation.fromRootPath),
+        .package(name: Dependency.msCoreKit,
+                 path: Dependency.msCoreKit.fromRootPath)
     ],
     targets: [
         .target(name: Target.spot,
@@ -59,7 +69,11 @@ let package = Package(
                     .product(name: Dependency.msDesignsystem,
                              package: Dependency.msUIKit),
                     .product(name: Dependency.msLogger,
-                             package: Dependency.msFoundation)
+                             package: Dependency.msFoundation),
+                    .product(name: Dependency.msNetworking,
+                             package: Dependency.msCoreKit),
+                    .product(name: Dependency.msData,
+                             package: Dependency.msData)
                 ])
     ]
 )
