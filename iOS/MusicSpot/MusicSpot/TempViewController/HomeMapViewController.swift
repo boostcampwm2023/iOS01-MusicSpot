@@ -1,5 +1,5 @@
 //
-//  HomeMapViewController.swift
+//  NavigateMapViewController.swift
 //  MusicSpot
 //
 //  Created by 윤동주 on 11/28/23.
