@@ -7,9 +7,6 @@
 
 import UIKit
 
-import JourneyList
-import MSDesignSystem
-
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     // MARK: - Properties
@@ -24,8 +21,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         defer { self.window = window }
-        
-        MSFont.registerFonts()
         
         let testViewController = UIViewController()
         window.rootViewController = testViewController

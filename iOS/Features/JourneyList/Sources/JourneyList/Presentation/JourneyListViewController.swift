@@ -8,33 +8,34 @@
 import Combine
 import UIKit
 
-import MSDesignSystem
+import MSCacheStorage
+import MSUIKit
 
 public final class JourneyListViewController: UIViewController {
     
-    typealias JourneyListDataSource = UICollectionViewDiffableDataSource<Journey, String>
-    typealias SpotPhotoCellRegistration = UICollectionView.CellRegistration<SpotPhotoCell, String>
-    typealias HeaderRegistration = UICollectionView.SupplementaryRegistration<JourneyInfoHeaderView>
-    typealias JourneySnapshot = NSDiffableDataSourceSnapshot<Journey, String>
+    typealias JourneyListDataSource = UICollectionViewDiffableDataSource<Int, Journey>
+    typealias JourneyCellRegistration = UICollectionView.CellRegistration<JourneyCell, Journey>
+    typealias JourneySnapshot = NSDiffableDataSourceSnapshot<Int, Journey>
     
     // MARK: - Constants
     
     private enum Typo {
         static let title: String = "지난 여정"
+        static func subtitle(numberOfJourneys: Int) -> String {
+            return "현재 위치에 \(numberOfJourneys)개의 여정이 있습니다."
+        }
     }
     
     private enum Metric {
         static let titleStackSpacing: CGFloat = 4.0
         static let collectionViewHorizontalInset: CGFloat = 10.0
         static let collectionViewVerticalInset: CGFloat = 24.0
-        static let interGroupSpacing: CGFloat = 5.0
-        static let interSectionSpacing: CGFloat = 12.0
-        static let headerSize: CGFloat = 93.0
-        static let listHorizontalInset: CGFloat = 16.0
-        static let listVerticalInset: CGFloat = 20.0
+        static let interGroupSpacing: CGFloat = 12.0
     }
     
     // MARK: - Properties
+    
+    private let cache: MSCacheStorage
     
     private var viewModel: JourneyListViewModel
     
@@ -67,7 +68,7 @@ public final class JourneyListViewController: UIViewController {
         let label = UILabel()
         label.font = .msFont(.caption)
         label.textColor = .msColor(.secondaryTypo)
-        label.text = "현재 위치에 0개의 여정이 있습니다."
+        label.text = Typo.subtitle(numberOfJourneys: 0)
         return label
     }()
     
@@ -75,19 +76,17 @@ public final class JourneyListViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero,
                                               collectionViewLayout: UICollectionViewLayout())
         collectionView.backgroundColor = .clear
-        collectionView.contentInset = UIEdgeInsets(top: Metric.collectionViewVerticalInset / 2,
-                                                   left: .zero,
-                                                   bottom: Metric.collectionViewVerticalInset,
-                                                   right: .zero)
         return collectionView
     }()
     
     // MARK: - Initializer
     
     public init(viewModel: JourneyListViewModel,
+                cache: MSCacheStorage = MSCacheStorage(),
                 nibName nibNameOrNil: String? = nil,
                 bundle nibBundleOrNil: Bundle? = nil) {
         self.viewModel = viewModel
+        self.cache = cache
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -106,18 +105,25 @@ public final class JourneyListViewController: UIViewController {
         self.viewModel.trigger(.viewNeedsLoaded)
     }
     
+    // MARK: - Combine Binding
+    
     func bind() {
         self.viewModel.state.journeys
+            .receive(on: DispatchQueue.main)
             .sink { journeys in
-                self.subtitleLabel.text = "현재 위치에 \(journeys.count)개의 여정이 있습니다."
+                self.subtitleLabel.text = Typo.subtitle(numberOfJourneys: journeys.count)
                 var snapshot = JourneySnapshot()
-                snapshot.appendSections(journeys)
-                journeys.forEach { journey in
-                    snapshot.appendItems(journey.spot.images, toSection: journey)
-                }
+                snapshot.appendSections([.zero])
+                snapshot.appendItems(journeys, toSection: .zero)
                 self.dataSource?.apply(snapshot)
             }
             .store(in: &self.cancellables)
+    }
+    
+    // MARK: - Functions
+    
+    public func fetchJourneys(from coordinate: Coordinate) {
+        self.viewModel.trigger(.fetchJourney(at: coordinate))
     }
     
 }
@@ -127,14 +133,9 @@ public final class JourneyListViewController: UIViewController {
 private extension JourneyListViewController {
     
     func configureCollectionView() {
-        let config = UICollectionViewCompositionalLayoutConfiguration()
-        config.interSectionSpacing = Metric.interSectionSpacing
-        
         let layout = UICollectionViewCompositionalLayout(sectionProvider: { _, _ in
             return self.configureSection()
-        }, configuration: config)
-        layout.register(JourneyListBackgroundView.self,
-                        forDecorationViewOfKind: JourneyListBackgroundView.reuseIdentifier)
+        })
         
         self.collectionView.setCollectionViewLayout(layout, animated: false)
         self.dataSource = self.configureDataSource()
@@ -145,57 +146,74 @@ private extension JourneyListViewController {
                                               heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(SpotPhotoCell.width),
-                                               heightDimension: .absolute(SpotPhotoCell.height))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .estimated(JourneyCell.estimatedHeight))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
                                                        subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = Metric.interGroupSpacing
-        section.orthogonalScrollingBehavior = .continuous
-        section.contentInsets = NSDirectionalEdgeInsets(top: Metric.interGroupSpacing,
-                                                        leading: Metric.listHorizontalInset,
-                                                        bottom: Metric.listVerticalInset,
-                                                        trailing: Metric.listHorizontalInset)
-        
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                heightDimension: .estimated(Metric.headerSize))
-        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
-                                                                 elementKind: UICollectionView.elementKindSectionHeader,
-                                                                 alignment: .top)
-        section.boundarySupplementaryItems = [header]
-        
-        let background = NSCollectionLayoutDecorationItem.background(
-            elementKind: JourneyListBackgroundView.reuseIdentifier)
-        section.decorationItems = [background]
         
         return section
     }
     
-    func configureDataSource() -> JourneyListDataSource {
-        let cellRegistration = SpotPhotoCellRegistration { cell, _, itemIdentifier in
-            cell.update(with: itemIdentifier)
+    private func fetchImage(url: URL) async throws -> Data {
+        let request = URLRequest(url: url)
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let statusCode = (response as? HTTPURLResponse)?.statusCode,
+              (200...299).contains(statusCode) else {
+            throw NSError(domain: "fetch error", code: 1004)
         }
         
-        let headerRegistration = HeaderRegistration(elementKind: UICollectionView.elementKindSectionHeader,
-                                                    handler: { header, _, indexPath in
-            guard let journey = self.currentSnapshot?.sectionIdentifiers[indexPath.section] else {
-                return
+        return data
+    }
+    
+    func configureDataSource() -> JourneyListDataSource {
+        // TODO: 최적화 & 캐싱
+        let cellRegistration = JourneyCellRegistration { cell, indexPath, itemIdentifier in
+            let cellModel = JourneyCellModel(location: itemIdentifier.location,
+                                             date: itemIdentifier.date,
+                                             songTitle: itemIdentifier.song.title,
+                                             songArtist: itemIdentifier.song.artist)
+            cell.update(with: cellModel)
+            let photoURLs = itemIdentifier.spots
+                .flatMap { $0.photoURLs }
+                .compactMap { URL(string: $0) }
+            
+            Task {
+                cell.addImageView(count: photoURLs.count)
+                
+                await withTaskGroup(of: (index: Int, imageData: Data).self) { group in
+                    for (index, photoURL) in photoURLs.enumerated() {
+                        let key = "\(indexPath.section)-\(indexPath.item)-\(index)"
+                        group.addTask(priority: .background) { [weak self] in
+                            if let cachedData = self?.cache.data(forKey: key) {
+                                return (index, cachedData)
+                            }
+                            
+                            if let imageData = try? await self?.fetchImage(url: photoURL) {
+                                self?.cache.cache(imageData, forKey: key)
+                                return (index, imageData)
+                            }
+                            
+                            return (0, Data())
+                        }
+                    }
+                    
+                    for await (index, imageData) in group {
+                        cell.updateImages(imageData: imageData, atIndex: index)
+                    }
+                }
             }
-            header.update(with: journey)
-        })
-        
+        }
+      
         let dataSource = JourneyListDataSource(collectionView: self.collectionView,
                                                cellProvider: { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration,
                                                                 for: indexPath,
                                                                 item: item)
         })
-        
-        dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
-            return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration,
-                                                                         for: indexPath)
-        }
         
         return dataSource
     }
@@ -219,14 +237,18 @@ private extension JourneyListViewController {
             self.titleStack.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
         ])
         
-        self.titleStack.addArrangedSubview(self.titleLabel)
-        self.titleStack.addArrangedSubview(self.subtitleLabel)
+        [
+            self.titleLabel,
+            self.subtitleLabel
+        ].forEach {
+            self.titleStack.addArrangedSubview($0)
+        }
         
         self.view.addSubview(self.collectionView)
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.collectionView.topAnchor.constraint(equalTo: self.titleStack.bottomAnchor,
-                                                     constant: Metric.collectionViewVerticalInset / 2),
+                                                     constant: Metric.collectionViewVerticalInset),
             self.collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor,
                                                          constant: Metric.collectionViewHorizontalInset),
             self.collectionView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
@@ -237,10 +259,15 @@ private extension JourneyListViewController {
     
 }
 
+// MARK: - Preview
+
+import MSData
+import MSDesignSystem
 @available(iOS 17, *)
 #Preview {
     MSFont.registerFonts()
-    let journeyListViewModel = JourneyListViewModel()
-    let journeyListViewController = JourneyListViewController(viewModel: journeyListViewModel)
-    return journeyListViewController
+    let journeyRepository = JourneyRepositoryImplementation()
+    let testViewModel = JourneyListViewModel(repository: journeyRepository)
+    let testViewController = JourneyListViewController(viewModel: testViewModel)
+    return testViewController
 }
