@@ -85,7 +85,6 @@ export class JourneyService {
     if (!updatedJourney) {
       throw new JourneyNotFoundException();
     }
-    console.log();
     return updatedJourney;
   }
 
