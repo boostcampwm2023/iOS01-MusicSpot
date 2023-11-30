@@ -176,7 +176,7 @@ private extension SaveJourneyViewController {
         }
         
         let journeyCellRegistration = JourneyCellRegistration { cell, _, itemIdentifier in
-            cell.update(with: "여정")
+            
         }
         
         let headerRegistration = HeaderRegistration(elementKind: SaveJourneyHeaderView.elementKind,

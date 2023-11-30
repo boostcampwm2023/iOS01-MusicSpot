@@ -6,6 +6,9 @@
 //
 
 import Combine
+import Foundation
+
+import MSData
 
 public final class JourneyListViewModel {
     
@@ -21,12 +24,14 @@ public final class JourneyListViewModel {
     
     // MARK: - Properties
     
-    public var state: State
+    public var state = State()
+    
+    private let repository: JourneyRepository
     
     // MARK: - Initializer
     
-    public init(state: State = State()) {
-        self.state = state
+    public init(repository: JourneyRepository) {
+        self.repository = repository
     }
     
     // MARK: - Functions
@@ -34,21 +39,18 @@ public final class JourneyListViewModel {
     func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
-            self.fetchInitialJourneys()
+            Task {
+                let result = await self.repository.fetchJourneyList()
+                
+                switch result {
+                case .success(let journeys):
+                    let journeys = journeys.map { Journey(dto: $0) }
+                    self.state.journeys.send(journeys)
+                case .failure(let error):
+                    print(error)
+                }
+            }
         }
-    }
-    
-}
-
-private extension JourneyListViewModel {
-    
-    func fetchInitialJourneys() {
-        self.state.journeys.send([Journey(location: "여정 위치",
-                                          date: "2023. 01. 01",
-                                          spot: Spot(images: ["sdlkj", "sdklfj"])),
-                                  Journey(location: "여정 위치",
-                                          date: "2023. 01. 02",
-                                          spot: Spot(images: ["slkjc", "llskl", "llskldf", "llskl5", "llskl12"]))])
     }
     
 }

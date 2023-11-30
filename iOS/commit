@@ -1,13 +1,16 @@
 #!/bin/sh
-
+​
 LINTPATH='.swiftlint.yml'
 declare -a PATHS=("MSCoreKit" "MSFoundation" "MSUIKit" "MSData" "MusicSpot" "Features")
 failures=""
-
+​
 for path in "${PATHS[@]}"; do
     if [ -d "$path" ]; then
         echo "👀 Running SwiftLint for $path"
         result=$(swiftlint lint --progress --config $LINTPATH $path)
+        if [[ "$result" == *warning* ]]; then
+            echo "🚧 Lint Warning: \n$result"
+        fi
         if [[ ! "$result" == *error* ]]; then
             echo "✅ Lint succeed for $path\n"
         else
@@ -19,7 +22,7 @@ for path in "${PATHS[@]}"; do
         exit 1
     fi
 done
-
+​
 if [ ! -z "$failures" ]; then
     echo "$failures"
     exit 1
