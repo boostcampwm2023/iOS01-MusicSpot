@@ -8,6 +8,10 @@ import PackageDescription
 private extension String {
     
     static let package = "FeatureJourneyList"
+
+	var fromRootPath: String {
+        return "../../" + self
+    }
     
     var fromRootPath: String {
         return "../../" + self
