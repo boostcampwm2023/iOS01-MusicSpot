@@ -7,6 +7,7 @@ import { StartJourneyDTO } from '../dto/journeyStart.dto';
 import { UserService } from '../../user/serivce/user.service';
 import { RecordJourneyDTO } from '../dto/journeyRecord.dto';
 import { JourneyExceptionMessageEnum } from '../../filters/exception.enum';
+import { EndJourneyDTO } from '../dto/journeyEnd.dto';
 
 let service: JourneyService;
 let userModel;
@@ -67,6 +68,31 @@ describe('여정 시작 관련 service 테스트', () => {
     } catch (err) {
       console.log(err);
     }
+  });
+});
+
+describe('여정 마무리 관련 service 테스트', () => {
+  it('end 성공 테스스', async () => {
+    journeyModel.findOneAndUpdate.mockReturnValue({
+      lean: jest.fn().mockResolvedValue({
+        _id: '655efda2fdc81cae36d20650',
+        title: 'title',
+        spots: [],
+        coordinates: [[37.555946, 126.972384]],
+        timestamp: '2023-11-22T12:00:00Z',
+        __v: 0,
+      }),
+    });
+    const endData: EndJourneyDTO = {
+      journeyId: '655efda2fdc81cae36d20650',
+      coordinate: [37.555946, 126.972384],
+      timestamp: '2023-11-22T12:00:00Z',
+      title: 'title',
+    };
+
+    const returnData = await service.end(endData);
+    const { title } = returnData;
+    expect(title).toEqual(endData.title);
   });
 });
 
