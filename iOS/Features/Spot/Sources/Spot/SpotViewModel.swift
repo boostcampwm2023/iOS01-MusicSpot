@@ -17,7 +17,7 @@ protocol ShotDelegate: AnyObject {
 
 final class SpotViewModel: NSObject {
     
-    // MARK: SwapMode
+    // MARK: - Type: SwapMode
     
     enum SwapMode {
         case front
@@ -44,7 +44,7 @@ final class SpotViewModel: NSObject {
         
     }
     
-    // MARK: Properties
+    // MARK: - Properties
     
     weak var delegate: ShotDelegate?
     var swapMode: SwapMode = .back {
@@ -57,11 +57,10 @@ final class SpotViewModel: NSObject {
     let session = AVCaptureSession()
     var input: AVCaptureDeviceInput?
     let output = AVCapturePhotoOutput()
-    let settings = AVCapturePhotoSettings()
     
 }
 
-// MARK: Interface
+// MARK: - Interface
 
 internal extension SpotViewModel {
     
@@ -70,6 +69,7 @@ internal extension SpotViewModel {
     }
     
     func shot() {
+        let settings = AVCapturePhotoSettings()
         self.output.capturePhoto(with: settings, delegate: self)
     }
     
@@ -95,9 +95,15 @@ internal extension SpotViewModel {
         }
     }
     
+    func startCamera() {
+        DispatchQueue.global(qos: .background).async {
+            self.session.startRunning()
+        }
+    }
+    
 }
 
-// MARK: Setting Camera
+// MARK: - Actions: Camera
 
 private extension SpotViewModel {
     
@@ -109,10 +115,7 @@ private extension SpotViewModel {
         
         let previewLayer = AVCaptureVideoPreviewLayer(session: self.session)
         
-        DispatchQueue.global(qos: .background).async {
-            self.session.startRunning()
-        }
-        
+        self.startCamera()
         DispatchQueue.main.async {
             previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
             previewLayer.frame = screen.bounds
@@ -134,16 +137,18 @@ private extension SpotViewModel {
     
 }
 
-// MARK: - AVCapturePhotoCaptureDelegate
+// MARK: - Delegate: Camera
 
 extension SpotViewModel: AVCapturePhotoCaptureDelegate {
+    
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let imageData = photo.fileDataRepresentation() else {
             MSLogger.make(category: .camera).debug("image Data가 없습니다.")
             return
         }
-        self.delegate?.update(imageData: imageData)
         self.stopCamera()
+        self.delegate?.update(imageData: imageData)
     }
+    
 }
 
