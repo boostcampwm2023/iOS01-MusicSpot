@@ -16,11 +16,13 @@ final class SaveJourneyMusicCell: UICollectionViewCell {
     static let estimatedHeight: CGFloat = 152.0
     
     private enum Metric {
+        
         static let cornerRadius: CGFloat = 12.0
         static let imageViewCornerRadius: CGFloat = 5.0
         static let imageViewSize: CGFloat = 128.0
         static let stackViewSpacing: CGFloat = 4.0
         static let iconImageSize: CGFloat = 24.0
+        
     }
     
     // MARK: - UI Components
