@@ -28,8 +28,6 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
       shouldAutocreateTestPlan = "YES">
-<<<<<<< HEAD
-=======
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -42,7 +40,6 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
->>>>>>> 48567b56ec07f40e5003caf774569cbdae8f356b
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
