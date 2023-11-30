@@ -1,2 +1,8 @@
-// The Swift Programming Language
-// https://docs.swift.org/swift-book
+//
+//  JourneyList.swift
+//  JourneyList
+//
+//  Created by 이창준 on 2023.11.29.
+//
+
+import Foundation

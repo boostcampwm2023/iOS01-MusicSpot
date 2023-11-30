@@ -3,25 +3,32 @@
 
 import PackageDescription
 
+// MARK: - Constants
+
+private extension String {
+    
+    static let package = "FeatureJourneyList"
+    
+}
+
+private enum Target {
+    
+    static let journeyList = "JourneyList"
+    
+}
+
+// MARK: - Package
+
 let package = Package(
-    name: "JourneyList",
+    name: .package,
     platforms: [
         .iOS(.v15)
     ],
     products: [
-        .library(name: "JourneyList",
-                 targets: ["JourneyList"])
-    ],
-    dependencies: [
-        .package(name: "MSData",
-                 path: "../../MSData"),
-        .package(name: "MSUIKit",
-                 path: "../../MSUIKit"),
-        .package(name: "MSNetworking",
-                 path: "../../MSCoreKit")
+        .library(name: Target.journeyList,
+                 targets: [Target.journeyList])
     ],
     targets: [
-        .target(name: "JourneyList",
-                dependencies: ["MSData", "MSUIKit", "MSNetworking"])
+        .target(name: Target.journeyList)
     ]
 )
