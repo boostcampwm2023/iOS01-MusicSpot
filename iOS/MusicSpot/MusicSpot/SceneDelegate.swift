@@ -6,11 +6,9 @@
 //
 
 import UIKit
+
+import MSDesignSystem
 import NavigateMap
-
-import MSDesignSystem
-
-import MSDesignSystem
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -29,10 +27,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let musicSpotNavigationController = UINavigationController()
         let appCoordinator = AppCoordinator(navigationController: musicSpotNavigationController)
-        window.rootViewController = musicSpotNavigationController
-        
         appCoordinator.start()
         
+        window.rootViewController = musicSpotNavigationController
         window.makeKeyAndVisible()
     }
     

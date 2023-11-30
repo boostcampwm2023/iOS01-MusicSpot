@@ -15,12 +15,6 @@
 		08CBF87D2B18468E007D3797 /* SpotCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8752B18468E007D3797 /* SpotCoordinator.swift */; };
 		08CBF87E2B18468E007D3797 /* SearchMusicCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8762B18468E007D3797 /* SearchMusicCoordinator.swift */; };
 		08CBF87F2B18468E007D3797 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8772B18468E007D3797 /* Coordinator.swift */; };
-		08CBF8872B1846A0007D3797 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8812B1846A0007D3797 /* SettingViewController.swift */; };
-		08CBF8882B1846A0007D3797 /* HomeMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8822B1846A0007D3797 /* HomeMapViewController.swift */; };
-		08CBF8892B1846A0007D3797 /* SaveJourneyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8832B1846A0007D3797 /* SaveJourneyViewController.swift */; };
-		08CBF88A2B1846A0007D3797 /* SpotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8842B1846A0007D3797 /* SpotViewController.swift */; };
-		08CBF88B2B1846A0007D3797 /* RewindViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8852B1846A0007D3797 /* RewindViewController.swift */; };
-		08CBF88C2B1846A0007D3797 /* SearchMusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8862B1846A0007D3797 /* SearchMusicViewController.swift */; };
 		DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */; };
 		DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */; };
 		DD73F8622B024C4B00EE9BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */; };
@@ -43,12 +37,6 @@
 		08CBF8752B18468E007D3797 /* SpotCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotCoordinator.swift; sourceTree = "<group>"; };
 		08CBF8762B18468E007D3797 /* SearchMusicCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchMusicCoordinator.swift; sourceTree = "<group>"; };
 		08CBF8772B18468E007D3797 /* Coordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
-		08CBF8812B1846A0007D3797 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
-		08CBF8822B1846A0007D3797 /* HomeMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeMapViewController.swift; sourceTree = "<group>"; };
-		08CBF8832B1846A0007D3797 /* SaveJourneyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveJourneyViewController.swift; sourceTree = "<group>"; };
-		08CBF8842B1846A0007D3797 /* SpotViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotViewController.swift; sourceTree = "<group>"; };
-		08CBF8852B1846A0007D3797 /* RewindViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RewindViewController.swift; sourceTree = "<group>"; };
-		08CBF8862B1846A0007D3797 /* SearchMusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchMusicViewController.swift; sourceTree = "<group>"; };
 		DD73F8552B024C4900EE9BF2 /* MusicSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -91,19 +79,6 @@
 			path = MSCoordinator;
 			sourceTree = "<group>";
 		};
-		08CBF8802B1846A0007D3797 /* TempViewController */ = {
-			isa = PBXGroup;
-			children = (
-				08CBF8812B1846A0007D3797 /* SettingViewController.swift */,
-				08CBF8822B1846A0007D3797 /* HomeMapViewController.swift */,
-				08CBF8832B1846A0007D3797 /* SaveJourneyViewController.swift */,
-				08CBF8842B1846A0007D3797 /* SpotViewController.swift */,
-				08CBF8852B1846A0007D3797 /* RewindViewController.swift */,
-				08CBF8862B1846A0007D3797 /* SearchMusicViewController.swift */,
-			);
-			path = TempViewController;
-			sourceTree = "<group>";
-		};
 		DD2856C32B187BAB002C994D /* Protocol */ = {
 			isa = PBXGroup;
 			children = (
@@ -139,7 +114,6 @@
 		DD73F8572B024C4900EE9BF2 /* MusicSpot */ = {
 			isa = PBXGroup;
 			children = (
-				08CBF8802B1846A0007D3797 /* TempViewController */,
 				08CBF86F2B18468E007D3797 /* MSCoordinator */,
 				DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */,
 				DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */,
@@ -237,15 +211,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08CBF88C2B1846A0007D3797 /* SearchMusicViewController.swift in Sources */,
-				08CBF8882B1846A0007D3797 /* HomeMapViewController.swift in Sources */,
 				08CBF8792B18468E007D3797 /* AppCoordinator.swift in Sources */,
-				08CBF8872B1846A0007D3797 /* SettingViewController.swift in Sources */,
 				08CBF8782B18468E007D3797 /* SaveJourneyCoordinator.swift in Sources */,
 				08CBF87F2B18468E007D3797 /* Coordinator.swift in Sources */,
-				08CBF88B2B1846A0007D3797 /* RewindViewController.swift in Sources */,
-				08CBF8892B1846A0007D3797 /* SaveJourneyViewController.swift in Sources */,
-				08CBF88A2B1846A0007D3797 /* SpotViewController.swift in Sources */,
 				08CBF87D2B18468E007D3797 /* SpotCoordinator.swift in Sources */,
 				08CBF87E2B18468E007D3797 /* SearchMusicCoordinator.swift in Sources */,
 				08CBF87A2B18468E007D3797 /* RewindCoordinator.swift in Sources */,
