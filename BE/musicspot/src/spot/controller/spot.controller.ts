@@ -23,8 +23,16 @@ export class SpotController {
     description: '생성된 spot 데이터를 반환',
     type: Spot,
   })
+  @UseInterceptors(FileInterceptor('image'))
   @Post()
-  async create(@Body() recordSpotDTO: RecordSpotDTO) {
-    return await this.spotService.create(recordSpotDTO);
+  async create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() recordSpotDTO: RecordSpotDTO,
+  ) {
+    return await this.spotService.create(file, recordSpotDTO);
   }
+  // @Post()
+  // async create(@Body() recordSpotDTO: RecordSpotDTO) {
+  //   return await this.spotService.create(recordSpotDTO);
+  // }
 }
