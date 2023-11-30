@@ -47,7 +47,6 @@ export class JourneyService {
   }
 
   async end(endJourneyDTO: EndJourneyDTO) {
-    // const journeyId = endJourneyDTO.journeyfId;
     const { journeyId, title, coordinate } = endJourneyDTO;
     const coordinateToAdd = Array.isArray(coordinate[0])
       ? coordinate
@@ -80,11 +79,13 @@ export class JourneyService {
       .findOneAndUpdate(
         { _id: journeyId },
         { $push: { coordinates: { $each: coordinateToAdd } } },
+        { new: true },
       )
       .lean();
     if (!updatedJourney) {
       throw new JourneyNotFoundException();
     }
+    console.log();
     return updatedJourney;
   }
 
