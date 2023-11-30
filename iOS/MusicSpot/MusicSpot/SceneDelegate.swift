@@ -9,14 +9,27 @@ import UIKit
 import HomeMapScene
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    
+    // MARK: - Properties
+    
     var window: UIWindow?
+    
+    // MARK: - Functions
+    
     func scene(_ scene: UIScene,
-               willConnectTo session: UISceneSession,
-               options connectionOptions: UIScene.ConnectionOptions) {
+               willConnectTo _: UISceneSession,
+               options _: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = HomeMapViewController()
-        self.window = window
+        defer { self.window = window }
+        
+        let musicSpotNavigationController = UINavigationController()
+        let appCoordinator = AppCoordinator(navigationController: musicSpotNavigationController)
+        window.rootViewController = musicSpotNavigationController
+        
+        appCoordinator.start()
+        
         window.makeKeyAndVisible()
     }
+    
 }
