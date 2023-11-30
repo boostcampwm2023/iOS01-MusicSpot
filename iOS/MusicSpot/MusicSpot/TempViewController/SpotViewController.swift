@@ -36,16 +36,6 @@ class SpotViewController: UIViewController {
         return button
     }()
 
-    var numberButton: UIButton = {
-        let button = UIButton()
-
-        button.setTitle("더하기", for: .normal)
-        button.layer.cornerRadius = 8
-        button.backgroundColor = .lightGray
-
-        return button
-    }()
-
     // MARK: - Life Cycle
 
     override func viewDidLoad() {
@@ -61,7 +51,6 @@ class SpotViewController: UIViewController {
     private func configureStyle() {
         self.view.addSubview(titleLabel)
         self.view.addSubview(startButton)
-        self.view.addSubview(numberButton)
 
         self.startButton.addTarget(self, action: #selector(navigateToHomeMap), for: .touchUpInside)
     }
@@ -69,7 +58,6 @@ class SpotViewController: UIViewController {
     private func configureLayout() {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         startButton.translatesAutoresizingMaskIntoConstraints = false
-        numberButton.translatesAutoresizingMaskIntoConstraints = false
 
         let safeArea = view.safeAreaLayoutGuide
 
@@ -79,12 +67,7 @@ class SpotViewController: UIViewController {
             startButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -100),
             startButton.heightAnchor.constraint(equalToConstant: 50),
 
-            numberButton.topAnchor.constraint(equalTo: startButton.bottomAnchor, constant: 40),
-            numberButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 100),
-            numberButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -100),
-            numberButton.heightAnchor.constraint(equalToConstant: 50),
-
-            titleLabel.topAnchor.constraint(equalTo: numberButton.bottomAnchor, constant: 40),
+            titleLabel.topAnchor.constraint(equalTo: startButton.bottomAnchor, constant: 40),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             titleLabel.heightAnchor.constraint(equalToConstant: 50)
         ])
