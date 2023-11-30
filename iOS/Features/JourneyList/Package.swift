@@ -9,11 +9,21 @@ private extension String {
     
     static let package = "FeatureJourneyList"
     
+    var fromRootPath: String {
+        return "../../" + self
+    }
+    
 }
 
 private enum Target {
     
     static let journeyList = "JourneyList"
+    
+}
+
+private enum Dependency {
+    
+    static let msUIKit = "MSUIKit"
     
 }
 
@@ -28,7 +38,15 @@ let package = Package(
         .library(name: Target.journeyList,
                  targets: [Target.journeyList])
     ],
+    dependencies: [
+        .package(name: Dependency.msUIKit,
+                 path: Dependency.msUIKit.fromRootPath)
+    ],
     targets: [
-        .target(name: Target.journeyList)
+        .target(name: Target.journeyList,
+                dependencies: [
+                    .product(name: Dependency.msUIKit,
+                             package: Dependency.msUIKit)
+                ])
     ]
 )
