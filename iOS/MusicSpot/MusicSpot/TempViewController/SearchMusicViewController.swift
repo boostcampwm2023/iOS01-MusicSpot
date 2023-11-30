@@ -24,8 +24,8 @@ class SearchMusicViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .red
-        view.addSubview(label)
+        self.view.backgroundColor = .red
+        self.view.addSubview(label)
     }
 
     @objc
@@ -37,4 +37,5 @@ class SearchMusicViewController: UIViewController {
     func navigateToSaveJourney() {
         self.delegate?.goSaveJourney()
     }
+    
 }

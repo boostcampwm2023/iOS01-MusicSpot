@@ -7,10 +7,6 @@
 
 import UIKit
 
-protocol RewindCoordinatorDelegate: AnyObject {
-    func popToHomeMap(coordinator: RewindCoordinator)
-}
-
 final class RewindCoordinator: Coordinator, RewindViewControllerDelegate {
 
     // MARK: - Properties
@@ -19,7 +15,7 @@ final class RewindCoordinator: Coordinator, RewindViewControllerDelegate {
 
     var childCoordinators: [Coordinator] = []
 
-    var delegate: RewindCoordinatorDelegate?
+    var delegate: AppCoordinatorDelegate?
 
     // MARK: - Initializer
 
@@ -32,10 +28,25 @@ final class RewindCoordinator: Coordinator, RewindViewControllerDelegate {
     func start() {
         let rewindViewController = RewindViewController()
         rewindViewController.delegate = self
-        navigationController.pushViewController(rewindViewController, animated: true)
+        self.navigationController.pushViewController(rewindViewController, animated: true)
     }
 
     func goHomeMap() {
-        delegate?.popToHomeMap(coordinator: self)
+        self.delegate?.popToHomeMap(from: self)
     }
+    
+}
+
+extension RewindCoordinator: AppCoordinatorDelegate {
+    
+    func popToHomeMap(from coordinator: Coordinator) {
+        self.childCoordinators.removeAll()
+        self.delegate?.popToHomeMap(from: self)
+    }
+    
+    func popToSearchMusic(from coordinator: Coordinator) {
+        self.childCoordinators.removeAll()
+        self.delegate?.popToSearchMusic(from: self)
+    }
+    
 }

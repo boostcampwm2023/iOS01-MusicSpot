@@ -7,11 +7,6 @@
 
 import UIKit
 
-protocol SaveJourneyCoordinatorDelegate: AnyObject {
-    func popToHomeMap(coordinator: SaveJourneyCoordinator)
-    func popToSearchMusic(coordinator: SaveJourneyCoordinator)
-}
-
 final class SaveJourneyCoordinator: Coordinator, SaveJourneyViewControllerDelegate {
 
     // MARK: - Properties
@@ -20,7 +15,7 @@ final class SaveJourneyCoordinator: Coordinator, SaveJourneyViewControllerDelega
 
     var childCoordinators: [Coordinator] = []
 
-    var delegate: SaveJourneyCoordinatorDelegate?
+    var delegate: AppCoordinatorDelegate?
 
     // MARK: - Initializer
 
@@ -33,14 +28,29 @@ final class SaveJourneyCoordinator: Coordinator, SaveJourneyViewControllerDelega
     func start() {
         let saveJourneyViewController = SaveJourneyViewController()
         saveJourneyViewController.delegate = self
-        navigationController.pushViewController(saveJourneyViewController, animated: true)
+        self.navigationController.pushViewController(saveJourneyViewController, animated: true)
     }
 
     func goHomeMap() {
-        delegate?.popToHomeMap(coordinator: self)
+        self.delegate?.popToHomeMap(from: self)
     }
 
     func goSearchMusic() {
-        delegate?.popToSearchMusic(coordinator: self)
+        self.delegate?.popToSearchMusic(from: self)
     }
+    
+}
+
+extension SaveJourneyCoordinator: AppCoordinatorDelegate {
+    
+    func popToHomeMap(from coordinator: Coordinator) {
+        self.childCoordinators.removeAll()
+        self.delegate?.popToHomeMap(from: self)
+    }
+    
+    func popToSearchMusic(from coordinator: Coordinator) {
+        self.childCoordinators.removeAll()
+        self.delegate?.popToSearchMusic(from: self)
+    }
+    
 }

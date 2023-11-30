@@ -7,10 +7,6 @@
 
 import UIKit
 
-protocol SettingCoordinatorDelegate: AnyObject {
-    func popToHomeMap(coordinator: SettingCoordinator)
-}
-
 final class SettingCoordinator: Coordinator, SettingViewControllerDelegate {
 
     // MARK: - Properties
@@ -19,7 +15,7 @@ final class SettingCoordinator: Coordinator, SettingViewControllerDelegate {
 
     var childCoordinators: [Coordinator] = []
 
-    var delegate: SettingCoordinatorDelegate?
+    var delegate: AppCoordinatorDelegate?
 
     // MARK: - Initializer
 
@@ -32,10 +28,25 @@ final class SettingCoordinator: Coordinator, SettingViewControllerDelegate {
     func start() {
         let settingViewController = SettingViewController()
         settingViewController.delegate = self
-        navigationController.pushViewController(settingViewController, animated: true)
+        self.navigationController.pushViewController(settingViewController, animated: true)
     }
 
     func goHomeMap() {
-        delegate?.popToHomeMap(coordinator: self)
+        self.delegate?.popToHomeMap(from: self)
     }
+    
+}
+
+extension SettingCoordinator: AppCoordinatorDelegate {
+    
+    func popToHomeMap(from coordinator: Coordinator) {
+        self.childCoordinators.removeAll()
+        self.delegate?.popToHomeMap(from: self)
+    }
+    
+    func popToSearchMusic(from coordinator: Coordinator) {
+        self.childCoordinators.removeAll()
+        self.delegate?.popToSearchMusic(from: self)
+    }
+    
 }

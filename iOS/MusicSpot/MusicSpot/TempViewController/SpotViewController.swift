@@ -42,8 +42,8 @@ class SpotViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
 
-        configureStyle()
-        configureLayout()
+        self.configureStyle()
+        self.configureLayout()
     }
 
     // MARK: - Functions
@@ -56,20 +56,20 @@ class SpotViewController: UIViewController {
     }
 
     private func configureLayout() {
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        startButton.translatesAutoresizingMaskIntoConstraints = false
+        self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.startButton.translatesAutoresizingMaskIntoConstraints = false
 
         let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
-            startButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 40),
-            startButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 100),
-            startButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -100),
-            startButton.heightAnchor.constraint(equalToConstant: 50),
+            self.startButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 40),
+            self.startButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 100),
+            self.startButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -100),
+            self.startButton.heightAnchor.constraint(equalToConstant: 50),
 
-            titleLabel.topAnchor.constraint(equalTo: startButton.bottomAnchor, constant: 40),
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.heightAnchor.constraint(equalToConstant: 50)
+            self.titleLabel.topAnchor.constraint(equalTo: startButton.bottomAnchor, constant: 40),
+            self.titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            self.titleLabel.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
 
@@ -82,4 +82,5 @@ class SpotViewController: UIViewController {
     func navigateToSearchMusic() {
         self.delegate?.goSearchMusic()
     }
+    
 }

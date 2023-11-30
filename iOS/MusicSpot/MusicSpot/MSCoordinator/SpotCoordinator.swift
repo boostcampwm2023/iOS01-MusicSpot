@@ -7,11 +7,6 @@
 
 import UIKit
 
-protocol SpotCoordinatorDelegate: AnyObject {
-    func popToHomeMap(coordinator: SpotCoordinator)
-    func pushToSearchMusic(coordinator: SpotCoordinator)
-}
-
 final class SpotCoordinator: Coordinator, SpotViewControllerDelegate {
     // MARK: - Properties
 
@@ -19,7 +14,7 @@ final class SpotCoordinator: Coordinator, SpotViewControllerDelegate {
 
     var childCoordinators: [Coordinator] = []
 
-    var delegate: SpotCoordinatorDelegate?
+    var delegate: AppCoordinatorDelegate?
 
     // MARK: - Initializer
 
@@ -32,14 +27,29 @@ final class SpotCoordinator: Coordinator, SpotViewControllerDelegate {
     func start() {
         let spotViewController = SpotViewController()
         spotViewController.delegate = self
-        navigationController.pushViewController(spotViewController, animated: true)
+        self.navigationController.pushViewController(spotViewController, animated: true)
     }
 
     func goHomeMap() {
-        delegate?.popToHomeMap(coordinator: self)
+        self.delegate?.popToHomeMap(from: self)
     }
 
     func goSearchMusic() {
-        delegate?.pushToSearchMusic(coordinator: self)
+        let searchMusicCoordinator = SearchMusicCoordinator(navigationController: navigationController)
+        self.childCoordinators.append(searchMusicCoordinator)
+        searchMusicCoordinator.start()
     }
+}
+
+extension SpotCoordinator: AppCoordinatorDelegate {
+    func popToHomeMap(from coordinator: Coordinator) {
+        self.childCoordinators.removeAll()
+        self.delegate?.popToHomeMap(from: self)
+    }
+    
+    func popToSearchMusic(from coordinator: Coordinator) {
+        self.childCoordinators.removeAll()
+        self.delegate?.popToSearchMusic(from: self)
+    }
+    
 }

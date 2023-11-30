@@ -7,12 +7,6 @@
 
 import UIKit
 
-protocol HomeMapCoordinatorDelegate: AnyObject {
-    func pushToSpot(coordinator: HomeMapCoordinator)
-    func pushToRewind(coordinator: HomeMapCoordinator)
-    func pushToSetting(coordinator: HomeMapCoordinator)
-}
-
 final class HomeMapCoordinator: Coordinator, HomeMapViewControllerDelegate {
 
     // MARK: - Properties
@@ -21,7 +15,7 @@ final class HomeMapCoordinator: Coordinator, HomeMapViewControllerDelegate {
 
     var childCoordinators: [Coordinator] = []
 
-    var delegate: HomeMapCoordinatorDelegate?
+    var delegate: AppCoordinatorDelegate?
 
     // MARK: - Initializer
 
@@ -34,18 +28,36 @@ final class HomeMapCoordinator: Coordinator, HomeMapViewControllerDelegate {
     func start() {
         let homeMapViewController = HomeMapViewController()
         homeMapViewController.delegate = self
-        navigationController.pushViewController(homeMapViewController, animated: true)
+        self.navigationController.pushViewController(homeMapViewController, animated: true)
     }
 
     func goSpot() {
-        delegate?.pushToSpot(coordinator: self)
+        let spotCoordinator = SpotCoordinator(navigationController: navigationController)
+        self.childCoordinators.append(spotCoordinator)
+        spotCoordinator.start()
     }
 
     func goRewind() {
-        delegate?.pushToRewind(coordinator: self)
+        let rewindCoordinator = RewindCoordinator(navigationController: navigationController)
+        self.childCoordinators.append(rewindCoordinator)
+        rewindCoordinator.start()
     }
 
     func goSetting() {
-        delegate?.pushToSetting(coordinator: self)
+        let settingCoordinator = SettingCoordinator(navigationController: navigationController)
+        self.childCoordinators.append(settingCoordinator)
+        settingCoordinator.start()
+    }
+}
+
+extension HomeMapCoordinator: AppCoordinatorDelegate {
+    
+    func popToHomeMap(from coordinator: Coordinator) {
+        self.start()
+    }
+    
+    func popToSearchMusic(from coordinator: Coordinator) {
+        self.childCoordinators.removeAll()
+        self.delegate?.popToSearchMusic(from: self)
     }
 }

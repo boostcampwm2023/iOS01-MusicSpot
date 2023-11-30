@@ -23,12 +23,13 @@ class RewindViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .red
-        view.addSubview(label)
+        self.view.backgroundColor = .red
+        self.view.addSubview(label)
     }
 
     @objc
     func navigateToHomeMap() {
         self.delegate?.goHomeMap()
     }
+    
 }
