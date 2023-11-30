@@ -11,7 +11,10 @@ export class RecordJourneyDTO {
   readonly journeyId: string;
 
   @ApiProperty({
-    example: [37.555946, 126.972384],
+    example: [
+      [37.555946, 126.972384],
+      [37.555946, 126.972384],
+    ],
     description: '위치 좌표',
     required: true,
   })

@@ -47,7 +47,7 @@ export class JourneyService {
   }
 
   async end(endJourneyDTO: EndJourneyDTO) {
-    // const journeyId = endJourneyDTO.journeyId;
+    // const journeyId = endJourneyDTO.journeyfId;
     const { journeyId, title, coordinate } = endJourneyDTO;
     const coordinateToAdd = Array.isArray(coordinate[0])
       ? coordinate
