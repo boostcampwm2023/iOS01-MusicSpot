@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import NavigateMap
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     

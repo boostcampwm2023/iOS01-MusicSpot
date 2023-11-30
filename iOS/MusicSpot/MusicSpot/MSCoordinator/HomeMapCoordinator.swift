@@ -39,7 +39,7 @@ final class HomeMapCoordinator: Coordinator {
     
 }
 
-// MARK: - HomeMapViewController
+// MARK: - NavigateMapViewController
 
 extension HomeMapCoordinator: HomeMapViewControllerDelegate {
     
