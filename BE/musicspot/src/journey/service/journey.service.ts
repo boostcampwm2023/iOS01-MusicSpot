@@ -76,23 +76,22 @@ export class JourneyService {
     let journeyList = [];
     for (let i = 0; i < journeys.length; i++) {
       let journey = await this.journeyModel.findById(journeys[i]).exec();
-      let minX = Infinity;
-      let minY = Infinity;
-      let maxX = -Infinity;
-      let maxY = -Infinity;
-      journey.coordinates.forEach(([x, y]) => {
-        minX = Math.min(minX, x);
-        minY = Math.min(minY, y);
-        maxX = Math.max(maxX, x);
-        maxY = Math.max(maxY, y);
-      });
-      if (
-        minX > minCoordinate[0] &&
-        minY > minCoordinate[1] &&
-        maxX < maxCoordinate[0] &&
-        maxY < maxCoordinate[1]
-      ) {
-        journeyList.push(journey.coordinates);
+      let chk = true;
+      for (const [x, y] of journey.coordinates) {
+        if (
+          !(
+            x > minCoordinate[0] &&
+            y > minCoordinate[1] &&
+            x < maxCoordinate[0] &&
+            y < maxCoordinate[1]
+          )
+        ) {
+          chk = false;
+          break;
+        }
+      }
+      if (chk) {
+        journeyList.push(journey);
       }
     }
     return journeyList;
