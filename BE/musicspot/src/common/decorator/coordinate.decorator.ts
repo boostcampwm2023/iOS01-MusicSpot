@@ -13,14 +13,30 @@ export function IsCoordinate(validationOptions?: ValidationOptions) {
       propertyName: propertyName,
       options: validationOptions,
       validator: {
-        validate(value: any, args: ValidationArguments) {
-          if (!(Array.isArray(value) && value.length == 2)) {
-            return false;
+        validate(
+          receiveValue: string | number[] | number[][],
+          args: ValidationArguments,
+        ) {
+          const value =
+            typeof receiveValue === 'string'
+              ? JSON.parse(receiveValue)
+              : receiveValue;
+          if (Array.isArray(value)) {
+            if (value.length === 2 && value.every((element) => element >= 0)) {
+              return true;
+            } else {
+              for (const arr of value) {
+                if (
+                  !Array.isArray(arr) ||
+                  arr.length !== 2 ||
+                  arr.some((element) => element < 0)
+                ) {
+                  return false;
+                }
+              }
+              return true;
+            }
           }
-          if (!value.every((element) => element >= 0)) {
-            return false;
-          }
-          return true;
         },
       },
     });

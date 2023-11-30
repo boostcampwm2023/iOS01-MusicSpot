@@ -6,6 +6,9 @@ import { Spot } from '../schema/spot.schema';
 import { RecordSpotDTO } from '../dto/recordSpot.dto';
 import { Journey } from '../../journey/schema/journey.schema';
 import * as AWS from 'aws-sdk';
+import * as dotenv from 'dotenv';
+import { SpotNotFoundException } from 'src/filters/spot.exception';
+dotenv.config();
 
 const endpoint = process.env.NCLOUD_ENDPOINT;
 const region = process.env.NCLOUD_REGION;
@@ -19,7 +22,7 @@ export class SpotService {
     @InjectModel(Spot.name) private spotModel: Model<Spot>,
     @InjectModel(Journey.name) private journeyModel: Model<Journey>,
   ) {}
-  async uploadPhotoToStorage(photoData: Buffer): Promise<string> {
+  async uploadPhotoToStorage(file): Promise<string> {
     const S3 = new AWS.S3({
       endpoint,
       region,
@@ -32,21 +35,33 @@ export class SpotService {
     const result = await S3.putObject({
       Bucket: bucketName,
       Key: key,
-      Body: photoData,
+      Body: file.buffer,
     }).promise();
+
     return `${endpoint}/${bucketName}/${key}`;
   }
   async insertToSpot(spotData) {
-    const createdSpotData = await new this.spotModel(spotData).save();
+    const data = { ...spotData, coordinate: JSON.parse(spotData.coordinate) };
+    const createdSpotData = await new this.spotModel(data).save();
     const spotId = createdSpotData._id;
-    await this.journeyModel.updateOne(
+    await this.journeyModel.findOneAndUpdate(
       { _id: spotData.journeyId },
       { $push: { spots: spotId } },
+      { new: true },
     );
     return createdSpotData;
   }
-  async create(recordSpotDto: RecordSpotDTO) {
-    const photoUrl = await this.uploadPhotoToStorage(recordSpotDto.photoData);
+
+  async create(file, recordSpotDto: RecordSpotDTO) {
+    const photoUrl = await this.uploadPhotoToStorage(file);
     return await this.insertToSpot({ ...recordSpotDto, photoUrl });
+  }
+  async getSpotImage(spotId: string) {
+    const spot = await this.spotModel.findById(spotId).lean();
+    if (!spot) {
+      throw new SpotNotFoundException();
+    }
+
+    return spot.photoUrl;
   }
 }

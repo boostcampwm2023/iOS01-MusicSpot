@@ -8,6 +8,8 @@ import { User } from '../../user/schema/user.schema';
 import { EndJourneyDTO } from '../dto/journeyEnd.dto';
 import { RecordJourneyDTO } from '../dto/journeyRecord.dto';
 import { CheckJourneyDTO } from '../dto/journeyCheck.dto';
+import { JourneyNotFoundException } from '../../filters/journey.exception';
+import { UserNotFoundException } from 'src/filters/user.exception';
 
 @Injectable()
 export class JourneyService {
@@ -26,10 +28,14 @@ export class JourneyService {
     return await createdJourneyData.save();
   }
   async pushJourneyIdToUser(journeyId, userEmail) {
-    return await this.userModel.updateOne(
-      { email: userEmail },
-      { $push: { journeys: journeyId } },
-    );
+    const result = await this.userModel
+      .findOneAndUpdate(
+        { email: userEmail },
+        { $push: { journeys: journeyId } },
+        { new: true },
+      )
+      .lean();
+    return result;
   }
   async create(startJourneyDTO: StartJourneyDTO): Promise<Journey> {
     const createdJourneyData = await this.insertJourneyData(startJourneyDTO);
@@ -41,29 +47,54 @@ export class JourneyService {
   }
 
   async end(endJourneyDTO: EndJourneyDTO) {
-    const journeyId = endJourneyDTO.journeyId;
-    return await this.journeyModel
+    const { journeyId, title, coordinate } = endJourneyDTO;
+    const coordinateToAdd = Array.isArray(coordinate[0])
+      ? coordinate
+      : [coordinate];
+    const updatedJourney = await this.journeyModel
       .findOneAndUpdate(
         { _id: journeyId },
         {
-          $set: { title: endJourneyDTO.title },
-          $push: { coordinates: endJourneyDTO.coordinate },
+          $set: { title },
+          $push: { coordinates: { $each: coordinateToAdd } },
         },
         { new: true },
       )
       .lean();
+
+    if (!updatedJourney) {
+      throw new JourneyNotFoundException();
+    }
+    return updatedJourney;
   }
 
   async pushCoordianteToJourney(recordJourneyDTO: RecordJourneyDTO) {
     const { journeyId, coordinate } = recordJourneyDTO;
-    return await this.journeyModel
-      .updateOne({ _id: journeyId }, { $push: { coordinates: coordinate } })
+    // coordinate가 단일 배열인 경우 이를 이중 배열로 감싸서 처리
+
+    const coordinateToAdd = Array.isArray(coordinate[0])
+      ? coordinate
+      : [coordinate];
+    const updatedJourney = await this.journeyModel
+      .findOneAndUpdate(
+        { _id: journeyId },
+        { $push: { coordinates: { $each: coordinateToAdd } } },
+        { new: true },
+      )
       .lean();
+    if (!updatedJourney) {
+      throw new JourneyNotFoundException();
+    }
+    return updatedJourney;
   }
 
   async checkJourney(checkJourneyDTO: CheckJourneyDTO) {
     const { userId, minCoordinate, maxCoordinate } = checkJourneyDTO;
-    const user = await this.userModel.findById(userId).exec();
+    const user = await this.userModel.findById(userId).lean();
+
+    if (!user) {
+      throw new UserNotFoundException();
+    }
     const journeys = user.journeys;
     const journeyList = await this.findMinMaxCoordinates(
       journeys,
@@ -75,24 +106,26 @@ export class JourneyService {
   async findMinMaxCoordinates(journeys, minCoordinate, maxCoordinate) {
     let journeyList = [];
     for (let i = 0; i < journeys.length; i++) {
-      let journey = await this.journeyModel.findById(journeys[i]).exec();
-      let minX = Infinity;
-      let minY = Infinity;
-      let maxX = -Infinity;
-      let maxY = -Infinity;
-      journey.coordinates.forEach(([x, y]) => {
-        minX = Math.min(minX, x);
-        minY = Math.min(minY, y);
-        maxX = Math.max(maxX, x);
-        maxY = Math.max(maxY, y);
-      });
-      if (
-        minX > minCoordinate[0] &&
-        minY > minCoordinate[1] &&
-        maxX < maxCoordinate[0] &&
-        maxY < maxCoordinate[1]
-      ) {
-        journeyList.push(journey.coordinates);
+      let journey = await this.journeyModel.findById(journeys[i]).lean();
+      if (!journey) {
+        throw new JourneyNotFoundException();
+      }
+      let chk = true;
+      for (const [x, y] of journey.coordinates) {
+        if (
+          !(
+            x > minCoordinate[0] &&
+            y > minCoordinate[1] &&
+            x < maxCoordinate[0] &&
+            y < maxCoordinate[1]
+          )
+        ) {
+          chk = false;
+          break;
+        }
+      }
+      if (chk) {
+        journeyList.push(journey);
       }
     }
     return journeyList;

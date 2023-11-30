@@ -5,10 +5,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { JourneyModule } from './journey/module/journey.module';
 import { SpotModule } from './spot/module/spot.module';
 import { UserModule } from './user/module/user.module';
-import * as dotenv from 'dotenv';
 
 import { ReleaseController } from './releasePage/release.controller';
-dotenv.config();
 
 @Module({
   imports: [
