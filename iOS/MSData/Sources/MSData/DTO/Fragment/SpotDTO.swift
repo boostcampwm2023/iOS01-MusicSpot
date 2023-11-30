@@ -7,7 +7,15 @@
 
 import Foundation
 
-public struct SpotDTO: Codable, Identifiable {
+public struct RequestableSpotDTO: Encodable, Identifiable {
+    
+    public let id: UUID
+    public let coordinate: [Double]
+    public let photoData: Data
+    
+}
+
+public struct ResponsibleSpotDTO: Decodable, Identifiable {
     
     public let id: UUID
     public let coordinate: [Double]
