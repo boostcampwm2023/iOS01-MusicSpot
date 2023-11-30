@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import HomeMapScene
+import NavigateMap
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
