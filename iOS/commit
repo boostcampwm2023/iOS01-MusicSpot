@@ -22,7 +22,7 @@ for path in "${PATHS[@]}"; do
         exit 1
     fi
 done
-
+​
 if [ ! -z "$failures" ]; then
     echo "$failures"
     exit 1

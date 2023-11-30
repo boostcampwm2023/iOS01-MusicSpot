@@ -12,7 +12,7 @@ public struct JourneyDTO: Codable, Identifiable {
     public let id: UUID
     public let location: String
     public let metaData: JourneyMetadataDTO
-    public let spots: [SpotDTO]
+    public let spots: [ResponsibleSpotDTO]
     public let coordinates: [CoordinateDTO]
     public let song: SongDTO
     public let lineColor: String
