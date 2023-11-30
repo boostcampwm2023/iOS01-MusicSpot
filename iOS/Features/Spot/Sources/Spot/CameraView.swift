@@ -20,7 +20,6 @@ final class CameraView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.configureLayer()
         self.configureStyle()
     }
     
@@ -30,13 +29,9 @@ final class CameraView: UIView {
     
 }
 
-// MARK: UI Configuration
+// MARK: - UI Configuration: Style
 
 private extension CameraView {
-    
-    func configureLayer() {
-        
-    }
     
     func configureStyle() {
         self.layer.cornerRadius = Metric.cornerRadius

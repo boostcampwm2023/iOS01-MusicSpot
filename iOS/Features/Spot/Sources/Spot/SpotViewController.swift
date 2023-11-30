@@ -11,7 +11,7 @@ import MSDesignSystem
 import MSLogger
 import MSUIKit
 
-public final class CameraViewController: UIViewController {
+public final class SpotViewController: UIViewController, UINavigationControllerDelegate {
 
     // MARK: - Constants
 
@@ -52,7 +52,8 @@ public final class CameraViewController: UIViewController {
 
     // MARK: - Properties
     
-    private let cameraViewModel = CameraViewModel()
+    private let spotViewModel = SpotViewModel()
+    private let picker = UIImagePickerController()
     
     // MARK: - UI Components
     
@@ -74,9 +75,27 @@ public final class CameraViewController: UIViewController {
         self.configureLayout()
         self.configureStyles()
         self.configureAction()
-        self.configureShotDelegate()
+        self.configureState()
+        self.configureDelegate()
+    }
+    
+    // MARK: - Configure Delegate
+    
+    private func configureDelegate() {
+        self.picker.delegate = self
+    }
+    
+    // MARK: - Configure State
+    
+    private func configureState() {
+        self.configurePickerState()
     }
 
+    private func configurePickerState() {
+        self.picker.sourceType = .photoLibrary
+        self.picker.allowsEditing = true
+    }
+    
     // MARK: - Actions
 
     private func configureAction() {
@@ -94,7 +113,7 @@ public final class CameraViewController: UIViewController {
     }
     
     private func shotButtonTapped() {
-        self.cameraViewModel.shot()
+        self.spotViewModel.shot()
     }
     
     private func configureSwapButtonAction() {
@@ -105,7 +124,7 @@ public final class CameraViewController: UIViewController {
     }
     
     private func swapButtonTapped() {
-        self.cameraViewModel.swap()
+        self.spotViewModel.swap()
     }
     
     private func configureGalleryButtonAction() {
@@ -116,21 +135,18 @@ public final class CameraViewController: UIViewController {
     }
     
     private func galleryButtonTapped() {
-        let picker = UIImagePickerController()
-        picker.sourceType = .photoLibrary
-        picker.allowsEditing = true
-        self.present(picker, animated: false)
+        self.present(self.picker, animated: false)
     }
     
     private func configureCameraSetting() {
-        self.cameraViewModel.preset(screen: cameraView)
+        self.spotViewModel.preset(screen: cameraView)
     }
     
 }
 
 // MARK: UI Configuration - Layout
 
-private extension CameraViewController {
+private extension SpotViewController {
     
     func configureLayout() {
         [ self.cameraView,
@@ -217,17 +233,17 @@ private extension CameraViewController {
 
 // MARK: ConfigureDelegate
 
-private extension CameraViewController {
+private extension SpotViewController {
     
     func configureShotDelegate() {
-        self.cameraViewModel.delegate = self
+        self.spotViewModel.delegate = self
     }
     
 }
 
 // MARK: ShotDelegate
 
-extension CameraViewController: ShotDelegate {
+extension SpotViewController: ShotDelegate {
     
     func update(imageData: Data?) {
         guard let imageData else {
@@ -239,11 +255,30 @@ extension CameraViewController: ShotDelegate {
     
 }
 
+// MARK: ImagePickerDelegate
+
+extension SpotViewController: UIImagePickerControllerDelegate {
+    
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else {
+            return
+        }
+        self.spotViewModel.stopCamera()
+        let spotSaveViewController = SpotSaveViewController()
+        spotSaveViewController.image = image
+        spotSaveViewController.modalPresentationStyle = .fullScreen
+        picker.dismiss(animated: true)
+        self.presentedViewController?.dismiss(animated: true)
+        self.present(spotSaveViewController, animated: false)
+    }
+    
+}
+
 // MARK: - Preview
 
 @available(iOS 17, *)
 #Preview {
     MSFont.registerFonts()
-    let viewController = CameraViewController()
+    let viewController = SpotViewController()
     return viewController
 }

@@ -11,7 +11,7 @@ import MSDesignSystem
 import MSLogger
 import MSUIKit
 
-public final class SpotViewController: UIViewController {
+public final class SpotSaveViewController: UIViewController {
     
     // MARK: - Constants
     
@@ -65,6 +65,13 @@ public final class SpotViewController: UIViewController {
         }
     }
     
+    // MARK: - Life Cycle
+
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        self.configure()
+    }
+    
     // MARK: - Configure
     
     func configure() {
@@ -112,7 +119,7 @@ public final class SpotViewController: UIViewController {
             self.view.addSubview(label)
             label.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+                label.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
             ])
         }
         NSLayoutConstraint.activate([
@@ -213,13 +220,6 @@ public final class SpotViewController: UIViewController {
         self.subTextLabel.numberOfLines = multiLineConstant
     }
     
-    // MARK: - Life Cycle
-    
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        self.configure()
-    }
-    
     // MARK: Actions
     
     private func cancelButtonTapped() {
@@ -234,8 +234,8 @@ public final class SpotViewController: UIViewController {
 
 // MARK: - Preview
 
-@available(iOS 17, *)
-#Preview {
-    let viewController = SpotViewController()
-    return viewController
-}
+//@available(iOS 17, *)
+//#Preview {
+////    let view = SpotSaveView()
+////    return view
+//}

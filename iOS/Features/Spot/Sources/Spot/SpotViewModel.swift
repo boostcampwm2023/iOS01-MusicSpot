@@ -15,7 +15,7 @@ protocol ShotDelegate: AnyObject {
     
 }
 
-final class CameraViewModel: NSObject {
+final class SpotViewModel: NSObject {
     
     // MARK: SwapMode
     
@@ -63,7 +63,7 @@ final class CameraViewModel: NSObject {
 
 // MARK: Interface
 
-internal extension CameraViewModel {
+internal extension SpotViewModel {
     
     func preset(screen: Positionable) {
         self.presetCamera(screen: screen)
@@ -89,11 +89,17 @@ internal extension CameraViewModel {
         self.session.commitConfiguration()
     }
     
+    func stopCamera() {
+        DispatchQueue.global(qos: .background).async {
+            self.session.stopRunning()
+        }
+    }
+    
 }
 
 // MARK: Setting Camera
 
-private extension CameraViewModel {
+private extension SpotViewModel {
     
     func presetCamera(screen: Positionable) {
         guard let input = self.swapMode.input else { return }
@@ -130,16 +136,14 @@ private extension CameraViewModel {
 
 // MARK: - AVCapturePhotoCaptureDelegate
 
-extension CameraViewModel: AVCapturePhotoCaptureDelegate {
+extension SpotViewModel: AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let imageData = photo.fileDataRepresentation() else {
             MSLogger.make(category: .camera).debug("image Data가 없습니다.")
             return
         }
         self.delegate?.update(imageData: imageData)
-        DispatchQueue.global(qos: .background).async {
-            self.session.stopRunning()
-        }
+        self.stopCamera()
     }
 }
 

@@ -7,8 +7,7 @@ import PackageDescription
 
 extension String {
     static let package = "Spot"
-    static let spotView = "SpotView"
-    static let cameraView = "CameraView"
+    static let spot = "Spot"
     static let msUIKit = "MSUIKit"
     static let msFoundation = "MSFoundation"
     static let msDesignsystem = "MSDesignSystem"
@@ -33,11 +32,8 @@ let package = Package(
     ],
     products: [
         .library(
-            name: .spotView,
-            targets: [.spotView]),
-        .library(
-            name: .cameraView,
-            targets: [.cameraView])
+            name: .spot,
+            targets: [.spot])
     ],
     dependencies: [
         .package(path: .msUIKit.path),
@@ -46,13 +42,7 @@ let package = Package(
     targets: [
         // Codes
         .target(
-            name: .spotView,
-            dependencies: [
-                .product(name: .msUIKit, package: .msUIKit),
-                .product(name: .msDesignsystem, package: .msUIKit),
-                .product(name: .msLogger, package: .msFoundation)]),
-        .target(
-            name: .cameraView,
+            name: .spot,
             dependencies: [
                 .product(name: .msUIKit, package: .msUIKit),
                 .product(name: .msDesignsystem, package: .msUIKit),
