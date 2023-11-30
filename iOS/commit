@@ -1,7 +1,11 @@
 #!/bin/sh
 ​
 LINTPATH='.swiftlint.yml'
+<<<<<<< HEAD
 declare -a PATHS=("MSCoreKit" "MSFoundation" "MSUIKit" "MusicSpot" "MSData" "Features")
+=======
+declare -a PATHS=("MSCoreKit" "MSFoundation" "MSUIKit" "MSData" "MusicSpot" "Features")
+>>>>>>> 48567b56ec07f40e5003caf774569cbdae8f356b
 failures=""
 ​
 for path in "${PATHS[@]}"; do

@@ -34,9 +34,6 @@ let package = Package(
         .library(name: .cache,
                  targets: [.cache])
     ],
-    dependencies: [
-        .package(path: "../MSFoundation")
-    ],
     targets: [
         // Codes
         .target(name: .persistentStorage),
@@ -46,10 +43,7 @@ let package = Package(
                     .target(name: .persistentStorage),
                     .target(name: .networking)
                 ]),
-        .target(name: .cache,
-                dependencies: [
-                    .product(name: "MSUserDefaults", package: "MSFoundation")
-                ]),
+        .target(name: .cache),
 
         // Tests
         .testTarget(name: .persistentStorage.testTarget,

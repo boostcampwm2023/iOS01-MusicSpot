@@ -13,7 +13,11 @@ import MSDesignSystem
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
+    // MARK: - Properties
+    
     var window: UIWindow?
+    
+    // MARK: - Functions
 
     func scene(_ scene: UIScene,
                willConnectTo _: UISceneSession,
@@ -30,4 +34,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = testViewController
         window.makeKeyAndVisible()
     }
+    
 }
