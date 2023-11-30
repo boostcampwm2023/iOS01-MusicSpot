@@ -42,7 +42,7 @@ extension SpotCoordinator: SpotViewControllerDelegate {
     }
     
     func navigateToSearchMusic() {
-        let searchMusicCoordinator = SearchMusicCoordinator(navigationController: navigationController)
+        let searchMusicCoordinator = SearchMusicCoordinator(navigationController: self.navigationController)
         self.childCoordinators.append(searchMusicCoordinator)
         searchMusicCoordinator.start()
     }

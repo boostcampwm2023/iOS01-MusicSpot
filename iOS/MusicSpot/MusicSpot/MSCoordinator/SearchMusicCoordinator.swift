@@ -42,7 +42,7 @@ extension SearchMusicCoordinator: SearchMusicViewControllerDelegate {
     }
     
     func navigateToSaveJourney() {
-        let saveJourneyCoordinator = SaveJourneyCoordinator(navigationController: navigationController)
+        let saveJourneyCoordinator = SaveJourneyCoordinator(navigationController: self.navigationController)
         self.childCoordinators.append(saveJourneyCoordinator)
         saveJourneyCoordinator.start()
     }
