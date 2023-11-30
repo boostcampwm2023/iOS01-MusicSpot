@@ -8,6 +8,7 @@
 import Combine
 import UIKit
 
+import MSCacheStorage
 import MSUIKit
 
 public final class JourneyListViewController: UIViewController {
@@ -20,6 +21,9 @@ public final class JourneyListViewController: UIViewController {
     
     private enum Typo {
         static let title: String = "지난 여정"
+        static func subtitle(numberOfJourneys: Int) -> String {
+            return "현재 위치에 \(numberOfJourneys)개의 여정이 있습니다."
+        }
     }
     
     private enum Metric {
@@ -30,6 +34,8 @@ public final class JourneyListViewController: UIViewController {
     }
     
     // MARK: - Properties
+    
+    private let cache: MSCacheStorage
     
     private var viewModel: JourneyListViewModel
     
@@ -62,7 +68,7 @@ public final class JourneyListViewController: UIViewController {
         let label = UILabel()
         label.font = .msFont(.caption)
         label.textColor = .msColor(.secondaryTypo)
-        label.text = "현재 위치에 0개의 여정이 있습니다."
+        label.text = Typo.subtitle(numberOfJourneys: 0)
         return label
     }()
     
@@ -76,9 +82,11 @@ public final class JourneyListViewController: UIViewController {
     // MARK: - Initializer
     
     public init(viewModel: JourneyListViewModel,
+                cache: MSCacheStorage = MSCacheStorage(),
                 nibName nibNameOrNil: String? = nil,
                 bundle nibBundleOrNil: Bundle? = nil) {
         self.viewModel = viewModel
+        self.cache = cache
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -103,13 +111,19 @@ public final class JourneyListViewController: UIViewController {
         self.viewModel.state.journeys
             .receive(on: DispatchQueue.main)
             .sink { journeys in
-                self.subtitleLabel.text = "현재 위치에 \(journeys.count)개의 여정이 있습니다."
+                self.subtitleLabel.text = Typo.subtitle(numberOfJourneys: journeys.count)
                 var snapshot = JourneySnapshot()
                 snapshot.appendSections([.zero])
                 snapshot.appendItems(journeys, toSection: .zero)
                 self.dataSource?.apply(snapshot)
             }
             .store(in: &self.cancellables)
+    }
+    
+    // MARK: - Functions
+    
+    public func fetchJourneys(from coordinate: Coordinate) {
+        self.viewModel.trigger(.fetchJourney(at: coordinate))
     }
     
 }
@@ -133,7 +147,7 @@ private extension JourneyListViewController {
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .absolute(268.0))
+                                               heightDimension: .estimated(JourneyCell.estimatedHeight))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
                                                        subitems: [item])
         
@@ -148,14 +162,16 @@ private extension JourneyListViewController {
         let (data, response) = try await URLSession.shared.data(for: request)
         
         guard let statusCode = (response as? HTTPURLResponse)?.statusCode,
-              (200...299).contains(statusCode) else { throw NSError(domain: "fetch error", code: 1004) }
+              (200...299).contains(statusCode) else {
+            throw NSError(domain: "fetch error", code: 1004)
+        }
         
         return data
     }
     
     func configureDataSource() -> JourneyListDataSource {
         // TODO: 최적화 & 캐싱
-        let cellRegistration = JourneyCellRegistration { cell, _, itemIdentifier in
+        let cellRegistration = JourneyCellRegistration { cell, indexPath, itemIdentifier in
             let cellModel = JourneyCellModel(location: itemIdentifier.location,
                                              date: itemIdentifier.date,
                                              songTitle: itemIdentifier.song.title,
@@ -170,11 +186,18 @@ private extension JourneyListViewController {
                 
                 await withTaskGroup(of: (index: Int, imageData: Data).self) { group in
                     for (index, photoURL) in photoURLs.enumerated() {
+                        let key = "\(indexPath.section)-\(indexPath.item)-\(index)"
                         group.addTask(priority: .background) { [weak self] in
-                            guard let imageData = try? await self?.fetchImage(url: photoURL) else {
-                                return (0, Data())
+                            if let cachedData = self?.cache.data(forKey: key) {
+                                return (index, cachedData)
                             }
-                            return (index, imageData)
+                            
+                            if let imageData = try? await self?.fetchImage(url: photoURL) {
+                                self?.cache.cache(imageData, forKey: key)
+                                return (index, imageData)
+                            }
+                            
+                            return (0, Data())
                         }
                     }
                     
@@ -240,7 +263,6 @@ private extension JourneyListViewController {
 
 import MSData
 import MSDesignSystem
-import MSNetworking
 @available(iOS 17, *)
 #Preview {
     MSFont.registerFonts()

@@ -9,14 +9,24 @@ import Foundation
 
 public protocol CacheStorage {
     
-    associatedtype Key: AnyObject = NSString
-    associatedtype Value: AnyObject
+    associatedtype Key = String
+    associatedtype Value
+    typealias Cache = NSCache<NSString, NSData>
     
-    typealias Cache = NSCache<Key, Value>
+    associatedtype CacheResult
     
     // MARK: - Functions
     
-    func data(forKey key: Key) async -> Value?
-    func cleanDisk() throws
+    func data(forKey key: Key) -> Value?
+    func cache(_ value: Value, forKey key: Key) -> CacheResult
+    func remove(forKey key: Key) -> CacheResult
     
+    func clean(_ target: CacheStorageTarget) throws
+    
+}
+
+public enum CacheStorageTarget {
+    case all
+    case memory
+    case disk
 }

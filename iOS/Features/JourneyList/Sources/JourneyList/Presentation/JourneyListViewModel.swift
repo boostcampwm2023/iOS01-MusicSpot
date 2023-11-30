@@ -14,6 +14,7 @@ public final class JourneyListViewModel {
     
     public enum Action {
         case viewNeedsLoaded
+        case fetchJourney(at: Coordinate)
     }
     
     public struct State {
@@ -50,6 +51,8 @@ public final class JourneyListViewModel {
                     print(error)
                 }
             }
+        case .fetchJourney(let coordinate):
+            print(coordinate)
         }
     }
     

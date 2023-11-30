@@ -6,13 +6,11 @@ import PackageDescription
 // MARK: - Constants
 
 extension String {
+    
     static let package = "MSUIKit"
     static let designSystem = "MSDesignSystem"
     static let uiKit = "MSUIKit"
     
-    var testTarget: String {
-        return self + "Tests"
-    }
 }
 
 // MARK: - Package
