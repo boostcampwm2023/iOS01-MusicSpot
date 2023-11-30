@@ -43,10 +43,10 @@ public final class JourneyListViewModel {
 private extension JourneyListViewModel {
     
     func fetchInitialJourneys() {
-        self.state.journeys.send([Journey(locatoin: "여정 위치",
+        self.state.journeys.send([Journey(location: "여정 위치",
                                           date: "2023. 01. 01",
                                           spot: Spot(images: ["sdlkj", "sdklfj"])),
-                                  Journey(locatoin: "여정 위치",
+                                  Journey(location: "여정 위치",
                                           date: "2023. 01. 02",
                                           spot: Spot(images: ["slkjc", "llskl", "llskldf", "llskl5", "llskl12"]))])
     }
