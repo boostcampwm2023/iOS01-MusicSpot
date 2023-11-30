@@ -13,8 +13,11 @@ export function IsCoordinate(validationOptions?: ValidationOptions) {
       propertyName: propertyName,
       options: validationOptions,
       validator: {
-        validate(stringValue: string, args: ValidationArguments) {
-          const value = JSON.parse(stringValue);
+        validate(receivedValue: string | number[], args: ValidationArguments) {
+          const value =
+            typeof receivedValue === 'string'
+              ? JSON.parse(receivedValue)
+              : receivedValue;
           if (!(Array.isArray(value) && value.length == 2)) {
             return false;
           }
