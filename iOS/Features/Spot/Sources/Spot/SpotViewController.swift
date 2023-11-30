@@ -297,7 +297,8 @@ private extension SpotViewController {
     func presentSpotSaveViewController(with image: UIImage) {
         self.spotViewModel.stopCamera()
         self.spotSaveViewController.image = image
-        self.presentingViewController?.dismiss(animated: true)
+        self.presentedViewController?.dismiss(animated: false)
+        self.presentingViewController?.dismiss(animated: false)
         self.present(self.spotSaveViewController, animated: true)
     }
     
