@@ -7,48 +7,57 @@
 
 import UIKit
 
-final class HomeMapCoordinator: Coordinator, HomeMapViewControllerDelegate {
-
+final class HomeMapCoordinator: Coordinator {
+    
     // MARK: - Properties
-
+    
     var navigationController: UINavigationController
-
+    
     var childCoordinators: [Coordinator] = []
-
+    
     var delegate: AppCoordinatorDelegate?
-
+    
     // MARK: - Initializer
-
+    
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
-
+    
     // MARK: - Functions
-
+    
     func start() {
         let homeMapViewController = HomeMapViewController()
         homeMapViewController.delegate = self
         self.navigationController.pushViewController(homeMapViewController, animated: true)
     }
+    
+}
 
+// MARK: - HomeMapViewController
+
+extension HomeMapCoordinator: HomeMapViewControllerDelegate {
+    
     func navigateToSpot() {
-        let spotCoordinator = SpotCoordinator(navigationController: navigationController)
+        let spotCoordinator = SpotCoordinator(navigationController: self.navigationController)
         self.childCoordinators.append(spotCoordinator)
         spotCoordinator.start()
     }
-
+    
     func navigateToRewind() {
-        let rewindCoordinator = RewindCoordinator(navigationController: navigationController)
+        let rewindCoordinator = RewindCoordinator(navigationController: self.navigationController)
         self.childCoordinators.append(rewindCoordinator)
         rewindCoordinator.start()
     }
-
+    
     func navigateToSetting() {
-        let settingCoordinator = SettingCoordinator(navigationController: navigationController)
+        let settingCoordinator = SettingCoordinator(navigationController: self.navigationController)
         self.childCoordinators.append(settingCoordinator)
         settingCoordinator.start()
     }
+    
 }
+
+// MARK: - App Coordinator
 
 extension HomeMapCoordinator: AppCoordinatorDelegate {
     

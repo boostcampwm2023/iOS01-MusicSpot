@@ -7,35 +7,43 @@
 
 import UIKit
 
-final class SettingCoordinator: Coordinator, SettingViewControllerDelegate {
-
+final class SettingCoordinator: Coordinator {
+    
     // MARK: - Properties
-
+    
     var navigationController: UINavigationController
-
+    
     var childCoordinators: [Coordinator] = []
-
+    
     var delegate: AppCoordinatorDelegate?
-
+    
     // MARK: - Initializer
-
+    
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
-
+    
     // MARK: - Functions
-
+    
     func start() {
         let settingViewController = SettingViewController()
         settingViewController.delegate = self
         self.navigationController.pushViewController(settingViewController, animated: true)
     }
+    
+}
 
+// MARK: - SettingViewController
+
+extension SettingCoordinator: SettingViewControllerDelegate {
+    
     func navigateToHomeMap() {
         self.delegate?.popToHomeMap(from: self)
     }
     
 }
+
+// MARK: - App Coordinator
 
 extension SettingCoordinator: AppCoordinatorDelegate {
     

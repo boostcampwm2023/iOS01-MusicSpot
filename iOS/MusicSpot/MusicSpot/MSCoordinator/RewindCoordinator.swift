@@ -7,35 +7,43 @@
 
 import UIKit
 
-final class RewindCoordinator: Coordinator, RewindViewControllerDelegate {
-
+final class RewindCoordinator: Coordinator {
+    
     // MARK: - Properties
-
+    
     var navigationController: UINavigationController
-
+    
     var childCoordinators: [Coordinator] = []
-
+    
     var delegate: AppCoordinatorDelegate?
-
+    
     // MARK: - Initializer
-
+    
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
-
+    
     // MARK: - Functions
-
+    
     func start() {
         let rewindViewController = RewindViewController()
         rewindViewController.delegate = self
         self.navigationController.pushViewController(rewindViewController, animated: true)
     }
+    
+}
 
+// MARK: - RewindViewController
+
+extension RewindCoordinator: RewindViewControllerDelegate {
+    
     func navigateToHomeMap() {
         self.delegate?.popToHomeMap(from: self)
     }
     
 }
+
+// MARK: - App Coordinator
 
 extension RewindCoordinator: AppCoordinatorDelegate {
     

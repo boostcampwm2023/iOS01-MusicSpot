@@ -79,7 +79,7 @@
 		08CBF86F2B18468E007D3797 /* MSCoordinator */ = {
 			isa = PBXGroup;
 			children = (
-				08CBF8772B18468E007D3797 /* Coordinator.swift */,
+				DD2856C32B187BAB002C994D /* Protocol */,
 				08CBF8712B18468E007D3797 /* AppCoordinator.swift */,
 				08CBF8732B18468E007D3797 /* HomeMapCoordinator.swift */,
 				08CBF8752B18468E007D3797 /* SpotCoordinator.swift */,
@@ -102,6 +102,14 @@
 				08CBF8862B1846A0007D3797 /* SearchMusicViewController.swift */,
 			);
 			path = TempViewController;
+			sourceTree = "<group>";
+		};
+		DD2856C32B187BAB002C994D /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				08CBF8772B18468E007D3797 /* Coordinator.swift */,
+			);
+			path = Protocol;
 			sourceTree = "<group>";
 		};
 		DD5EA23F2B16EC690080AEC1 /* Frameworks */ = {
