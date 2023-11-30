@@ -16,4 +16,5 @@ public enum MSLogCategory: String {
     case login
     case setting
     case camera
+    case spot
 }

@@ -9,7 +9,9 @@ import UIKit
 
 import MSDesignSystem
 import MSLogger
+import MSNetworking
 import MSUIKit
+import MSData
 
 public final class SpotSaveViewController: UIViewController {
     
@@ -59,6 +61,20 @@ public final class SpotSaveViewController: UIViewController {
         }
     }
     private let spotSaveViewModel = SpotSaveViewModel()
+    
+    // MARK: - Properties: Networking
+    
+    internal var spotRouter: Router?
+    internal var journeyID: UUID? {
+        didSet {
+            self.spotSaveViewModel.journeyID = self.journeyID
+        }
+    }
+    internal var coordinate: [Double]? {
+        didSet {
+            self.spotSaveViewModel.coordinate = self.coordinate
+        }
+    }
     
     // MARK: - UI Components
     
@@ -235,7 +251,7 @@ public final class SpotSaveViewController: UIViewController {
             MSLogger.make(category: .recordingJourney).debug("현재 이미지를 Data로 변환할 수 없습니다.")
             return
         }
-        self.spotSaveViewModel.upload(data: data)
+        self.spotSaveViewModel.upload(data: data, using: self.spotRouter)
     }
     
 }

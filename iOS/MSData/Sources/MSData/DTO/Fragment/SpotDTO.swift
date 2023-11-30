@@ -23,11 +23,10 @@ public struct RequestableSpotDTO: Encodable, Identifiable {
     
 }
 
-public struct ResponsibleSpotDTO: Decodable, Identifiable {
+public struct ResponsibleSpotDTO: Codable, Identifiable {
     
     public let id: UUID
     public let coordinate: [Double]
     public let photoURLs: [String]
-    public let w3w: String
     
 }

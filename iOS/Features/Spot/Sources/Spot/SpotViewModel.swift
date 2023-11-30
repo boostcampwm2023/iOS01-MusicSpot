@@ -20,6 +20,7 @@ final class SpotViewModel: NSObject {
     // MARK: - Type: SwapMode
     
     enum SwapMode {
+        
         case front
         case back
         

@@ -7,8 +7,10 @@
 
 import UIKit
 
+import MSData
 import MSDesignSystem
 import MSLogger
+import MSNetworking
 import MSUIKit
 
 public final class SpotViewController: UIViewController, UINavigationControllerDelegate {
@@ -55,6 +57,24 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     private let spotViewModel = SpotViewModel()
     private let spotSaveViewController = SpotSaveViewController()
     private let picker = UIImagePickerController()
+    
+    // MARK: - Properties: Networking
+    
+    internal var spotRouter: Router? {
+        didSet {
+            self.spotSaveViewController.spotRouter = self.spotRouter
+        }
+    }
+    private var journeyID: UUID? {
+        didSet {
+            self.spotSaveViewController.journeyID = self.journeyID
+        }
+    }
+    private var coordinate: [Double]? {
+        didSet {
+            self.spotSaveViewController.coordinate = self.coordinate
+        }
+    }
     
     // MARK: - UI Components
     
