@@ -8,8 +8,8 @@ import PackageDescription
 extension String {
     static let package = "MSUIKit"
     static let designSystem = "MSDesignSystem"
-    static let components = "MSUIComponents"
-
+    static let uiKit = "MSUIKit"
+    
     var testTarget: String {
         return self + "Tests"
     }
@@ -24,16 +24,19 @@ let package = Package(
     ],
     products: [
         .library(name: .designSystem,
+                 type: .static,
                  targets: [.designSystem]),
-        .library(name: .components,
-                 targets: [.components])
+        .library(name: .uiKit,
+                 targets: [.uiKit])
     ],
     targets: [
         // Codes
-        .target(name: .designSystem),
-        .target(name: .components,
-                dependencies: [.target(name: .designSystem)])
-        // Tests
+        .target(name: .designSystem,
+                resources: [
+                    .process("../MSDesignSystem/Resources")
+                ]),
+        .target(name: .uiKit,
+                dependencies: ["MSDesignSystem"])
     ],
     swiftLanguageVersions: [.v5]
 )

@@ -8,19 +8,23 @@
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    
+    // MARK: - Properties
+    
     var window: UIWindow?
+    
+    // MARK: - Functions
+
     func scene(_ scene: UIScene,
-               willConnectTo session: UISceneSession,
-               options connectionOptions: UIScene.ConnectionOptions) {
+               willConnectTo _: UISceneSession,
+               options _: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-
-        self.window = UIWindow(windowScene: windowScene)
-
-        let musicSpotNavigationController = UINavigationController()
-        let appCoordinator = AppCoordinator(navigationController: musicSpotNavigationController)
-        window?.rootViewController = musicSpotNavigationController
-
-        appCoordinator.start()
-        window?.makeKeyAndVisible()
+        let window = UIWindow(windowScene: windowScene)
+        defer { self.window = window }
+        
+        let testViewController = UIViewController()
+        window.rootViewController = testViewController
+        window.makeKeyAndVisible()
     }
+    
 }
