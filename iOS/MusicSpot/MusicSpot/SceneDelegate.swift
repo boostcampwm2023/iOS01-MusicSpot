@@ -14,7 +14,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
     // MARK: - Functions
-
+    
     func scene(_ scene: UIScene,
                willConnectTo _: UISceneSession,
                options _: UIScene.ConnectionOptions) {
@@ -22,8 +22,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         defer { self.window = window }
         
-        let testViewController = UIViewController()
-        window.rootViewController = testViewController
+        let musicSpotNavigationController = UINavigationController()
+        let appCoordinator = AppCoordinator(navigationController: musicSpotNavigationController)
+        window.rootViewController = musicSpotNavigationController
+        
+        appCoordinator.start()
+        
         window.makeKeyAndVisible()
     }
     
