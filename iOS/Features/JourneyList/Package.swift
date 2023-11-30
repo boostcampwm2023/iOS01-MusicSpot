@@ -3,22 +3,50 @@
 
 import PackageDescription
 
+// MARK: - Constants
+
+private extension String {
+    
+    static let package = "FeatureJourneyList"
+
+	var fromRootPath: String {
+        return "../../" + self
+    }
+    
+}
+
+private enum Target {
+    
+    static let journeyList = "JourneyList"
+    
+}
+
+private enum Dependency {
+	
+	static let msUIKit = "MSUIKit"
+
+}
+
+// MARK: - Package
+
 let package = Package(
-    name: "JourneyList",
+    name: .package,
     platforms: [
         .iOS(.v15)
     ],
     products: [
-        .library(
-            name: "JourneyList",
-            targets: ["JourneyList"])
+        .library(name: Target.journeyList,
+                 targets: [Target.journeyList])
     ],
-    dependencies: [
-        .package(name: "MSUIKit", path: "../../MSUIKit")
-    ],
+	dependencies: [
+		.package(name: Dependency.msUIKit,
+				 path: Dependency.msUIKit.fromRootPath)
+	],
     targets: [
-        .target(
-            name: "JourneyList",
-            dependencies: ["MSUIKit"])
+        .target(name: Target.journeyList,
+				dependencies: [
+					.product(name: Dependency.msUIKit,
+							 package: Dependency.msUIKit)
+				])
     ]
 )
