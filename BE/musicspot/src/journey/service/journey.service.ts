@@ -49,12 +49,15 @@ export class JourneyService {
   async end(endJourneyDTO: EndJourneyDTO) {
     // const journeyId = endJourneyDTO.journeyId;
     const { journeyId, title, coordinate } = endJourneyDTO;
+    const coordinateToAdd = Array.isArray(coordinate[0])
+      ? coordinate
+      : [coordinate];
     const updatedJourney = await this.journeyModel
       .findOneAndUpdate(
         { _id: journeyId },
         {
           $set: { title },
-          $push: { coordinates: coordinate },
+          $push: { coordinates: { $each: coordinateToAdd } },
         },
         { new: true },
       )
@@ -68,10 +71,15 @@ export class JourneyService {
 
   async pushCoordianteToJourney(recordJourneyDTO: RecordJourneyDTO) {
     const { journeyId, coordinate } = recordJourneyDTO;
+    // coordinate가 단일 배열인 경우 이를 이중 배열로 감싸서 처리
+
+    const coordinateToAdd = Array.isArray(coordinate[0])
+      ? coordinate
+      : [coordinate];
     const updatedJourney = await this.journeyModel
       .findOneAndUpdate(
         { _id: journeyId },
-        { $push: { coordinates: coordinate } },
+        { $push: { coordinates: { $each: coordinateToAdd } } },
       )
       .lean();
     if (!updatedJourney) {
@@ -82,7 +90,7 @@ export class JourneyService {
 
   async checkJourney(checkJourneyDTO: CheckJourneyDTO) {
     const { userId, minCoordinate, maxCoordinate } = checkJourneyDTO;
-    const user = await this.userModel.findById(userId);
+    const user = await this.userModel.findById(userId).lean();
 
     if (!user) {
       throw new UserNotFoundException();
@@ -98,7 +106,10 @@ export class JourneyService {
   async findMinMaxCoordinates(journeys, minCoordinate, maxCoordinate) {
     let journeyList = [];
     for (let i = 0; i < journeys.length; i++) {
-      let journey = await this.journeyModel.findById(journeys[i]).exec();
+      let journey = await this.journeyModel.findById(journeys[i]).lean();
+      if (!journey) {
+        throw new JourneyNotFoundException();
+      }
       let chk = true;
       for (const [x, y] of journey.coordinates) {
         if (

@@ -18,5 +18,5 @@ export class RecordJourneyDTO {
   @IsCoordinate({
     message: '배열의 각 요소는 양수여야 하고 두 개의 요소만 허용됩니다.',
   })
-  readonly coordinate: number[];
+  readonly coordinate: number[] | number[][];
 }
