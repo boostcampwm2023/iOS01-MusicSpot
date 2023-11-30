@@ -21,13 +21,6 @@ export function IsCoordinate(validationOptions?: ValidationOptions) {
             typeof receiveValue === 'string'
               ? JSON.parse(receiveValue)
               : receiveValue;
-          // if (!(Array.isArray(value) && value.length == 2)) {
-          //   return false;
-          // }
-          // if (!value.every((element) => element >= 0)) {
-          //   return false;
-          // }
-          // return true;
           if (Array.isArray(value)) {
             if (value.length === 2 && value.every((element) => element >= 0)) {
               return true;
