@@ -4,6 +4,8 @@ import {
   Body,
   UseInterceptors,
   UploadedFile,
+  Get,
+  Query,
 } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RecordSpotDTO } from '../dto/recordSpot.dto';
@@ -24,13 +26,27 @@ export class SpotController {
     type: Spot,
   })
   @UseInterceptors(FileInterceptor('image'))
-  @Post()
+  @Post('create')
   async create(
     @UploadedFile() file: Express.Multer.File,
     @Body() recordSpotDTO: RecordSpotDTO,
   ) {
     return await this.spotService.create(file, recordSpotDTO);
   }
+
+  @ApiOperation({
+    summary: 'spot 조회 API',
+    description: 'spotId로 스팟 이미지를 조회합니다.',
+  })
+  @ApiCreatedResponse({
+    description: 'spot 데이터를 반환',
+    type: Spot,
+  })
+  @Get('find')
+  async findSpotImage(@Query('spotId') spotId: string) {
+    return await this.spotService.getSpotImage(spotId);
+  }
+
   // @Post()
   // async create(@Body() recordSpotDTO: RecordSpotDTO) {
   //   return await this.spotService.create(recordSpotDTO);

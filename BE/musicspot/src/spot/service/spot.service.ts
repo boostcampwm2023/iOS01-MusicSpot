@@ -55,4 +55,8 @@ export class SpotService {
     const photoUrl = await this.uploadPhotoToStorage(file);
     return await this.insertToSpot({ ...recordSpotDto, photoUrl });
   }
+  async getSpotImage(spotId: string) {
+    const spot = await this.spotModel.findById(spotId);
+    return spot.photoUrl;
+  }
 }
