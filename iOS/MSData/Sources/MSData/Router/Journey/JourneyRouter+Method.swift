@@ -12,6 +12,7 @@ extension JourneyRouter {
     public var method: HTTPMethod {
         switch self {
         case .journeyList: return .get
+        case .spot: return .post
         }
     }
     

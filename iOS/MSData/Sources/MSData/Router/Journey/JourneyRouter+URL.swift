@@ -25,6 +25,7 @@ extension JourneyRouter {
     public var pathURL: String {
         switch self {
         case .journeyList: return ""
+        case .spot: return "/spot"
         }
     }
     
