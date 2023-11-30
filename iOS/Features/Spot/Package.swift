@@ -59,7 +59,9 @@ let package = Package(
         .package(name: Dependency.msFoundation,
                  path: Dependency.msFoundation.fromRootPath),
         .package(name: Dependency.msCoreKit,
-                 path: Dependency.msCoreKit.fromRootPath)
+                 path: Dependency.msCoreKit.fromRootPath),
+        .package(name: Dependency.msData,
+                 path: Dependency.msData.fromRootPath)
     ],
     targets: [
         .target(name: Target.spot,
