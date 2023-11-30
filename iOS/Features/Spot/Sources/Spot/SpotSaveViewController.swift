@@ -32,7 +32,7 @@ public final class SpotSaveViewController: UIViewController {
         
         enum SubTextLabel {
             static let height: CGFloat = 42.0
-            static let topInset: CGFloat = 12.0
+            static let topInset: CGFloat = 2.0
         }
         
         // buttons
@@ -53,17 +53,21 @@ public final class SpotSaveViewController: UIViewController {
     
     // MARK: - Properties
     
+    public var image: UIImage? {
+        didSet {
+            self.configureImageViewState()
+        }
+    }
+    private let spotSaveViewModel = SpotSaveViewModel()
+    
+    // MARK: - UI Components
+    
     private let imageView = UIImageView()
     private let textView = UIView()
     private let textLabel = UILabel()
     private let subTextLabel = UILabel()
     private let cancelButton = MSRectButton.large(isBrandColored: false)
     private let completeButton = MSRectButton.large()
-    public var image: UIImage? {
-        didSet {
-            self.configureImageViewValue()
-        }
-    }
     
     // MARK: - Life Cycle
 
@@ -78,7 +82,7 @@ public final class SpotSaveViewController: UIViewController {
         self.configureLayout()
         self.configureStyle()
         self.configureAction()
-        self.configureValue()
+        self.configureState()
     }
     
     // MARK: - UI Components: Layout
@@ -201,18 +205,18 @@ public final class SpotSaveViewController: UIViewController {
         self.completeButton.addAction(completeButtonAction, for: .touchUpInside)
     }
     
-    // MARK: - Configure: Value
+    // MARK: - Configure: State
     
-    private func configureValue() {
-        self.configureImageViewValue()
-        self.configureLabelsValue()
+    private func configureState() {
+        self.configureImageViewState()
+        self.configureLabelsState()
     }
     
-    private func configureImageViewValue() {
+    private func configureImageViewState() {
         self.imageView.image = self.image
     }
     
-    private func configureLabelsValue() {
+    private func configureLabelsState() {
         self.textLabel.text = Default.text
         self.subTextLabel.text = Default.subText
         
@@ -220,22 +224,26 @@ public final class SpotSaveViewController: UIViewController {
         self.subTextLabel.numberOfLines = multiLineConstant
     }
     
-    // MARK: Actions
+    // MARK: - Button Actions
     
     private func cancelButtonTapped() {
-        
+        self.presentingViewController?.dismiss(animated: true)
     }
     
     private func completeButtonTapped() {
-        
+        guard let data = self.image?.pngData() else {
+            MSLogger.make(category: .recordingJourney).debug("현재 이미지를 Data로 변환할 수 없습니다.")
+            return
+        }
+        self.spotSaveViewModel.upload(data: data)
     }
     
 }
 
 // MARK: - Preview
 
-//@available(iOS 17, *)
-//#Preview {
-////    let view = SpotSaveView()
-////    return view
-//}
+@available(iOS 17, *)
+#Preview {
+    let spotView = SpotSaveViewController()
+    return spotView
+}
