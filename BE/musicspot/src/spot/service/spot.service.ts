@@ -7,6 +7,7 @@ import { RecordSpotDTO } from '../dto/recordSpot.dto';
 import { Journey } from '../../journey/schema/journey.schema';
 import * as AWS from 'aws-sdk';
 import * as dotenv from 'dotenv';
+import { SpotNotFoundException } from 'src/filters/spot.exception';
 dotenv.config();
 
 const endpoint = process.env.NCLOUD_ENDPOINT;
@@ -56,7 +57,11 @@ export class SpotService {
     return await this.insertToSpot({ ...recordSpotDto, photoUrl });
   }
   async getSpotImage(spotId: string) {
-    const spot = await this.spotModel.findById(spotId);
+    const spot = await this.spotModel.findById(spotId).lean();
+    if (!spot) {
+      throw new SpotNotFoundException();
+    }
+
     return spot.photoUrl;
   }
 }
