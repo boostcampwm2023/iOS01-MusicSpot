@@ -27,6 +27,7 @@ private enum Target {
 
 private enum Dependency {
     
+    static let msData = "MSData"
     static let msUIKit = "MSUIKit"
     static let msFoundation = "MSFoundation"
     static let msDesignsystem = "MSDesignSystem"
@@ -47,11 +48,15 @@ let package = Package(
     ],
     dependencies: [
         .package(name: Dependency.msUIKit,
-                 path: Dependency.msUIKit.fromRootPath)
+                 path: Dependency.msUIKit.fromRootPath),
+        .package(name: Dependency.msData,
+                 path: Dependency.msData.fromRootPath)
     ],
     targets: [
         .target(name: Target.saveJourney,
                 dependencies: [
+                    .product(name: Dependency.msData,
+                             package: Dependency.msData),
                     .product(name: Dependency.msUIKit,
                              package: Dependency.msUIKit)
                 ])

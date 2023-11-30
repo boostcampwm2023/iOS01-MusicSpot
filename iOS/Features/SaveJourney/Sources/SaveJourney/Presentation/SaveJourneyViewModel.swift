@@ -11,6 +11,8 @@ public final class SaveJourneyViewModel {
     
     public enum Action {
         case viewNeedsLoaded
+        case mediaControlButtonDidTap
+        case nextButtonDidTap
     }
     
     public struct State {
@@ -32,6 +34,10 @@ public final class SaveJourneyViewModel {
         switch action {
         case .viewNeedsLoaded:
             self.fetchInitialJourneys()
+        case .mediaControlButtonDidTap:
+            print("Media Control Button Tap.")
+        case .nextButtonDidTap:
+            print("Next Button Tap.")
         }
     }
     
@@ -41,10 +47,10 @@ private extension SaveJourneyViewModel {
     
     func fetchInitialJourneys() {
         self.state.music.send("NewJeans")
-        self.state.journeys.send([Journey(locatoin: "여정 위치",
+        self.state.journeys.send([Journey(location: "여정 위치",
                                           date: "2023. 01. 01",
                                           spot: Spot(images: ["sdlkj", "sdklfj"])),
-                                  Journey(locatoin: "여정 위치",
+                                  Journey(location: "여정 위치",
                                           date: "2023. 01. 02",
                                           spot: Spot(images: ["slkjc", "llskl", "llskldf", "llskl5", "llskl12"]))])
     }
