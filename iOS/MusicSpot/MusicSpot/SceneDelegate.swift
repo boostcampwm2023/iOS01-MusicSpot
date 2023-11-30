@@ -7,8 +7,6 @@
 
 import UIKit
 
-import JourneyList
-import MSData
 import MSDesignSystem
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -28,9 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         MSFont.registerFonts()
         
-        let journeyRepository = JourneyRepositoryImplementation()
-        let testViewModel = JourneyListViewModel(repository: journeyRepository)
-        let testViewController = JourneyListViewController(viewModel: testViewModel)
+        let testViewController = UIViewController()
         window.rootViewController = testViewController
         window.makeKeyAndVisible()
     }

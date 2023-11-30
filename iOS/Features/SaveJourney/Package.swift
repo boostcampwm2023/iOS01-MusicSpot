@@ -42,18 +42,6 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-<<<<<<< HEAD
-        .library(name: "SaveJourney",
-                 targets: ["SaveJourney"])
-    ],
-    dependencies: [
-        .package(name: "MSUIKit",
-                 path: "../../MSUIKit")
-    ],
-    targets: [
-        .target(name: "SaveJourney",
-                dependencies: ["MSUIKit"])
-=======
         .library(name: Target.saveJourney,
                  targets: [Target.saveJourney])
     ],
@@ -67,6 +55,5 @@ let package = Package(
                     .product(name: Dependency.msUIKit,
                              package: Dependency.msUIKit)
                 ])
->>>>>>> 48567b56ec07f40e5003caf774569cbdae8f356b
     ]
 )
