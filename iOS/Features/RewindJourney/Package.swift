@@ -5,25 +5,32 @@ import PackageDescription
 
 // MARK: - Constants
 
-extension String {
-    static let package = "RewindJourney"
-    static let rewindJourneyView = "RewindJourneyView"
-    static let msUIKit = "MSUIKit"
-    static let msFoundation = "MSFoundation"
-    static let msDesignsystem = "MSDesignSystem"
-    static let msLogger = "MSLogger"
+private extension String {
+    
+    static let package = "FeatureRewindJourney"
     
     var testTarget: String {
         return self + "Tests"
     }
     
-    var path: String {
+    var fromRootPath: String {
         return "../../" + self
     }
     
-    var featurePath: String {
-        return "../Features/" + self
-    }
+}
+
+private enum Target {
+    
+    static let rewindJourney = "RewindJourney"
+    
+}
+
+private enum Dependency {
+    
+    static let msUIKit = "MSUIKit"
+    static let msFoundation = "MSFoundation"
+    static let msDesignsystem = "MSDesignSystem"
+    static let msLogger = "MSLogger"
     
 }
 
@@ -35,23 +42,24 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(
-            name: .rewindJourneyView,
-            targets: [.rewindJourneyView])
+        .library(name: Target.rewindJourney,
+                 targets: [Target.rewindJourney])
     ],
     dependencies: [
-        .package(path: .msUIKit.path),
-        .package(path: .msFoundation.path)
+        .package(name: Dependency.msUIKit,
+                 path: Dependency.msUIKit.fromRootPath),
+        .package(name: Dependency.msFoundation,
+                 path: Dependency.msFoundation.fromRootPath)
     ],
     targets: [
-        // Codes
-        .target(
-            name: .rewindJourneyView,
-            dependencies: [
-                .product(name: .msUIKit, package: .msUIKit),
-                .product(name: .msDesignsystem, package: .msUIKit),
-                .product(name: .msLogger, package: .msFoundation)])
-        
-        // Tests
+        .target(name: Target.rewindJourney,
+                dependencies: [
+                    .product(name: Dependency.msUIKit,
+                             package: Dependency.msUIKit),
+                    .product(name: Dependency.msDesignsystem,
+                             package: Dependency.msUIKit),
+                    .product(name: Dependency.msLogger,
+                             package: Dependency.msFoundation)
+                ])
     ]
 )
