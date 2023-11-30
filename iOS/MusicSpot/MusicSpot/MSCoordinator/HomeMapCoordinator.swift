@@ -7,6 +7,12 @@
 
 import UIKit
 
+protocol HomeMapCoordinatorDelegate: AnyObject {
+    
+    func popToHomeMap(from coordinator: Coordinator)
+    
+}
+
 final class HomeMapCoordinator: Coordinator {
     
     // MARK: - Properties
@@ -39,35 +45,40 @@ extension HomeMapCoordinator: HomeMapViewControllerDelegate {
     
     func navigateToSpot() {
         let spotCoordinator = SpotCoordinator(navigationController: self.navigationController)
+        spotCoordinator.delegate = self
         self.childCoordinators.append(spotCoordinator)
         spotCoordinator.start()
     }
     
+    func navigateToSearchMusic() {
+        let searchMusicCoordinator = SearchMusicCoordinator(navigationController: self.navigationController)
+        searchMusicCoordinator.delegate = self
+        self.childCoordinators.append(searchMusicCoordinator)
+        searchMusicCoordinator.start()
+    }
+    
     func navigateToRewind() {
         let rewindCoordinator = RewindCoordinator(navigationController: self.navigationController)
+        rewindCoordinator.delegate = self
         self.childCoordinators.append(rewindCoordinator)
         rewindCoordinator.start()
     }
     
     func navigateToSetting() {
         let settingCoordinator = SettingCoordinator(navigationController: self.navigationController)
+        settingCoordinator.delegate = self
         self.childCoordinators.append(settingCoordinator)
         settingCoordinator.start()
     }
     
 }
 
-// MARK: - App Coordinator
+// MARK: - HomeMap Coordinator
 
-extension HomeMapCoordinator: AppCoordinatorDelegate {
+extension HomeMapCoordinator: HomeMapCoordinatorDelegate {
     
     func popToHomeMap(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()
     }
     
-    func popToSearchMusic(from coordinator: Coordinator) {
-        self.childCoordinators.removeAll()
-        self.navigationController.popViewController(animated: true)
-        self.delegate?.popToSearchMusic(from: self)
-    }
 }

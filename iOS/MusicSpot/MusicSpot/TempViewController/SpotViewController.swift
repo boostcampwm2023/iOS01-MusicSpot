@@ -9,7 +9,6 @@ import UIKit
 
 protocol SpotViewControllerDelegate: AnyObject {
     func navigateToHomeMap()
-    func navigateToSearchMusic()
 }
 
 class SpotViewController: UIViewController {
@@ -45,6 +44,12 @@ class SpotViewController: UIViewController {
         self.configureStyle()
         self.configureLayout()
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        self.delegate?.navigateToHomeMap()
+    }
 
     // MARK: - Functions
 
@@ -76,11 +81,6 @@ class SpotViewController: UIViewController {
     @objc
     func navigateToHomeMap() {
         self.delegate?.navigateToHomeMap()
-    }
-
-    @objc
-    func navigateToSearchMusic() {
-        self.delegate?.navigateToSearchMusic()
     }
     
 }

@@ -15,7 +15,7 @@ final class SaveJourneyCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     
-    var delegate: AppCoordinatorDelegate?
+    var delegate: SearchMusicCoordinatorDelegate?
     
     // MARK: - Initializer
     
@@ -42,24 +42,6 @@ extension SaveJourneyCoordinator: SaveJourneyViewControllerDelegate {
     }
     
     func navigateToSearchMusic() {
-        self.delegate?.popToSearchMusic(from: self)
-    }
-    
-}
-
-// MARK: - App Coordinator
-
-extension SaveJourneyCoordinator: AppCoordinatorDelegate {
-    
-    func popToHomeMap(from coordinator: Coordinator) {
-        self.childCoordinators.removeAll()
-        self.navigationController.popViewController(animated: true)
-        self.delegate?.popToHomeMap(from: self)
-    }
-    
-    func popToSearchMusic(from coordinator: Coordinator) {
-        self.childCoordinators.removeAll()
-        self.navigationController.popViewController(animated: true)
         self.delegate?.popToSearchMusic(from: self)
     }
     

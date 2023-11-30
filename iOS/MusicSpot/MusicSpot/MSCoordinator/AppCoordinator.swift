@@ -37,19 +37,3 @@ final class AppCoordinator: Coordinator {
     }
     
 }
-
-// MARK: - App Coordinator
-
-extension AppCoordinator: AppCoordinatorDelegate {
-    
-    func popToHomeMap(from coordinator: Coordinator) {
-        self.childCoordinators.removeAll()
-        self.start()
-    }
-    
-    func popToSearchMusic(from coordinator: Coordinator) {
-        self.childCoordinators.removeAll()
-        self.navigationController.popToRootViewController(animated: true)
-    }
-    
-}

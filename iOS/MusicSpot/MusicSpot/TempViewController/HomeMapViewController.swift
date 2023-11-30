@@ -9,6 +9,7 @@ import UIKit
 
 protocol HomeMapViewControllerDelegate: AnyObject {
     func navigateToSpot()
+    func navigateToSearchMusic()
     func navigateToRewind()
     func navigateToSetting()
 }

@@ -15,7 +15,7 @@ final class RewindCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     
-    var delegate: AppCoordinatorDelegate?
+    var delegate: HomeMapCoordinatorDelegate?
     
     // MARK: - Initializer
     
@@ -43,20 +43,14 @@ extension RewindCoordinator: RewindViewControllerDelegate {
     
 }
 
-// MARK: - App Coordinator
+// MARK: - HomeMap Coordinator
 
-extension RewindCoordinator: AppCoordinatorDelegate {
+extension RewindCoordinator: HomeMapCoordinatorDelegate {
     
     func popToHomeMap(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()
         self.navigationController.popViewController(animated: true)
         self.delegate?.popToHomeMap(from: self)
-    }
-    
-    func popToSearchMusic(from coordinator: Coordinator) {
-        self.childCoordinators.removeAll()
-        self.navigationController.popViewController(animated: true)
-        self.delegate?.popToSearchMusic(from: self)
     }
     
 }
