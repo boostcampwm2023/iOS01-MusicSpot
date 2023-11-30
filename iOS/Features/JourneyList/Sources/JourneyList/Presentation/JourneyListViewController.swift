@@ -263,7 +263,6 @@ private extension JourneyListViewController {
 
 import MSData
 import MSDesignSystem
-import MSNetworking
 @available(iOS 17, *)
 #Preview {
     MSFont.registerFonts()
