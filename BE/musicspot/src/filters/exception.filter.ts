@@ -9,19 +9,20 @@ export class AllExceptionFilter implements ExceptionFilter {
     const req = ctx.getRequest();
     const res = ctx.getResponse();
     const err = exception;
-
+    const status = err.status;
     if (err instanceof BaseException) {
       err.timestamp = new Date().toISOString();
       err.path = req.url;
-      res.status(err.statusCode).json({
+      res.status(status).json({
         errorCode: err.errorCode,
-        statusCode: err.statusCode,
+        statusCode: status,
         timestamp: err.timestamp,
         path: err.path,
         message: err.message,
       });
     } else {
-      res.send({ ...err, timestamp: new Date().toISOString() });
+      res.status(status).json(err);
+      // res.send({ ...err, timestamp: new Date().toISOString() });
     }
   }
 }
