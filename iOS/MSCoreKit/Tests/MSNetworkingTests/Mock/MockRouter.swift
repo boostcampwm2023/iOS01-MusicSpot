@@ -6,15 +6,24 @@
 //
 
 import Foundation
+@testable import MSNetworking
 
-public struct MockRouterType {
+struct MockRouter: Router {
     
-    public let getJourney = MockRouter.getJourney
+    var baseURL: String {
+        return "https://www.naver.com"
+    }
     
-}
-
-public enum MockRouter {
+    var pathURL: String {
+        return "api"
+    }
     
-    case getJourney
+    var method: HTTPMethod {
+        return .get
+    }
+    
+    var body: HTTPBody?
+    
+    var headers: HTTPHeaders?
     
 }

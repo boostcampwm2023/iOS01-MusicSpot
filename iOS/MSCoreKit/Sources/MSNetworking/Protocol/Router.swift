@@ -7,12 +7,36 @@
 
 import Foundation
 
-protocol Router {
+public protocol Router {
     
-    var baseURL: APIbaseURL { get }
-    var pathURL: APIpathURL { get }
+    var baseURL: String { get }
+    var pathURL: String { get }
     var method: HTTPMethod { get }
-    var body: HTTPBody { get }
+    var body: HTTPBody? { get }
+    var headers: HTTPHeaders? { get }
     
-    func asURLRequest() -> URLRequest?
+    var request: URLRequest? { get }
+    
+}
+
+extension Router {
+    
+    public var request: URLRequest? {
+        guard let baseURL = URL(string: self.baseURL) else { return nil }
+        let url = baseURL.appendingPathComponent(self.pathURL)
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = self.method.rawValue
+        if let body = self.body {
+            request.httpBody = body.data()
+        }
+        if let headers = self.headers {
+            headers.forEach { key, value in
+                request.addValue(value, forHTTPHeaderField: key)
+            }
+        }
+        
+        return request
+    }
+    
 }

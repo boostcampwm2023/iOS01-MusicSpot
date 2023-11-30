@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -32,6 +32,8 @@
 		DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */; };
 		DD73F8622B024C4B00EE9BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */; };
 		DD73F8652B024C4B00EE9BF2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8632B024C4B00EE9BF2 /* LaunchScreen.storyboard */; };
+		DDE77E192B131FFE005927B0 /* MSDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = DDE77E182B131FFE005927B0 /* MSDesignSystem */; };
+		DDE77E1C2B13200B005927B0 /* JourneyList in Frameworks */ = {isa = PBXBuildFile; productRef = DDE77E1B2B13200B005927B0 /* JourneyList */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -148,6 +150,13 @@
 				DD73F8662B024C4B00EE9BF2 /* Info.plist */,
 			);
 			path = MusicSpot;
+			sourceTree = "<group>";
+		};
+		DDE77E1D2B1320B9005927B0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

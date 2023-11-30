@@ -8,6 +8,8 @@
 import UIKit
 import NavigateMap
 
+import MSDesignSystem
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     // MARK: - Properties
