@@ -10,6 +10,8 @@ import NavigateMap
 
 import MSDesignSystem
 
+import MSDesignSystem
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     // MARK: - Properties
