@@ -3,4 +3,5 @@ export interface IBaseException {
   timestamp: string;
   statusCode: number;
   path: string;
+  message: string;
 }
