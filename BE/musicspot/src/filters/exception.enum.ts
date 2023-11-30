@@ -16,3 +16,4 @@ export enum UserExceptionMessageEnum {
   UserNotFound = 'UserId에 해당하는 User가 없습니다.',
   UnexpectedError = '예상치 못한 오류입니다.',
 }
+
