@@ -7,6 +7,8 @@
 
 import UIKit
 
+import RewindJourney
+
 final class RewindCoordinator: Coordinator {
     
     // MARK: - Properties
@@ -26,8 +28,8 @@ final class RewindCoordinator: Coordinator {
     // MARK: - Functions
     
     func start() {
-        let rewindViewController = RewindViewController()
-        rewindViewController.delegate = self
+        let rewindViewController = RewindJourneyViewController()
+//        rewindViewController.delegate = self
         self.navigationController.pushViewController(rewindViewController, animated: true)
     }
     
@@ -35,13 +37,13 @@ final class RewindCoordinator: Coordinator {
 
 // MARK: - RewindViewController
 
-extension RewindCoordinator: RewindViewControllerDelegate {
-    
-    func navigateToHomeMap() {
-        self.delegate?.popToHomeMap(from: self)
-    }
-    
-}
+//extension RewindCoordinator: RewindViewControllerDelegate {
+//    
+//    func navigateToHomeMap() {
+//        self.delegate?.popToHomeMap(from: self)
+//    }
+//    
+//}
 
 // MARK: - HomeMap Coordinator
 

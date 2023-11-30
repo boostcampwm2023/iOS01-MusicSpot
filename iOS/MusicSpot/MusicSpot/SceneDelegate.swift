@@ -8,7 +8,6 @@
 import UIKit
 
 import MSDesignSystem
-import NavigateMap
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -24,6 +23,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         defer { self.window = window }
+        
+        MSFont.registerFonts()
         
         let musicSpotNavigationController = UINavigationController()
         let appCoordinator = AppCoordinator(navigationController: musicSpotNavigationController)
