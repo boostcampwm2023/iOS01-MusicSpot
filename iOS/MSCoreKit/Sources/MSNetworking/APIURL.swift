@@ -9,12 +9,12 @@ import Foundation
 
 enum APIbaseURL: String {
     
-    //base URL 추가
+    // base URL 추가
     case none = ""
 }
 
 enum APIpathURL: String {
     
-    //path URL 추가
+    // path URL 추가
     case none = ""
 }
