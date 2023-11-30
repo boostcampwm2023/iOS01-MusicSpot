@@ -33,11 +33,17 @@ public final class SaveJourneyViewController: UIViewController {
     
     // MARK: - Constants
     
+    private enum Typo {
+        static let nextButtonTitle = "다음"
+    }
+    
     private enum Metric {
         static let horizontalInset: CGFloat = 24.0
         static let verticalInset: CGFloat = 12.0
         static let innerGroupSpacing: CGFloat = 12.0
         static let headerTopInset: CGFloat = 24.0
+        static let buttonSpacing: CGFloat = 4.0
+        static let buttonBottomInset: CGFloat = 24.0
     }
     
     // MARK: - Properties
@@ -68,6 +74,25 @@ public final class SaveJourneyViewController: UIViewController {
     }()
     
     private var mapViewHeightConstraint: NSLayoutConstraint?
+    
+    private let buttonStack: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = Metric.buttonSpacing
+        return stackView
+    }()
+    
+    private let mediaControlButton: MSRectButton = {
+        let button = MSRectButton.small()
+        button.configuration?.image = .msIcon(.play)
+        return button
+    }()
+    
+    private let nextButton: MSButton = {
+        let button = MSButton.primary()
+        button.configuration?.title = Typo.nextButtonTitle
+        return button
+    }()
     
     // MARK: - Initializer
     
@@ -267,6 +292,22 @@ private extension SaveJourneyViewController {
             self.collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             self.collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
         ])
+        
+        self.view.addSubview(self.buttonStack)
+        self.buttonStack.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.buttonStack.leadingAnchor.constraint(equalTo: self.view.layoutMarginsGuide.leadingAnchor),
+            self.buttonStack.trailingAnchor.constraint(equalTo: self.view.layoutMarginsGuide.trailingAnchor),
+            self.buttonStack.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor,
+                                                     constant: -Metric.buttonBottomInset)
+        ])
+        
+        [
+            self.mediaControlButton,
+            self.nextButton
+        ].forEach {
+            self.buttonStack.addArrangedSubview($0)
+        }
     }
     
 }
