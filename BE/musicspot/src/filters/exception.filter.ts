@@ -21,12 +21,7 @@ export class AllExceptionFilter implements ExceptionFilter {
         message: err.message,
       });
     } else {
-      res.status(err.status).json({
-        statusCode: err.status,
-        timestamp: new Date().toISOString(),
-        path: req.url,
-        message: err.response.message,
-      });
+      res.send({ ...err, timestamp: new Date().toISOString() });
     }
   }
 }
