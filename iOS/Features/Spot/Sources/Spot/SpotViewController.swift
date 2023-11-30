@@ -123,7 +123,7 @@ private extension SpotViewController {
             
             self.shotButton.centerXAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerXAnchor),
             self.shotButton.centerYAnchor.constraint(equalTo: self.cameraView.safeAreaLayoutGuide.bottomAnchor,
-                                                     constant: -Metric.ShotButton.bottomInset),
+                                                     constant: -Metric.ShotButton.bottomInset)
         ])
     }
     
@@ -135,7 +135,7 @@ private extension SpotViewController {
             self.galleryButton.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor,
                                                         constant: Metric.GalleryButton.leadingInset),
             self.galleryButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor,
-                                                       constant: -Metric.GalleryButton.bottomInset),
+                                                       constant: -Metric.GalleryButton.bottomInset)
         ])
     }
     
@@ -147,7 +147,7 @@ private extension SpotViewController {
             self.swapButton.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor,
                                                       constant: -Metric.SwapButton.trailingInset),
             self.swapButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor,
-                                                    constant: -Metric.SwapButton.bottomInset),
+                                                    constant: -Metric.SwapButton.bottomInset)
         ])
     }
     
@@ -280,7 +280,8 @@ extension SpotViewController: ShotDelegate {
 
 extension SpotViewController: UIImagePickerControllerDelegate {
     
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo
+                                      info: [UIImagePickerController.InfoKey: Any]) {
         guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else {
             return
         }

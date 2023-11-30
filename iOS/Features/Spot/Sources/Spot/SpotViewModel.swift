@@ -24,7 +24,7 @@ final class SpotViewModel: NSObject {
         case back
         
         var device: AVCaptureDevice? {
-            guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, 
+            guard let device = AVCaptureDevice.default(.builtInWideAngleCamera,
                                                        for: .video,
                                                        position: self == .front ? .front : .back) else {
                 MSLogger.make(category: .camera).error("해당 위치의 camera device가 존재하지 않습니다.")
@@ -151,4 +151,3 @@ extension SpotViewModel: AVCapturePhotoCaptureDelegate {
     }
     
 }
-
