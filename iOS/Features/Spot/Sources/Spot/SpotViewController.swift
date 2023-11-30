@@ -12,9 +12,9 @@ import MSLogger
 import MSUIKit
 
 public final class SpotViewController: UIViewController, UINavigationControllerDelegate {
-
+    
     // MARK: - Constants
-
+    
     private enum Metric {
         
         // camera view
@@ -49,10 +49,11 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
             static let radius: CGFloat = width / 2
         }
     }
-
+    
     // MARK: - Properties
     
     private let spotViewModel = SpotViewModel()
+    private let spotSaveViewController = SpotSaveViewController()
     private let picker = UIImagePickerController()
     
     // MARK: - UI Components
@@ -61,12 +62,17 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     private let shotButton = UIButton()
     private let galleryButton = UIButton()
     private let swapButton = UIButton()
-
+    
     // MARK: - Life Cycle
-
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.configure()
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.spotViewModel.startCamera()
     }
     
     // MARK: - Configure
@@ -79,72 +85,9 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
         self.configureDelegate()
     }
     
-    // MARK: - Configure Delegate
-    
-    private func configureDelegate() {
-        self.picker.delegate = self
-    }
-    
-    // MARK: - Configure State
-    
-    private func configureState() {
-        self.configurePickerState()
-    }
-
-    private func configurePickerState() {
-        self.picker.sourceType = .photoLibrary
-        self.picker.allowsEditing = true
-    }
-    
-    // MARK: - Actions
-
-    private func configureAction() {
-        self.configureCameraSetting()
-        self.configureShotButtonAction()
-        self.configureSwapButtonAction()
-        self.configureGalleryButtonAction()
-    }
-    
-    private func configureShotButtonAction() {
-        let shotButtonAction = UIAction(handler: { _ in
-            self.shotButtonTapped()
-        })
-        self.shotButton.addAction(shotButtonAction, for: .touchUpInside)
-    }
-    
-    private func shotButtonTapped() {
-        self.spotViewModel.shot()
-    }
-    
-    private func configureSwapButtonAction() {
-        let swapButtonAction = UIAction(handler: { _ in
-            self.swapButtonTapped()
-        })
-        self.swapButton.addAction(swapButtonAction, for: .touchUpInside)
-    }
-    
-    private func swapButtonTapped() {
-        self.spotViewModel.swap()
-    }
-    
-    private func configureGalleryButtonAction() {
-        let galleryButtonAction = UIAction(handler: { _ in
-            self.galleryButtonTapped()
-        })
-        self.galleryButton.addAction(galleryButtonAction, for: .touchUpInside)
-    }
-    
-    private func galleryButtonTapped() {
-        self.present(self.picker, animated: false)
-    }
-    
-    private func configureCameraSetting() {
-        self.spotViewModel.preset(screen: cameraView)
-    }
-    
 }
 
-// MARK: UI Configuration - Layout
+// MARK: - UI Configuration: Layout
 
 private extension SpotViewController {
     
@@ -202,13 +145,17 @@ private extension SpotViewController {
             self.swapButton.widthAnchor.constraint(equalToConstant: Metric.SwapButton.width),
             
             self.swapButton.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor,
-                                                        constant: -Metric.SwapButton.trailingInset),
+                                                      constant: -Metric.SwapButton.trailingInset),
             self.swapButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor,
-                                                       constant: -Metric.SwapButton.bottomInset),
+                                                    constant: -Metric.SwapButton.bottomInset),
         ])
     }
     
-    // MARK: UI Configuration - Style
+}
+    
+    // MARK: UI Configuration: Style
+    
+private extension SpotViewController {
     
     func configureStyles() {
         self.view.backgroundColor = .black
@@ -227,35 +174,109 @@ private extension SpotViewController {
         self.swapButton.layer.cornerRadius = Metric.SwapButton.radius
         self.swapButton.setImage(UIImage(systemName: "arrow.triangle.2.circlepath"), for: .normal)
         self.swapButton.tintColor = .white
+        
+        self.spotSaveViewController.modalPresentationStyle = .fullScreen
     }
     
 }
 
-// MARK: ConfigureDelegate
+// MARK: - Configure: Actions
 
 private extension SpotViewController {
     
-    func configureShotDelegate() {
+    func configureAction() {
+        self.configureCameraSetting()
+        self.configureShotButtonAction()
+        self.configureSwapButtonAction()
+        self.configureGalleryButtonAction()
+    }
+    
+    func configureShotButtonAction() {
+        let shotButtonAction = UIAction(handler: { _ in
+            self.shotButtonTapped()
+        })
+        self.shotButton.addAction(shotButtonAction, for: .touchUpInside)
+    }
+    
+    func configureSwapButtonAction() {
+        let swapButtonAction = UIAction(handler: { _ in
+            self.swapButtonTapped()
+        })
+        self.swapButton.addAction(swapButtonAction, for: .touchUpInside)
+    }
+    
+    func configureGalleryButtonAction() {
+        let galleryButtonAction = UIAction(handler: { _ in
+            self.galleryButtonTapped()
+        })
+        self.galleryButton.addAction(galleryButtonAction, for: .touchUpInside)
+    }
+    
+    private func configureCameraSetting() {
+        self.spotViewModel.preset(screen: cameraView)
+    }
+    
+}
+    
+// MARK: - Configure: State
+
+private extension SpotViewController {
+    
+    func configureState() {
+        self.configurePickerState()
+    }
+    
+    func configurePickerState() {
+        self.picker.sourceType = .photoLibrary
+        self.picker.allowsEditing = true
+    }
+    
+}
+
+// MARK: - Button Actions
+
+private extension SpotViewController {
+    
+    func shotButtonTapped() {
+        self.spotViewModel.shot()
+    }
+    
+    func swapButtonTapped() {
+        self.spotViewModel.swap()
+    }
+    
+    func galleryButtonTapped() {
+        self.present(self.picker, animated: false)
+    }
+}
+
+// MARK: - Delegate
+    
+private extension SpotViewController {
+    
+    func configureDelegate() {
+        self.picker.delegate = self
         self.spotViewModel.delegate = self
     }
     
 }
 
-// MARK: ShotDelegate
+// MARK: - Delegate: ShotDelegate
 
 extension SpotViewController: ShotDelegate {
     
     func update(imageData: Data?) {
-        guard let imageData else {
+        guard let imageData, let image = UIImage(data: imageData) else {
             MSLogger.make(category: .camera).debug("촬영된 image가 저장되지 않았습니다.")
             return
         }
-        self.cameraView.layer.contents = UIImage(data: imageData)
+        self.cameraView.layer.contents = imageData
+        self.presentSpotSaveViewController(with: image)
     }
     
 }
 
-// MARK: ImagePickerDelegate
+// MARK: - Delegate: ImagePickerDelegate
 
 extension SpotViewController: UIImagePickerControllerDelegate {
     
@@ -263,13 +284,20 @@ extension SpotViewController: UIImagePickerControllerDelegate {
         guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else {
             return
         }
+        self.presentSpotSaveViewController(with: image)
+    }
+    
+}
+
+// MARK: - Functions
+
+private extension SpotViewController {
+    
+    func presentSpotSaveViewController(with image: UIImage) {
         self.spotViewModel.stopCamera()
-        let spotSaveViewController = SpotSaveViewController()
-        spotSaveViewController.image = image
-        spotSaveViewController.modalPresentationStyle = .fullScreen
-        picker.dismiss(animated: true)
-        self.presentedViewController?.dismiss(animated: true)
-        self.present(spotSaveViewController, animated: false)
+        self.spotSaveViewController.image = image
+        self.presentingViewController?.dismiss(animated: true)
+        self.present(self.spotSaveViewController, animated: true)
     }
     
 }
