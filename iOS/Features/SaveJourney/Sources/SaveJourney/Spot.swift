@@ -8,5 +8,7 @@
 import Foundation
 
 struct Spot: Hashable {
+    
     let images: [String]
+    
 }

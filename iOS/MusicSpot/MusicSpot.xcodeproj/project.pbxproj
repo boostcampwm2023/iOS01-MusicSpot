@@ -3,24 +3,54 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DD4D98812B184EAA006E577D /* NavigateMap in Frameworks */ = {isa = PBXBuildFile; productRef = DD4D98802B184EAA006E577D /* NavigateMap */; };
-		DD4D98832B184EAA006E577D /* RecordJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD4D98822B184EAA006E577D /* RecordJourney */; };
-		DD4D98862B184EB1006E577D /* JourneyList in Frameworks */ = {isa = PBXBuildFile; productRef = DD4D98852B184EB1006E577D /* JourneyList */; };
-		DD4D98892B184EB8006E577D /* RewindJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD4D98882B184EB8006E577D /* RewindJourney */; };
-		DD4D988C2B184EC0006E577D /* SaveJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD4D988B2B184EC0006E577D /* SaveJourney */; };
-		DD4D988F2B184EC8006E577D /* SelectSong in Frameworks */ = {isa = PBXBuildFile; productRef = DD4D988E2B184EC8006E577D /* SelectSong */; };
-		DD4D98922B184ED4006E577D /* Spot in Frameworks */ = {isa = PBXBuildFile; productRef = DD4D98912B184ED4006E577D /* Spot */; };
+		08CBF8782B18468E007D3797 /* SaveJourneyCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8702B18468E007D3797 /* SaveJourneyCoordinator.swift */; };
+		08CBF8792B18468E007D3797 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8712B18468E007D3797 /* AppCoordinator.swift */; };
+		08CBF87A2B18468E007D3797 /* RewindCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8722B18468E007D3797 /* RewindCoordinator.swift */; };
+		08CBF87B2B18468E007D3797 /* HomeMapCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8732B18468E007D3797 /* HomeMapCoordinator.swift */; };
+		08CBF87C2B18468E007D3797 /* SettingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8742B18468E007D3797 /* SettingCoordinator.swift */; };
+		08CBF87D2B18468E007D3797 /* SpotCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8752B18468E007D3797 /* SpotCoordinator.swift */; };
+		08CBF87E2B18468E007D3797 /* SearchMusicCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8762B18468E007D3797 /* SearchMusicCoordinator.swift */; };
+		08CBF87F2B18468E007D3797 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8772B18468E007D3797 /* Coordinator.swift */; };
+		08CBF8872B1846A0007D3797 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8812B1846A0007D3797 /* SettingViewController.swift */; };
+		08CBF8882B1846A0007D3797 /* HomeMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8822B1846A0007D3797 /* HomeMapViewController.swift */; };
+		08CBF8892B1846A0007D3797 /* SaveJourneyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8832B1846A0007D3797 /* SaveJourneyViewController.swift */; };
+		08CBF88A2B1846A0007D3797 /* SpotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8842B1846A0007D3797 /* SpotViewController.swift */; };
+		08CBF88B2B1846A0007D3797 /* RewindViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8852B1846A0007D3797 /* RewindViewController.swift */; };
+		08CBF88C2B1846A0007D3797 /* SearchMusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8862B1846A0007D3797 /* SearchMusicViewController.swift */; };
+		DD5EA2552B16EC920080AEC1 /* JourneyList in Frameworks */ = {isa = PBXBuildFile; productRef = DD5EA2542B16EC920080AEC1 /* JourneyList */; };
+		DD5EA2572B16EC960080AEC1 /* NavigateMap in Frameworks */ = {isa = PBXBuildFile; productRef = DD5EA2562B16EC960080AEC1 /* NavigateMap */; };
+		DD5EA2592B16EC9B0080AEC1 /* RecordJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD5EA2582B16EC9B0080AEC1 /* RecordJourney */; };
+		DD5EA25B2B16ECA10080AEC1 /* SaveJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD5EA25A2B16ECA10080AEC1 /* SaveJourney */; };
+		DD5EA25D2B16ECA60080AEC1 /* SelectSong in Frameworks */ = {isa = PBXBuildFile; productRef = DD5EA25C2B16ECA60080AEC1 /* SelectSong */; };
+		DD5EA25F2B16ECAB0080AEC1 /* Spot in Frameworks */ = {isa = PBXBuildFile; productRef = DD5EA25E2B16ECAB0080AEC1 /* Spot */; };
+		DD5EA2612B16ECAF0080AEC1 /* RewindJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD5EA2602B16ECAF0080AEC1 /* RewindJourney */; };
 		DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */; };
 		DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */; };
 		DD73F8622B024C4B00EE9BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */; };
 		DD73F8652B024C4B00EE9BF2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8632B024C4B00EE9BF2 /* LaunchScreen.storyboard */; };
+		DDE77E192B131FFE005927B0 /* MSDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = DDE77E182B131FFE005927B0 /* MSDesignSystem */; };
+		DDE77E1C2B13200B005927B0 /* JourneyList in Frameworks */ = {isa = PBXBuildFile; productRef = DDE77E1B2B13200B005927B0 /* JourneyList */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		08CBF8702B18468E007D3797 /* SaveJourneyCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveJourneyCoordinator.swift; sourceTree = "<group>"; };
+		08CBF8712B18468E007D3797 /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		08CBF8722B18468E007D3797 /* RewindCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RewindCoordinator.swift; sourceTree = "<group>"; };
+		08CBF8732B18468E007D3797 /* HomeMapCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeMapCoordinator.swift; sourceTree = "<group>"; };
+		08CBF8742B18468E007D3797 /* SettingCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingCoordinator.swift; sourceTree = "<group>"; };
+		08CBF8752B18468E007D3797 /* SpotCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotCoordinator.swift; sourceTree = "<group>"; };
+		08CBF8762B18468E007D3797 /* SearchMusicCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchMusicCoordinator.swift; sourceTree = "<group>"; };
+		08CBF8772B18468E007D3797 /* Coordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		08CBF8812B1846A0007D3797 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		08CBF8822B1846A0007D3797 /* HomeMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeMapViewController.swift; sourceTree = "<group>"; };
+		08CBF8832B1846A0007D3797 /* SaveJourneyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveJourneyViewController.swift; sourceTree = "<group>"; };
+		08CBF8842B1846A0007D3797 /* SpotViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotViewController.swift; sourceTree = "<group>"; };
+		08CBF8852B1846A0007D3797 /* RewindViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RewindViewController.swift; sourceTree = "<group>"; };
+		08CBF8862B1846A0007D3797 /* SearchMusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchMusicViewController.swift; sourceTree = "<group>"; };
 		DD73F8552B024C4900EE9BF2 /* MusicSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -48,6 +78,42 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		08CBF86F2B18468E007D3797 /* MSCoordinator */ = {
+			isa = PBXGroup;
+			children = (
+				DD2856C32B187BAB002C994D /* Protocol */,
+				08CBF8712B18468E007D3797 /* AppCoordinator.swift */,
+				08CBF8732B18468E007D3797 /* HomeMapCoordinator.swift */,
+				08CBF8752B18468E007D3797 /* SpotCoordinator.swift */,
+				08CBF8762B18468E007D3797 /* SearchMusicCoordinator.swift */,
+				08CBF8702B18468E007D3797 /* SaveJourneyCoordinator.swift */,
+				08CBF8742B18468E007D3797 /* SettingCoordinator.swift */,
+				08CBF8722B18468E007D3797 /* RewindCoordinator.swift */,
+			);
+			path = MSCoordinator;
+			sourceTree = "<group>";
+		};
+		08CBF8802B1846A0007D3797 /* TempViewController */ = {
+			isa = PBXGroup;
+			children = (
+				08CBF8812B1846A0007D3797 /* SettingViewController.swift */,
+				08CBF8822B1846A0007D3797 /* HomeMapViewController.swift */,
+				08CBF8832B1846A0007D3797 /* SaveJourneyViewController.swift */,
+				08CBF8842B1846A0007D3797 /* SpotViewController.swift */,
+				08CBF8852B1846A0007D3797 /* RewindViewController.swift */,
+				08CBF8862B1846A0007D3797 /* SearchMusicViewController.swift */,
+			);
+			path = TempViewController;
+			sourceTree = "<group>";
+		};
+		DD2856C32B187BAB002C994D /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				08CBF8772B18468E007D3797 /* Coordinator.swift */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
 		DD5EA23F2B16EC690080AEC1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -75,6 +141,8 @@
 		DD73F8572B024C4900EE9BF2 /* MusicSpot */ = {
 			isa = PBXGroup;
 			children = (
+				08CBF8802B1846A0007D3797 /* TempViewController */,
+				08CBF86F2B18468E007D3797 /* MSCoordinator */,
 				DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */,
 				DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */,
 				DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */,
@@ -82,6 +150,13 @@
 				DD73F8662B024C4B00EE9BF2 /* Info.plist */,
 			);
 			path = MusicSpot;
+			sourceTree = "<group>";
+		};
+		DDE77E1D2B1320B9005927B0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -171,7 +246,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08CBF88C2B1846A0007D3797 /* SearchMusicViewController.swift in Sources */,
+				08CBF8882B1846A0007D3797 /* HomeMapViewController.swift in Sources */,
+				08CBF8792B18468E007D3797 /* AppCoordinator.swift in Sources */,
+				08CBF8872B1846A0007D3797 /* SettingViewController.swift in Sources */,
+				08CBF8782B18468E007D3797 /* SaveJourneyCoordinator.swift in Sources */,
+				08CBF87F2B18468E007D3797 /* Coordinator.swift in Sources */,
+				08CBF88B2B1846A0007D3797 /* RewindViewController.swift in Sources */,
+				08CBF8892B1846A0007D3797 /* SaveJourneyViewController.swift in Sources */,
+				08CBF88A2B1846A0007D3797 /* SpotViewController.swift in Sources */,
+				08CBF87D2B18468E007D3797 /* SpotCoordinator.swift in Sources */,
+				08CBF87E2B18468E007D3797 /* SearchMusicCoordinator.swift in Sources */,
+				08CBF87A2B18468E007D3797 /* RewindCoordinator.swift in Sources */,
+				08CBF87C2B18468E007D3797 /* SettingCoordinator.swift in Sources */,
 				DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */,
+				08CBF87B2B18468E007D3797 /* HomeMapCoordinator.swift in Sources */,
 				DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -324,6 +413,9 @@
 				INFOPLIST_FILE = MusicSpot/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MusicSpot;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "사용자의 위치 정보에 대한 엑세스가 필요합니다.";
+				INFOPLIST_KEY_NSLocationUsageDescription = "사용자의 위치 정보를 통해 실시간 위치 표시 및 데이터를 제공해드립니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자의 위치를 필요 시 쓰겠습니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -357,6 +449,9 @@
 				INFOPLIST_FILE = MusicSpot/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MusicSpot;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "사용자의 위치 정보에 대한 엑세스가 필요합니다.";
+				INFOPLIST_KEY_NSLocationUsageDescription = "사용자의 위치 정보를 통해 실시간 위치 표시 및 데이터를 제공해드립니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자의 위치를 필요 시 쓰겠습니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;

@@ -13,6 +13,10 @@ private extension String {
         return "../../" + self
     }
     
+    var fromRootPath: String {
+        return "../../" + self
+    }
+    
 }
 
 private enum Target {

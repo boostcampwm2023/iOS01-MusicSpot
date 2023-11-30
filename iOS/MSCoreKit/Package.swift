@@ -56,6 +56,9 @@ let package = Package(
         .package(name: Dependency.msFoundation,
                  path: Dependency.msFoundation.fromRootPath)
     ],
+    dependencies: [
+        .package(path: "../MSFoundation")
+    ],
     targets: [
         // Codes
         .target(name: Target.msPersistentStorage),
