@@ -7,3 +7,12 @@ export enum JourneyExceptionMessageEnum {
   JourneyNotFound = 'journeyId에 해당하는 Journey가 없습니다.',
   UnexpectedError = '예상치 못한 오류입니다.',
 }
+export enum UserExceptionCodeEnum {
+  UserNotFound = '0002',
+  UnexpectedError = '9998',
+}
+
+export enum UserExceptionMessageEnum {
+  UserNotFound = 'UserId에 해당하는 User가 없습니다.',
+  UnexpectedError = '예상치 못한 오류입니다.',
+}

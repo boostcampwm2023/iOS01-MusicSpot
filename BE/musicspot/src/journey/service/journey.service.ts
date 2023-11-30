@@ -9,6 +9,7 @@ import { EndJourneyDTO } from '../dto/journeyEnd.dto';
 import { RecordJourneyDTO } from '../dto/journeyRecord.dto';
 import { CheckJourneyDTO } from '../dto/journeyCheck.dto';
 import { JourneyNotFoundException } from '../../filters/journey.exception';
+import { UserNotFoundException } from 'src/filters/user.exception';
 
 @Injectable()
 export class JourneyService {
@@ -81,7 +82,11 @@ export class JourneyService {
 
   async checkJourney(checkJourneyDTO: CheckJourneyDTO) {
     const { userId, minCoordinate, maxCoordinate } = checkJourneyDTO;
-    const user = await this.userModel.findById(userId).exec();
+    const user = await this.userModel.findById(userId);
+
+    if (!user) {
+      throw new UserNotFoundException();
+    }
     const journeys = user.journeys;
     const journeyList = await this.findMinMaxCoordinates(
       journeys,
