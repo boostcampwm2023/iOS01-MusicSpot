@@ -27,11 +27,13 @@ export class JourneyService {
     return await createdJourneyData.save();
   }
   async pushJourneyIdToUser(journeyId, userEmail) {
-    const result = await this.userModel.findOneAndUpdate(
-      { email: userEmail },
-      { $push: { journeys: journeyId } },
-      { new: true },
-    );
+    const result = await this.userModel
+      .findOneAndUpdate(
+        { email: userEmail },
+        { $push: { journeys: journeyId } },
+        { new: true },
+      )
+      .lean();
     return result;
   }
   async create(startJourneyDTO: StartJourneyDTO): Promise<Journey> {
@@ -44,13 +46,14 @@ export class JourneyService {
   }
 
   async end(endJourneyDTO: EndJourneyDTO) {
-    const journeyId = endJourneyDTO.journeyId;
+    // const journeyId = endJourneyDTO.journeyId;
+    const { journeyId, title, coordinate } = endJourneyDTO;
     const updatedJourney = await this.journeyModel
       .findOneAndUpdate(
         { _id: journeyId },
         {
-          $set: { title: endJourneyDTO.title },
-          $push: { coordinates: endJourneyDTO.coordinate },
+          $set: { title },
+          $push: { coordinates: coordinate },
         },
         { new: true },
       )
