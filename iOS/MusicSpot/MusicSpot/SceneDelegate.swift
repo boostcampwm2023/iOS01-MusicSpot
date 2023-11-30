@@ -14,6 +14,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // MARK: - Properties
     
     var window: UIWindow?
+    private var appCoordinator: Coordinator!
     
     // MARK: - Functions
     
@@ -28,6 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let musicSpotNavigationController = UINavigationController()
         let appCoordinator = AppCoordinator(navigationController: musicSpotNavigationController)
+        self.appCoordinator = appCoordinator
         appCoordinator.start()
         
         window.rootViewController = musicSpotNavigationController

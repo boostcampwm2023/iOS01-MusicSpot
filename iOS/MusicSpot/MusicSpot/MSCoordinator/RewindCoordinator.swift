@@ -29,6 +29,13 @@ final class RewindCoordinator: Coordinator {
     
     func start() {
         let rewindViewController = RewindJourneyViewController()
+        rewindViewController.images = [
+            .msIcon(.arrowDown)!,
+            .msIcon(.addLocation)!,
+            .msIcon(.calendar)!,
+            .msIcon(.arrowDown)!,
+            .msIcon(.arrowUp)!
+        ]
 //        rewindViewController.delegate = self
         self.navigationController.pushViewController(rewindViewController, animated: true)
     }

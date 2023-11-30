@@ -65,7 +65,11 @@ let package = Package(
                     .product(name: Dependency.journeyList,
                              package: Dependency.journeyList)
                 ]),
-        .target(name: Target.navigateMap),
+        .target(name: Target.navigateMap,
+                dependencies: [
+                    .product(name: Dependency.msUIKit,
+                             package: Dependency.msUIKit)
+                ]),
         .target(name: Target.recordJourney)
     ]
 )

@@ -45,11 +45,12 @@ final class HomeCoordinator: Coordinator {
         let journeyRepository = JourneyRepositoryImplementation()
         let journeyListViewModel = JourneyListViewModel(repository: journeyRepository)
         let journeyListViewController = JourneyListViewController(viewModel: journeyListViewModel)
+        journeyListViewController.delegate = self
         
         // Bottom Sheet
         let configuration = HomeBottomSheetViewController.BottomSheetConfiguration(fullHeight: 852.0,
-                                                                                   detentHeight: 400.0,
-                                                                                   minimizedHeight: 94.0)
+                                                                                   detentHeight: 425.0,
+                                                                                   minimizedHeight: 100.0)
         let homeBottomSheetVC = HomeBottomSheetViewController(contentViewController: navigateMapViewController,
                                                               bottomSheetViewController: journeyListViewController,
                                                               configuration: configuration)
@@ -77,19 +78,23 @@ extension HomeCoordinator: HomeViewControllerDelegate {
 //        searchMusicCoordinator.start()
 //    }
     
-    func navigateToRewind() {
-        let rewindCoordinator = RewindCoordinator(navigationController: self.navigationController)
-        rewindCoordinator.delegate = self
-        self.childCoordinators.append(rewindCoordinator)
-        rewindCoordinator.start()
-    }
-    
 //    func navigateToSetting() {
 //        let settingCoordinator = SettingCoordinator(navigationController: self.navigationController)
 //        settingCoordinator.delegate = self
 //        self.childCoordinators.append(settingCoordinator)
 //        settingCoordinator.start()
 //    }
+    
+}
+
+extension HomeCoordinator: JourneyListViewControllerDelegate {
+    
+    func navigateToRewind() {
+        let rewindCoordinator = RewindCoordinator(navigationController: self.navigationController)
+        rewindCoordinator.delegate = self
+        self.childCoordinators.append(rewindCoordinator)
+        rewindCoordinator.start()
+    }
     
 }
 
