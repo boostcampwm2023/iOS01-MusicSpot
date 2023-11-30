@@ -8,7 +8,7 @@
 import UIKit
 
 protocol SettingViewControllerDelegate: AnyObject {
-    func goHomeMap()
+    func navigateToHomeMap()
 }
 
 class SettingViewController: UIViewController {
@@ -29,7 +29,7 @@ class SettingViewController: UIViewController {
 
     @objc
     func navigateToHomeMap() {
-        self.delegate?.goHomeMap()
+        self.delegate?.navigateToHomeMap()
     }
     
 }

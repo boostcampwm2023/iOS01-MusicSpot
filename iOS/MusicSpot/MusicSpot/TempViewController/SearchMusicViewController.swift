@@ -8,8 +8,8 @@
 import UIKit
 
 protocol SearchMusicViewControllerDelegate: AnyObject {
-    func goHomeMap()
-    func goSaveJourney()
+    func navigateToHomeMap()
+    func navigateToSaveJourney()
 }
 
 class SearchMusicViewController: UIViewController {
@@ -30,12 +30,12 @@ class SearchMusicViewController: UIViewController {
 
     @objc
     func navigateToHomeMap() {
-        self.delegate?.goHomeMap()
+        self.delegate?.navigateToHomeMap()
     }
 
     @objc
     func navigateToSaveJourney() {
-        self.delegate?.goSaveJourney()
+        self.delegate?.navigateToSaveJourney()
     }
     
 }

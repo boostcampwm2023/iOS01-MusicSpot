@@ -31,19 +31,19 @@ final class HomeMapCoordinator: Coordinator, HomeMapViewControllerDelegate {
         self.navigationController.pushViewController(homeMapViewController, animated: true)
     }
 
-    func goSpot() {
+    func navigateToSpot() {
         let spotCoordinator = SpotCoordinator(navigationController: navigationController)
         self.childCoordinators.append(spotCoordinator)
         spotCoordinator.start()
     }
 
-    func goRewind() {
+    func navigateToRewind() {
         let rewindCoordinator = RewindCoordinator(navigationController: navigationController)
         self.childCoordinators.append(rewindCoordinator)
         rewindCoordinator.start()
     }
 
-    func goSetting() {
+    func navigateToSetting() {
         let settingCoordinator = SettingCoordinator(navigationController: navigationController)
         self.childCoordinators.append(settingCoordinator)
         settingCoordinator.start()
@@ -53,11 +53,12 @@ final class HomeMapCoordinator: Coordinator, HomeMapViewControllerDelegate {
 extension HomeMapCoordinator: AppCoordinatorDelegate {
     
     func popToHomeMap(from coordinator: Coordinator) {
-        self.start()
+        self.childCoordinators.removeAll()
     }
     
     func popToSearchMusic(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()
+        self.navigationController.popViewController(animated: true)
         self.delegate?.popToSearchMusic(from: self)
     }
 }

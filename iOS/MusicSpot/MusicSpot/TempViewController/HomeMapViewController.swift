@@ -8,9 +8,9 @@
 import UIKit
 
 protocol HomeMapViewControllerDelegate: AnyObject {
-    func goSpot()
-    func goRewind()
-    func goSetting()
+    func navigateToSpot()
+    func navigateToRewind()
+    func navigateToSetting()
 }
 
 class HomeMapViewController: UIViewController {
@@ -77,17 +77,17 @@ class HomeMapViewController: UIViewController {
 
     @objc
     func navigateToSpot() {
-        self.delegate?.goSpot()
+        self.delegate?.navigateToSpot()
     }
 
     @objc
     func navigateToRewind() {
-        self.delegate?.goRewind()
+        self.delegate?.navigateToRewind()
     }
 
     @objc
     func navigateToSetting() {
-        self.delegate?.goSetting()
+        self.delegate?.navigateToSetting()
     }
     
 }

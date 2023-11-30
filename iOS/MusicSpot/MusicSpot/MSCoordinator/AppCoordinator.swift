@@ -45,9 +45,7 @@ extension AppCoordinator: AppCoordinatorDelegate {
     
     func popToSearchMusic(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()
-        let searchMusicCoordinator = SearchMusicCoordinator(navigationController: navigationController)
-        self.childCoordinators.append(searchMusicCoordinator)
-        searchMusicCoordinator.start()
+        self.navigationController.popToRootViewController(animated: true)
     }
     
 }

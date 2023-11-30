@@ -8,7 +8,7 @@
 import UIKit
 
 protocol RewindViewControllerDelegate: AnyObject {
-    func goHomeMap()
+    func navigateToHomeMap()
 }
 
 class RewindViewController: UIViewController {
@@ -29,7 +29,7 @@ class RewindViewController: UIViewController {
 
     @objc
     func navigateToHomeMap() {
-        self.delegate?.goHomeMap()
+        self.delegate?.navigateToHomeMap()
     }
     
 }

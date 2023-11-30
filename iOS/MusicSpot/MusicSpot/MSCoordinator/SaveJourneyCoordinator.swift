@@ -31,11 +31,11 @@ final class SaveJourneyCoordinator: Coordinator, SaveJourneyViewControllerDelega
         self.navigationController.pushViewController(saveJourneyViewController, animated: true)
     }
 
-    func goHomeMap() {
+    func navigateToHomeMap() {
         self.delegate?.popToHomeMap(from: self)
     }
 
-    func goSearchMusic() {
+    func navigateToSearchMusic() {
         self.delegate?.popToSearchMusic(from: self)
     }
     
@@ -45,11 +45,13 @@ extension SaveJourneyCoordinator: AppCoordinatorDelegate {
     
     func popToHomeMap(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()
+        self.navigationController.popViewController(animated: true)
         self.delegate?.popToHomeMap(from: self)
     }
     
     func popToSearchMusic(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()
+        self.navigationController.popViewController(animated: true)
         self.delegate?.popToSearchMusic(from: self)
     }
     

@@ -30,11 +30,11 @@ final class SpotCoordinator: Coordinator, SpotViewControllerDelegate {
         self.navigationController.pushViewController(spotViewController, animated: true)
     }
 
-    func goHomeMap() {
+    func navigateToHomeMap() {
         self.delegate?.popToHomeMap(from: self)
     }
 
-    func goSearchMusic() {
+    func navigateToSearchMusic() {
         let searchMusicCoordinator = SearchMusicCoordinator(navigationController: navigationController)
         self.childCoordinators.append(searchMusicCoordinator)
         searchMusicCoordinator.start()
@@ -44,11 +44,13 @@ final class SpotCoordinator: Coordinator, SpotViewControllerDelegate {
 extension SpotCoordinator: AppCoordinatorDelegate {
     func popToHomeMap(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()
+        self.navigationController.popViewController(animated: true)
         self.delegate?.popToHomeMap(from: self)
     }
     
     func popToSearchMusic(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()
+        self.navigationController.popViewController(animated: true)
         self.delegate?.popToSearchMusic(from: self)
     }
     

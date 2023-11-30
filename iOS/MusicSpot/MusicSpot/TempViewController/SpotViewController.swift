@@ -8,8 +8,8 @@
 import UIKit
 
 protocol SpotViewControllerDelegate: AnyObject {
-    func goHomeMap()
-    func goSearchMusic()
+    func navigateToHomeMap()
+    func navigateToSearchMusic()
 }
 
 class SpotViewController: UIViewController {
@@ -75,12 +75,12 @@ class SpotViewController: UIViewController {
 
     @objc
     func navigateToHomeMap() {
-        self.delegate?.goHomeMap()
+        self.delegate?.navigateToHomeMap()
     }
 
     @objc
     func navigateToSearchMusic() {
-        self.delegate?.goSearchMusic()
+        self.delegate?.navigateToSearchMusic()
     }
     
 }
