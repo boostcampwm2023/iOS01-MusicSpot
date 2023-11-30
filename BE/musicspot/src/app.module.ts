@@ -6,7 +6,6 @@ import { JourneyModule } from './journey/module/journey.module';
 import { SpotModule } from './spot/module/spot.module';
 import { UserModule } from './user/module/user.module';
 
-
 import { ReleaseController } from './releasePage/release.controller';
 
 @Module({
