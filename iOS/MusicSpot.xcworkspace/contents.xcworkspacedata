@@ -2,14 +2,30 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Features/SaveJourney">
+      location = "group:MusicSpot/MusicSpot.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:Features/JourneyList">
-   </FileRef>
-   <FileRef
-      location = "group:MSUIKit/../MusicSpot/MusicSpot.xcodeproj">
-   </FileRef>
+   <Group
+      location = "container:"
+      name = "Features">
+      <FileRef
+         location = "group:Features/Home">
+      </FileRef>
+      <FileRef
+         location = "group:Features/Spot">
+      </FileRef>
+      <FileRef
+         location = "group:Features/SelectSong">
+      </FileRef>
+      <FileRef
+         location = "group:Features/SaveJourney">
+      </FileRef>
+      <FileRef
+         location = "group:Features/JourneyList">
+      </FileRef>
+      <FileRef
+         location = "group:Features/RewindJourney">
+      </FileRef>
+   </Group>
    <FileRef
       location = "group:MSData">
    </FileRef>
@@ -20,6 +36,6 @@
       location = "group:MSCoreKit">
    </FileRef>
    <FileRef
-      location = "group:MSFoundation">
+      location = "group:MusicSpot/../MSFoundation">
    </FileRef>
 </Workspace>

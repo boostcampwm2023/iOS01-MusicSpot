@@ -5,21 +5,40 @@ import PackageDescription
 
 // MARK: - Constants
 
-extension String {
-    static let package = "Spot"
-    static let spotView = "SpotView"
-    static let msUIKit = "MSUIKit"
-    static let msFoundation = "MSFoundation"
-    static let msDesignsystem = "MSDesignSystem"
-    static let msLogger = "MSLogger"
+private extension String {
+    
+    static let package = "FeatureSpot"
     
     var testTarget: String {
         return self + "Tests"
     }
     
-    var path: String {
+    var fromRootPath: String {
         return "../../" + self
     }
+    
+}
+
+private enum Target {
+    
+    static let spot = "Spot"
+    
+}
+
+private enum Dependency {
+    
+    // package
+    static let msUIKit = "MSUIKit"
+    static let msFoundation = "MSFoundation"
+    static let msCoreKit = "MSCoreKit"
+    
+    // library
+    static let msDesignsystem = "MSDesignSystem"
+    static let msLogger = "MSLogger"
+    static let msNetworking = "MSNetworking"
+    
+    // package = library
+    static let msData = "MSData"
     
 }
 
@@ -31,23 +50,32 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(
-            name: .spotView,
-            targets: [.spotView])
+        .library(name: Target.spot,
+                 targets: [Target.spot])
     ],
     dependencies: [
-        .package(path: .msUIKit.path),
-        .package(path: .msFoundation.path)
+        .package(name: Dependency.msUIKit,
+                 path: Dependency.msUIKit.fromRootPath),
+        .package(name: Dependency.msFoundation,
+                 path: Dependency.msFoundation.fromRootPath),
+        .package(name: Dependency.msCoreKit,
+                 path: Dependency.msCoreKit.fromRootPath),
+        .package(name: Dependency.msData,
+                 path: Dependency.msData.fromRootPath)
     ],
     targets: [
-        // Codes
-        .target(
-            name: .spotView,
-            dependencies: [
-                .product(name: .msUIKit, package: .msUIKit),
-                .product(name: .msDesignsystem, package: .msUIKit),
-                .product(name: .msLogger, package: .msFoundation)])
-        
-        // Tests
+        .target(name: Target.spot,
+                dependencies: [
+                    .product(name: Dependency.msUIKit,
+                             package: Dependency.msUIKit),
+                    .product(name: Dependency.msDesignsystem,
+                             package: Dependency.msUIKit),
+                    .product(name: Dependency.msLogger,
+                             package: Dependency.msFoundation),
+                    .product(name: Dependency.msNetworking,
+                             package: Dependency.msCoreKit),
+                    .product(name: Dependency.msData,
+                             package: Dependency.msData)
+                ])
     ]
 )
