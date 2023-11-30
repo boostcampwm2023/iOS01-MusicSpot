@@ -1,9 +1,9 @@
 #!/bin/sh
-
+​
 LINTPATH='.swiftlint.yml'
 declare -a PATHS=("MSCoreKit" "MSFoundation" "MSUIKit" "MSData" "MusicSpot" "Features")
 failures=""
-
+​
 for path in "${PATHS[@]}"; do
     if [ -d "$path" ]; then
         echo "👀 Running SwiftLint for $path"
