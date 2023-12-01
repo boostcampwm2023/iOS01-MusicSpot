@@ -18,7 +18,8 @@ public protocol HomeViewControllerDelegate: AnyObject {
     
 }
 
-public final class HomeBottomSheetViewController: MSBottomSheetViewController<NavigateMapViewController, JourneyListViewController> {
+public final class HomeBottomSheetViewController
+: MSBottomSheetViewController<NavigateMapViewController, JourneyListViewController> {
     
     // MARK: - Properties
     

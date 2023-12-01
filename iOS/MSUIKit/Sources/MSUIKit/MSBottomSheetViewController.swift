@@ -8,6 +8,7 @@
 import UIKit
 
 import MSDesignSystem
+import MSLogger
 
 open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: UIViewController>
 : UIViewController, UIGestureRecognizerDelegate {
@@ -38,7 +39,7 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
     
     // MARK: - State
     
-    public enum State {
+    public enum State: String {
         case full
         case detented
         case minimized
@@ -69,8 +70,11 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
     // MARK: - Properties
     
     private let configuration: BottomSheetConfiguration
-    var state: State = .minimized
     private let gestureVelocity: CGFloat = 750.0
+    
+    public var state: State = .minimized {
+        willSet { self.stateDidChanged(newValue) }
+    }
     
     // MARK: - Initializer
     
@@ -92,7 +96,11 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
     
     // MARK: - Functions
     
-    public func presentFullBottomSheet(animated: Bool = true) {
+    public func stateDidChanged(_ state: State) {
+        MSLogger.make(category: .ui).log("Bottom Sheet 상태가 \(state.rawValue)로 업데이트 되었습니다.")
+    }
+    
+    private func presentFullBottomSheet(animated: Bool = true) {
         self.topConstraints?.constant = -self.configuration.fullHeight
         
         if animated {
@@ -107,7 +115,7 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
         }
     }
     
-    public func presentDetentedBottomSheet(animated: Bool = true) {
+    private func presentDetentedBottomSheet(animated: Bool = true) {
         self.topConstraints?.constant = -self.configuration.detentHeight
         
         if animated {
@@ -126,7 +134,7 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
         }
     }
     
-    public func dismissBottomSheet(animated: Bool = true) {
+    private func dismissBottomSheet(animated: Bool = true) {
         self.topConstraints?.constant = -self.configuration.minimizedHeight
         
         if animated {
