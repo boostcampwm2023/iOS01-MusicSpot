@@ -7,6 +7,8 @@
 
 import UIKit
 
+import SaveJourney
+
 final class SaveJourneyCoordinator: Coordinator {
     
     // MARK: - Properties
@@ -15,7 +17,7 @@ final class SaveJourneyCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     
-    var delegate: SearchMusicCoordinatorDelegate?
+//    var delegate: SearchMusicCoordinatorDelegate?
     
     // MARK: - Initializer
     
@@ -26,8 +28,9 @@ final class SaveJourneyCoordinator: Coordinator {
     // MARK: - Functions
     
     func start() {
-        let saveJourneyViewController = SaveJourneyViewController()
-        saveJourneyViewController.delegate = self
+        let saveJourneyViewModel = SaveJourneyViewModel()
+        let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
+//        saveJourneyViewController.delegate = self
         self.navigationController.pushViewController(saveJourneyViewController, animated: true)
     }
     
@@ -35,14 +38,14 @@ final class SaveJourneyCoordinator: Coordinator {
 
 // MARK: - SaveJourneyViewController
 
-extension SaveJourneyCoordinator: SaveJourneyViewControllerDelegate {
-    
-    func navigateToHomeMap() {
-        self.delegate?.popToHomeMap(from: self)
-    }
-    
-    func navigateToSearchMusic() {
-        self.delegate?.popToSearchMusic(from: self)
-    }
-    
-}
+//extension SaveJourneyCoordinator: SaveJourneyViewControllerDelegate {
+//    
+//    func navigateToHomeMap() {
+//        self.delegate?.popToHomeMap(from: self)
+//    }
+//    
+//    func navigateToSearchMusic() {
+//        self.delegate?.popToSearchMusic(from: self)
+//    }
+//    
+//}

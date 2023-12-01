@@ -9,6 +9,8 @@ import CoreLocation
 import UIKit
 import MapKit
 
+import MSUIKit
+
 public final class NavigateMapViewController: UIViewController {
 
     // MARK: - Properties
@@ -27,12 +29,10 @@ public final class NavigateMapViewController: UIViewController {
     }()
 
     /// 시작하기 Button
-    var startButton: UIButton = {
-        let button = UIButton()
-
-        button.backgroundColor = .gray
-        button.setTitle("시작하기", for: .normal)
-        button.layer.cornerRadius = 25
+    private let startButton: MSButton = {
+        let button = MSButton.primary()
+        button.cornerStyle = .rounded
+        button.title = "시작하기"
         return button
     }()
     
@@ -82,7 +82,6 @@ public final class NavigateMapViewController: UIViewController {
     private func configureStyle() {}
 
     private func configureLayout() {
-        
         view.addSubview(buttonStackView)
         view.addSubview(startButton)
         
@@ -90,23 +89,22 @@ public final class NavigateMapViewController: UIViewController {
         buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         startButton.translatesAutoresizingMaskIntoConstraints = false
 
-        let safeArea = view.safeAreaLayoutGuide
+        let safeArea = self.view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
-            mapView.map.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            mapView.map.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            mapView.map.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            mapView.map.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            self.mapView.map.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.mapView.map.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.mapView.map.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.mapView.map.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
-            buttonStackView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 50),
-            buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            self.buttonStackView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 50),
+            self.buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
 
-            startButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -27),
-            startButton.heightAnchor.constraint(equalToConstant: 60),
-            startButton.widthAnchor.constraint(equalToConstant: 186),
-            startButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            self.startButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -80),
+            self.startButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
+    
 }
 
 // MARK: - CLLocationManager

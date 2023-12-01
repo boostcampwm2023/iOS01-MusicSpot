@@ -11,7 +11,13 @@ import UIKit
 import MSCacheStorage
 import MSUIKit
 
-public final class JourneyListViewController: UIViewController {
+public protocol JourneyListViewControllerDelegate: AnyObject {
+    
+    func navigateToRewind()
+    
+}
+
+public final class JourneyListViewController: BaseViewController {
     
     typealias JourneyListDataSource = UICollectionViewDiffableDataSource<Int, Journey>
     typealias JourneyCellRegistration = UICollectionView.CellRegistration<JourneyCell, Journey>
@@ -34,6 +40,8 @@ public final class JourneyListViewController: UIViewController {
     }
     
     // MARK: - Properties
+    
+    public weak var delegate: JourneyListViewControllerDelegate?
     
     private let cache: MSCacheStorage
     
@@ -72,10 +80,11 @@ public final class JourneyListViewController: UIViewController {
         return label
     }()
     
-    private let collectionView: UICollectionView = {
+    private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero,
                                               collectionViewLayout: UICollectionViewLayout())
         collectionView.backgroundColor = .clear
+        collectionView.delegate = self
         return collectionView
     }()
     
@@ -126,13 +135,49 @@ public final class JourneyListViewController: UIViewController {
         self.viewModel.trigger(.fetchJourney(at: coordinate))
     }
     
+    // MARK: - UI Configuration
+    
+    public override func configureStyle() {
+        super.configureStyle()
+        self.view.backgroundColor = .msColor(.primaryBackground)
+    }
+    
+    public override func configureLayout() {
+        self.view.addSubview(self.titleStack)
+        self.titleStack.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.titleStack.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.titleStack.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            self.titleStack.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
+        ])
+        
+        [
+            self.titleLabel,
+            self.subtitleLabel
+        ].forEach {
+            self.titleStack.addArrangedSubview($0)
+        }
+        
+        self.view.addSubview(self.collectionView)
+        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.collectionView.topAnchor.constraint(equalTo: self.titleStack.bottomAnchor,
+                                                     constant: Metric.collectionViewVerticalInset),
+            self.collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor,
+                                                         constant: Metric.collectionViewHorizontalInset),
+            self.collectionView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            self.collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,
+                                                          constant: -Metric.collectionViewHorizontalInset)
+        ])
+    }
+    
 }
 
 // MARK: - CollectionView
 
-private extension JourneyListViewController {
+extension JourneyListViewController: UICollectionViewDelegate {
     
-    func configureCollectionView() {
+    private func configureCollectionView() {
         let layout = UICollectionViewCompositionalLayout(sectionProvider: { _, _ in
             return self.configureSection()
         })
@@ -141,7 +186,7 @@ private extension JourneyListViewController {
         self.dataSource = self.configureDataSource()
     }
     
-    func configureSection() -> NSCollectionLayoutSection {
+    private func configureSection() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                               heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -169,7 +214,7 @@ private extension JourneyListViewController {
         return data
     }
     
-    func configureDataSource() -> JourneyListDataSource {
+    private func configureDataSource() -> JourneyListDataSource {
         // TODO: 최적화 & 캐싱
         let cellRegistration = JourneyCellRegistration { cell, indexPath, itemIdentifier in
             let cellModel = JourneyCellModel(location: itemIdentifier.location,
@@ -218,43 +263,8 @@ private extension JourneyListViewController {
         return dataSource
     }
     
-}
-
-// MARK: - UI Configuration
-
-private extension JourneyListViewController {
-    
-    func configureStyle() {
-        self.view.backgroundColor = .msColor(.primaryBackground)
-    }
-    
-    func configureLayout() {
-        self.view.addSubview(self.titleStack)
-        self.titleStack.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            self.titleStack.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            self.titleStack.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            self.titleStack.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
-        ])
-        
-        [
-            self.titleLabel,
-            self.subtitleLabel
-        ].forEach {
-            self.titleStack.addArrangedSubview($0)
-        }
-        
-        self.view.addSubview(self.collectionView)
-        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            self.collectionView.topAnchor.constraint(equalTo: self.titleStack.bottomAnchor,
-                                                     constant: Metric.collectionViewVerticalInset),
-            self.collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor,
-                                                         constant: Metric.collectionViewHorizontalInset),
-            self.collectionView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-            self.collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,
-                                                          constant: -Metric.collectionViewHorizontalInset)
-        ])
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.delegate?.navigateToRewind()
     }
     
 }

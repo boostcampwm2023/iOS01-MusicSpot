@@ -43,7 +43,7 @@ public final class RewindJourneyViewController: UIViewController {
     }
     
     // MARK: - Properties
-
+    
     private let stackView = UIStackView()
     private let presentImageView = UIImageView()
     private let musicView = MSMusicView()
@@ -122,7 +122,7 @@ public final class RewindJourneyViewController: UIViewController {
     
     private func configureMusicViewLayout() {
         self.view.addSubview(self.musicView)
-
+        
         self.musicView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.musicView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor,
@@ -156,6 +156,7 @@ public final class RewindJourneyViewController: UIViewController {
     // MARK: - UI Configuration: Style
     
     private func configureStyle() {
+        self.view.backgroundColor = .msColor(.primaryBackground)
         self.configurePresentImageViewStyle()
         self.configureProgressbarsStyle()
     }
