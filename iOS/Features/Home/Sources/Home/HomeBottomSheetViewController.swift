@@ -25,4 +25,10 @@ public final class HomeBottomSheetViewController
     
     public weak var delegate: HomeViewControllerDelegate?
     
+    public override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        
+        self.navigationController?.isNavigationBarHidden = true
+    }
+    
 }

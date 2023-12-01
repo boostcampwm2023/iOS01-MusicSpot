@@ -50,7 +50,7 @@ final class HomeCoordinator: Coordinator {
         // Bottom Sheet
         let configuration = HomeBottomSheetViewController.BottomSheetConfiguration(fullHeight: 852.0,
                                                                                    detentHeight: 425.0,
-                                                                                   minimizedHeight: 100.0)
+                                                                                   minimizedHeight: 150.0)
         let homeBottomSheetVC = HomeBottomSheetViewController(contentViewController: navigateMapViewController,
                                                               bottomSheetViewController: journeyListViewController,
                                                               configuration: configuration)

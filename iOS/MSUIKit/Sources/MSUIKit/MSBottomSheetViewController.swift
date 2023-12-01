@@ -85,8 +85,8 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
         self.bottomSheetViewController = bottomSheetViewController
         self.configuration = configuration
         super.init(nibName: nil, bundle: nil)
-        self.configureLayout()
         self.configureStyle()
+        self.configureLayout()
         self.configureGesture()
     }
     
@@ -98,6 +98,10 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
     
     public func stateDidChanged(_ state: State) {
         MSLogger.make(category: .ui).log("Bottom Sheet 상태가 \(state.rawValue)로 업데이트 되었습니다.")
+        
+        if case .full = state {
+            self.resizeIndicator.isHidden = true
+        }
     }
     
     private func presentFullBottomSheet(animated: Bool = true) {
@@ -172,6 +176,8 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
     }
     
     private func handlePanChanged(translation: CGPoint) {
+        self.resizeIndicator.isHidden = false
+        
         switch self.state {
         case .full:
             guard translation.y > 0 else { return }
@@ -206,7 +212,7 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
                 self.presentFullBottomSheet()
             }
         case .detented:
-            if yTransMagnitude >= self.configuration.fullDetentDiff / 2 || velocity.y < -self.gestureVelocity {
+            if translation.y <= -self.configuration.fullDetentDiff / 2 || velocity.y < -self.gestureVelocity {
                 self.presentFullBottomSheet()
             } else if translation.y >= self.configuration.detentMinimizedDiff / 2 || velocity.y > self.gestureVelocity {
                 self.dismissBottomSheet()
@@ -233,12 +239,6 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
         }
     }
     
-    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
-                                  shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
-    ) -> Bool {
-        return false
-    }
-    
 }
 
 // MARK: - UI Configuration
@@ -259,25 +259,25 @@ private extension MSBottomSheetViewController {
         
         self.contentViewController.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.contentViewController.view.leftAnchor
-                .constraint(equalTo: self.view.leftAnchor),
-            self.contentViewController.view.rightAnchor
-                .constraint(equalTo: self.view.rightAnchor),
             self.contentViewController.view.topAnchor
                 .constraint(equalTo: self.view.topAnchor),
+            self.contentViewController.view.leadingAnchor
+                .constraint(equalTo: self.view.leadingAnchor),
             self.contentViewController.view.bottomAnchor
-                .constraint(equalTo: self.view.bottomAnchor)
+                .constraint(equalTo: self.view.bottomAnchor),
+            self.contentViewController.view.trailingAnchor
+                .constraint(equalTo: self.view.trailingAnchor)
         ])
         self.contentViewController.didMove(toParent: self)
         
         self.bottomSheetViewController.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.bottomSheetViewController.view.heightAnchor
-                .constraint(equalToConstant: self.configuration.fullHeight),
-            self.bottomSheetViewController.view.leftAnchor
-                .constraint(equalTo: self.view.leftAnchor),
-            self.bottomSheetViewController.view.rightAnchor
-                .constraint(equalTo: self.view.rightAnchor)
+            self.bottomSheetViewController.view.leadingAnchor
+                .constraint(equalTo: self.view.leadingAnchor),
+            self.bottomSheetViewController.view.bottomAnchor
+                .constraint(equalTo: self.view.bottomAnchor),
+            self.bottomSheetViewController.view.trailingAnchor
+                .constraint(equalTo: self.view.trailingAnchor)
         ])
         self.topConstraints = self.bottomSheetViewController.view.topAnchor
             .constraint(equalTo: self.view.bottomAnchor,
@@ -292,7 +292,7 @@ private extension MSBottomSheetViewController {
             self.resizeIndicator.heightAnchor.constraint(equalToConstant: 5.0),
             self.resizeIndicator.centerXAnchor.constraint(equalTo: self.bottomSheetViewController.view.centerXAnchor),
             self.resizeIndicator.topAnchor.constraint(equalTo: self.bottomSheetViewController.view.topAnchor,
-                                                      constant: 5.0)
+                                                      constant: 6.0)
         ])
     }
     
