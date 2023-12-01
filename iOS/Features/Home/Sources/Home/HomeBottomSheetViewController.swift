@@ -5,6 +5,8 @@
 //  Created by 이창준 on 2023.12.01.
 //
 
+import UIKit
+
 import JourneyList
 import MSUIKit
 import NavigateMap

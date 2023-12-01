@@ -46,8 +46,8 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
     
     // MARK: - UI Components
     
-    let contentViewController: Content
-    let bottomSheetViewController: BottomSheet
+    public let contentViewController: Content
+    public let bottomSheetViewController: BottomSheet
     
     private var topConstraints: NSLayoutConstraint?
     
@@ -79,7 +79,7 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
     }
     
     public required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
     
     // MARK: - Functions
@@ -220,7 +220,7 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
                                   shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
     ) -> Bool {
-        return true
+        return false
     }
     
 }
