@@ -31,7 +31,7 @@ final class AppCoordinator: Coordinator {
     // MARK: - From: HomeMap
     
     func start() {
-        let homeMapCoordinator = HomeMapCoordinator(navigationController: self.navigationController)
+        let homeMapCoordinator = HomeCoordinator(navigationController: self.navigationController)
         self.childCoordinators.append(homeMapCoordinator)
         homeMapCoordinator.start()
     }

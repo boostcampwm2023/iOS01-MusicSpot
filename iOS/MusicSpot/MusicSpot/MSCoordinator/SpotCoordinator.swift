@@ -7,6 +7,8 @@
 
 import UIKit
 
+import Spot
+
 final class SpotCoordinator: Coordinator {
     
     // MARK: - Properties
@@ -27,7 +29,7 @@ final class SpotCoordinator: Coordinator {
     
     func start() {
         let spotViewController = SpotViewController()
-        spotViewController.delegate = self
+//        spotViewController.delegate = self
         self.navigationController.pushViewController(spotViewController, animated: true)
     }
     
@@ -35,13 +37,13 @@ final class SpotCoordinator: Coordinator {
 
 // MARK: - SpotViewController
 
-extension SpotCoordinator: SpotViewControllerDelegate {
-    
-    func navigateToHomeMap() {
-        self.delegate?.popToHomeMap(from: self)
-    }
-    
-}
+//extension SpotCoordinator: SpotViewControllerDelegate {
+//    
+//    func navigateToHomeMap() {
+//        self.delegate?.popToHomeMap(from: self)
+//    }
+//    
+//}
 
 // MARK: - HomeMap Coordinator
 

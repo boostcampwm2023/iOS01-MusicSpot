@@ -55,6 +55,7 @@ private extension SpotPhotoImageView {
         self.backgroundColor = .msColor(.secondaryBackground)
         self.layer.cornerRadius = Metric.cornerRadius
         self.clipsToBounds = true
+        self.isUserInteractionEnabled = true
     }
     
     func configureLayout() {
