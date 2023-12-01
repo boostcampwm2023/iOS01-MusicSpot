@@ -49,6 +49,14 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
     public let contentViewController: Content
     public let bottomSheetViewController: BottomSheet
     
+    private let resizeIndicator: UIView = {
+        let view = UIView()
+        view.backgroundColor = .darkGray.withAlphaComponent(0.5)
+        view.layer.cornerRadius = 2.5
+        view.clipsToBounds = true
+        return view
+    }()
+    
     private var topConstraints: NSLayoutConstraint?
     
     private lazy var panGesture: UIPanGestureRecognizer = {
@@ -268,6 +276,16 @@ private extension MSBottomSheetViewController {
                         constant: -self.configuration.minimizedHeight)
         self.topConstraints?.isActive = true
         self.bottomSheetViewController.didMove(toParent: self)
+        
+        self.bottomSheetViewController.view.addSubview(self.resizeIndicator)
+        self.resizeIndicator.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.resizeIndicator.widthAnchor.constraint(equalToConstant: 36.0),
+            self.resizeIndicator.heightAnchor.constraint(equalToConstant: 5.0),
+            self.resizeIndicator.centerXAnchor.constraint(equalTo: self.bottomSheetViewController.view.centerXAnchor),
+            self.resizeIndicator.topAnchor.constraint(equalTo: self.bottomSheetViewController.view.topAnchor,
+                                                      constant: 5.0)
+        ])
     }
     
     func configureGesture() {
