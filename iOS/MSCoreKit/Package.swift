@@ -21,6 +21,7 @@ private extension String {
 
 private enum Target {
     
+    static let msImageFetcher = "MSImageFetcher"
     static let msPersistentStorage = "MSPersistentStorage"
     static let msNetworking = "MSNetworking"
     static let msFetcher = "MSFetcher"
@@ -43,6 +44,8 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
+        .library(name: Target.msImageFetcher,
+                 targets: [Target.msImageFetcher]),
         .library(name: Target.msPersistentStorage,
                  targets: [Target.msPersistentStorage]),
         .library(name: Target.msNetworking,
@@ -58,6 +61,10 @@ let package = Package(
     ],
     targets: [
         // Codes
+        .target(name: Target.msImageFetcher,
+               dependencies: [
+                    .target(name: Target.msCacheStorage)
+               ]),
         .target(name: Target.msPersistentStorage),
         .target(name: Target.msNetworking),
         .target(name: Target.msFetcher,

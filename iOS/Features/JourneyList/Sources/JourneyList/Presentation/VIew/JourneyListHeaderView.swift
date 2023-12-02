@@ -8,6 +8,7 @@
 import UIKit
 
 import MSDesignSystem
+import MSUIKit
 
 public final class JourneyListHeaderView: UICollectionReusableView {
     
@@ -65,6 +66,8 @@ public final class JourneyListHeaderView: UICollectionReusableView {
         self.configureStyles()
         self.configureLayout()
     }
+    
+    let imageView: UIImageView = .init()
     
     public required init?(coder: NSCoder) {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
