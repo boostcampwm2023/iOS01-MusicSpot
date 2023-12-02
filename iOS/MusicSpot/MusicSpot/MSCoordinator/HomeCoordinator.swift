@@ -48,12 +48,11 @@ final class HomeCoordinator: Coordinator {
         journeyListViewController.delegate = self
         
         // Bottom Sheet
-        let configuration = HomeBottomSheetViewController.BottomSheetConfiguration(fullHeight: 852.0,
-                                                                                   detentHeight: 425.0,
-                                                                                   minimizedHeight: 150.0)
         let homeBottomSheetVC = HomeBottomSheetViewController(contentViewController: navigateMapViewController,
-                                                              bottomSheetViewController: journeyListViewController,
-                                                              configuration: configuration)
+                                                              bottomSheetViewController: journeyListViewController)
+        homeBottomSheetVC.configuration = MSBottomSheetViewController.Configuration(fullDimension: .fractional(1.0),
+                                                                                    detentDimension: .fractional(0.4),
+                                                                                    minimizedDimension: .absolute(100.0))
         homeBottomSheetVC.delegate = self
         self.navigationController.pushViewController(homeBottomSheetVC, animated: true)
     }

@@ -13,30 +13,6 @@ import MSLogger
 open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: UIViewController>
 : UIViewController, UIGestureRecognizerDelegate {
     
-    // MARK: - Configuration
-    
-    public struct BottomSheetConfiguration {
-        let fullHeight: CGFloat
-        let detentHeight: CGFloat
-        let minimizedHeight: CGFloat
-        
-        var fullDetentDiff: CGFloat {
-            return self.fullHeight - self.detentHeight
-        }
-        
-        var detentMinimizedDiff: CGFloat {
-            return self.detentHeight - self.minimizedHeight
-        }
-        
-        public init(fullHeight: CGFloat,
-                    detentHeight: CGFloat,
-                    minimizedHeight: CGFloat) {
-            self.fullHeight = fullHeight
-            self.detentHeight = detentHeight
-            self.minimizedHeight = minimizedHeight
-        }
-    }
-    
     // MARK: - State
     
     public enum State: String {
@@ -69,7 +45,7 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
     
     // MARK: - Properties
     
-    private let configuration: BottomSheetConfiguration
+    public var configuration: MSBottomSheetViewController.Configuration?
     private let gestureVelocity: CGFloat = 750.0
     
     public var state: State = .minimized {
@@ -79,24 +55,28 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
     // MARK: - Initializer
     
     public init(contentViewController: Content,
-                bottomSheetViewController: BottomSheet,
-                configuration: BottomSheetConfiguration) {
+                bottomSheetViewController: BottomSheet) {
         self.contentViewController = contentViewController
         self.bottomSheetViewController = bottomSheetViewController
-        self.configuration = configuration
         super.init(nibName: nil, bundle: nil)
-        self.configureStyle()
-        self.configureLayout()
-        self.configureGesture()
     }
     
     public required init?(coder: NSCoder) {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
     
+    // MARK: - Life Cycle
+    
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        self.configureStyle()
+        self.configureLayout()
+        self.configureGesture()
+    }
+    
     // MARK: - Functions
     
-    public func stateDidChanged(_ state: State) {
+    open func stateDidChanged(_ state: State) {
         MSLogger.make(category: .ui).log("Bottom Sheet 상태가 \(state.rawValue)로 업데이트 되었습니다.")
         
         if case .full = state {
@@ -105,7 +85,8 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
     }
     
     private func presentFullBottomSheet(animated: Bool = true) {
-        self.topConstraints?.constant = -self.configuration.fullHeight
+        guard let configuration = self.configuration else { return }
+        self.topConstraints?.constant = -configuration.fullHeight
         
         if animated {
             UIView.animate(withDuration: 0.3) {
@@ -120,7 +101,8 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
     }
     
     private func presentDetentedBottomSheet(animated: Bool = true) {
-        self.topConstraints?.constant = -self.configuration.detentHeight
+        guard let configuration = self.configuration else { return }
+        self.topConstraints?.constant = -configuration.detentHeight
         
         if animated {
             UIView.animate(withDuration: 0.5,
@@ -139,7 +121,8 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
     }
     
     private func dismissBottomSheet(animated: Bool = true) {
-        self.topConstraints?.constant = -self.configuration.minimizedHeight
+        guard let configuration = self.configuration else { return }
+        self.topConstraints?.constant = -configuration.minimizedHeight
         
         if animated {
             UIView.animate(withDuration: 0.5,
@@ -176,51 +159,55 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
     }
     
     private func handlePanChanged(translation: CGPoint) {
+        guard let configuration = self.configuration else { return }
+        
         self.resizeIndicator.isHidden = false
         
         switch self.state {
         case .full:
             guard translation.y > 0 else { return }
             
-            self.topConstraints?.constant = -(self.configuration.fullHeight - translation.y.magnitude)
+            self.topConstraints?.constant = -(configuration.fullHeight - translation.y.magnitude)
             self.view.layoutIfNeeded()
         case .detented:
             if translation.y >= 0 { // 아래로 Pan
-                self.topConstraints?.constant = -(self.configuration.detentHeight - translation.y.magnitude)
+                self.topConstraints?.constant = -(configuration.detentHeight - translation.y.magnitude)
             } else if translation.y < 0 { // 위로 Pan
-                self.topConstraints?.constant = -(self.configuration.detentHeight + translation.y.magnitude)
+                self.topConstraints?.constant = -(configuration.detentHeight + translation.y.magnitude)
             }
             self.view.layoutIfNeeded()
         case .minimized:
             guard translation.y < 0 else { return }
             
-            let newConstant = -(self.configuration.minimizedHeight + translation.y.magnitude)
+            let newConstant = -(configuration.minimizedHeight + translation.y.magnitude)
             self.topConstraints?.constant = newConstant
             self.view.layoutIfNeeded()
         }
     }
     
     private func handlePanEnded(translation: CGPoint, velocity: CGPoint) {
+        guard let configuration = self.configuration else { return }
+        
         let yTransMagnitude = translation.y.magnitude
         switch self.state {
         case .full:
             if velocity.y < 0 {
                 self.presentFullBottomSheet()
-            } else if yTransMagnitude >= self.configuration.fullDetentDiff / 2 || velocity.y > self.gestureVelocity {
+            } else if yTransMagnitude >= configuration.fullDetentDiff / 2 || velocity.y > self.gestureVelocity {
                 self.presentDetentedBottomSheet()
             } else {
                 self.presentFullBottomSheet()
             }
         case .detented:
-            if translation.y <= -self.configuration.fullDetentDiff / 2 || velocity.y < -self.gestureVelocity {
+            if translation.y <= -configuration.fullDetentDiff / 2 || velocity.y < -self.gestureVelocity {
                 self.presentFullBottomSheet()
-            } else if translation.y >= self.configuration.detentMinimizedDiff / 2 || velocity.y > self.gestureVelocity {
+            } else if translation.y >= configuration.detentMinimizedDiff / 2 || velocity.y > self.gestureVelocity {
                 self.dismissBottomSheet()
             } else {
                 self.presentDetentedBottomSheet()
             }
         case .minimized:
-            if yTransMagnitude >= self.configuration.detentHeight / 2 || velocity.y < -self.gestureVelocity {
+            if yTransMagnitude >= configuration.detentHeight / 2 || velocity.y < -self.gestureVelocity {
                 self.presentDetentedBottomSheet()
             } else {
                 self.dismissBottomSheet()
@@ -248,9 +235,13 @@ private extension MSBottomSheetViewController {
     func configureStyle() {
         self.bottomSheetViewController.view.layer.cornerRadius = 12.0
         self.bottomSheetViewController.view.clipsToBounds = true
+        
+        self.configuration?.standardMetric = self.view.frame.height
     }
     
     func configureLayout() {
+        guard let configuration = self.configuration else { return }
+        
         self.addChild(self.contentViewController)
         self.addChild(self.bottomSheetViewController)
         
@@ -259,29 +250,22 @@ private extension MSBottomSheetViewController {
         
         self.contentViewController.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.contentViewController.view.topAnchor
-                .constraint(equalTo: self.view.topAnchor),
-            self.contentViewController.view.leadingAnchor
-                .constraint(equalTo: self.view.leadingAnchor),
-            self.contentViewController.view.bottomAnchor
-                .constraint(equalTo: self.view.bottomAnchor),
-            self.contentViewController.view.trailingAnchor
-                .constraint(equalTo: self.view.trailingAnchor)
+            self.contentViewController.view.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.contentViewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.contentViewController.view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.contentViewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
         ])
         self.contentViewController.didMove(toParent: self)
         
         self.bottomSheetViewController.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.bottomSheetViewController.view.leadingAnchor
-                .constraint(equalTo: self.view.leadingAnchor),
-            self.bottomSheetViewController.view.bottomAnchor
-                .constraint(equalTo: self.view.bottomAnchor),
-            self.bottomSheetViewController.view.trailingAnchor
-                .constraint(equalTo: self.view.trailingAnchor)
+            self.bottomSheetViewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.bottomSheetViewController.view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.bottomSheetViewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
         ])
         self.topConstraints = self.bottomSheetViewController.view.topAnchor
             .constraint(equalTo: self.view.bottomAnchor,
-                        constant: -self.configuration.minimizedHeight)
+                        constant: -configuration.minimizedHeight)
         self.topConstraints?.isActive = true
         self.bottomSheetViewController.didMove(toParent: self)
         
