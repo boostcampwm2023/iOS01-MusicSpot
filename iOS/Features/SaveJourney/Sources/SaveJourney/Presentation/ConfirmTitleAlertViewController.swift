@@ -13,6 +13,13 @@ final class ConfirmTitleAlertViewController: MSAlertViewController {
     
     // MARK: - Constants
     
+    private enum Typo {
+        
+        static let title = "여정 이름"
+        static let subtitle = "마지막으로 여정의 이름을 정해주세요."
+        
+    }
+    
     private enum Metric {
         
         static let horizontalInset: CGFloat = 12.0
@@ -57,6 +64,13 @@ final class ConfirmTitleAlertViewController: MSAlertViewController {
     }
     
     // MARK: - UI Configuration
+    
+    override func configureStyles() {
+        super.configureStyles()
+        
+        self.updateTitle(Typo.title)
+        self.updateSubtitle(Typo.subtitle)
+    }
     
     override func configureLayout() {
         super.configureLayout()

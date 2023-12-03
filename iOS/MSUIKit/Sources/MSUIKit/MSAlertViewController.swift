@@ -181,8 +181,8 @@ open class MSAlertViewController: UIViewController {
     
     @objc
     private func handlePanGesture(_ sender: UIPanGestureRecognizer) {
-        let translation = sender.translation(in: self.view)
-        let velocity = sender.velocity(in: self.view)
+        let translation = sender.translation(in: self.containerView)
+        let velocity = sender.velocity(in: self.containerView)
         let updatedBottomInset = Metric.verticalInset + translation.y
         
         switch sender.state {
@@ -207,7 +207,9 @@ open class MSAlertViewController: UIViewController {
     }
     
     private func animatePresentView() {
-        UIView.animate(withDuration: 0.3) {
+        UIView.animate(withDuration: 0.3,
+                       delay: .zero,
+                       options: .curveEaseInOut) {
             self.containerViewBottomInset?.constant = -Metric.verticalInset / 2
             self.view.layoutIfNeeded()
         }
@@ -237,7 +239,7 @@ open class MSAlertViewController: UIViewController {
     open func configureStyles() {
         self.view.backgroundColor = .clear
         self.dimmedView.addGestureRecognizer(self.tapGesture)
-        self.view.addGestureRecognizer(self.panGesture)
+        self.containerView.addGestureRecognizer(self.panGesture)
     }
     
     open func configureLayout() {
