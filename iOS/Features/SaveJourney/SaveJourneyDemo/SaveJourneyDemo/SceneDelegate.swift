@@ -31,8 +31,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let journeyRepository = JourneyRepositoryImplementation()
         let saveJourneyViewModel = SaveJourneyViewModel(repository: journeyRepository)
         let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
+        let navigationViewController = UINavigationController(rootViewController: saveJourneyViewController)
         
-        window.rootViewController = saveJourneyViewController
+        window.rootViewController = navigationViewController
         window.makeKeyAndVisible()
     }
     

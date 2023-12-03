@@ -91,15 +91,6 @@ open class MSAlertViewController: UIViewController {
         return label
     }()
     
-    // TextField
-    private let textField: MSTextField = {
-        let textField = MSTextField()
-        textField.imageStyle = .none
-        textField.clearButtonMode = .whileEditing
-        textField.placeholder = "Placeholder"
-        return textField
-    }()
-    
     // Button
     private let buttonStack: UIStackView = {
         let stackView = UIStackView()
@@ -161,7 +152,6 @@ open class MSAlertViewController: UIViewController {
     
     @objc
     open func dismissBottomSheet() {
-        self.textField.resignFirstResponder()
         self.animateDismissView()
     }
     
@@ -224,24 +214,15 @@ open class MSAlertViewController: UIViewController {
         }
     }
     
-    // MARK: - Functions
+    // MARK: - UI Configuration
     
-    public func updateTitle(_ title: String) {
-        self.titleLabel.text = title
-    }
-}
-
-// MARK: - UI Configuration
-
-private extension MSAlertViewController {
-    
-    func configureStyles() {
+    open func configureStyles() {
         self.view.backgroundColor = .clear
         self.dimmedView.addGestureRecognizer(self.tapGesture)
         self.view.addGestureRecognizer(self.panGesture)
     }
     
-    func configureLayout() {
+    open func configureLayout() {
         [
             self.dimmedView,
             self.containerView,
@@ -271,7 +252,6 @@ private extension MSAlertViewController {
         [
             self.resizeIndicator,
             self.titleStack,
-            self.textField,
             self.buttonStack
         ].forEach {
             self.containerView.addSubview($0)
@@ -289,12 +269,7 @@ private extension MSAlertViewController {
             self.titleStack.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor,
                                                      constant: Metric.horizontalInset),
             self.titleStack.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor,
-                                                     constant: -Metric.horizontalInset),
-            
-            self.textField.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor,
-                                                    constant: Metric.horizontalInset),
-            self.textField.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor,
-                                                     constant: -Metric.horizontalInset),
+                                                      constant: -Metric.horizontalInset),
             
             self.buttonStack.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor,
                                                       constant: Metric.horizontalInset),
@@ -303,9 +278,6 @@ private extension MSAlertViewController {
             self.buttonStack.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor,
                                                        constant: -Metric.horizontalInset)
         ])
-        let textFieldYConstraint = self.textField.centerYAnchor.constraint(equalTo: self.titleStack.bottomAnchor)
-        textFieldYConstraint.constant += ((self.titleStack.frame.minY - self.buttonStack.frame.maxY) / 2)
-        textFieldYConstraint.isActive = true
         
         [
             self.titleLabel,
@@ -321,5 +293,16 @@ private extension MSAlertViewController {
             self.buttonStack.addArrangedSubview($0)
         }
     }
+    
+    // MARK: - Functions
+    
+    public func updateTitle(_ title: String) {
+        self.titleLabel.text = title
+    }
+}
+
+// MARK: - UI Configuration
+
+extension MSAlertViewController {
     
 }

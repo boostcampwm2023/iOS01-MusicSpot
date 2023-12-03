@@ -89,9 +89,15 @@ public final class SaveJourneyViewController: UIViewController {
         return button
     }()
     
-    private let nextButton: MSButton = {
+    private lazy var nextButton: MSButton = {
         let button = MSButton.primary()
         button.configuration?.title = Typo.nextButtonTitle
+        let action = UIAction { [weak self] _ in
+            let alert = ConfirmTitleAlertViewController()
+            alert.modalPresentationStyle = .overCurrentContext
+            self?.present(alert, animated: false)
+        }
+        button.addAction(action, for: .touchUpInside)
         return button
     }()
     
