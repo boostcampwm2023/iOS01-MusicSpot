@@ -5,15 +5,23 @@ import PackageDescription
 
 // MARK: - Constants
 
-extension String {
+private extension String {
+    
     static let package = "MSFoundation"
-    static let foundationExt = "FoundationExt"
-    static let logger = "MSLogger"
-    static let userDefaults = "MSUserDefaults"
 
     var testTarget: String {
         return self + "Tests"
     }
+    
+}
+
+private enum Target {
+    
+    static let msConstants = "MSConstants"
+    static let foundationExt = "FoundationExt"
+    static let msLogger = "MSLogger"
+    static let msUserDefaults = "MSUserDefaults"
+    
 }
 
 // MARK: - Package
@@ -24,24 +32,31 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(name: .foundationExt,
-                 targets: [.foundationExt]),
-        .library(name: .logger,
-                 targets: [.logger]),
-        .library(name: .userDefaults,
-                 targets: [.userDefaults])
+        .library(name: Target.msConstants,
+                 targets: [Target.msConstants]),
+        .library(name: Target.foundationExt,
+                 targets: [Target.foundationExt]),
+        .library(name: Target.msLogger,
+                 targets: [Target.msLogger]),
+        .library(name: Target.msUserDefaults,
+                 targets: [Target.msUserDefaults])
     ],
     targets: [
         // Codes
-        .target(name: .foundationExt),
-        .target(name: .logger),
-        .target(name: .userDefaults),
+        .target(name: Target.msConstants),
+        .target(name: Target.foundationExt),
+        .target(name: Target.msLogger),
+        .target(name: Target.msUserDefaults),
 
         // Tests
-        .testTarget(name: .logger.testTarget,
-                    dependencies: [.target(name: .logger)]),
-        .testTarget(name: .userDefaults.testTarget,
-                    dependencies: [.target(name: .userDefaults)])
+        .testTarget(name: Target.msLogger.testTarget,
+                    dependencies: [
+                        .target(name: Target.msLogger)
+                    ]),
+        .testTarget(name: Target.msUserDefaults.testTarget,
+                    dependencies: [
+                        .target(name: Target.msUserDefaults)
+                    ])
     ],
     swiftLanguageVersions: [.v5]
 )

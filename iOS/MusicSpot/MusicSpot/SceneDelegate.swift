@@ -16,9 +16,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // MARK: - Properties
     
     var window: UIWindow?
+    private var appCoordinator: Coordinator!
     
     // MARK: - Functions
-
+    
     func scene(_ scene: UIScene,
                willConnectTo _: UISceneSession,
                options _: UIScene.ConnectionOptions) {
@@ -28,10 +29,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         MSFont.registerFonts()
         
-        let journeyRepository = JourneyRepositoryImplementation()
-        let testViewModel = JourneyListViewModel(repository: journeyRepository)
-        let testViewController = JourneyListViewController(viewModel: testViewModel)
-        window.rootViewController = testViewController
+        let musicSpotNavigationController = UINavigationController()
+        let appCoordinator = AppCoordinator(navigationController: musicSpotNavigationController)
+        self.appCoordinator = appCoordinator
+        appCoordinator.start()
+        
+        window.rootViewController = musicSpotNavigationController
         window.makeKeyAndVisible()
     }
     

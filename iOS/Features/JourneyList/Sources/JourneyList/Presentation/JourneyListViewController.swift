@@ -8,9 +8,16 @@
 import Combine
 import UIKit
 
+import MSCacheStorage
 import MSUIKit
 
-public final class JourneyListViewController: UIViewController {
+public protocol JourneyListViewControllerDelegate: AnyObject {
+    
+    func navigateToRewind()
+    
+}
+
+public final class JourneyListViewController: BaseViewController {
     
     typealias JourneyListDataSource = UICollectionViewDiffableDataSource<Int, Journey>
     typealias JourneyCellRegistration = UICollectionView.CellRegistration<JourneyCell, Journey>
@@ -20,6 +27,9 @@ public final class JourneyListViewController: UIViewController {
     
     private enum Typo {
         static let title: String = "지난 여정"
+        static func subtitle(numberOfJourneys: Int) -> String {
+            return "현재 위치에 \(numberOfJourneys)개의 여정이 있습니다."
+        }
     }
     
     private enum Metric {
@@ -30,6 +40,10 @@ public final class JourneyListViewController: UIViewController {
     }
     
     // MARK: - Properties
+    
+    public weak var delegate: JourneyListViewControllerDelegate?
+    
+    private let cache: MSCacheStorage
     
     private var viewModel: JourneyListViewModel
     
@@ -62,23 +76,26 @@ public final class JourneyListViewController: UIViewController {
         let label = UILabel()
         label.font = .msFont(.caption)
         label.textColor = .msColor(.secondaryTypo)
-        label.text = "현재 위치에 0개의 여정이 있습니다."
+        label.text = Typo.subtitle(numberOfJourneys: 0)
         return label
     }()
     
-    private let collectionView: UICollectionView = {
+    private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero,
                                               collectionViewLayout: UICollectionViewLayout())
         collectionView.backgroundColor = .clear
+        collectionView.delegate = self
         return collectionView
     }()
     
     // MARK: - Initializer
     
     public init(viewModel: JourneyListViewModel,
+                cache: MSCacheStorage = MSCacheStorage(),
                 nibName nibNameOrNil: String? = nil,
                 bundle nibBundleOrNil: Bundle? = nil) {
         self.viewModel = viewModel
+        self.cache = cache
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
@@ -101,8 +118,9 @@ public final class JourneyListViewController: UIViewController {
     
     func bind() {
         self.viewModel.state.journeys
+            .receive(on: DispatchQueue.main)
             .sink { journeys in
-                self.subtitleLabel.text = "현재 위치에 \(journeys.count)개의 여정이 있습니다."
+                self.subtitleLabel.text = Typo.subtitle(numberOfJourneys: journeys.count)
                 var snapshot = JourneySnapshot()
                 snapshot.appendSections([.zero])
                 snapshot.appendItems(journeys, toSection: .zero)
@@ -111,68 +129,20 @@ public final class JourneyListViewController: UIViewController {
             .store(in: &self.cancellables)
     }
     
-}
-
-// MARK: - CollectionView
-
-private extension JourneyListViewController {
+    // MARK: - Functions
     
-    func configureCollectionView() {
-        let layout = UICollectionViewCompositionalLayout(sectionProvider: { _, _ in
-            return self.configureSection()
-        })
-        
-        self.collectionView.setCollectionViewLayout(layout, animated: false)
-        self.dataSource = self.configureDataSource()
+    public func fetchJourneys(from coordinate: Coordinate) {
+        self.viewModel.trigger(.fetchJourney(at: coordinate))
     }
     
-    func configureSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .fractionalHeight(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .absolute(268.0))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
-                                                       subitems: [item])
-        
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = Metric.interGroupSpacing
-        
-        return section
-    }
+    // MARK: - UI Configuration
     
-    func configureDataSource() -> JourneyListDataSource {
-        let cellRegistration = JourneyCellRegistration { cell, _, itemIdentifier in
-            let cellModel = JourneyCellModel(location: itemIdentifier.location,
-                                             date: itemIdentifier.date,
-                                             songTitle: itemIdentifier.song.title,
-                                             songArtist: itemIdentifier.song.artist)
-            cell.update(with: cellModel)
-//            cell.updateImages(images: itemIdentifier.spot.photoURLs)
-        }
-        
-        let dataSource = JourneyListDataSource(collectionView: self.collectionView,
-                                               cellProvider: { collectionView, indexPath, item in
-            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration,
-                                                                for: indexPath,
-                                                                item: item)
-        })
-        
-        return dataSource
-    }
-    
-}
-
-// MARK: - UI Configuration
-
-private extension JourneyListViewController {
-    
-    func configureStyle() {
+    public override func configureStyle() {
+        super.configureStyle()
         self.view.backgroundColor = .msColor(.primaryBackground)
     }
     
-    func configureLayout() {
+    public override func configureLayout() {
         self.view.addSubview(self.titleStack)
         self.titleStack.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -203,16 +173,113 @@ private extension JourneyListViewController {
     
 }
 
+// MARK: - CollectionView
+
+extension JourneyListViewController: UICollectionViewDelegate {
+    
+    private func configureCollectionView() {
+        let layout = UICollectionViewCompositionalLayout(sectionProvider: { _, _ in
+            return self.configureSection()
+        })
+        
+        self.collectionView.setCollectionViewLayout(layout, animated: false)
+        self.dataSource = self.configureDataSource()
+    }
+    
+    private func configureSection() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                              heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .estimated(JourneyCell.estimatedHeight))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
+                                                       subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = Metric.interGroupSpacing
+        
+        return section
+    }
+    
+    private func fetchImage(url: URL) async throws -> Data {
+        let request = URLRequest(url: url)
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let statusCode = (response as? HTTPURLResponse)?.statusCode,
+              (200...299).contains(statusCode) else {
+            throw NSError(domain: "fetch error", code: 1004)
+        }
+        
+        return data
+    }
+    
+    private func configureDataSource() -> JourneyListDataSource {
+        // TODO: 최적화 & 캐싱
+        let cellRegistration = JourneyCellRegistration { cell, indexPath, itemIdentifier in
+            let cellModel = JourneyCellModel(location: itemIdentifier.location,
+                                             date: itemIdentifier.date,
+                                             songTitle: itemIdentifier.song.title,
+                                             songArtist: itemIdentifier.song.artist)
+            cell.update(with: cellModel)
+            let photoURLs = itemIdentifier.spots
+                .flatMap { $0.photoURLs }
+                .compactMap { URL(string: $0) }
+            
+            Task {
+                cell.addImageView(count: photoURLs.count)
+                
+                await withTaskGroup(of: (index: Int, imageData: Data).self) { group in
+                    for (index, photoURL) in photoURLs.enumerated() {
+                        let key = "\(indexPath.section)-\(indexPath.item)-\(index)"
+                        group.addTask(priority: .background) { [weak self] in
+                            if let cachedData = self?.cache.data(forKey: key) {
+                                return (index, cachedData)
+                            }
+                            
+                            if let imageData = try? await self?.fetchImage(url: photoURL) {
+                                self?.cache.cache(imageData, forKey: key)
+                                return (index, imageData)
+                            }
+                            
+                            return (0, Data())
+                        }
+                    }
+                    
+                    for await (index, imageData) in group {
+                        cell.updateImages(imageData: imageData, atIndex: index)
+                    }
+                }
+            }
+        }
+      
+        let dataSource = JourneyListDataSource(collectionView: self.collectionView,
+                                               cellProvider: { collectionView, indexPath, item in
+            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration,
+                                                                for: indexPath,
+                                                                item: item)
+        })
+        
+        return dataSource
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.delegate?.navigateToRewind()
+    }
+    
+}
+
 // MARK: - Preview
 
+import MSData
 import MSDesignSystem
 import MSData
 import MSNetworking
 @available(iOS 17, *)
 #Preview {
     MSFont.registerFonts()
-    let journeyListRepository = JourneyRepositoryImplementation()
-    let journeyListViewModel = JourneyListViewModel(repository: journeyListRepository)
-    let journeyListViewController = JourneyListViewController(viewModel: journeyListViewModel)
-    return journeyListViewController
+    let journeyRepository = JourneyRepositoryImplementation()
+    let testViewModel = JourneyListViewModel(repository: journeyRepository)
+    let testViewController = JourneyListViewController(viewModel: testViewModel)
+    return testViewController
 }

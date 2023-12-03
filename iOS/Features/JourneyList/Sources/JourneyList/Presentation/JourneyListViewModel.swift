@@ -14,6 +14,7 @@ public final class JourneyListViewModel {
     
     public enum Action {
         case viewNeedsLoaded
+        case fetchJourney(at: Coordinate)
     }
     
     public struct State {
@@ -39,27 +40,20 @@ public final class JourneyListViewModel {
     func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
-            self.fetchInitialJourneys()
+            Task {
+                let result = await self.repository.fetchJourneyList()
+                
+                switch result {
+                case .success(let journeys):
+                    let journeys = journeys.map { Journey(dto: $0) }
+                    self.state.journeys.send(journeys)
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        case .fetchJourney(let coordinate):
+            print(coordinate)
         }
-    }
-    
-}
-
-private extension JourneyListViewModel {
-    
-    func fetchInitialJourneys() {
-        self.state.journeys.send([Journey(location: "여정 위치",
-                                          date: .now,
-                                          spots: [
-                                            Spot(photoURLs: ["sdlkj", "sdklfj"])
-                                          ],
-                                          song: Song(artist: "sdlkfj", title: "sdklfj")),
-                                  Journey(location: "여정 위치",
-                                          date: .now,
-                                          spots: [
-                                            Spot(photoURLs: ["sdlkj", "sdklfj"])
-                                          ],
-                                          song: Song(artist: "sdlkfj", title: "sdklfj"))])
     }
     
 }

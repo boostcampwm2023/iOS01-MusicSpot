@@ -7,6 +7,8 @@
 
 import UIKit
 
+import MSDesignSystem
+
 final class SpotPhotoImageView: UIView {
     
     // MARK: - Constants
@@ -50,8 +52,10 @@ final class SpotPhotoImageView: UIView {
 private extension SpotPhotoImageView {
     
     func configureStyle() {
+        self.backgroundColor = .msColor(.secondaryBackground)
         self.layer.cornerRadius = Metric.cornerRadius
         self.clipsToBounds = true
+        self.isUserInteractionEnabled = true
     }
     
     func configureLayout() {

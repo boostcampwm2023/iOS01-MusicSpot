@@ -11,7 +11,10 @@ extension JourneyRouter {
     
     public var body: HTTPBody? {
         switch self {
-        case .journeyList: return nil
+        case .journeyList: 
+            return nil
+        case .spot:
+            return nil
         }
     }
     

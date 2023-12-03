@@ -29,7 +29,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     // MARK: - Functions
     
     public func fetchJourneyList() async -> Result<[JourneyDTO], Error> {
-#if DEBUG
+        #if DEBUG
         guard let jsonURL = Bundle.module.url(forResource: "MockJourney", withExtension: "json") else {
             return .failure((MSNetworkError.invalidRouter))
         }
@@ -44,7 +44,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         } catch {
             print(error)
         }
-#else
+        #else
         return await withCheckedContinuation { continuation in
             var cancellable: AnyCancellable?
             cancellable = self.networking.request([JourneyDTO].self, router: JourneyRouter.journeyList)
@@ -61,7 +61,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                     cancellable?.cancel()
                 }
         }
-#endif
+        #endif
         
         return .failure(MSNetworkError.unknownResponse)
     }

@@ -5,16 +5,34 @@ import PackageDescription
 
 // MARK: - Constants
 
-extension String {
+private extension String {
+    
     static let package = "MSCoreKit"
-    static let persistentStorage = "MSPersistentStorage"
-    static let networking = "MSNetworking"
-    static let fetcher = "MSFetcher"
-    static let cache = "MSCacheStorage"
 
     var testTarget: String {
         return self + "Tests"
     }
+    
+    var fromRootPath: String {
+        return "../" + self
+    }
+    
+}
+
+private enum Target {
+    
+    static let msPersistentStorage = "MSPersistentStorage"
+    static let msNetworking = "MSNetworking"
+    static let msFetcher = "MSFetcher"
+    static let msCacheStorage = "MSCacheStorage"
+    
+}
+
+private enum Dependency {
+    
+    static let msFoundation = "MSFoundation"
+    static let msConstants = "MSConstants"
+    
 }
 
 // MARK: - Package
@@ -25,35 +43,51 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(name: .persistentStorage,
-                 targets: [.persistentStorage]),
-        .library(name: .networking,
-                 targets: [.networking]),
-        .library(name: .fetcher,
-                 targets: [.fetcher]),
-        .library(name: .cache,
-                 targets: [.cache])
+        .library(name: Target.msPersistentStorage,
+                 targets: [Target.msPersistentStorage]),
+        .library(name: Target.msNetworking,
+                 targets: [Target.msNetworking]),
+        .library(name: Target.msFetcher,
+                 targets: [Target.msFetcher]),
+        .library(name: Target.msCacheStorage,
+                 targets: [Target.msCacheStorage])
+    ],
+    dependencies: [
+        .package(name: Dependency.msFoundation,
+                 path: Dependency.msFoundation.fromRootPath)
     ],
     targets: [
         // Codes
-        .target(name: .persistentStorage),
-        .target(name: .networking),
-        .target(name: .fetcher,
+        .target(name: Target.msPersistentStorage),
+        .target(name: Target.msNetworking),
+        .target(name: Target.msFetcher,
                 dependencies: [
-                    .target(name: .persistentStorage),
-                    .target(name: .networking)
+                    .target(name: Target.msPersistentStorage),
+                    .target(name: Target.msNetworking)
                 ]),
-        .target(name: .cache),
+        .target(name: Target.msCacheStorage,
+                dependencies: [
+                    .product(name: Dependency.msConstants,
+                             package: Dependency.msFoundation)
+                ]),
 
         // Tests
-        .testTarget(name: .persistentStorage.testTarget,
-                    dependencies: ["MSPersistentStorage"]),
-        .testTarget(name: .networking.testTarget,
-                    dependencies: ["MSNetworking"]),
-        .testTarget(name: .fetcher.testTarget,
-                    dependencies: ["MSFetcher"]),
-        .testTarget(name: .cache.testTarget,
-                    dependencies: ["MSCacheStorage"])
+        .testTarget(name: Target.msPersistentStorage.testTarget,
+                    dependencies: [
+                        .target(name: Target.msPersistentStorage)
+                    ]),
+        .testTarget(name: Target.msNetworking.testTarget,
+                    dependencies: [
+                        .target(name: Target.msNetworking)
+                    ]),
+        .testTarget(name: Target.msFetcher.testTarget,
+                    dependencies: [
+                        .target(name: Target.msFetcher)
+                    ]),
+        .testTarget(name: Target.msCacheStorage.testTarget,
+                    dependencies: [
+                        .target(name: Target.msCacheStorage)
+                    ])
     ],
     swiftLanguageVersions: [.v5]
 )

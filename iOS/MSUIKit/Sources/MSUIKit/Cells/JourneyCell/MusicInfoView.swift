@@ -9,12 +9,19 @@ import UIKit
 
 final class MusicInfoView: UIView {
     
+    // MARK: - Constants
+    
+    private enum Metric {
+        static let spacing: CGFloat = 8.0
+        static let iconSize: CGFloat = 24.0
+    }
+    
     // MARK: - UI Components
     
     private let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
-        stackView.spacing = 8.0
+        stackView.spacing = Metric.spacing
         return stackView
     }()
     
@@ -98,8 +105,8 @@ private extension MusicInfoView {
         }
         self.iconImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.iconImageView.widthAnchor.constraint(equalToConstant: 24.0),
-            self.iconImageView.heightAnchor.constraint(equalToConstant: 24.0)
+            self.iconImageView.widthAnchor.constraint(equalToConstant: Metric.iconSize),
+            self.iconImageView.heightAnchor.constraint(equalToConstant: Metric.iconSize)
         ])
         
         [

@@ -36,6 +36,6 @@
       location = "group:MSCoreKit">
    </FileRef>
    <FileRef
-      location = "group:MusicSpot/../MSFoundation">
+      location = "group:MSFoundation">
    </FileRef>
 </Workspace>

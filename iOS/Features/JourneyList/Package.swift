@@ -8,6 +8,10 @@ import PackageDescription
 private extension String {
     
     static let package = "FeatureJourneyList"
+
+	var fromRootPath: String {
+        return "../../" + self
+    }
     
     var fromRootPath: String {
         return "../../" + self
@@ -23,8 +27,10 @@ private enum Target {
 
 private enum Dependency {
     
-    static let msData = "MSData"
     static let msUIKit = "MSUIKit"
+    static let msCacheStorage = "MSCacheStorage"
+    static let msCoreKit = "MSCoreKit"
+    static let msData = "MSData"
     
 }
 
@@ -40,18 +46,22 @@ let package = Package(
                  targets: [Target.journeyList])
     ],
     dependencies: [
-        .package(name: Dependency.msData,
-                 path: Dependency.msData.fromRootPath),
         .package(name: Dependency.msUIKit,
-                 path: Dependency.msUIKit.fromRootPath)
+                 path: Dependency.msUIKit.fromRootPath),
+        .package(name: Dependency.msCoreKit,
+                 path: Dependency.msCoreKit.fromRootPath),
+        .package(name: Dependency.msData,
+                 path: Dependency.msData.fromRootPath)
     ],
     targets: [
         .target(name: Target.journeyList,
                 dependencies: [
-                    .product(name: Dependency.msData,
-                             package: Dependency.msData),
                     .product(name: Dependency.msUIKit,
-                             package: Dependency.msUIKit)
+                             package: Dependency.msUIKit),
+                    .product(name: Dependency.msCacheStorage,
+                             package: Dependency.msCoreKit),
+                    .product(name: Dependency.msData,
+                             package: Dependency.msData)
                 ])
     ]
 )
