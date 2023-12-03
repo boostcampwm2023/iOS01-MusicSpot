@@ -10,6 +10,7 @@ import MusicKit
 import UIKit
 
 import CombineCocoa
+import MSDesignSystem
 import MSLogger
 import MSUIKit
 
@@ -24,6 +25,7 @@ public final class SelectSongViewController: BaseViewController {
     private enum Typo {
         
         static let title = "음악 검색"
+        static let searchTextFieldPlaceholder = "추가할 음악을 검색하세요."
         
     }
     
@@ -58,6 +60,10 @@ public final class SelectSongViewController: BaseViewController {
         textField.imageStyle = .search
         textField.clearButtonMode = .whileEditing
         textField.enablesReturnKeyAutomatically = true
+        var container = AttributeContainer()
+        container.font = .msFont(.caption)
+        let attributedString = AttributedString(Typo.searchTextFieldPlaceholder, attributes: container)
+        textField.attributedPlaceholder = NSAttributedString(attributedString)
         return textField
     }()
     
