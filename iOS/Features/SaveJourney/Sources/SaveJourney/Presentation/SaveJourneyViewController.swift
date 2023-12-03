@@ -131,6 +131,7 @@ public final class SaveJourneyViewController: UIViewController {
             .store(in: &self.cancellables)
         
         self.viewModel.state.journeys
+            .receive(on: DispatchQueue.main)
             .sink { journeys in
                 var snapshot = SpotSnapshot()
                 snapshot.append(journeys.map { .spot($0) })
@@ -315,9 +316,14 @@ private extension SaveJourneyViewController {
 
 // MARK: - Preview
 
+#if DEBUG
+import MSData
+
 @available(iOS 17, *)
 #Preview {
-    let saveJourneyViewModel = SaveJourneyViewModel()
+    let journeyRepository = JourneyRepositoryImplementation()
+    let saveJourneyViewModel = SaveJourneyViewModel(repository: journeyRepository)
     let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
     return saveJourneyViewController
 }
+#endif

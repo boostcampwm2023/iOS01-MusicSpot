@@ -7,6 +7,8 @@
 
 import Combine
 
+import MSData
+
 public final class SaveJourneyViewModel {
     
     public enum Action {
@@ -22,37 +24,36 @@ public final class SaveJourneyViewModel {
     
     // MARK: - Properties
     
+    private let repository: JourneyRepository
+    
     public var state = State()
     
     // MARK: - Initializer
     
-    public init() { }
+    public init(repository: JourneyRepository) {
+        self.repository = repository
+    }
     
     // MARK: - Functions
     
     func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
-            self.fetchInitialJourneys()
+            Task {
+                let result = await self.repository.fetchJourneyList()
+                switch result {
+                case .success(let journeyDTOs):
+                    let journeys = journeyDTOs.map { Journey(dto: $0) }
+                    self.state.journeys.send(journeys)
+                case .failure(let error):
+                    print(error)
+                }
+            }
         case .mediaControlButtonDidTap:
             print("Media Control Button Tap.")
         case .nextButtonDidTap:
             print("Next Button Tap.")
         }
-    }
-    
-}
-
-private extension SaveJourneyViewModel {
-    
-    func fetchInitialJourneys() {
-        self.state.music.send("NewJeans")
-        self.state.journeys.send([Journey(location: "여정 위치",
-                                          date: "2023. 01. 01",
-                                          spot: Spot(images: ["sdlkj", "sdklfj"])),
-                                  Journey(location: "여정 위치",
-                                          date: "2023. 01. 02",
-                                          spot: Spot(images: ["slkjc", "llskl", "llskldf", "llskl5", "llskl12"]))])
     }
     
 }

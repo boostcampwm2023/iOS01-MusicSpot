@@ -7,6 +7,7 @@
 
 import UIKit
 
+import MSData
 import MSDesignSystem
 import SaveJourney
 
@@ -27,7 +28,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         MSFont.registerFonts()
         
-        let saveJourneyViewModel = SaveJourneyViewModel()
+        let journeyRepository = JourneyRepositoryImplementation()
+        let saveJourneyViewModel = SaveJourneyViewModel(repository: journeyRepository)
         let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
         
         window.rootViewController = saveJourneyViewController

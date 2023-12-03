@@ -10,7 +10,7 @@ import Foundation
 struct Journey: Hashable {
     
     let location: String
-    let date: String
-    let spot: Spot
+    let date: Date
+    let spots: [Spot]
     
 }
