@@ -12,6 +12,7 @@ public enum MSColor: String {
     case secondaryBackground = "Background Secondary"
     case primaryButtonBackground = "Button Background Primary"
     case secondaryButtonBackground = "Button Background Secondary"
+    case modalBackground = "Background Modal"
     
     case primaryTypo = "Typo Primary"
     case primaryButtonTypo = "Button Typo Primary"
