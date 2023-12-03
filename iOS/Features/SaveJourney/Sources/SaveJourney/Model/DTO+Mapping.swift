@@ -15,6 +15,7 @@ extension Journey {
         self.location = dto.location
         self.spots = dto.spots.map { Spot(dto: $0) }
         self.date = dto.metaData.date
+        self.song = Song(dto: dto.song)
     }
     
 }
@@ -23,6 +24,15 @@ extension Spot {
     
     init(dto: ResponsibleSpotDTO) {
         self.photoURLs = dto.photoURLs
+    }
+    
+}
+
+extension Song {
+    
+    init(dto: SongDTO) {
+        self.title = dto.title
+        self.artist = dto.artist
     }
     
 }

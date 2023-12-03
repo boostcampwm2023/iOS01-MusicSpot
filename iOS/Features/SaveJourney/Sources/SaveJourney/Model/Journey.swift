@@ -12,5 +12,6 @@ struct Journey: Hashable {
     let location: String
     let date: Date
     let spots: [Spot]
+    let song: Song
     
 }

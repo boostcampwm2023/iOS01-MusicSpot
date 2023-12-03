@@ -202,8 +202,13 @@ private extension SaveJourneyViewController {
             cell.update(with: itemIdentifier)
         }
         
-        let journeyCellRegistration = JourneyCellRegistration { cell, _, itemIdentifier in
-            
+        let journeyCellRegistration = JourneyCellRegistration { cell, indexPath, itemIdentifier in
+            let cellModel = JourneyCellModel(location: itemIdentifier.location,
+                                             date: itemIdentifier.date,
+                                             songTitle: itemIdentifier.song.title,
+                                             songArtist: itemIdentifier.song.artist)
+            cell.update(with: cellModel)
+            // TODO: ImageFetcher 사용해 이미지 업데이트
         }
         
         let headerRegistration = HeaderRegistration(elementKind: SaveJourneyHeaderView.elementKind,
