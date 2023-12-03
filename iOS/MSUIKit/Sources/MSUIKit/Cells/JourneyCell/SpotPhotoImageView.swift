@@ -21,7 +21,7 @@ final class SpotPhotoImageView: UIView {
     
     // MARK: - UI Components
     
-    private let imageView: UIImageView = {
+    private(set) var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         return imageView

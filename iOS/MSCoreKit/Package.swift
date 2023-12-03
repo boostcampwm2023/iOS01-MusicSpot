@@ -31,8 +31,9 @@ private enum Target {
 
 private enum Dependency {
     
-    static let msFoundation = "MSFoundation"
     static let msConstants = "MSConstants"
+    static let msLogger = "MSLogger"
+    static let msFoundation = "MSFoundation"
     
 }
 
@@ -63,7 +64,9 @@ let package = Package(
         // Codes
         .target(name: Target.msImageFetcher,
                dependencies: [
-                    .target(name: Target.msCacheStorage)
+                    .target(name: Target.msCacheStorage),
+                    .product(name: Dependency.msLogger,
+                             package: Dependency.msFoundation)
                ]),
         .target(name: Target.msPersistentStorage),
         .target(name: Target.msNetworking),

@@ -8,6 +8,7 @@
 import UIKit
 
 import MSDesignSystem
+import MSImageFetcher
 
 public final class JourneyCell: UICollectionViewCell {
     
@@ -68,6 +69,15 @@ public final class JourneyCell: UICollectionViewCell {
                              artist: model.song.artist)
     }
     
+    public func updateImages(with photoURLs: [URL], for indexPath: IndexPath) {
+        self.addImageView(count: photoURLs.count)
+        
+        photoURLs.enumerated().forEach { index, photoURL in
+            let photoIndexPath = IndexPath(item: index, section: indexPath.item)
+            self.updateImage(with: photoURL, at: photoIndexPath)
+        }
+    }
+    
     @MainActor
     public func addImageView(count: Int) {
         (1...count).forEach { _ in
@@ -76,16 +86,16 @@ public final class JourneyCell: UICollectionViewCell {
         }
     }
     
-    @MainActor
-    public func updateImages(imageData: Data, atIndex index: Int) {
-        guard self.spotImageStack.arrangedSubviews.count > index else {
+    public func updateImage(with imageURL: URL, at indexPath: IndexPath) {
+        guard self.spotImageStack.arrangedSubviews.count > indexPath.item else {
             return
         }
-        guard let imageView = self.spotImageStack.arrangedSubviews[index] as? SpotPhotoImageView else {
+        guard let photoView = self.spotImageStack.arrangedSubviews[indexPath.item] as? SpotPhotoImageView else {
             return
         }
         
-        imageView.update(with: imageData)
+        let key = "\(indexPath.section)-\(indexPath.item)"
+        photoView.imageView.ms.setImage(with: imageURL, forKey: key)
     }
     
 }
