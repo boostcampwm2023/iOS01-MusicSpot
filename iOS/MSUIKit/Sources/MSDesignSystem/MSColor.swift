@@ -22,6 +22,9 @@ public enum MSColor: String {
     case componentBackground = "Component Background"
     case componentTypo = "Component Typo"
     
+    case textFieldBackground = "TextField Background"
+    case textFieldTypo = "TextField Typo"
+    
     case musicSpot = "MusicSpot"
 }
 
