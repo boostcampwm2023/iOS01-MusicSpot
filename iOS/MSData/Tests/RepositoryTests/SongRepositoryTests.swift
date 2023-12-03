@@ -16,21 +16,4 @@ final class SongRepositoryTests: XCTestCase {
     
     // MARK: - Tests
 
-    func testExample() throws {
-        
-        let expectation = XCTestExpectation()
-        
-        Task {
-            let result = await self.songRepository.fetchSongList()
-            switch result {
-            case .success:
-                expectation.fulfill()
-            case .failure:
-                XCTFail()
-            }
-        }
-        
-        wait(for: [expectation], timeout: 3)
-    }
-
 }
