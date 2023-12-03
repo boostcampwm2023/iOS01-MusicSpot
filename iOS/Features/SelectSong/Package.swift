@@ -27,10 +27,11 @@ private enum Target {
 
 private enum Dependency {
     
-    static let msUIKit = "MSUIKit"
-    static let msFoundation = "MSFoundation"
     static let msDesignsystem = "MSDesignSystem"
+    static let msUIKit = "MSUIKit"
+    static let combineCocoa = "CombineCocoa"
     static let msLogger = "MSLogger"
+    static let msFoundation = "MSFoundation"
     
 }
 
@@ -53,6 +54,8 @@ let package = Package(
         .target(name:Target.selectSong,
                 dependencies: [
                     .product(name: Dependency.msUIKit,
+                             package: Dependency.msUIKit),
+                    .product(name: Dependency.combineCocoa,
                              package: Dependency.msUIKit)
                 ])
     ]
