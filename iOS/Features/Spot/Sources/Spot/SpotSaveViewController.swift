@@ -248,7 +248,7 @@ public final class SpotSaveViewController: UIViewController {
     
     private func completeButtonTapped() {
         guard let data = self.image?.pngData() else {
-            MSLogger.make(category: .recordingJourney).debug("현재 이미지를 Data로 변환할 수 없습니다.")
+            MSLogger.make(category: .recordJourney).debug("현재 이미지를 Data로 변환할 수 없습니다.")
             return
         }
         self.spotSaveViewModel.upload(data: data, using: self.spotRouter)
