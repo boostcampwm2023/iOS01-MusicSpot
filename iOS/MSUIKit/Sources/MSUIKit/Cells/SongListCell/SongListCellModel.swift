@@ -9,8 +9,16 @@ import Foundation
 
 public struct SongListCellModel {
     
-    let songTitle: String
+    let title: String
     let artist: String
-    let albumArtURL: String
+    let albumArtURL: URL?
+    
+    public init(title: String,
+                artist: String,
+                albumArtURL: URL?) {
+        self.title = title
+        self.artist = artist
+        self.albumArtURL = albumArtURL
+    }
     
 }

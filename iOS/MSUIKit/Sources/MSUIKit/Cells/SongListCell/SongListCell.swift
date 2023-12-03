@@ -8,10 +8,15 @@
 import UIKit
 
 import MSDesignSystem
+#if canImport(MSImageFetcher)
+import MSImageFetcher
+#endif
 
 public final class SongListCell: UICollectionViewCell {
     
     // MARK: - Constants
+    
+    public static let estimatedHeight: CGFloat = 68.0
     
     private enum Metric {
         
@@ -30,6 +35,7 @@ public final class SongListCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = Metric.albumArtImageViewCornerRadius
         imageView.clipsToBounds = true
+        imageView.backgroundColor = .msColor(.musicSpot)
         return imageView
     }()
     
@@ -59,6 +65,7 @@ public final class SongListCell: UICollectionViewCell {
     private let rightIconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = .msIcon(.arrowRight)
+        imageView.tintColor = .msColor(.primaryTypo)
         return imageView
     }()
     
@@ -77,8 +84,13 @@ public final class SongListCell: UICollectionViewCell {
     // MARK: - Functions
     
     public func update(with cellModel: SongListCellModel) {
-        self.songTitleLabel.text = cellModel.songTitle
+        self.songTitleLabel.text = cellModel.title
         self.artistLabel.text = cellModel.artist
+    }
+    
+    public func updateArtwork(with artWorkURL: URL) {
+        // TODO: MSImageFetcher Merge 후 적용
+//        self.albumArtImageView.ms.setImage(with: artWorkURL, to: IndexPath(item: .zero, section: .zero))
     }
     
 }

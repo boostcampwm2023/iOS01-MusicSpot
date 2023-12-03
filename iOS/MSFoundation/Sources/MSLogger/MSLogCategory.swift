@@ -10,11 +10,10 @@ import Foundation
 public enum MSLogCategory: String {
     case network
     case userDefaults
-    case dataCore
-    case recordingJourney
-    case checkJourney
-    case login
-    case setting
+    
+    case recordJourney
+    case selectSong = "SelectSong"
+    case saveJourney
     case camera
     case spot
 }

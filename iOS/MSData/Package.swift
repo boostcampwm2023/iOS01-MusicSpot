@@ -20,6 +20,8 @@ let package = Package(
                 dependencies: ["MSNetworking"],
                 resources: [.process("Resources")]),
         .testTarget(name: "MSDataTests",
+                    dependencies: ["MSData"]),
+        .testTarget(name: "RepositoryTests",
                     dependencies: ["MSData"])
     ]
 )

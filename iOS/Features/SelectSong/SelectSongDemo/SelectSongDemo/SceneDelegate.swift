@@ -7,6 +7,7 @@
 
 import UIKit
 
+import MSData
 import SelectSong
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -23,7 +24,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let navigationController = UINavigationController(rootViewController: UIViewController())
         window.rootViewController = navigationController
         
-        let selectSongViewController = SelectSongViewController()
+        let songRepository = SongRepositoryImplementation()
+        let selectSongViewModel = SelectSongViewModel(repository: songRepository)
+        let selectSongViewController = SelectSongViewController(viewModel: selectSongViewModel)
         navigationController.pushViewController(selectSongViewController, animated: true)
         
         window.makeKeyAndVisible()
