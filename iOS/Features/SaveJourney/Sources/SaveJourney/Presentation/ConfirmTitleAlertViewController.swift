@@ -25,15 +25,35 @@ final class ConfirmTitleAlertViewController: MSAlertViewController {
         let textField = MSTextField()
         textField.imageStyle = .none
         textField.clearButtonMode = .whileEditing
+        textField.enablesReturnKeyAutomatically = true
         textField.placeholder = "Placeholder"
         return textField
     }()
+    
+    // MARK: - Properties
+    
+    // MARK: - Life Cycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.configureButtonActions()
+    }
     
     // MARK: - Helpers
     
     override func dismissBottomSheet() {
         super.dismissBottomSheet()
         self.textField.resignFirstResponder()
+    }
+    
+    private func configureButtonActions() {
+        self.cancelButtonAction = UIAction { _ in
+            self.dismissBottomSheet()
+        }
+        
+        self.doneButtonAction = UIAction { _ in
+            print("TODO: 완료 로직 구현!!")
+        }
     }
     
     // MARK: - UI Configuration

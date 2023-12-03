@@ -31,6 +31,9 @@ open class MSAlertViewController: UIViewController {
         static let containerViewCornerRadius: CGFloat = 12.0
         static let stackSpacing: CGFloat = 4.0
         
+        static let cancelButtonVerticalInset: CGFloat = 10.0
+        static let cancelButtonHorizontalInset: CGFloat = 28.0
+        
         enum ResizeIndicator {
             static let width: CGFloat = 36.0
             static let height: CGFloat = 5.0
@@ -96,6 +99,7 @@ open class MSAlertViewController: UIViewController {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.spacing = Metric.stackSpacing
+        stackView.distribution = .fillProportionally
         return stackView
     }()
     
@@ -103,6 +107,10 @@ open class MSAlertViewController: UIViewController {
         let button = MSButton.secondary()
         button.cornerStyle = .squared
         button.title = Typo.cancelButtonTitle
+        button.configuration?.contentInsets = NSDirectionalEdgeInsets(top: Metric.cancelButtonVerticalInset,
+                                                                      leading: Metric.cancelButtonHorizontalInset,
+                                                                      bottom: Metric.cancelButtonVerticalInset,
+                                                                      trailing: Metric.cancelButtonHorizontalInset)
         return button
     }()
     
@@ -135,6 +143,22 @@ open class MSAlertViewController: UIViewController {
         self.view.keyboardLayoutGuide.layoutFrame.height
     }
     
+    // MARK: - Properties
+    
+    open var cancelButtonAction: UIAction? {
+        didSet {
+            guard let action = self.cancelButtonAction else { return }
+            self.cancelButton.addAction(action, for: .touchUpInside)
+        }
+    }
+    
+    open var doneButtonAction: UIAction? {
+        didSet {
+            guard let action = self.doneButtonAction else { return }
+            self.doneButton.addAction(action, for: .touchUpInside)
+        }
+    }
+    
     // MARK: - Life Cycle
     
     open override func viewDidLoad() {
@@ -148,7 +172,7 @@ open class MSAlertViewController: UIViewController {
         self.animatePresentView()
     }
     
-    // MARK: - SELECTORS
+    // MARK: - Helpers
     
     @objc
     open func dismissBottomSheet() {
@@ -180,12 +204,6 @@ open class MSAlertViewController: UIViewController {
         default:
             break
         }
-    }
-    
-    // MARK: - Helpers
-    
-    public func dismissAlert() {
-        self.animateDismissView()
     }
     
     private func animatePresentView() {
@@ -299,10 +317,9 @@ open class MSAlertViewController: UIViewController {
     public func updateTitle(_ title: String) {
         self.titleLabel.text = title
     }
-}
-
-// MARK: - UI Configuration
-
-extension MSAlertViewController {
+    
+    public func updateSubtitle(_ subtitle: String) {
+        self.subtitleLabel.text = subtitle
+    }
     
 }
