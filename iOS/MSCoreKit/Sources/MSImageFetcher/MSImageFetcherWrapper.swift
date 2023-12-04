@@ -21,7 +21,7 @@ public struct MSImageFetcherWrapper<Base> {
     
 }
 
-// MARK: - Campatible
+// MARK: - Compatible
 
 public protocol MSImageFetcherCompatible: AnyObject { }
 
