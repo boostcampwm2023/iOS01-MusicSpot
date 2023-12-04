@@ -111,7 +111,7 @@ public final class SelectSongViewController: BaseViewController {
             .store(in: &self.cancellables)
     }
     
-    // MARK: - UI Configursafdation
+    // MARK: - UI Configuration
     
     public override func configureStyle() {
         super.configureStyle()
