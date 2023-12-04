@@ -23,15 +23,17 @@ private enum Target {
     
     static let home = "Home"
     static let navigateMap = "NavigateMap"
-    static let recordJourney = "RecordJourney"
     
 }
 
 private enum Dependency {
     
     static let journeyList = "JourneyList"
+    static let msData = "MSData"
     static let msUIKit = "MSUIKit"
     static let msCoreKit = "MSCoreKit"
+    static let msFoundation = "MSFoundation"
+    static let msUserDefaults = "MSUserDefaults"
     
 }
 
@@ -46,30 +48,33 @@ let package = Package(
         .library(name: Target.home,
                  targets: [Target.home]),
         .library(name: Target.navigateMap,
-                 targets: [Target.navigateMap]),
-        .library(name: Target.recordJourney,
-                 targets: [Target.recordJourney])
+                 targets: [Target.navigateMap])
     ],
     dependencies: [
         .package(name: Dependency.journeyList,
                  path: Dependency.journeyList.fromCurrentPath),
+        .package(name: Dependency.msData,
+                 path: Dependency.msData.fromRootPath),
         .package(name: Dependency.msUIKit,
                  path: Dependency.msUIKit.fromRootPath),
-        .package(name: Dependency.msCoreKit,
-                 path: Dependency.msCoreKit.fromRootPath)
+        .package(name: Dependency.msFoundation,
+                 path: Dependency.msFoundation.fromRootPath)
     ],
     targets: [
         .target(name: Target.home,
                 dependencies: [
                     .target(name: Target.navigateMap),
                     .product(name: Dependency.journeyList,
-                             package: Dependency.journeyList)
+                             package: Dependency.journeyList),
+                    .product(name: Dependency.msUserDefaults,
+                             package: Dependency.msFoundation)
                 ]),
         .target(name: Target.navigateMap,
                 dependencies: [
+                    .product(name: Dependency.msData,
+                             package: Dependency.msData),
                     .product(name: Dependency.msUIKit,
                              package: Dependency.msUIKit)
                 ]),
-        .target(name: Target.recordJourney)
     ]
 )

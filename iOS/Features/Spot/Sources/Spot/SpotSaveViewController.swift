@@ -100,7 +100,7 @@ public final class SpotSaveViewController: UIViewController {
         self.configureAction()
         self.configureState()
     }
-    
+
     // MARK: - UI Components: Layout
     
     private func configureLayout() {
