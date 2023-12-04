@@ -127,4 +127,18 @@ export class JourneyController {
   async checkPost(@Body() checkJourneyDTO: CheckJourneyDTO) {
     return await this.journeyService.checkJourney(checkJourneyDTO);
   }
+
+  @ApiOperation({
+    summary: '최근 여정 조회 API',
+    description: '진행 중인 여정이 있었는 지 확인',
+  })
+  @ApiCreatedResponse({
+    description: '사용자가 진행중이었던 여정 정보',
+    type: Journey,
+  })
+  @Get('loadLastData')
+  async loadLastData(@Query('userId') userId: string) {
+    // 여기서 userid를 이용하여 필요한 동작 수행
+    return await this.journeyService.loadLastJourney(userId);
+  }
 }

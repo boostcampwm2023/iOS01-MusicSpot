@@ -124,8 +124,7 @@ export class JourneyService {
     }
     return journeyList;
   }
-  async loadLastJourney(loadJourneyDTO: LoadJourneyDTO) {
-    const { userId } = loadJourneyDTO;
+  async loadLastJourney(userId) {
     const user = await this.userModel.findById(userId).lean();
 
     if (!user) {
@@ -140,8 +139,6 @@ export class JourneyService {
     return '진행중이었던 여정이 없습니다.';
   }
   async findLastJourney(journeys) {
-    let journeyList = [];
-
     for (let i = 0; i < journeys.length; i++) {
       let journey = await this.journeyModel.findById(journeys[i]).lean();
       if (!journey) {
