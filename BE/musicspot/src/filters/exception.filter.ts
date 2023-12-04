@@ -17,6 +17,7 @@ export class AllExceptionFilter implements ExceptionFilter {
     if (err instanceof BaseException) {
       json['errorCode'] = err.errorCode;
       json['message'] = err.message;
+      json['statusCode'] = status;
     } else {
       Object.assign(json, response);
     }
