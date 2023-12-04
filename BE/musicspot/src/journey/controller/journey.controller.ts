@@ -10,7 +10,6 @@ import {
 import { JourneyService } from '../service/journey.service';
 import { StartJourneyDTO } from '.././dto/journeyStart.dto';
 import {
-  ApiBody,
   ApiCreatedResponse,
   ApiOperation,
   ApiQuery,
@@ -22,6 +21,7 @@ import { RecordJourneyDTO } from '.././dto/journeyRecord.dto';
 import { CheckJourneyDTO } from '../dto/journeyCheck.dto';
 import { EndJourneyResponseDTO } from '../dto/journeyEndResponse.dto';
 import { CheckJourneyResponseDTO } from '../dto/journeyCheckResponse.dto';
+import { RecordJourneyResponseDTO } from '../dto/journetRecordResponse.dto';
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
@@ -60,7 +60,7 @@ export class JourneyController {
   })
   @ApiCreatedResponse({
     description: '생성된 여정 데이터를 반환',
-    type: Journey,
+    type: RecordJourneyResponseDTO,
   })
   @Post('record')
   async record(@Body() recordJourneyDTO: RecordJourneyDTO) {
