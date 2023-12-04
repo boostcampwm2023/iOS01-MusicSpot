@@ -8,6 +8,7 @@
 import UIKit
 
 import MSDesignSystem
+import MSUIKit
 
 public final class JourneyListHeaderView: UICollectionReusableView {
     

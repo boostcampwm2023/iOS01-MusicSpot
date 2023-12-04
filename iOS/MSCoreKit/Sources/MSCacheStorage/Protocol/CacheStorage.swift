@@ -13,13 +13,11 @@ public protocol CacheStorage {
     associatedtype Value
     typealias Cache = NSCache<NSString, NSData>
     
-    associatedtype CacheResult
-    
     // MARK: - Functions
     
     func data(forKey key: Key) -> Value?
-    func cache(_ value: Value, forKey key: Key) -> CacheResult
-    func remove(forKey key: Key) -> CacheResult
+    func cache(_ value: Value, forKey key: Key) -> Result<Value, MSCacheError>
+    func remove(forKey key: Key) throws
     
     func clean(_ target: CacheStorageTarget) throws
     

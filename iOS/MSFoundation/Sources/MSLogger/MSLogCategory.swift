@@ -8,8 +8,10 @@
 import Foundation
 
 public enum MSLogCategory: String {
+    
     case ui = "UI"
     case network
+    case imageFetcher = "ImageFetcher"
     case userDefaults
 	
     case recordJourney
@@ -20,4 +22,5 @@ public enum MSLogCategory: String {
     case saveJourney
     case camera
     case spot
+    
 }
