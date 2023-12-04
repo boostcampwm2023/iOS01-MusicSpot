@@ -41,4 +41,7 @@ export class EndJourneyResponseDTO {
     required: true,
   })
   readonly coordinates: number[][];
+
+  @IsDateString()
+  readonly endTime: string;
 }
