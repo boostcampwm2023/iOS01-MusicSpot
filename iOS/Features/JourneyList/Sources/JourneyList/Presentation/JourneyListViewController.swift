@@ -201,31 +201,7 @@ extension JourneyListViewController: UICollectionViewDelegate {
                 .flatMap { $0.photoURLs }
                 .compactMap { URL(string: $0) }
             
-            Task {
-                cell.addImageView(count: photoURLs.count)
-                
-                await withTaskGroup(of: (index: Int, imageData: Data).self) { group in
-                    for (index, photoURL) in photoURLs.enumerated() {
-                        let key = "\(indexPath.section)-\(indexPath.item)-\(index)"
-                        group.addTask(priority: .background) { [weak self] in
-                            if let cachedData = self?.cache.data(forKey: key) {
-                                return (index, cachedData)
-                            }
-                            
-                            if let imageData = try? await self?.fetchImage(url: photoURL) {
-                                self?.cache.cache(imageData, forKey: key)
-                                return (index, imageData)
-                            }
-                            
-                            return (0, Data())
-                        }
-                    }
-                    
-                    for await (index, imageData) in group {
-                        cell.updateImages(imageData: imageData, atIndex: index)
-                    }
-                }
-            }
+            cell.updateImages(with: photoURLs, for: indexPath)
         }
         
         let headerRegistration = JourneyListHeaderRegistration(elementKind: UICollectionView.elementKindSectionHeader,

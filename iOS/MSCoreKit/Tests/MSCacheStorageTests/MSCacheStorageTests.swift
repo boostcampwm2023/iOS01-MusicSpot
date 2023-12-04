@@ -19,14 +19,14 @@ final class MSCacheStorageTests: XCTestCase {
     
     // MARK: - Setup
     
-    override func setUp() {
+    override func setUp() async throws {
         let memory = CacheStorage.Cache()
         let disk = FileManager.default
         self.cacheStorage = MSCacheStorage(cache: memory, fileManager: disk)
-        self.cacheStorage.remove(forKey: self.key)
     }
     
-    override func tearDown() {
+    override func tearDown() async throws {
+        try self.cacheStorage.clean(.all)
         self.cacheStorage = nil
     }
     
@@ -36,7 +36,7 @@ final class MSCacheStorageTests: XCTestCase {
         let sut = Data(self.mockData.utf8)
         
         let result = self.cacheStorage.cache(sut, forKey: self.key)
-        XCTAssertEqual(result, .success,
+        XCTAssertEqual(result, .success(sut),
                        "새로운 Key 값으로 저장한 값은 .success 결과를 반환해야 합니다.")
     }
     
@@ -46,7 +46,7 @@ final class MSCacheStorageTests: XCTestCase {
         
         self.cacheStorage.cache(sut, forKey: self.key)
         let result = self.cacheStorage.cache(sut2, forKey: self.key)
-        XCTAssertEqual(result, .success,
+        XCTAssertEqual(result, .success(sut2),
                        "중복된 Key 값으로 저장할 경우, 이전 캐싱된 값을 대체하며 성공해야 합니다.")
     }
     
