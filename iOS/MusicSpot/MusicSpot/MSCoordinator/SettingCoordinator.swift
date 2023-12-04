@@ -7,9 +7,9 @@
 
 import UIKit
 
-//final class SettingCoordinator: Coordinator {
-//    
-//    // MARK: - Properties
+// final class SettingCoordinator: Coordinator {
+//
+    // MARK: - Properties
 //    
 //    var navigationController: UINavigationController
 //    
@@ -17,13 +17,13 @@ import UIKit
 //    
 //    var delegate: HomeMapCoordinatorDelegate?
 //    
-//    // MARK: - Initializer
+    // MARK: - Initializer
 //    
 //    init(navigationController: UINavigationController) {
 //        self.navigationController = navigationController
 //    }
 //    
-//    // MARK: - Functions
+    // MARK: - Functions
 //    
 //    func start() {
 //        let settingViewController = SettingViewController()
@@ -31,26 +31,16 @@ import UIKit
 //        self.navigationController.pushViewController(settingViewController, animated: true)
 //    }
 //    
-//}
+// }
 //
-//// MARK: - SettingViewController
+// MARK: - HomeMap Coordinator
 //
-//extension SettingCoordinator: SettingViewControllerDelegate {
-//    
-//    func navigateToHomeMap() {
-//        self.delegate?.popToHomeMap(from: self)
-//    }
-//    
-//}
+// extension SettingCoordinator: HomeMapCoordinatorDelegate {
 //
-//// MARK: - HomeMap Coordinator
-//
-//extension SettingCoordinator: HomeMapCoordinatorDelegate {
-//    
 //    func popToHomeMap(from coordinator: Coordinator) {
 //        self.childCoordinators.removeAll()
 //        self.navigationController.popViewController(animated: true)
 //        self.delegate?.popToHomeMap(from: self)
 //    }
 //    
-//}
+// }

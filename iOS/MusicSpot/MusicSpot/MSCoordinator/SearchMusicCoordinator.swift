@@ -9,16 +9,16 @@ import UIKit
 
 import SelectSong
 
-//protocol SearchMusicCoordinatorDelegate {
-//    
+// protocol SearchMusicCoordinatorDelegate {
+//
 //    func popToHomeMap(from coordinator: Coordinator)
 //    func popToSearchMusic(from coordinator: Coordinator)
 //    
-//}
+// }
 //
-//final class SearchMusicCoordinator: Coordinator {
-//    
-//    // MARK: - Properties
+// final class SearchMusicCoordinator: Coordinator {
+//
+    // MARK: - Properties
 //    
 //    var navigationController: UINavigationController
 //    
@@ -26,13 +26,13 @@ import SelectSong
 //    
 //    var delegate: HomeMapCoordinatorDelegate?
 //    
-//    // MARK: - Initializer
+    // MARK: - Initializer
 //    
 //    init(navigationController: UINavigationController) {
 //        self.navigationController = navigationController
 //    }
 //    
-//    // MARK: - Functions
+    // MARK: - Functions
 //    
 //    func start() {
 //        let searchMusicViewController = SearchMusicViewController()
@@ -40,12 +40,12 @@ import SelectSong
 //        self.navigationController.pushViewController(searchMusicViewController, animated: true)
 //    }
 //    
-//}
+// }
 //
-//// MARK: - SearchMusicViewController
+// MARK: - SearchMusicViewController
 //
-//extension SearchMusicCoordinator: SearchMusicViewControllerDelegate {
-//    
+// extension SearchMusicCoordinator: SearchMusicViewControllerDelegate {
+//
 //    func navigateToHomeMap() {
 //        self.delegate?.popToHomeMap(from: self)
 //    }
@@ -57,9 +57,9 @@ import SelectSong
 //        saveJourneyCoordinator.start()
 //    }
 //    
-//}
+// }
 //
-//// MARK: - App Coordinator
+// MARK: - App Coordinator
 //
 //extension SearchMusicCoordinator: SearchMusicCoordinatorDelegate {
 //    
@@ -73,4 +73,4 @@ import SelectSong
 //        self.childCoordinators.removeAll()
 //    }
 //    
-//}
+// }

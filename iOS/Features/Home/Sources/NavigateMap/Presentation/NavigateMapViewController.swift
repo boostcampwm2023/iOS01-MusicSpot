@@ -11,97 +11,100 @@ import MapKit
 
 import MSUIKit
 
-public final class NavigateMapViewController: UIViewController {
+public protocol NavigateMapViewControllerDelegate {
+    
+    func settingButtonDidTap()
+    func mapButtonDidTap()
+    func locationButtonDidTap()
+    
+}
 
+public final class NavigateMapViewController: UIViewController {
+    
     // MARK: - Properties
+    
+    public var viewModel: NavigateMapViewModel?
     
     // 임시 위치 정보
     let tempCoordinate = CLLocationCoordinate2D(latitude: 37.495120492289026, longitude: 126.9553042366186)
-
+    
     /// 전체 Map에 대한 View
     let mapView = MapView()
-
+    
     /// HomeMap 내 우상단 3버튼 View
-    var buttonStackView: NavigateMapButtonView = {
+    private lazy var buttonStackView: NavigateMapButtonView = {
         let stackView = NavigateMapButtonView()
-
+        stackView.delegate = self
         return stackView
     }()
-
-    /// 시작하기 Button
-    private let startButton: MSButton = {
-        let button = MSButton.primary()
-        button.cornerStyle = .rounded
-        button.title = "시작하기"
-        return button
-    }()
+    
+    public var delegate: NavigateMapViewControllerDelegate?
     
     @objc func findMyLocation() {
         
-        guard let currentLocation = locationManager.location else {
-            locationManager.requestWhenInUseAuthorization()
+        guard self.locationManager.location != nil else {
+            self.locationManager.requestWhenInUseAuthorization()
             return
         }
         
-        mapView.map.showsUserLocation = true
-        
-        mapView.map.setUserTrackingMode(.follow, animated: true)
-        
+        self.mapView.map.showsUserLocation = true
+        self.mapView.map.setUserTrackingMode(.follow, animated: true)
     }
-
+    
     var timer: Timer?
     var previousCoordinate: CLLocationCoordinate2D?
     private var polyline: MKPolyline?
-
+    
     let locationManager = CLLocationManager()
-
+    
+    // MARK: - Initializer
+    
+    public init(viewModel: NavigateMapViewModel,
+                nibName nibNameOrNil: String? = nil,
+                bundle nibBundleOrNil: Bundle? = nil) {
+        self.viewModel = viewModel
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
+    }
+    
     // MARK: - Life Cycle
-
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        view = mapView
+        self.view = self.mapView
         
-        startButton.addTarget(self, action: #selector(findMyLocation), for: .touchUpInside)
+        self.locationManager.requestWhenInUseAuthorization()
+        self.mapView.map.setRegion(MKCoordinateRegion(center: self.tempCoordinate,
+                                                      span: MKCoordinateSpan(latitudeDelta: 0.1,
+                                                                             longitudeDelta: 0.11)),
+                                   animated: true)
         
-        locationManager.requestWhenInUseAuthorization()
-        mapView.map.setRegion(MKCoordinateRegion(center: tempCoordinate,
-                                                 span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.11)),
-                              animated: true)
+        self.mapView.map.delegate = self
+        self.locationManager.delegate = self
         
-        mapView.map.delegate = self
-        
-        locationManager.delegate = self
-    
-        configureLayout()
-        configureStyle()
+        self.configureLayout()
     }
-
-    // MARK: - Functions
-
-    private func configureStyle() {}
-
+    
+    // MARK: - UI Configuration
+    
     private func configureLayout() {
-        view.addSubview(buttonStackView)
-        view.addSubview(startButton)
+        self.view.addSubview(self.buttonStackView)
+        self.mapView.map.translatesAutoresizingMaskIntoConstraints = false
+        self.buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         
-        mapView.map.translatesAutoresizingMaskIntoConstraints = false
-        buttonStackView.translatesAutoresizingMaskIntoConstraints = false
-        startButton.translatesAutoresizingMaskIntoConstraints = false
-
         let safeArea = self.view.safeAreaLayoutGuide
-
         NSLayoutConstraint.activate([
             self.mapView.map.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.mapView.map.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.mapView.map.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.mapView.map.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-
+            
             self.buttonStackView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 50),
-            self.buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-
-            self.startButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -80),
-            self.startButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            self.buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
     }
     
@@ -110,13 +113,13 @@ public final class NavigateMapViewController: UIViewController {
 // MARK: - CLLocationManager
 
 extension NavigateMapViewController: CLLocationManagerDelegate {
-
+    
     /// 위치 정보 권한 변경에 따른 동작
     func checkCurrentLocationAuthorization(authorizationStatus: CLAuthorizationStatus) {
         switch authorizationStatus {
         case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-            locationManager.startUpdatingLocation()
+            self.locationManager.requestWhenInUseAuthorization()
+            self.locationManager.startUpdatingLocation()
         case .restricted:
             print("restricted")
         case .denied:
@@ -125,12 +128,12 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
             print("always")
         case .authorizedWhenInUse:
             print("wheninuse")
-            locationManager.startUpdatingLocation()
+            self.locationManager.startUpdatingLocation()
         @unknown default:
             print("unknown")
         }
         if #available(iOS 14.0, *) {
-            let accuracyState = locationManager.accuracyAuthorization
+            let accuracyState = self.locationManager.accuracyAuthorization
             switch accuracyState {
             case .fullAccuracy:
                 print("full")
@@ -145,83 +148,84 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
     func checkUserLocationServicesAuthorization() {
         let authorizationStatus: CLAuthorizationStatus
         if #available(iOS 14, *) {
-            authorizationStatus = locationManager.authorizationStatus
+            authorizationStatus = self.locationManager.authorizationStatus
         } else {
             authorizationStatus = CLLocationManager.authorizationStatus()
         }
         
         if CLLocationManager.locationServicesEnabled() {
-            checkCurrentLocationAuthorization(authorizationStatus: authorizationStatus)
+            self.checkCurrentLocationAuthorization(authorizationStatus: authorizationStatus)
         }
     }
-
-//    /// 현재 보고있는 화면을 내 현위치로 맞춤
-//    private func centerMapOnLocation(_ location: CLLocation) {
-//        let coordinateRegion = MKCoordinateRegion(center: location.coordinate,
-//                                                  latitudinalMeters: 500,
-//                                                  longitudinalMeters: 500)
-//        mapView.map.setRegion(coordinateRegion, animated: true)
-//    }
-
+    
+    //    /// 현재 보고있는 화면을 내 현위치로 맞춤
+    //    private func centerMapOnLocation(_ location: CLLocation) {
+    //        let coordinateRegion = MKCoordinateRegion(center: location.coordinate,
+    //                                                  latitudinalMeters: 500,
+    //                                                  longitudinalMeters: 500)
+    //        mapView.map.setRegion(coordinateRegion, animated: true)
+    //    }
+    
     /// 이전 좌표와 현 좌표를 기준으로 polyline을 추가
     @objc private func updatePolyline() {
-        guard let newCoordinate = locationManager.location?.coordinate else { return }
+        guard let newCoordinate = self.locationManager.location?.coordinate else { return }
         print(newCoordinate)
         // Draw polyline
-        self.addPolylineToMap(from: previousCoordinate, to: newCoordinate)
-
+        self.addPolylineToMap(from: self.previousCoordinate, to: newCoordinate)
+        
         // Update previous coordinate
-        previousCoordinate = newCoordinate
+        self.previousCoordinate = newCoordinate
     }
-
+    
     private func addPolylineToMap(from previousCoordinate: CLLocationCoordinate2D?,
                                   to newCoordinate: CLLocationCoordinate2D) {
         guard let previousCoordinate = previousCoordinate else { return }
-
+        
         var points: [CLLocationCoordinate2D]
-
+        
         if let existingPolyline = polyline {
             points = [existingPolyline.coordinate] + [newCoordinate]
             mapView.map.removeOverlay(existingPolyline)
         } else {
             points = [previousCoordinate, newCoordinate]
         }
-
-        polyline = MKPolyline(coordinates: &points, count: points.count)
-        mapView.map.addOverlay(polyline!) // Add the updated polyline to the map
+        
+        self.polyline = MKPolyline(coordinates: &points, count: points.count)
+        self.mapView.map.addOverlay(polyline!) // Add the updated polyline to the map
     }
     
     public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         print(#function)
-        checkUserLocationServicesAuthorization()
+        self.checkUserLocationServicesAuthorization()
     }
     
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         print(#function)
-        checkUserLocationServicesAuthorization()
+        self.checkUserLocationServicesAuthorization()
     }
-
+    
     /// 위치 가져오기 실패
     public func locationManager(_ manager: CLLocationManager,
                                 didFailWithError error: Error) {
         // 위치 가져오기 실패 에러 Logger 설정
     }
+    
 }
 
 // MARK: - MKMapView
 
 extension NavigateMapViewController: MKMapViewDelegate {
-
+    
     /// 현재까지의 polyline들을 지도 위에 그림
     public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         guard let polyLine = overlay as? MKPolyline else {
             return MKOverlayRenderer()
         }
-
+        
         let renderer = MKPolylineRenderer(polyline: polyLine)
         renderer.strokeColor = .orange
         renderer.lineWidth = 5.0
-
+        
         return renderer
     }
     
@@ -250,4 +254,23 @@ extension NavigateMapViewController: MKMapViewDelegate {
         
         return annotationView
     }
+    
+}
+
+// MARK: - ButtonView
+
+extension NavigateMapViewController: NavigateMapButtonViewDelegate {
+    
+    public func settingButtonDidTap() {
+        self.delegate?.settingButtonDidTap()
+    }
+    
+    public func mapButtonDidTap() {
+        self.delegate?.mapButtonDidTap()
+    }
+    
+    public func locationButtonDidTap() {
+        self.delegate?.locationButtonDidTap()
+    }
+    
 }
