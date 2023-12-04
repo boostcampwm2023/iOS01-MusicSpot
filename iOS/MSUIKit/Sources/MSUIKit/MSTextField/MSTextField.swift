@@ -57,7 +57,7 @@ public class MSTextField: UITextField {
         }
         var rightImage: UIImage? {
             switch self {
-            case .none:
+            case .none, .search:
                 return nil
             default:
                 return .msIcon(.arrowRight)

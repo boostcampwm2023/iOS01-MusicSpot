@@ -13,14 +13,13 @@ public enum MSLogCategory: String {
     case network
     case imageFetcher = "ImageFetcher"
     case userDefaults
-    case dataCore
-    
-    case recordingJourney
-    case saveJourney
+	
+    case recordJourney
     case rewindJourney
     case checkJourney
-    case login
-    case setting
+    case login    
+    case selectSong = "SelectSong"
+    case saveJourney
     case camera
     case spot
     
