@@ -22,7 +22,7 @@ public final class NavigateMapViewController: UIViewController {
     
     // MARK: - Properties
     
-    public var viewModel: NavigateMapViewModel
+    public var viewModel: NavigateMapViewModel?
     
     // 임시 위치 정보
     let tempCoordinate = CLLocationCoordinate2D(latitude: 37.495120492289026, longitude: 126.9553042366186)
@@ -58,14 +58,14 @@ public final class NavigateMapViewController: UIViewController {
     
     // MARK: - Initializer
     
-    public init(viewModel: NavigateMapViewModel,
-                cache: MSCacheStorage = MSCacheStorage(),
-                nibName nibNameOrNil: String? = nil,
-                bundle nibBundleOrNil: Bundle? = nil) {
-        self.viewModel = viewModel
-        self.cache = cache
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-    }
+//    public init(viewModel: NavigateMapViewModel,
+//                cache: MSCacheStorage = MSCacheStorage(),
+//                nibName nibNameOrNil: String? = nil,
+//                bundle nibBundleOrNil: Bundle? = nil) {
+//        self.viewModel = viewModel
+//        self.cache = cache
+//        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+//    }
     
     required init?(coder: NSCoder) {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
