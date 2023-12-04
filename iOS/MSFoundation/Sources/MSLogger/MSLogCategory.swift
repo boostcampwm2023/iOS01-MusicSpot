@@ -11,14 +11,13 @@ public enum MSLogCategory: String {
     case ui = "UI"
     case network
     case userDefaults
-    case dataCore
-    
-    case recordingJourney
-    case saveJourney
+	
+    case recordJourney
     case rewindJourney
     case checkJourney
-    case login
-    case setting
+    case login    
+    case selectSong = "SelectSong"
+    case saveJourney
     case camera
     case spot
 }

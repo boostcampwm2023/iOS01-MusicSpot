@@ -12,7 +12,7 @@ final class MSLoggerTests: XCTestCase {
     
     func test_Logger객체_잘_생성되는지_성공() {
         // arrange, act
-        let logger = MSLogger.make(category: .login)
+        let logger = MSLogger.make(category: .network)
         
         // assert
         XCTAssertNotNil(logger)
