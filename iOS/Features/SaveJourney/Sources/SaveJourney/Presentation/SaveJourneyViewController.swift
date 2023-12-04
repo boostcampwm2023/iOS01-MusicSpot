@@ -10,6 +10,7 @@ import MapKit
 import UIKit
 
 import MSUIKit
+import MediaPlayer
 
 enum SaveJourneySection {
     case music
@@ -60,6 +61,8 @@ public final class SaveJourneyViewController: UIViewController {
     
     private var dataSource: SaveJourneyDataSource?
     
+    private let musicPlayer = MPMusicPlayerApplicationController.applicationMusicPlayer
+    
     private var cancellables: Set<AnyCancellable> = []
     
     // MARK: - UI Components
@@ -100,12 +103,6 @@ public final class SaveJourneyViewController: UIViewController {
     private lazy var nextButton: MSButton = {
         let button = MSButton.primary()
         button.configuration?.title = Typo.nextButtonTitle
-        let action = UIAction { [weak self] _ in
-            let alert = ConfirmTitleAlertViewController()
-            alert.modalPresentationStyle = .overCurrentContext
-            self?.present(alert, animated: false)
-        }
-        button.addAction(action, for: .touchUpInside)
         return button
     }()
     
@@ -128,7 +125,7 @@ public final class SaveJourneyViewController: UIViewController {
         super.viewDidLoad()
         self.configureStyles()
         self.configureLayout()
-        self.configureCollectionView()
+        self.configureComponents()
         self.bind()
         self.viewModel.trigger(.viewNeedsLoaded)
     }
@@ -152,6 +149,38 @@ public final class SaveJourneyViewController: UIViewController {
                 self.dataSource?.apply(snapshot, to: .spot)
             }
             .store(in: &self.cancellables)
+    }
+    
+}
+
+// MARK: - Buttons
+
+private extension SaveJourneyViewController {
+    
+    func configureButtons() {
+        let mediaControlAction = UIAction { [weak self] _ in
+            self?.viewModel.trigger(.mediaControlButtonDidTap)
+        }
+        self.mediaControlButton.addAction(mediaControlAction, for: .touchUpInside)
+        
+        let nextButtonAction = UIAction { [weak self] _ in
+            self?.viewModel.trigger(.nextButtonDidTap)
+            
+            let alert = ConfirmTitleAlertViewController()
+            alert.modalPresentationStyle = .overCurrentContext
+            self?.present(alert, animated: false)
+        }
+        self.nextButton.addAction(nextButtonAction, for: .touchUpInside)
+    }
+    
+}
+
+// MARK: - Media Player
+
+private extension SaveJourneyViewController {
+    
+    func configureMusicPlayer() {
+        self.musicPlayer.setQueue(with: .songs())
     }
     
 }
@@ -337,6 +366,12 @@ private extension SaveJourneyViewController {
         ].forEach {
             self.buttonStack.addArrangedSubview($0)
         }
+    }
+    
+    func configureComponents() {
+        self.configureCollectionView()
+        self.configureButtons()
+        self.configureMusicPlayer()
     }
     
 }
