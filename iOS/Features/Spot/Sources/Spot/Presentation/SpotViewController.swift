@@ -95,9 +95,9 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
         self.spotViewModel.startCamera()
     }
     
-    // MARK: - Configure
+    // MARK: - Configuration
     
-    func configure() {
+    private func configure() {
         self.configureLayout()
         self.configureStyles()
         self.configureAction()
@@ -200,7 +200,7 @@ private extension SpotViewController {
     
 }
 
-// MARK: - Configure: Actions
+// MARK: - Configuration: Actions
 
 private extension SpotViewController {
     
@@ -238,7 +238,7 @@ private extension SpotViewController {
     
 }
     
-// MARK: - Configure: State
+// MARK: - Configuration: State
 
 private extension SpotViewController {
     
@@ -270,7 +270,7 @@ private extension SpotViewController {
     }
 }
 
-// MARK: - Delegate
+// MARK: - Configuration: Delegate
     
 private extension SpotViewController {
     

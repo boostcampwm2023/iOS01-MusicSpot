@@ -33,7 +33,6 @@ final class SaveJourneyCoordinator: Coordinator {
         let spotRepository = SpotRepositoryImplementation()
         let saveJourneyViewModel = SaveJourneyViewModel(selectedSong: song, spotRepository: spotRepository)
         let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
-//        saveJourneyViewController.delegate = self
         self.navigationController.pushViewController(saveJourneyViewController, animated: true)
     }
     

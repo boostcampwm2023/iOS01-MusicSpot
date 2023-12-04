@@ -13,11 +13,9 @@ import MSUIKit
 import MSUserDefaults
 import NavigateMap
 
-public protocol HomeViewControllerDelegate: AnyObject {
+public protocol HomeNavigationDelegate: AnyObject {
     
     func navigateToSpot()
-    func navigateToRewind()
-    func navigateToSetting()
     
 }
 
@@ -57,7 +55,7 @@ public final class HomeBottomSheetViewController: HomeViewController {
     
     // MARK: - Properties
     
-    public weak var delegate: HomeViewControllerDelegate?
+    public weak var delegate: HomeNavigationDelegate?
     
     @UserDefaultsWrapped(UserDefaultsKey.isRecording, defaultValue: false)
     private var isRecording: Bool
@@ -123,7 +121,7 @@ private extension HomeBottomSheetViewController {
 extension HomeBottomSheetViewController: NavigateMapViewControllerDelegate {
     
     public func settingButtonDidTap() {
-        delegate?.navigateToSetting()
+        // 
     }
     
     public func mapButtonDidTap() {

@@ -17,7 +17,7 @@ final class SpotCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     
-    var delegate: HomeMapCoordinatorDelegate?
+    var delegate: HomeCoordinatorDelegate?
     
     // MARK: - Initializer
     
@@ -29,7 +29,6 @@ final class SpotCoordinator: Coordinator {
     
     func start() {
         let spotViewController = SpotViewController()
-//        spotViewController.delegate = self
         self.navigationController.pushViewController(spotViewController, animated: true)
     }
     
@@ -37,7 +36,7 @@ final class SpotCoordinator: Coordinator {
 
 // MARK: - HomeMap Coordinator
 
-extension SpotCoordinator: HomeMapCoordinatorDelegate {
+extension SpotCoordinator: HomeCoordinatorDelegate {
     
     func popToHomeMap(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()

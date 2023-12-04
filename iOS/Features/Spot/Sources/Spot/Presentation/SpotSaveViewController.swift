@@ -55,6 +55,8 @@ public final class SpotSaveViewController: UIViewController {
     
     // MARK: - Properties
     
+    public weak var navigationDelegate: SpotNavigationDelegate?
+    
     public var image: UIImage? {
         didSet {
             self.configureImageViewState()
@@ -94,7 +96,7 @@ public final class SpotSaveViewController: UIViewController {
     
     // MARK: - Configure
     
-    func configure() {
+    private func configure() {
         self.configureLayout()
         self.configureStyle()
         self.configureAction()
@@ -177,8 +179,6 @@ public final class SpotSaveViewController: UIViewController {
     // MARK: - UI Components: Style
     
     private func configureStyle() {
-        
-        MSFont.registerFonts()
         self.view.backgroundColor = .msColor(.primaryBackground)
         self.configureImageViewStyle()
         self.configureLabelsStyle()
@@ -248,7 +248,7 @@ public final class SpotSaveViewController: UIViewController {
     
     private func completeButtonTapped() {
         guard let data = self.image?.pngData() else {
-            MSLogger.make(category: .recordJourney).debug("현재 이미지를 Data로 변환할 수 없습니다.")
+            MSLogger.make(category: .spot).debug("현재 이미지를 Data로 변환할 수 없습니다.")
             return
         }
         self.spotSaveViewModel.upload(data: data, using: self.spotRouter)
