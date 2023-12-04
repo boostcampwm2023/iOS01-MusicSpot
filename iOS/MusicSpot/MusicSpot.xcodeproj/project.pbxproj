@@ -15,25 +15,17 @@
 		08CBF87D2B18468E007D3797 /* SpotCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8752B18468E007D3797 /* SpotCoordinator.swift */; };
 		08CBF87E2B18468E007D3797 /* SearchMusicCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8762B18468E007D3797 /* SearchMusicCoordinator.swift */; };
 		08CBF87F2B18468E007D3797 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8772B18468E007D3797 /* Coordinator.swift */; };
-		DD197B162B1E1BB1001D4290 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = DD197B152B1E1BB1001D4290 /* Home */; };
-		DD197B182B1E1BB1001D4290 /* NavigateMap in Frameworks */ = {isa = PBXBuildFile; productRef = DD197B172B1E1BB1001D4290 /* NavigateMap */; };
-		DD197B1A2B1E1BB1001D4290 /* RecordJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD197B192B1E1BB1001D4290 /* RecordJourney */; };
-		DD197B1D2B1E1BB9001D4290 /* JourneyList in Frameworks */ = {isa = PBXBuildFile; productRef = DD197B1C2B1E1BB9001D4290 /* JourneyList */; };
-		DD197B202B1E1BC0001D4290 /* RewindJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD197B1F2B1E1BC0001D4290 /* RewindJourney */; };
-		DD197B232B1E1BCC001D4290 /* SaveJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD197B222B1E1BCC001D4290 /* SaveJourney */; };
-		DD197B262B1E1BD6001D4290 /* SelectSong in Frameworks */ = {isa = PBXBuildFile; productRef = DD197B252B1E1BD6001D4290 /* SelectSong */; };
-		DD197B292B1E1BEA001D4290 /* Spot in Frameworks */ = {isa = PBXBuildFile; productRef = DD197B282B1E1BEA001D4290 /* Spot */; };
+		DD197B2C2B1E4963001D4290 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = DD197B2B2B1E4963001D4290 /* Home */; };
+		DD197B2E2B1E4963001D4290 /* NavigateMap in Frameworks */ = {isa = PBXBuildFile; productRef = DD197B2D2B1E4963001D4290 /* NavigateMap */; };
+		DD197B312B1E496B001D4290 /* JourneyList in Frameworks */ = {isa = PBXBuildFile; productRef = DD197B302B1E496B001D4290 /* JourneyList */; };
+		DD197B342B1E4973001D4290 /* RewindJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD197B332B1E4973001D4290 /* RewindJourney */; };
+		DD197B372B1E497C001D4290 /* SaveJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD197B362B1E497C001D4290 /* SaveJourney */; };
+		DD197B3A2B1E4986001D4290 /* SelectSong in Frameworks */ = {isa = PBXBuildFile; productRef = DD197B392B1E4986001D4290 /* SelectSong */; };
+		DD197B3D2B1E498E001D4290 /* Spot in Frameworks */ = {isa = PBXBuildFile; productRef = DD197B3C2B1E498E001D4290 /* Spot */; };
 		DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */; };
 		DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */; };
 		DD73F8622B024C4B00EE9BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */; };
 		DD73F8652B024C4B00EE9BF2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8632B024C4B00EE9BF2 /* LaunchScreen.storyboard */; };
-		DD9782712B1902B8003CB134 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = DD9782702B1902B8003CB134 /* Home */; };
-		DDCDDA172B18F4B8008E66D1 /* NavigateMap in Frameworks */ = {isa = PBXBuildFile; productRef = DDCDDA162B18F4B8008E66D1 /* NavigateMap */; };
-		DDCDDA1C2B18F4BE008E66D1 /* JourneyList in Frameworks */ = {isa = PBXBuildFile; productRef = DDCDDA1B2B18F4BE008E66D1 /* JourneyList */; };
-		DDCDDA1F2B18F4C6008E66D1 /* RewindJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DDCDDA1E2B18F4C6008E66D1 /* RewindJourney */; };
-		DDCDDA222B18F4CD008E66D1 /* SaveJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DDCDDA212B18F4CD008E66D1 /* SaveJourney */; };
-		DDCDDA252B18F4D7008E66D1 /* SelectSong in Frameworks */ = {isa = PBXBuildFile; productRef = DDCDDA242B18F4D7008E66D1 /* SelectSong */; };
-		DDCDDA282B18F4DE008E66D1 /* Spot in Frameworks */ = {isa = PBXBuildFile; productRef = DDCDDA272B18F4DE008E66D1 /* Spot */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,16 +51,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD197B1A2B1E1BB1001D4290 /* RecordJourney in Frameworks */,
-				DD197B262B1E1BD6001D4290 /* SelectSong in Frameworks */,
-				DD197B292B1E1BEA001D4290 /* Spot in Frameworks */,
-				DD197B182B1E1BB1001D4290 /* NavigateMap in Frameworks */,
-				DD197B162B1E1BB1001D4290 /* Home in Frameworks */,
-				DD197B202B1E1BC0001D4290 /* RewindJourney in Frameworks */,
-				DD197B232B1E1BCC001D4290 /* SaveJourney in Frameworks */,
-				DD197B1D2B1E1BB9001D4290 /* JourneyList in Frameworks */,
-				DDCDDA172B18F4B8008E66D1 /* NavigateMap in Frameworks */,
-				DDCDDA1C2B18F4BE008E66D1 /* JourneyList in Frameworks */,
+				DD197B342B1E4973001D4290 /* RewindJourney in Frameworks */,
+				DD197B3A2B1E4986001D4290 /* SelectSong in Frameworks */,
+				DD197B2E2B1E4963001D4290 /* NavigateMap in Frameworks */,
+				DD197B3D2B1E498E001D4290 /* Spot in Frameworks */,
+				DD197B2C2B1E4963001D4290 /* Home in Frameworks */,
+				DD197B312B1E496B001D4290 /* JourneyList in Frameworks */,
+				DD197B372B1E497C001D4290 /* SaveJourney in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,14 +141,13 @@
 			);
 			name = MusicSpot;
 			packageProductDependencies = (
-				DD197B152B1E1BB1001D4290 /* Home */,
-				DD197B172B1E1BB1001D4290 /* NavigateMap */,
-				DD197B192B1E1BB1001D4290 /* RecordJourney */,
-				DD197B1C2B1E1BB9001D4290 /* JourneyList */,
-				DD197B1F2B1E1BC0001D4290 /* RewindJourney */,
-				DD197B222B1E1BCC001D4290 /* SaveJourney */,
-				DD197B252B1E1BD6001D4290 /* SelectSong */,
-				DD197B282B1E1BEA001D4290 /* Spot */,
+				DD197B2B2B1E4963001D4290 /* Home */,
+				DD197B2D2B1E4963001D4290 /* NavigateMap */,
+				DD197B302B1E496B001D4290 /* JourneyList */,
+				DD197B332B1E4973001D4290 /* RewindJourney */,
+				DD197B362B1E497C001D4290 /* SaveJourney */,
+				DD197B392B1E4986001D4290 /* SelectSong */,
+				DD197B3C2B1E498E001D4290 /* Spot */,
 			);
 			productName = MusicSpot;
 			productReference = DD73F8552B024C4900EE9BF2 /* MusicSpot.app */;
@@ -190,12 +178,12 @@
 			);
 			mainGroup = DD73F84C2B024C4900EE9BF2;
 			packageReferences = (
-				DD197B142B1E1BB1001D4290 /* XCLocalSwiftPackageReference "../Features/Home" */,
-				DD197B1B2B1E1BB9001D4290 /* XCLocalSwiftPackageReference "../Features/JourneyList" */,
-				DD197B1E2B1E1BC0001D4290 /* XCLocalSwiftPackageReference "../Features/RewindJourney" */,
-				DD197B212B1E1BCC001D4290 /* XCLocalSwiftPackageReference "../Features/SaveJourney" */,
-				DD197B242B1E1BD6001D4290 /* XCLocalSwiftPackageReference "../Features/SelectSong" */,
-				DD197B272B1E1BEA001D4290 /* XCLocalSwiftPackageReference "../Features/Spot" */,
+				DD197B2A2B1E4963001D4290 /* XCLocalSwiftPackageReference "../Features/Home" */,
+				DD197B2F2B1E496B001D4290 /* XCLocalSwiftPackageReference "../Features/JourneyList" */,
+				DD197B322B1E4973001D4290 /* XCLocalSwiftPackageReference "../Features/RewindJourney" */,
+				DD197B352B1E497C001D4290 /* XCLocalSwiftPackageReference "../Features/SaveJourney" */,
+				DD197B382B1E4986001D4290 /* XCLocalSwiftPackageReference "../Features/SelectSong" */,
+				DD197B3B2B1E498E001D4290 /* XCLocalSwiftPackageReference "../Features/Spot" */,
 			);
 			productRefGroup = DD73F8562B024C4900EE9BF2 /* Products */;
 			projectDirPath = "";
@@ -468,62 +456,58 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		DD197B142B1E1BB1001D4290 /* XCLocalSwiftPackageReference "../Features/Home" */ = {
+		DD197B2A2B1E4963001D4290 /* XCLocalSwiftPackageReference "../Features/Home" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Features/Home;
 		};
-		DD197B1B2B1E1BB9001D4290 /* XCLocalSwiftPackageReference "../Features/JourneyList" */ = {
+		DD197B2F2B1E496B001D4290 /* XCLocalSwiftPackageReference "../Features/JourneyList" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Features/JourneyList;
 		};
-		DD197B1E2B1E1BC0001D4290 /* XCLocalSwiftPackageReference "../Features/RewindJourney" */ = {
+		DD197B322B1E4973001D4290 /* XCLocalSwiftPackageReference "../Features/RewindJourney" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Features/RewindJourney;
 		};
-		DD197B212B1E1BCC001D4290 /* XCLocalSwiftPackageReference "../Features/SaveJourney" */ = {
+		DD197B352B1E497C001D4290 /* XCLocalSwiftPackageReference "../Features/SaveJourney" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Features/SaveJourney;
 		};
-		DD197B242B1E1BD6001D4290 /* XCLocalSwiftPackageReference "../Features/SelectSong" */ = {
+		DD197B382B1E4986001D4290 /* XCLocalSwiftPackageReference "../Features/SelectSong" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Features/SelectSong;
 		};
-		DD197B272B1E1BEA001D4290 /* XCLocalSwiftPackageReference "../Features/Spot" */ = {
+		DD197B3B2B1E498E001D4290 /* XCLocalSwiftPackageReference "../Features/Spot" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Features/Spot;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		DD197B152B1E1BB1001D4290 /* Home */ = {
+		DD197B2B2B1E4963001D4290 /* Home */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Home;
 		};
-		DD197B172B1E1BB1001D4290 /* NavigateMap */ = {
+		DD197B2D2B1E4963001D4290 /* NavigateMap */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = NavigateMap;
 		};
-		DD197B192B1E1BB1001D4290 /* RecordJourney */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = RecordJourney;
-		};
-		DD197B1C2B1E1BB9001D4290 /* JourneyList */ = {
+		DD197B302B1E496B001D4290 /* JourneyList */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = JourneyList;
 		};
-		DD197B1F2B1E1BC0001D4290 /* RewindJourney */ = {
+		DD197B332B1E4973001D4290 /* RewindJourney */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RewindJourney;
 		};
-		DD197B222B1E1BCC001D4290 /* SaveJourney */ = {
+		DD197B362B1E497C001D4290 /* SaveJourney */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SaveJourney;
 		};
-		DD197B252B1E1BD6001D4290 /* SelectSong */ = {
+		DD197B392B1E4986001D4290 /* SelectSong */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SelectSong;
 		};
-		DD197B282B1E1BEA001D4290 /* Spot */ = {
+		DD197B3C2B1E498E001D4290 /* Spot */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Spot;
 		};
