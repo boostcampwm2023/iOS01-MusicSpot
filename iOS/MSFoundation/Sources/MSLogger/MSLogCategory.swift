@@ -12,7 +12,9 @@ public enum MSLogCategory: String {
     case network
     case userDefaults
     case dataCore
+    
     case recordingJourney
+    case saveJourney
     case rewindJourney
     case checkJourney
     case login

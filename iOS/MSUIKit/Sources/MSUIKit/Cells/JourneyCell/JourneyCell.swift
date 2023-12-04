@@ -64,8 +64,8 @@ public final class JourneyCell: UICollectionViewCell {
     public func update(with model: JourneyCellModel) {
         self.infoView.update(location: model.location,
                              date: model.date,
-                             title: model.song.title,
-                             artist: model.song.artist)
+                             title: model.song?.title,
+                             artist: model.song?.artist)
     }
     
     @MainActor

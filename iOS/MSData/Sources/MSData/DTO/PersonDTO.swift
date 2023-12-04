@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct PersonDTO: Codable, Identifiable {
+public struct PersonDTO: Decodable, Identifiable {
     
     public let id: UUID
     public let nickname: String

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Journey: Hashable, Decodable {
+struct Journey: Hashable {
     
     // MARK: - Properties
     
