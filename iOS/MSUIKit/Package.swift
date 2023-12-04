@@ -8,8 +8,24 @@ import PackageDescription
 extension String {
     
     static let package = "MSUIKit"
-    static let designSystem = "MSDesignSystem"
-    static let uiKit = "MSUIKit"
+    
+    var fromRootPath: String {
+        return "../" + self
+    }
+    
+}
+
+private enum Target {
+    
+    static let msDesignSystem = "MSDesignSystem"
+    static let msUIKit = "MSUIKit"
+    
+}
+
+private enum Dependency {
+    
+    static let msFoundation = "MSFoundation"
+    static let msLogger = "MSLogger"
     
 }
 
@@ -21,20 +37,26 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(name: .designSystem,
-                 type: .static,
-                 targets: [.designSystem]),
-        .library(name: .uiKit,
-                 targets: [.uiKit])
+        .library(name: Target.msDesignSystem,
+                 targets: [Target.msDesignSystem]),
+        .library(name: Target.msUIKit,
+                 targets: [Target.msUIKit])
+    ],
+    dependencies: [
+        .package(name: Dependency.msFoundation,
+                 path: Dependency.msFoundation.fromRootPath)
     ],
     targets: [
-        // Codes
-        .target(name: .designSystem,
+        .target(name: Target.msDesignSystem,
                 resources: [
-                    .process("../\(String.designSystem)/Resources")
+                    .process("\(Target.msDesignSystem.fromRootPath)/Resources")
                 ]),
-        .target(name: .uiKit,
-                dependencies: ["MSDesignSystem"])
+        .target(name: Target.msUIKit,
+                dependencies: [
+                    .target(name: Target.msDesignSystem),
+                    .product(name: Dependency.msLogger,
+                             package: Dependency.msFoundation)
+                ])
     ],
     swiftLanguageVersions: [.v5]
 )
