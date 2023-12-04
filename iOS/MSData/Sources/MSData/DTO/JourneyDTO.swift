@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct JourneyDTO: Codable, Identifiable {
+public struct JourneyDTO: Decodable, Identifiable {
     
     public let id: UUID
     public let location: String
@@ -18,3 +18,4 @@ public struct JourneyDTO: Codable, Identifiable {
     public let lineColor: String
     
 }
+

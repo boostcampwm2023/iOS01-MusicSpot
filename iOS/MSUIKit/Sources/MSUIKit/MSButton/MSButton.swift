@@ -72,6 +72,7 @@ public class MSButton: UIButton {
         configuration.imagePlacement = .leading
         configuration.imagePadding = Metric.imagePadding
         configuration.titleAlignment = .center
+        configuration.titleLineBreakMode = .byTruncatingMiddle
         self.configuration = configuration
     }
     

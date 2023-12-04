@@ -70,16 +70,20 @@ public class MSTextField: UITextField {
     
     private var leftImage = UIImageView()
     private var rightImage = UIImageView()
+    
     public var imageStyle: ImageStyle = .none {
         didSet {
             self.configureImageStyle()
             self.configureLayout()
         }
     }
+    
     public override var text: String? {
-        didSet {
-            self.convertMode()
-        }
+        didSet { self.convertMode() }
+    }
+    
+    public override var placeholder: String? {
+        didSet { self.configurePlaceholder() }
     }
     
     // MARK: - Initializer
@@ -97,11 +101,10 @@ public class MSTextField: UITextField {
     // MARK: - UI Configuration
     
     private func configureStyles() {
-        MSFont.registerFonts()
         self.font = .msFont(.caption)
         
         self.layer.cornerRadius = Metric.cornerRadius
-        self.backgroundColor = .msColor(.primaryBackground)
+        self.backgroundColor = .msColor(.textFieldBackground)
         
         self.configureImageStyle()
     }
@@ -157,6 +160,13 @@ public class MSTextField: UITextField {
         ])
     }
     
+    private func configurePlaceholder() {
+        var container = AttributeContainer()
+        container.font = .msFont(.caption)
+        let attributedString = AttributedString(self.placeholder ?? "", attributes: container)
+        self.attributedPlaceholder = NSAttributedString(attributedString)
+    }
+    
 }
 
 // MARK: - Edit/Non-Edit Mode Functions
@@ -183,7 +193,7 @@ private extension MSTextField {
         if let leftImage = self.imageStyle.leftImage {
             self.leftImage.image = leftImage
         }
-        self.leftImage.tintColor = .msColor(.secondaryTypo)
+        self.leftImage.tintColor = .msColor(.textFieldTypo)
     }
     
     private func configureRightImageStyle() {
@@ -194,7 +204,7 @@ private extension MSTextField {
         if self.hasText {
             self.rightImage.image = ImageBox.close
         }
-        self.rightImage.tintColor = .msColor(.secondaryTypo)
+        self.rightImage.tintColor = .msColor(.textFieldTypo)
     }
     
     private func configureImages(color: UIColor) {

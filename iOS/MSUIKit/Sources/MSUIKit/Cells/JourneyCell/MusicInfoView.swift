@@ -75,7 +75,7 @@ final class MusicInfoView: UIView {
     
     // MARK: - Functions
     
-    func update(artist: String, title: String) {
+    func update(artist: String?, title: String?) {
         self.artistLabel.text = artist
         self.titleLabel.text = title
     }

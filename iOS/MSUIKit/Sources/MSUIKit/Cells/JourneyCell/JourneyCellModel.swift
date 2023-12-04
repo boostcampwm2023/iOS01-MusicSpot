@@ -19,19 +19,23 @@ public struct JourneyCellModel: Hashable {
     let id: UUID
     let location: String
     let date: Date
-    let song: Song
+    let song: Song?
     
     // MARK: - Initializer
     
     public init(id: UUID = UUID(),
                 location: String,
                 date: Date,
-                songTitle: String,
-                songArtist: String) {
+                songTitle: String?,
+                songArtist: String?) {
         self.id = id
         self.location = location
         self.date = date
-        self.song = Song(artist: songArtist, title: songTitle)
+        if let songTitle, let songArtist {
+            self.song = Song(artist: songArtist, title: songTitle)
+        } else {
+            self.song = nil
+        }
     }
     
 }

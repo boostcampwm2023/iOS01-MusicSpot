@@ -19,6 +19,13 @@ private enum Target {
     
 }
 
+private enum Dependency {
+    
+    static let msFoundation = "MSFoundation"
+    static let msLogger = "MSLogger"
+    
+}
+
 // MARK: - Package
 
 let package = Package(
@@ -34,11 +41,16 @@ let package = Package(
         .library(name: Target.combineCocoa,
                  targets: [Target.combineCocoa])
     ],
+    dependencies: [
+        .package(name: Dependency.msFoundation,
+                 path: Dependency.msFoundation.fromRootPath)
+    ],
     targets: [
         .target(name: Target.msDesignSystem,
                 resources: [
                     .process("../\(Target.msDesignSystem)/Resources")
                 ]),
+        .target(name: Target.combineCocoa),
         .target(name: Target.msUIKit,
                 dependencies: [
                     .target(name: Target.msDesignSystem)
