@@ -32,7 +32,7 @@ final class SaveJourneyMusicCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = Metric.imageViewCornerRadius
         imageView.clipsToBounds = true
-        imageView.backgroundColor = .systemBlue
+        imageView.backgroundColor = .msColor(.musicSpot)
         return imageView
     }()
     

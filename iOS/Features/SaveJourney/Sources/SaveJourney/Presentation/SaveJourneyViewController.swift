@@ -12,12 +12,6 @@ import UIKit
 
 import MSUIKit
 import MediaPlayer
-
-enum SaveJourneyItem: Hashable {
-    case music(String)
-    case spot(Spot)
-}
-
 public final class SaveJourneyViewController: UIViewController {
     
     typealias SaveJourneyDataSource = UICollectionViewDiffableDataSource<SaveJourneySection, SaveJourneyItem>
@@ -44,6 +38,7 @@ public final class SaveJourneyViewController: UIViewController {
         
         static let horizontalInset: CGFloat = 24.0
         static let verticalInset: CGFloat = 12.0
+        static let collectionViewBottomSpacing: CGFloat = 80.0
         static let innerSpacing: CGFloat = 4.0
         static let headerTopInset: CGFloat = 24.0
         static let buttonSpacing: CGFloat = 4.0
@@ -74,7 +69,7 @@ public final class SaveJourneyViewController: UIViewController {
         collectionView.backgroundColor = .clear
         collectionView.contentInset = UIEdgeInsets(top: self.view.frame.width,
                                                    left: .zero,
-                                                   bottom: .zero,
+                                                   bottom: Metric.collectionViewBottomSpacing,
                                                    right: .zero)
         collectionView.delegate = self
         return collectionView
@@ -317,20 +312,18 @@ extension SaveJourneyViewController: UICollectionViewDelegate {
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offset = scrollView.contentOffset
-        self.updateProfileViewLayout(by: offset, name: "Change Me!")
+        self.updateProfileViewLayout(by: offset)
     }
     
-    func updateProfileViewLayout(by offset: CGPoint, name: String) {
+    func updateProfileViewLayout(by offset: CGPoint) {
         let collectionViewHeight = self.collectionView.frame.height
         let collectionViewContentInset = collectionViewHeight - self.view.safeAreaInsets.top
         let assistanceValue = collectionViewHeight - collectionViewContentInset
         let isContentBelowTopOfScreen = offset.y < 0
         
         if isContentBelowTopOfScreen {
-            self.navigationItem.title = nil
             self.mapViewHeightConstraint?.constant = assistanceValue + offset.y.magnitude
         } else if !isContentBelowTopOfScreen {
-            self.navigationItem.title = name
             self.mapViewHeightConstraint?.constant = 0
         } else {
             self.mapViewHeightConstraint?.constant = offset.y.magnitude

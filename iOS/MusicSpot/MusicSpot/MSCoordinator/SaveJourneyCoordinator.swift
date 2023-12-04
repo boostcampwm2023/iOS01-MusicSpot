@@ -7,6 +7,7 @@
 
 import UIKit
 
+import MSData
 import SaveJourney
 
 final class SaveJourneyCoordinator: Coordinator {
@@ -28,7 +29,8 @@ final class SaveJourneyCoordinator: Coordinator {
     // MARK: - Functions
     
     func start() {
-        let saveJourneyViewModel = SaveJourneyViewModel()
+        let spotRepository = SpotRepositoryImplementation()
+        let saveJourneyViewModel = SaveJourneyViewModel(spotRepository: spotRepository)
         let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
 //        saveJourneyViewController.delegate = self
         self.navigationController.pushViewController(saveJourneyViewController, animated: true)

@@ -7,6 +7,8 @@
 
 import UIKit
 
+// MARK: - Section
+
 enum SaveJourneySection {
     case music
     case spot
@@ -33,4 +35,11 @@ enum SaveJourneySection {
         }
     }
     
+}
+
+// MARK: - Item
+
+enum SaveJourneyItem: Hashable {
+    case music(String)
+    case spot(Spot)
 }

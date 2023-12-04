@@ -22,7 +22,7 @@ extension Journey {
 extension Spot {
     
     init(dto: ResponsibleSpotDTO) {
-        self.photoURLs = dto.photoURLs
+        self.photoURL = dto.photoURL
     }
     
 }
