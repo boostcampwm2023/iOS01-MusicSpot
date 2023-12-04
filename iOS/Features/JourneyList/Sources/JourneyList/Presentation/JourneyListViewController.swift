@@ -198,8 +198,7 @@ extension JourneyListViewController: UICollectionViewDelegate {
                                              songArtist: itemIdentifier.song.artist)
             cell.update(with: cellModel)
             let photoURLs = itemIdentifier.spots
-                .flatMap { $0.photoURLs }
-                .compactMap { URL(string: $0) }
+                .map { $0.photoURL }
             
             cell.updateImages(with: photoURLs, for: indexPath)
         }
@@ -234,6 +233,8 @@ extension JourneyListViewController: UICollectionViewDelegate {
 
 import MSData
 import MSDesignSystem
+import MSData
+import MSNetworking
 @available(iOS 17, *)
 #Preview {
     MSFont.registerFonts()

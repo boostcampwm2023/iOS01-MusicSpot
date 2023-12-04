@@ -16,11 +16,13 @@ final class SaveJourneyMusicCell: UICollectionViewCell {
     static let estimatedHeight: CGFloat = 152.0
     
     private enum Metric {
+        
         static let cornerRadius: CGFloat = 12.0
         static let imageViewCornerRadius: CGFloat = 5.0
         static let imageViewSize: CGFloat = 128.0
         static let stackViewSpacing: CGFloat = 4.0
         static let iconImageSize: CGFloat = 24.0
+        
     }
     
     // MARK: - UI Components
@@ -30,7 +32,7 @@ final class SaveJourneyMusicCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = Metric.imageViewCornerRadius
         imageView.clipsToBounds = true
-        imageView.backgroundColor = .systemBlue
+        imageView.backgroundColor = .msColor(.musicSpot)
         return imageView
     }()
     
@@ -45,6 +47,7 @@ final class SaveJourneyMusicCell: UICollectionViewCell {
     private let audioIconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = .msIcon(.voice)
+        imageView.tintColor = .msColor(.primaryTypo)
         return imageView
     }()
     
@@ -78,8 +81,11 @@ final class SaveJourneyMusicCell: UICollectionViewCell {
     
     // MARK: - Functions
     
-    func update(with data: String) {
+    func update(with cellModel: Song) {
+        self.titleLabel.text = cellModel.title
+        self.artistLabel.text = cellModel.artist
         
+        // TODO: ImageFetcher Merge 후 구현
     }
     
 }
