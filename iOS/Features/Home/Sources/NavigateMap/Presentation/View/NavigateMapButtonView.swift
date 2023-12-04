@@ -14,29 +14,29 @@ enum ButtonImage: String {
 }
 
 /// HomeMap 내의 버튼들을 감싸는 View
-final class NavigateMapButtonView: UIView {
+public final class NavigateMapButtonView: UIView {
     
     // MARK: - Properties
     
-    private var buttonStackView: ButtonStackView = {
+    public var buttonStackView: ButtonStackView = {
         let view = ButtonStackView()
         return view
     }()
     
     // Button별 기능 주입
-    var settingButtonAction: (() -> Void)? {
+    public var settingButtonAction: (() -> Void)? {
         didSet {
             buttonStackView.settingButtonAction = settingButtonAction
         }
     }
     
-    var mapButtonAction: (() -> Void)? {
+    public var mapButtonAction: (() -> Void)? {
         didSet {
             buttonStackView.mapButtonAction = mapButtonAction
         }
     }
     
-    var locationButtonAction: (() -> Void)? {
+    public var locationButtonAction: (() -> Void)? {
         didSet {
             buttonStackView.locationButtonAction = locationButtonAction
         }
@@ -75,7 +75,7 @@ final class NavigateMapButtonView: UIView {
 }
 
 /// HomeMap 내 3개 버튼 StackView
-class ButtonStackView: UIStackView {
+final public class ButtonStackView: UIStackView {
     
     // MARK: - Properties
     
@@ -97,11 +97,11 @@ class ButtonStackView: UIStackView {
     // MARK: - Functions
     
     private func configureLayout() {
-        axis = .vertical
-        spacing = 24
-        alignment = .fill
-        distribution = .fillEqually
-        translatesAutoresizingMaskIntoConstraints = false
+        self.axis = .vertical
+        self.spacing = 24
+        self.alignment = .fill
+        self.distribution = .fillEqually
+        self.translatesAutoresizingMaskIntoConstraints = false
         
         let settingButton = self.createButton(image: ButtonImage.setting)
         settingButton.addTarget(self, action: #selector(settingButtondidTap), for: .touchUpInside)
@@ -110,9 +110,9 @@ class ButtonStackView: UIStackView {
         let locationButton = self.createButton(image: ButtonImage.location)
         locationButton.addTarget(self, action: #selector(locationButtondidTap), for: .touchUpInside)
         
-        addArrangedSubview(settingButton)
-        addArrangedSubview(mapButton)
-        addArrangedSubview(locationButton)
+        self.addArrangedSubview(settingButton)
+        self.addArrangedSubview(mapButton)
+        self.addArrangedSubview(locationButton)
     }
     
     private func createButton(image: ButtonImage) -> UIButton {

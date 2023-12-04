@@ -10,10 +10,22 @@ import UIKit
 import MapKit
 
 import MSUIKit
+import MSCacheStorage
+
+public protocol NavigationViewControllerDelegate {
+    func navigateToSetting()
+    func showUserLocation()
+}
 
 public final class NavigateMapViewController: UIViewController {
 
     // MARK: - Properties
+    
+    public var viewModel: NavigateMapViewModel
+    
+    private let cache: MSCacheStorage
+    
+    public var delegate: NavigationViewControllerDelegate?
     
     // 임시 위치 정보
     let tempCoordinate = CLLocationCoordinate2D(latitude: 37.495120492289026, longitude: 126.9553042366186)
@@ -30,7 +42,7 @@ public final class NavigateMapViewController: UIViewController {
     
     @objc func findMyLocation() {
         
-        guard let currentLocation = locationManager.location else {
+        guard locationManager.location != nil else {
             locationManager.requestWhenInUseAuthorization()
             return
         }
@@ -46,7 +58,22 @@ public final class NavigateMapViewController: UIViewController {
     private var polyline: MKPolyline?
 
     let locationManager = CLLocationManager()
+    
+    // MARK: - Initializer
 
+    public init(viewModel: NavigateMapViewModel,
+                cache: MSCacheStorage = MSCacheStorage(),
+                nibName nibNameOrNil: String? = nil,
+                bundle nibBundleOrNil: Bundle? = nil) {
+        self.viewModel = viewModel
+        self.cache = cache
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
+    }
+    
     // MARK: - Life Cycle
 
     public override func viewDidLoad() {
@@ -56,7 +83,8 @@ public final class NavigateMapViewController: UIViewController {
         
         locationManager.requestWhenInUseAuthorization()
         mapView.map.setRegion(MKCoordinateRegion(center: tempCoordinate,
-                                                 span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.11)),
+                                                 span: MKCoordinateSpan(latitudeDelta: 0.1, 
+                                                                        longitudeDelta: 0.11)),
                               animated: true)
         
         mapView.map.delegate = self
@@ -66,10 +94,18 @@ public final class NavigateMapViewController: UIViewController {
         configureLayout()
         configureStyle()
     }
+    
+    
 
     // MARK: - Functions
+    
+    private func settingButtonDidTap() {
+        
+    }
 
-    private func configureStyle() {}
+    private func configureStyle() {
+        buttonStackView.settingButtonAction = settingButtonDidTap
+    }
 
     private func configureLayout() {
         view.addSubview(buttonStackView)

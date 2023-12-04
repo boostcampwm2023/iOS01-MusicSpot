@@ -39,7 +39,9 @@ final class HomeCoordinator: Coordinator {
     
     func start() {
         // Navigate Map
-        let navigateMapViewController = NavigateMapViewController()
+        let navigateMapRepository = NavigateMapRepositoryImplementation()
+        let navigateMapViewModel = NavigateMapViewModel(repository: navigateMapRepository)
+        let navigateMapViewController = NavigateMapViewController(viewModel: navigateMapViewModel)
         
         // Journey List
         let journeyRepository = JourneyRepositoryImplementation()
@@ -50,9 +52,10 @@ final class HomeCoordinator: Coordinator {
         // Bottom Sheet
         let homeBottomSheetVC = HomeBottomSheetViewController(contentViewController: navigateMapViewController,
                                                               bottomSheetViewController: journeyListViewController)
-        homeBottomSheetVC.configuration = MSBottomSheetViewController.Configuration(fullDimension: .fractional(1.0),
-                                                                                    detentDimension: .fractional(0.4),
-                                                                                    minimizedDimension: .absolute(100.0))
+        homeBottomSheetVC.configuration = 
+        MSBottomSheetViewController.Configuration(fullDimension: .fractional(1.0),
+                                                  detentDimension: .fractional(0.4),
+                                                  minimizedDimension: .absolute(100.0))
         homeBottomSheetVC.delegate = self
         self.navigationController.pushViewController(homeBottomSheetVC, animated: true)
     }
@@ -62,6 +65,9 @@ final class HomeCoordinator: Coordinator {
 // MARK: - NavigateMapViewController
 
 extension HomeCoordinator: HomeViewControllerDelegate {
+    func navigateToSetting() {
+        print(#function)
+    }
     
     func navigateToSpot() {
         let spotCoordinator = SpotCoordinator(navigationController: self.navigationController)
