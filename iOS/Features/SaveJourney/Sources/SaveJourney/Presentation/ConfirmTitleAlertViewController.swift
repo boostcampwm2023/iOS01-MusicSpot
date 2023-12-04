@@ -8,6 +8,7 @@
 import Combine
 import UIKit
 
+import CombineCocoa
 import MSUIKit
 
 protocol AlertViewControllerDelegate: AnyObject {
@@ -23,13 +24,14 @@ final class ConfirmTitleAlertViewController: MSAlertViewController {
     private enum Typo {
         
         static let title = "여정 이름"
-        static let subtitle = "마지막으로 여정의 이름을 정해주세요."
+        static let placeholder = "마지막으로 여정의 이름을 정해주세요."
         
     }
     
     private enum Metric {
         
         static let horizontalInset: CGFloat = 12.0
+        static let textFieldCenterOffset: CGFloat = 15.0
         
     }
     
@@ -40,7 +42,7 @@ final class ConfirmTitleAlertViewController: MSAlertViewController {
         textField.imageStyle = .none
         textField.clearButtonMode = .whileEditing
         textField.enablesReturnKeyAutomatically = true
-        textField.placeholder = "Placeholder"
+        textField.placeholder = Typo.placeholder
         return textField
     }()
     
@@ -48,17 +50,33 @@ final class ConfirmTitleAlertViewController: MSAlertViewController {
     
     weak var delegate: AlertViewControllerDelegate?
     
+    private var cancellables: Set<AnyCancellable> = []
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.configureButtonActions()
+        self.bind()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         self.textField.becomeFirstResponder()
+    }
+    
+    // MARK: - Combine Binding
+    
+    private func bind() {
+        self.textField.textPublisher
+            .receive(on: DispatchQueue.main)
+            .map { $0.isEmpty }
+            .removeDuplicates()
+            .sink { [weak self] isTextEmpty in
+                self?.updateDoneButton(isEnabled: !isTextEmpty)
+            }
+            .store(in: &self.cancellables)
     }
     
     // MARK: - Helpers
@@ -85,7 +103,6 @@ final class ConfirmTitleAlertViewController: MSAlertViewController {
         super.configureStyles()
         
         self.updateTitle(Typo.title)
-        self.updateSubtitle(Typo.subtitle)
     }
     
     override func configureLayout() {
@@ -94,7 +111,8 @@ final class ConfirmTitleAlertViewController: MSAlertViewController {
         self.containerView.addSubview(self.textField)
         self.textField.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.textField.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
+            self.textField.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor,
+                                                    constant: -Metric.textFieldCenterOffset),
             self.textField.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor,
                                                     constant: Metric.horizontalInset),
             self.textField.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor,

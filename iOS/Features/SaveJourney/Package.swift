@@ -28,6 +28,7 @@ private enum Target {
 private enum Dependency {
     
     static let msData = "MSData"
+    static let combineCocoa = "CombineCocoa"
     static let msUIKit = "MSUIKit"
     static let msDesignsystem = "MSDesignSystem"
     static let msLogger = "MSLogger"
@@ -60,6 +61,8 @@ let package = Package(
                     .product(name: Dependency.msData,
                              package: Dependency.msData),
                     .product(name: Dependency.msUIKit,
+                             package: Dependency.msUIKit),
+                    .product(name: Dependency.combineCocoa,
                              package: Dependency.msUIKit),
                     .product(name: Dependency.msLogger,
                              package: Dependency.msFoundation)

@@ -82,7 +82,6 @@ open class MSAlertViewController: UIViewController {
         let label = UILabel()
         label.font = .msFont(.headerTitle)
         label.textColor = .msColor(.primaryTypo)
-        label.text = "Title"
         return label
     }()
     
@@ -90,7 +89,6 @@ open class MSAlertViewController: UIViewController {
         let label = UILabel()
         label.font = .msFont(.caption)
         label.textColor = .msColor(.secondaryTypo)
-        label.text = "Subtitle"
         return label
     }()
     
@@ -118,6 +116,7 @@ open class MSAlertViewController: UIViewController {
         let button = MSButton.primary()
         button.cornerStyle = .squared
         button.title = Typo.doneButtonTitle
+        button.isEnabled = false
         return button
     }()
     
@@ -322,6 +321,10 @@ open class MSAlertViewController: UIViewController {
     
     public func updateSubtitle(_ subtitle: String) {
         self.subtitleLabel.text = subtitle
+    }
+    
+    public func updateDoneButton(isEnabled: Bool) {
+        self.doneButton.isEnabled = isEnabled
     }
     
 }
