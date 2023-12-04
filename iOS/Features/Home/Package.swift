@@ -29,6 +29,7 @@ private enum Target {
 private enum Dependency {
     
     static let journeyList = "JourneyList"
+    static let msData = "MSData"
     static let msUIKit = "MSUIKit"
     static let msCoreKit = "MSCoreKit"
     static let msFoundation = "MSFoundation"
@@ -50,10 +51,11 @@ let package = Package(
                  targets: [Target.navigateMap]),
         
     ],
-    
     dependencies: [
         .package(name: Dependency.journeyList,
                  path: Dependency.journeyList.fromCurrentPath),
+        .package(name: Dependency.msData,
+                 path: Dependency.msData.fromCurrentPath),
         .package(name: Dependency.msUIKit,
                  path: Dependency.msUIKit.fromRootPath),
         .package(name: Dependency.msFoundation,
@@ -70,6 +72,8 @@ let package = Package(
                 ]),
         .target(name: Target.navigateMap,
                 dependencies: [
+                    .product(name: Dependency.msData,
+                             package: Dependency.msData),
                     .product(name: Dependency.msUIKit,
                              package: Dependency.msUIKit)
                 ]),
