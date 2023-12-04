@@ -245,7 +245,6 @@ private extension SaveJourneyViewController {
         }
         
         let journeyCellRegistration = SpotCellRegistration { cell, indexPath, itemIdentifier in
-            // TODO: 별도의 모델 사용
             let geocoder = CLGeocoder()
             let location = CLLocation(latitude: itemIdentifier.location.latitude,
                                       longitude: itemIdentifier.location.longitude)
