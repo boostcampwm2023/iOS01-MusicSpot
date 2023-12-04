@@ -10,12 +10,12 @@ import UIKit
 // MARK: - Section
 
 enum SaveJourneySection {
-    case music
+    case song
     case spot
     
     var itemSize: NSCollectionLayoutSize {
         switch self {
-        case .music:
+        case .song:
             return NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                           heightDimension: .fractionalHeight(1.0))
         case .spot:
@@ -26,7 +26,7 @@ enum SaveJourneySection {
     
     var groupSize: NSCollectionLayoutSize {
         switch self {
-        case .music:
+        case .song:
             return NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                           heightDimension: .estimated(SaveJourneyMusicCell.estimatedHeight))
         case .spot:
@@ -40,6 +40,6 @@ enum SaveJourneySection {
 // MARK: - Item
 
 enum SaveJourneyItem: Hashable {
-    case music(String)
+    case song(Song)
     case spot(Spot)
 }

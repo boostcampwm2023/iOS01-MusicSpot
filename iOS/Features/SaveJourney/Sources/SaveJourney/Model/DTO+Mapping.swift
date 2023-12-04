@@ -46,6 +46,7 @@ extension Song {
     init(dto: SongDTO) {
         self.title = dto.title
         self.artist = dto.artist
+        self.albumArtURL = URL(string: dto.artwork)
     }
     
 }

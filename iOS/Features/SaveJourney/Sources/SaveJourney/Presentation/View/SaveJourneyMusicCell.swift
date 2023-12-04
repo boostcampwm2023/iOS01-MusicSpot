@@ -47,6 +47,7 @@ final class SaveJourneyMusicCell: UICollectionViewCell {
     private let audioIconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = .msIcon(.voice)
+        imageView.tintColor = .msColor(.primaryTypo)
         return imageView
     }()
     
@@ -80,8 +81,11 @@ final class SaveJourneyMusicCell: UICollectionViewCell {
     
     // MARK: - Functions
     
-    func update(with data: String) {
+    func update(with cellModel: Song) {
+        self.titleLabel.text = cellModel.title
+        self.artistLabel.text = cellModel.artist
         
+        // TODO: ImageFetcher Merge 후 구현
     }
     
 }

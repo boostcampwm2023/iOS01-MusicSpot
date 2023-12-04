@@ -28,8 +28,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         MSFont.registerFonts()
         
+        let song = Song(title: "OMG", artist: "NewJeans", albumArtURL: URL(string: "https://naver.com")!)
         let spotRepository = SpotRepositoryImplementation()
-        let saveJourneyViewModel = SaveJourneyViewModel(spotRepository: spotRepository)
+        let saveJourneyViewModel = SaveJourneyViewModel(selectedSong: song,
+                                                        spotRepository: spotRepository)
         let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
         let navigationViewController = UINavigationController(rootViewController: saveJourneyViewController)
         

@@ -16,7 +16,7 @@ public final class SaveJourneyViewController: UIViewController {
     
     typealias SaveJourneyDataSource = UICollectionViewDiffableDataSource<SaveJourneySection, SaveJourneyItem>
     typealias HeaderRegistration = UICollectionView.SupplementaryRegistration<SaveJourneyHeaderView>
-    typealias MusicCellRegistration = UICollectionView.CellRegistration<SaveJourneyMusicCell, String>
+    typealias MusicCellRegistration = UICollectionView.CellRegistration<SaveJourneyMusicCell, Song>
     typealias SpotCellRegistration = UICollectionView.CellRegistration<SpotCell, Spot>
     typealias SaveJourneySnapshot = NSDiffableDataSourceSnapshot<SaveJourneySection, SaveJourneyItem>
     typealias MusicSnapshot = NSDiffableDataSourceSectionSnapshot<SaveJourneyItem>
@@ -124,11 +124,12 @@ public final class SaveJourneyViewController: UIViewController {
     // MARK: - Combine Binding
     
     func bind() {
-        self.viewModel.state.music
-            .sink { music in
+        self.viewModel.state.song
+            .print()
+            .sink { song in
                 var snapshot = MusicSnapshot()
-                snapshot.append([.music(music)])
-                self.dataSource?.apply(snapshot, to: .music)
+                snapshot.append([.song(song)])
+                self.dataSource?.apply(snapshot, to: .song)
             }
             .store(in: &self.cancellables)
         
@@ -196,8 +197,8 @@ private extension SaveJourneyViewController {
         let item = NSCollectionLayoutItem(layoutSize: section.itemSize)
         
         let group: NSCollectionLayoutGroup
-        let itemCount = section == .music ? 1 : 2
-        let interItemSpacing: CGFloat = section == .music ? .zero : Metric.innerSpacing
+        let itemCount = section == .song ? 1 : 2
+        let interItemSpacing: CGFloat = section == .song ? .zero : Metric.innerSpacing
         if #available(iOS 16.0, *) {
             group = NSCollectionLayoutGroup.horizontal(layoutSize: section.groupSize,
                                                            repeatingSubitem: item,
@@ -281,10 +282,10 @@ private extension SaveJourneyViewController {
         let dataSource = SaveJourneyDataSource(collectionView: self.collectionView,
                                                cellProvider: { collectionView, indexPath, item in
             switch item {
-            case .music(let music):
+            case .song(let song):
                 return collectionView.dequeueConfiguredReusableCell(using: musicCellRegistration,
                                                                     for: indexPath,
-                                                                    item: music)
+                                                                    item: song)
             case .spot(let journey):
                 return collectionView.dequeueConfiguredReusableCell(using: journeyCellRegistration,
                                                                     for: indexPath,
@@ -298,7 +299,7 @@ private extension SaveJourneyViewController {
         }
         
         var snapshot = SaveJourneySnapshot()
-        snapshot.appendSections([.music, .spot])
+        snapshot.appendSections([.song, .spot])
         dataSource.apply(snapshot)
         
         return dataSource
@@ -392,8 +393,9 @@ import MSData
 
 @available(iOS 17, *)
 #Preview {
+    let song = Song(title: "OMG", artist: "NewJeans", albumArtURL: URL(string: "sdf")!)
     let spotRepository = SpotRepositoryImplementation()
-    let saveJourneyViewModel = SaveJourneyViewModel(spotRepository: spotRepository)
+    let saveJourneyViewModel = SaveJourneyViewModel(selectedSong: song, spotRepository: spotRepository)
     let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
     return saveJourneyViewController
 }

@@ -19,7 +19,7 @@ public final class SaveJourneyViewModel {
     }
     
     public struct State {
-        var music = CurrentValueSubject<String, Never>("")
+        var song: CurrentValueSubject<Song, Never>
         var spots = CurrentValueSubject<[Spot], Never>([])
     }
     
@@ -27,12 +27,14 @@ public final class SaveJourneyViewModel {
     
     private let spotRepository: SpotRepository
     
-    public var state = State()
+    public var state: State
     
     // MARK: - Initializer
     
-    public init(spotRepository: SpotRepository) {
+    public init(selectedSong: Song,
+                spotRepository: SpotRepository) {
         self.spotRepository = spotRepository
+        self.state = State(song: CurrentValueSubject<Song, Never>(selectedSong))
     }
     
     // MARK: - Functions

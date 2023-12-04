@@ -1,6 +1,6 @@
 //
 //  Journey.swift
-//  JourneyList
+//  SaveJourney
 //
 //  Created by 이창준 on 11/23/23.
 //
