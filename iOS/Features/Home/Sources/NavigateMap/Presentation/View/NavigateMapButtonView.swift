@@ -8,9 +8,11 @@
 import UIKit
 
 enum ButtonImage: String {
-    case setting = "gearshape.fill",
-         map = "map.fill",
-         location = "mappin"
+    
+    case setting = "gearshape.fill"
+    case map = "map.fill"
+    case location = "mappin"
+    
 }
 
 protocol NavigateMapButtonViewDelegate: AnyObject {
@@ -26,10 +28,7 @@ public final class NavigateMapButtonView: UIView {
     
     // MARK: - UI Components
     
-    public var buttonStackView: ButtonStackView = {
-        let view = ButtonStackView()
-        return view
-    }()
+    public var buttonStackView = ButtonStackView()
     
     // MARK: - Properties
 
@@ -52,19 +51,18 @@ public final class NavigateMapButtonView: UIView {
     // MARK: - UI Configuration
     
     private func configureStyle() {
-        backgroundColor = .lightGray
-        layer.cornerRadius = 8
-        
+        self.backgroundColor = .lightGray
+        self.layer.cornerRadius = 8
     }
     
     private func configureLayout() {
-        addSubview(buttonStackView)
-        buttonStackView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(self.buttonStackView)
+        self.buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            buttonStackView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            buttonStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-            buttonStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
-            buttonStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
+            self.buttonStackView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            self.buttonStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            self.buttonStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            self.buttonStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16)
         ])
     }
     
@@ -101,28 +99,34 @@ public final class NavigateMapButtonView: UIView {
     // MARK: - Functions
     
     private func settingButtonDidTap() {
-        delegate?.settingButtonDidTap()
+        self.delegate?.settingButtonDidTap()
     }
     
     private func mapButtonDidTap() {
-        delegate?.mapButtonDidTap()
+        self.delegate?.mapButtonDidTap()
     }
     
     private func locationButtonDidTap() {
-        delegate?.locationButtonDidTap()
+        self.delegate?.locationButtonDidTap()
     }
     
 }
 
 /// HomeMap 내 3개 버튼 StackView
-final public class ButtonStackView: UIStackView {
+public final class ButtonStackView: UIStackView {
+    
+    // MARK: - Constants
+    
+    private enum Metric {
+        
+        static let spacing: CGFloat = 24.0
+        
+    }
     
     // MARK: - Properties
 
     lazy var settingButton = self.createButton(image: ButtonImage.setting)
-    
     lazy var mapButton = self.createButton(image: ButtonImage.map)
-    
     lazy var locationButton = self.createButton(image: ButtonImage.location)
     
     
@@ -139,17 +143,17 @@ final public class ButtonStackView: UIStackView {
     
     // MARK: - UI Configuration
     
+    private func configureStyles() {
+        self.axis = .vertical
+        self.spacing = Metric.spacing
+        self.distribution = .fillEqually
+    }
+    
     private func configureLayout() {
         
-        self.addArrangedSubview(settingButton)
-        self.addArrangedSubview(mapButton)
-        self.addArrangedSubview(locationButton)
-        
-        self.axis = .vertical
-        self.spacing = 24
-        self.alignment = .fill
-        self.distribution = .fillEqually
-        self.translatesAutoresizingMaskIntoConstraints = false
+        self.addArrangedSubview(self.settingButton)
+        self.addArrangedSubview(self.mapButton)
+        self.addArrangedSubview(self.locationButton)
     }
     
     // MARK: - Functions
