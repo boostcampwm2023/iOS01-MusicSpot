@@ -39,7 +39,9 @@ final class HomeCoordinator: Coordinator {
     
     func start() {
         // Navigate Map
-        let navigateMapViewController = NavigateMapViewController()
+        let navigateMapRepository = NavigateMapRepositoryImplementation()
+        let navigateMapViewModel = NavigateMapViewModel(repository: navigateMapRepository)
+        let navigateMapViewController = NavigateMapViewController(viewModel: navigateMapViewModel)
         
         // Journey List
         let journeyRepository = JourneyRepositoryImplementation()
@@ -62,6 +64,9 @@ final class HomeCoordinator: Coordinator {
 // MARK: - NavigateMapViewController
 
 extension HomeCoordinator: HomeViewControllerDelegate {
+    func navigateToSetting() {
+        print(#function)
+    }
     
     func navigateToSpot() {
         let spotCoordinator = SpotCoordinator(navigationController: self.navigationController)

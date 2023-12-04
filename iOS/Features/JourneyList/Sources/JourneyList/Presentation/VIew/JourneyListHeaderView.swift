@@ -67,8 +67,6 @@ public final class JourneyListHeaderView: UICollectionReusableView {
         self.configureLayout()
     }
     
-    let imageView: UIImageView = .init()
-    
     public required init?(coder: NSCoder) {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }

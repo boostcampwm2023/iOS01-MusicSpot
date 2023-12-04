@@ -27,7 +27,6 @@ private enum Dependency {
     static let msImageFetcher = "MSImageFetcher"
     static let msCoreKit = "MSCoreKit"
     static let msLogger = "MSLogger"
-    static let msFoundation = "MSFoundation"
     
 }
 
