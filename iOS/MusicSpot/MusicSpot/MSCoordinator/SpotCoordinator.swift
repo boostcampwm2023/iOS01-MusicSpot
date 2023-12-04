@@ -35,16 +35,6 @@ final class SpotCoordinator: Coordinator {
     
 }
 
-// MARK: - SpotViewController
-
-//extension SpotCoordinator: SpotViewControllerDelegate {
-//    
-//    func navigateToHomeMap() {
-//        self.delegate?.popToHomeMap(from: self)
-//    }
-//    
-//}
-
 // MARK: - HomeMap Coordinator
 
 extension SpotCoordinator: HomeMapCoordinatorDelegate {

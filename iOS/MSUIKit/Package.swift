@@ -9,6 +9,10 @@ extension String {
     
     static let package = "MSUIKit"
     
+    var fromRootPath: String {
+        return "../" + self
+    }
+    
 }
 
 private enum Target {
@@ -16,6 +20,13 @@ private enum Target {
     static let msDesignSystem = "MSDesignSystem"
     static let msUIKit = "MSUIKit"
     static let combineCocoa = "CombineCocoa"
+    
+}
+
+private enum Dependency {
+    
+    static let msFoundation = "MSFoundation"
+    static let msLogger = "MSLogger"
     
 }
 
@@ -34,16 +45,22 @@ let package = Package(
         .library(name: Target.combineCocoa,
                  targets: [Target.combineCocoa])
     ],
+    dependencies: [
+        .package(name: Dependency.msFoundation,
+                 path: Dependency.msFoundation.fromRootPath)
+    ],
     targets: [
         .target(name: Target.msDesignSystem,
                 resources: [
                     .process("../\(Target.msDesignSystem)/Resources")
                 ]),
+        .target(name: Target.combineCocoa),
         .target(name: Target.msUIKit,
                 dependencies: [
-                    .target(name: Target.msDesignSystem)
-                ]),
-        .target(name: Target.combineCocoa)
+                    .target(name: Target.msDesignSystem),
+                    .product(name: Dependency.msLogger,
+                             package: Dependency.msFoundation)
+                ])
     ],
     swiftLanguageVersions: [.v5]
 )

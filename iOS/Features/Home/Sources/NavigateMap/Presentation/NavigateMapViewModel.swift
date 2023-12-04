@@ -7,29 +7,20 @@
 
 import Foundation
 
-class NavigateMapViewModel {
+import MSData
+
+public final class NavigateMapViewModel {
     
     // MARK: - Properties
-
-    var journeys: [Journey]
-    var user: User
-    var currentJourney: Journey?
+    
+    private let repository: NavigateMapRepository?
     
     // MARK: - Initializer
 
-    init(journeys: [Journey], user: User, currentJourney: Journey? = nil) {
-        self.journeys = journeys
-        self.user = user
-        self.currentJourney = currentJourney
-    }
-    
-    var userState: Bool {
-        self.user.isRecording
+    public init(repository: NavigateMapRepository) {
+        self.repository = repository
     }
     
     // MARK: - Functions
 
-    func toggleIsRecording() {
-        user.isRecording.toggle()
-    }
 }

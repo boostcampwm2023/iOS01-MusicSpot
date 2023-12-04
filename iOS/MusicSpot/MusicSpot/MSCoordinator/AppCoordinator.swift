@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol AppCoordinatorDelegate {
+protocol AppCoordinatorDelegate: AnyObject {
     
     func popToHomeMap(from coordinator: Coordinator)
     func popToSearchMusic(from coordinator: Coordinator)

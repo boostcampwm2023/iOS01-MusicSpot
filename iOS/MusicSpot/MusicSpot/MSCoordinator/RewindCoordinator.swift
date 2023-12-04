@@ -42,16 +42,6 @@ final class RewindCoordinator: Coordinator {
     
 }
 
-// MARK: - RewindViewController
-
-//extension RewindCoordinator: RewindViewControllerDelegate {
-//    
-//    func navigateToHomeMap() {
-//        self.delegate?.popToHomeMap(from: self)
-//    }
-//    
-//}
-
 // MARK: - HomeMap Coordinator
 
 extension RewindCoordinator: HomeMapCoordinatorDelegate {

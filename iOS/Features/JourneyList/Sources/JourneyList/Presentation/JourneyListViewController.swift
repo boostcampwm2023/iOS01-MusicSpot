@@ -20,23 +20,26 @@ public protocol JourneyListViewControllerDelegate: AnyObject {
 public final class JourneyListViewController: BaseViewController {
     
     typealias JourneyListDataSource = UICollectionViewDiffableDataSource<Int, Journey>
+    typealias JourneyListHeaderRegistration = UICollectionView.SupplementaryRegistration<JourneyListHeaderView>
     typealias JourneyCellRegistration = UICollectionView.CellRegistration<JourneyCell, Journey>
     typealias JourneySnapshot = NSDiffableDataSourceSnapshot<Int, Journey>
     
     // MARK: - Constants
     
     private enum Typo {
-        static let title: String = "지난 여정"
+        
         static func subtitle(numberOfJourneys: Int) -> String {
             return "현재 위치에 \(numberOfJourneys)개의 여정이 있습니다."
         }
+        
     }
     
     private enum Metric {
-        static let titleStackSpacing: CGFloat = 4.0
+        
         static let collectionViewHorizontalInset: CGFloat = 10.0
         static let collectionViewVerticalInset: CGFloat = 24.0
         static let interGroupSpacing: CGFloat = 12.0
+        
     }
     
     // MARK: - Properties
@@ -57,31 +60,8 @@ public final class JourneyListViewController: BaseViewController {
     
     // MARK: - UI Components
     
-    private let titleStack: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = Metric.titleStackSpacing
-        return stackView
-    }()
-    
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = .msFont(.headerTitle)
-        label.textColor = .msColor(.primaryTypo)
-        label.text = Typo.title
-        return label
-    }()
-    
-    private let subtitleLabel: UILabel = {
-        let label = UILabel()
-        label.font = .msFont(.caption)
-        label.textColor = .msColor(.secondaryTypo)
-        label.text = Typo.subtitle(numberOfJourneys: 0)
-        return label
-    }()
-    
-    private lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: .zero,
+    private lazy var collectionView: MSCollectionView = {
+        let collectionView = MSCollectionView(frame: .zero,
                                               collectionViewLayout: UICollectionViewLayout())
         collectionView.backgroundColor = .clear
         collectionView.delegate = self
@@ -120,7 +100,6 @@ public final class JourneyListViewController: BaseViewController {
         self.viewModel.state.journeys
             .receive(on: DispatchQueue.main)
             .sink { journeys in
-                self.subtitleLabel.text = Typo.subtitle(numberOfJourneys: journeys.count)
                 var snapshot = JourneySnapshot()
                 snapshot.appendSections([.zero])
                 snapshot.appendItems(journeys, toSection: .zero)
@@ -143,29 +122,15 @@ public final class JourneyListViewController: BaseViewController {
     }
     
     public override func configureLayout() {
-        self.view.addSubview(self.titleStack)
-        self.titleStack.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            self.titleStack.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            self.titleStack.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            self.titleStack.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
-        ])
-        
-        [
-            self.titleLabel,
-            self.subtitleLabel
-        ].forEach {
-            self.titleStack.addArrangedSubview($0)
-        }
-        
         self.view.addSubview(self.collectionView)
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
+        let bottomAnchor = self.collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+        bottomAnchor.priority = .defaultLow
         NSLayoutConstraint.activate([
-            self.collectionView.topAnchor.constraint(equalTo: self.titleStack.bottomAnchor,
-                                                     constant: Metric.collectionViewVerticalInset),
+            self.collectionView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
             self.collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor,
                                                          constant: Metric.collectionViewHorizontalInset),
-            self.collectionView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            bottomAnchor,
             self.collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,
                                                           constant: -Metric.collectionViewHorizontalInset)
         ])
@@ -178,9 +143,19 @@ public final class JourneyListViewController: BaseViewController {
 extension JourneyListViewController: UICollectionViewDelegate {
     
     private func configureCollectionView() {
+        let configuration = UICollectionViewCompositionalLayoutConfiguration()
+        
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                heightDimension: .estimated(JourneyListHeaderView.estimatedHight))
+        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
+                                                                 elementKind: UICollectionView.elementKindSectionHeader,
+                                                                 alignment: .top)
+        header.pinToVisibleBounds = true
+        configuration.boundarySupplementaryItems = [header]
+        
         let layout = UICollectionViewCompositionalLayout(sectionProvider: { _, _ in
             return self.configureSection()
-        })
+        }, configuration: configuration)
         
         self.collectionView.setCollectionViewLayout(layout, animated: false)
         self.dataSource = self.configureDataSource()
@@ -251,6 +226,11 @@ extension JourneyListViewController: UICollectionViewDelegate {
                 }
             }
         }
+        
+        let headerRegistration = JourneyListHeaderRegistration(elementKind: UICollectionView.elementKindSectionHeader,
+                                                               handler: { header, _, indexPath in
+            
+        })
       
         let dataSource = JourneyListDataSource(collectionView: self.collectionView,
                                                cellProvider: { collectionView, indexPath, item in
@@ -258,6 +238,11 @@ extension JourneyListViewController: UICollectionViewDelegate {
                                                                 for: indexPath,
                                                                 item: item)
         })
+        
+        dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
+            return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration,
+                                                                         for: indexPath)
+        }
         
         return dataSource
     }
