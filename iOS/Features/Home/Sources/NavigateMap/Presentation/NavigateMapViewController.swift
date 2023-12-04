@@ -27,14 +27,6 @@ public final class NavigateMapViewController: UIViewController {
 
         return stackView
     }()
-
-    /// 시작하기 Button
-    private let startButton: MSButton = {
-        let button = MSButton.primary()
-        button.cornerStyle = .rounded
-        button.title = "시작하기"
-        return button
-    }()
     
     @objc func findMyLocation() {
         
@@ -62,8 +54,6 @@ public final class NavigateMapViewController: UIViewController {
         
         view = mapView
         
-        startButton.addTarget(self, action: #selector(findMyLocation), for: .touchUpInside)
-        
         locationManager.requestWhenInUseAuthorization()
         mapView.map.setRegion(MKCoordinateRegion(center: tempCoordinate,
                                                  span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.11)),
@@ -83,11 +73,9 @@ public final class NavigateMapViewController: UIViewController {
 
     private func configureLayout() {
         view.addSubview(buttonStackView)
-        view.addSubview(startButton)
         
         mapView.map.translatesAutoresizingMaskIntoConstraints = false
         buttonStackView.translatesAutoresizingMaskIntoConstraints = false
-        startButton.translatesAutoresizingMaskIntoConstraints = false
 
         let safeArea = self.view.safeAreaLayoutGuide
 
@@ -98,10 +86,7 @@ public final class NavigateMapViewController: UIViewController {
             self.mapView.map.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
             self.buttonStackView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 50),
-            self.buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-
-            self.startButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -80),
-            self.startButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            self.buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
     }
     

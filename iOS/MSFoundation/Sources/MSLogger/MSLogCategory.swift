@@ -8,6 +8,7 @@
 import Foundation
 
 public enum MSLogCategory: String {
+    case ui = "UI"
     case network
     case userDefaults
     case dataCore

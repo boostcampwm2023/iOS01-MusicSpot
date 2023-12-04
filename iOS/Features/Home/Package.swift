@@ -54,9 +54,7 @@ let package = Package(
         .package(name: Dependency.journeyList,
                  path: Dependency.journeyList.fromCurrentPath),
         .package(name: Dependency.msUIKit,
-                 path: Dependency.msUIKit.fromRootPath),
-        .package(name: Dependency.msCoreKit,
-                 path: Dependency.msCoreKit.fromRootPath)
+                 path: Dependency.msUIKit.fromRootPath)
     ],
     targets: [
         .target(name: Target.home,
