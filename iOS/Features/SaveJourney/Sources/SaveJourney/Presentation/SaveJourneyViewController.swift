@@ -6,38 +6,45 @@
 //
 
 import Combine
+import CoreLocation
 import MapKit
 import UIKit
 
 import MSUIKit
-
-enum SaveJourneySection {
-    case music
-    case spot
-}
-
-enum SaveJourneyItem: Hashable {
-    case music(String)
-    case spot(Journey)
-}
+import MediaPlayer
 
 public final class SaveJourneyViewController: UIViewController {
     
     typealias SaveJourneyDataSource = UICollectionViewDiffableDataSource<SaveJourneySection, SaveJourneyItem>
     typealias HeaderRegistration = UICollectionView.SupplementaryRegistration<SaveJourneyHeaderView>
-    typealias MusicCellRegistration = UICollectionView.CellRegistration<SaveJourneyMusicCell, String>
-    typealias JourneyCellRegistration = UICollectionView.CellRegistration<JourneyCell, Journey>
+    typealias MusicCellRegistration = UICollectionView.CellRegistration<SaveJourneyMusicCell, Song>
+    typealias SpotCellRegistration = UICollectionView.CellRegistration<SpotCell, Spot>
     typealias SaveJourneySnapshot = NSDiffableDataSourceSnapshot<SaveJourneySection, SaveJourneyItem>
     typealias MusicSnapshot = NSDiffableDataSourceSectionSnapshot<SaveJourneyItem>
     typealias SpotSnapshot = NSDiffableDataSourceSectionSnapshot<SaveJourneyItem>
     
     // MARK: - Constants
     
+    private enum Typo {
+        
+        static let songSectionTitle = "함께한 음악"
+        static func spotSectionTitle(_ numberOfSpots: Int) -> String {
+            return "\(numberOfSpots)개의 스팟"
+        }
+        static let nextButtonTitle = "다음"
+        
+    }
+    
     private enum Metric {
+        
         static let horizontalInset: CGFloat = 24.0
         static let verticalInset: CGFloat = 12.0
-        static let innerGroupSpacing: CGFloat = 12.0
+        static let collectionViewBottomSpacing: CGFloat = 80.0
+        static let innerSpacing: CGFloat = 4.0
         static let headerTopInset: CGFloat = 24.0
+        static let buttonSpacing: CGFloat = 4.0
+        static let buttonBottomInset: CGFloat = 24.0
+        
     }
     
     // MARK: - Properties
@@ -45,6 +52,8 @@ public final class SaveJourneyViewController: UIViewController {
     private let viewModel: SaveJourneyViewModel
     
     private var dataSource: SaveJourneyDataSource?
+    
+    private let musicPlayer = MPMusicPlayerApplicationController.applicationMusicPlayer
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -61,13 +70,33 @@ public final class SaveJourneyViewController: UIViewController {
         collectionView.backgroundColor = .clear
         collectionView.contentInset = UIEdgeInsets(top: self.view.frame.width,
                                                    left: .zero,
-                                                   bottom: .zero,
+                                                   bottom: Metric.collectionViewBottomSpacing,
                                                    right: .zero)
         collectionView.delegate = self
         return collectionView
     }()
     
     private var mapViewHeightConstraint: NSLayoutConstraint?
+    
+    private let buttonStack: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = Metric.buttonSpacing
+        stackView.alignment = .center
+        return stackView
+    }()
+    
+    private let mediaControlButton: MSRectButton = {
+        let button = MSRectButton.small()
+        button.image = .msIcon(.play)
+        return button
+    }()
+    
+    private lazy var nextButton: MSButton = {
+        let button = MSButton.primary()
+        button.title = Typo.nextButtonTitle
+        return button
+    }()
     
     // MARK: - Initializer
     
@@ -88,7 +117,7 @@ public final class SaveJourneyViewController: UIViewController {
         super.viewDidLoad()
         self.configureStyles()
         self.configureLayout()
-        self.configureCollectionView()
+        self.configureComponents()
         self.bind()
         self.viewModel.trigger(.viewNeedsLoaded)
     }
@@ -96,21 +125,55 @@ public final class SaveJourneyViewController: UIViewController {
     // MARK: - Combine Binding
     
     func bind() {
-        self.viewModel.state.music
-            .sink { music in
+        self.viewModel.state.song
+            .sink { song in
                 var snapshot = MusicSnapshot()
-                snapshot.append([.music(music)])
-                self.dataSource?.apply(snapshot, to: .music)
+                snapshot.append([.song(song)])
+                self.dataSource?.apply(snapshot, to: .song)
             }
             .store(in: &self.cancellables)
         
-        self.viewModel.state.journeys
-            .sink { journeys in
+        self.viewModel.state.spots
+            .receive(on: DispatchQueue.main)
+            .sink { spots in
                 var snapshot = SpotSnapshot()
-                snapshot.append(journeys.map { .spot($0) })
+                snapshot.append(spots.map { .spot($0) })
                 self.dataSource?.apply(snapshot, to: .spot)
             }
             .store(in: &self.cancellables)
+    }
+    
+}
+
+// MARK: - Buttons
+
+private extension SaveJourneyViewController {
+    
+    func configureButtons() {
+        let mediaControlAction = UIAction { [weak self] _ in
+            self?.viewModel.trigger(.mediaControlButtonDidTap)
+        }
+        self.mediaControlButton.addAction(mediaControlAction, for: .touchUpInside)
+        
+        let nextButtonAction = UIAction { [weak self] _ in
+            self?.presentSaveJourney()
+        }
+        self.nextButton.addAction(nextButtonAction, for: .touchUpInside)
+    }
+    
+}
+
+// MARK: - Media Player
+
+private extension SaveJourneyViewController {
+    
+    func configureMusicPlayer() {
+        let songTitleFilter = MPMediaPropertyPredicate(value: "ETA",
+                                                       forProperty: MPMediaItemPropertyTitle,
+                                                       comparisonType: .contains)
+        let filterSet = Set([songTitleFilter])
+        let query = MPMediaQuery(filterPredicates: filterSet)
+        self.musicPlayer.setQueue(with: query)
     }
     
 }
@@ -132,21 +195,24 @@ private extension SaveJourneyViewController {
     }
     
     func configureSection(for section: SaveJourneySection) -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .fractionalHeight(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let item = NSCollectionLayoutItem(layoutSize: section.itemSize)
         
-        let groupHeight: NSCollectionLayoutDimension = switch section {
-        case .music: .estimated(SaveJourneyMusicCell.estimatedHeight)
-        case .spot: .estimated(JourneyCell.estimatedHeight)
+        let group: NSCollectionLayoutGroup
+        let itemCount = section == .song ? 1 : 2
+        let interItemSpacing: CGFloat = section == .song ? .zero : Metric.innerSpacing
+        if #available(iOS 16.0, *) {
+            group = NSCollectionLayoutGroup.horizontal(layoutSize: section.groupSize,
+                                                           repeatingSubitem: item,
+                                                           count: itemCount)
+        } else {
+            group = NSCollectionLayoutGroup.horizontal(layoutSize: section.groupSize,
+                                                           subitem: item,
+                                                           count: itemCount)
         }
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: groupHeight)
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
-                                                       subitems: [item])
+        group.interItemSpacing = .fixed(interItemSpacing)
         
         let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = Metric.innerGroupSpacing
+        section.interGroupSpacing = Metric.innerSpacing
         section.contentInsets = NSDirectionalEdgeInsets(top: Metric.verticalInset,
                                                         leading: Metric.horizontalInset,
                                                         bottom: Metric.verticalInset,
@@ -175,22 +241,52 @@ private extension SaveJourneyViewController {
             cell.update(with: itemIdentifier)
         }
         
-        let journeyCellRegistration = JourneyCellRegistration { cell, _, itemIdentifier in
-            
+        let journeyCellRegistration = SpotCellRegistration { cell, indexPath, itemIdentifier in
+            let geocoder = CLGeocoder()
+            let location = CLLocation(latitude: itemIdentifier.location.latitude,
+                                      longitude: itemIdentifier.location.longitude)
+            Task {
+                guard let placemark = try? await geocoder.reverseGeocodeLocation(location).first else {
+                    return
+                }
+                var location = ""
+                
+                if let locality = placemark.locality {
+                    location += locality
+                }
+                
+                if let subLocality = placemark.subLocality {
+                    location += " \(subLocality)"
+                }
+                
+                let cellModel = SpotCellModel(location: location,
+                                              date: itemIdentifier.date,
+                                              photoURL: itemIdentifier.photoURL)
+                cell.update(with: cellModel)
+            }
+            // TODO: ImageFetcher 사용해 이미지 업데이트
         }
         
         let headerRegistration = HeaderRegistration(elementKind: SaveJourneyHeaderView.elementKind,
                                                     handler: { header, _, indexPath in
-            header.update(with: "헤더")
+            switch indexPath.section {
+            case .zero:
+                header.update(with: Typo.songSectionTitle)
+            case 1:
+                let spots = self.viewModel.state.spots
+                header.update(with: Typo.spotSectionTitle(spots.value.count))
+            default:
+                break
+            }
         })
         
         let dataSource = SaveJourneyDataSource(collectionView: self.collectionView,
                                                cellProvider: { collectionView, indexPath, item in
             switch item {
-            case .music(let music):
+            case .song(let song):
                 return collectionView.dequeueConfiguredReusableCell(using: musicCellRegistration,
                                                                     for: indexPath,
-                                                                    item: music)
+                                                                    item: song)
             case .spot(let journey):
                 return collectionView.dequeueConfiguredReusableCell(using: journeyCellRegistration,
                                                                     for: indexPath,
@@ -204,7 +300,7 @@ private extension SaveJourneyViewController {
         }
         
         var snapshot = SaveJourneySnapshot()
-        snapshot.appendSections([.music, .spot])
+        snapshot.appendSections([.song, .spot])
         dataSource.apply(snapshot)
         
         return dataSource
@@ -218,24 +314,39 @@ extension SaveJourneyViewController: UICollectionViewDelegate {
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offset = scrollView.contentOffset
-        self.updateProfileViewLayout(by: offset, name: "Change Me!")
+        self.updateProfileViewLayout(by: offset)
     }
     
-    func updateProfileViewLayout(by offset: CGPoint, name: String) {
+    func updateProfileViewLayout(by offset: CGPoint) {
         let collectionViewHeight = self.collectionView.frame.height
         let collectionViewContentInset = collectionViewHeight - self.view.safeAreaInsets.top
         let assistanceValue = collectionViewHeight - collectionViewContentInset
         let isContentBelowTopOfScreen = offset.y < 0
         
         if isContentBelowTopOfScreen {
-            self.navigationItem.title = nil
             self.mapViewHeightConstraint?.constant = assistanceValue + offset.y.magnitude
         } else if !isContentBelowTopOfScreen {
-            self.navigationItem.title = name
             self.mapViewHeightConstraint?.constant = 0
         } else {
             self.mapViewHeightConstraint?.constant = offset.y.magnitude
         }
+    }
+    
+}
+
+// MARK: - AlertViewController
+
+extension SaveJourneyViewController: AlertViewControllerDelegate {
+    
+    private func presentSaveJourney() {
+        let alert = ConfirmTitleAlertViewController()
+        alert.modalPresentationStyle = .overCurrentContext
+        alert.delegate = self
+        self.present(alert, animated: false)
+    }
+    
+    func titleDidConfirmed(_ title: String) {
+        print("Title: \(title)")
     }
     
 }
@@ -267,15 +378,43 @@ private extension SaveJourneyViewController {
             self.collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             self.collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
         ])
+        
+        self.view.addSubview(self.buttonStack)
+        self.buttonStack.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.buttonStack.leadingAnchor.constraint(equalTo: self.view.layoutMarginsGuide.leadingAnchor),
+            self.buttonStack.trailingAnchor.constraint(equalTo: self.view.layoutMarginsGuide.trailingAnchor),
+            self.buttonStack.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor,
+                                                     constant: -Metric.buttonBottomInset)
+        ])
+        
+        [
+            self.mediaControlButton,
+            self.nextButton
+        ].forEach {
+            self.buttonStack.addArrangedSubview($0)
+        }
+    }
+    
+    func configureComponents() {
+        self.configureCollectionView()
+        self.configureButtons()
+        self.configureMusicPlayer()
     }
     
 }
 
 // MARK: - Preview
 
+#if DEBUG
+import MSData
+
 @available(iOS 17, *)
 #Preview {
-    let saveJourneyViewModel = SaveJourneyViewModel()
+    let song = Song(title: "OMG", artist: "NewJeans", albumArtURL: URL(string: "sdf")!)
+    let spotRepository = SpotRepositoryImplementation()
+    let saveJourneyViewModel = SaveJourneyViewModel(selectedSong: song, spotRepository: spotRepository)
     let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
     return saveJourneyViewController
 }
+#endif

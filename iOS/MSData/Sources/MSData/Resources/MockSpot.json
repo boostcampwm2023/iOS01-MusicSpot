@@ -1,0 +1,52 @@
+[
+    {
+        "journeyId": "ab4068ef-95ed-40c3-be6d-3db35df866b9",
+        "coordinate": [37.46569, 126.44748],
+        "photoUrl": "https://source.unsplash.com/random/200x300"
+    },
+    {
+        "journeyId": "2c5dc172-724f-4781-9669-2657fad175c8",
+        "coordinate": [37.37501, 126.63229],
+        "photoUrl": "https://source.unsplash.com/random/200x300"
+    },
+    {
+        "journeyId": "bb058be2-c5d0-400c-8b18-140cc971c126",
+        "coordinate": [37.52593, 126.91611],
+        "photoUrl": "https://source.unsplash.com/random/200x300"
+    },
+    {
+        "journeyId": "f263a338-5fff-4349-95af-feb5abacbf29",
+        "coordinate": [37.55676, 126.91247],
+        "photoUrl": "https://source.unsplash.com/random/200x300"
+    },
+    {
+        "journeyId": "02a90f9d-ca78-49f5-893a-3f0e79ccb8e6",
+        "coordinate": [37.54440, 127.04031],
+        "photoUrl": "https://source.unsplash.com/random/200x300"
+    },
+    {
+        "journeyId": "8b10e0bb-4387-4997-adaf-9a4a6369f91a",
+        "coordinate": [37.57774, 126.97258],
+        "photoUrl": "https://source.unsplash.com/random/200x300"
+    },
+    {
+        "journeyId": "d6397ea4-582e-4228-a98d-4dc541f854bb",
+        "coordinate": [37.27979, 127.01506],
+        "photoUrl": "https://source.unsplash.com/random/200x300"
+    },
+    {
+        "journeyId": "3cd9a630-edbd-4c45-bb94-5f8b549f7586",
+        "coordinate": [36.82055, 127.14046],
+        "photoUrl": "https://source.unsplash.com/random/200x300"
+    },
+    {
+        "journeyId": "00eefb58-bc78-4058-a898-f54d07e4c467",
+        "coordinate": [33.27913, 126.30613],
+        "photoUrl": "https://source.unsplash.com/random/200x300"
+    },
+    {
+        "journeyId": "26b68488-60fc-4d8f-ac88-ff54c3edd3a5",
+        "coordinate": [35.14139, 129.10911],
+        "photoUrl": "https://source.unsplash.com/random/200x300"
+    }
+]

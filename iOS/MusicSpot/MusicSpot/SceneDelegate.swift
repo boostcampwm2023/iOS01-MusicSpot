@@ -7,6 +7,8 @@
 
 import UIKit
 
+import JourneyList
+import MSData
 import MSDesignSystem
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {

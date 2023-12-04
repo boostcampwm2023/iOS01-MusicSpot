@@ -11,7 +11,7 @@ import MSDesignSystem
 
 final class SaveJourneyHeaderView: UICollectionReusableView {
     
-    // MARK: - Constant
+    // MARK: - Constants
     
     static let elementKind = "SaveJourneyHeaderView"
     static let estimatedHeight: CGFloat = 33.0
