@@ -34,16 +34,24 @@ public final class SaveJourneyViewController: UIViewController {
     // MARK: - Constants
     
     private enum Typo {
+        
+        static let songSectionTitle = "함께한 음악"
+        static func spotSectionTitle(_ numberOfSpots: Int) -> String {
+            return "\(numberOfSpots)개의 스팟"
+        }
         static let nextButtonTitle = "다음"
+        
     }
     
     private enum Metric {
+        
         static let horizontalInset: CGFloat = 24.0
         static let verticalInset: CGFloat = 12.0
         static let innerGroupSpacing: CGFloat = 12.0
         static let headerTopInset: CGFloat = 24.0
         static let buttonSpacing: CGFloat = 4.0
         static let buttonBottomInset: CGFloat = 24.0
+        
     }
     
     // MARK: - Properties
@@ -219,7 +227,15 @@ private extension SaveJourneyViewController {
         
         let headerRegistration = HeaderRegistration(elementKind: SaveJourneyHeaderView.elementKind,
                                                     handler: { header, _, indexPath in
-            header.update(with: "헤더")
+            switch indexPath.section {
+            case .zero:
+                header.update(with: Typo.songSectionTitle)
+            case 1:
+                let spots = self.viewModel.state.journeys
+                header.update(with: Typo.spotSectionTitle(spots.value.count))
+            default:
+                break
+            }
         })
         
         let dataSource = SaveJourneyDataSource(collectionView: self.collectionView,
