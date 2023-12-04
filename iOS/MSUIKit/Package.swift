@@ -8,8 +8,14 @@ import PackageDescription
 extension String {
     
     static let package = "MSUIKit"
-    static let designSystem = "MSDesignSystem"
-    static let uiKit = "MSUIKit"
+    
+}
+
+private enum Target {
+    
+    static let msDesignSystem = "MSDesignSystem"
+    static let msUIKit = "MSUIKit"
+    static let combineCocoa = "CombineCocoa"
     
 }
 
@@ -21,20 +27,23 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(name: .designSystem,
-                 type: .static,
-                 targets: [.designSystem]),
-        .library(name: .uiKit,
-                 targets: [.uiKit])
+        .library(name: Target.msDesignSystem,
+                 targets: [Target.msDesignSystem]),
+        .library(name: Target.msUIKit,
+                 targets: [Target.msUIKit]),
+        .library(name: Target.combineCocoa,
+                 targets: [Target.combineCocoa])
     ],
     targets: [
-        // Codes
-        .target(name: .designSystem,
+        .target(name: Target.msDesignSystem,
                 resources: [
-                    .process("../\(String.designSystem)/Resources")
+                    .process("../\(Target.msDesignSystem)/Resources")
                 ]),
-        .target(name: .uiKit,
-                dependencies: ["MSDesignSystem"])
+        .target(name: Target.msUIKit,
+                dependencies: [
+                    .target(name: Target.msDesignSystem)
+                ]),
+        .target(name: Target.combineCocoa)
     ],
     swiftLanguageVersions: [.v5]
 )
