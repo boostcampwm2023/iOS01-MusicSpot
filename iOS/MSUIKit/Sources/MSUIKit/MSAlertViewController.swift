@@ -167,7 +167,7 @@ open class MSAlertViewController: UIViewController {
         self.configureLayout()
     }
     
-    public override func viewDidAppear(_ animated: Bool) {
+    open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.animatePresentView()
     }

@@ -12,6 +12,7 @@ import UIKit
 
 import MSUIKit
 import MediaPlayer
+
 public final class SaveJourneyViewController: UIViewController {
     
     typealias SaveJourneyDataSource = UICollectionViewDiffableDataSource<SaveJourneySection, SaveJourneyItem>
@@ -87,13 +88,13 @@ public final class SaveJourneyViewController: UIViewController {
     
     private let mediaControlButton: MSRectButton = {
         let button = MSRectButton.small()
-        button.configuration?.image = .msIcon(.play)
+        button.image = .msIcon(.play)
         return button
     }()
     
     private lazy var nextButton: MSButton = {
         let button = MSButton.primary()
-        button.configuration?.title = Typo.nextButtonTitle
+        button.title = Typo.nextButtonTitle
         return button
     }()
     
@@ -125,7 +126,6 @@ public final class SaveJourneyViewController: UIViewController {
     
     func bind() {
         self.viewModel.state.song
-            .print()
             .sink { song in
                 var snapshot = MusicSnapshot()
                 snapshot.append([.song(song)])
@@ -156,11 +156,7 @@ private extension SaveJourneyViewController {
         self.mediaControlButton.addAction(mediaControlAction, for: .touchUpInside)
         
         let nextButtonAction = UIAction { [weak self] _ in
-            self?.viewModel.trigger(.nextButtonDidTap)
-            
-            let alert = ConfirmTitleAlertViewController()
-            alert.modalPresentationStyle = .overCurrentContext
-            self?.present(alert, animated: false)
+            self?.presentSaveJourney()
         }
         self.nextButton.addAction(nextButtonAction, for: .touchUpInside)
     }
@@ -329,6 +325,23 @@ extension SaveJourneyViewController: UICollectionViewDelegate {
         } else {
             self.mapViewHeightConstraint?.constant = offset.y.magnitude
         }
+    }
+    
+}
+
+// MARK: - AlertViewController
+
+extension SaveJourneyViewController: AlertViewControllerDelegate {
+    
+    private func presentSaveJourney() {
+        let alert = ConfirmTitleAlertViewController()
+        alert.modalPresentationStyle = .overCurrentContext
+        alert.delegate = self
+        self.present(alert, animated: false)
+    }
+    
+    func titleDidConfirmed(_ title: String) {
+        print("Title: \(title)")
     }
     
 }

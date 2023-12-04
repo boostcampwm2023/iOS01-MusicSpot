@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DD197B132B1DF223001D4290 /* SaveJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD197B122B1DF223001D4290 /* SaveJourney */; };
 		DDAA4DC92B17356D002F0748 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA4DC82B17356D002F0748 /* AppDelegate.swift */; };
 		DDAA4DCB2B17356D002F0748 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA4DCA2B17356D002F0748 /* SceneDelegate.swift */; };
 		DDAA4DD22B17356E002F0748 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DDAA4DD12B17356E002F0748 /* Assets.xcassets */; };
 		DDAA4DD52B17356E002F0748 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DDAA4DD32B17356E002F0748 /* LaunchScreen.storyboard */; };
-		DDAA4DDE2B17357F002F0748 /* SaveJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DDAA4DDD2B17357F002F0748 /* SaveJourney */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,7 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDAA4DDE2B17357F002F0748 /* SaveJourney in Frameworks */,
+				DD197B132B1DF223001D4290 /* SaveJourney in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,7 +80,7 @@
 			);
 			name = SaveJourneyDemo;
 			packageProductDependencies = (
-				DDAA4DDD2B17357F002F0748 /* SaveJourney */,
+				DD197B122B1DF223001D4290 /* SaveJourney */,
 			);
 			productName = SaveJourneyDemo;
 			productReference = DDAA4DC52B17356D002F0748 /* SaveJourneyDemo.app */;
@@ -111,7 +111,7 @@
 			);
 			mainGroup = DDAA4DBC2B17356D002F0748;
 			packageReferences = (
-				DDAA4DDC2B17357F002F0748 /* XCLocalSwiftPackageReference ".." */,
+				DD197B112B1DF223001D4290 /* XCLocalSwiftPackageReference ".." */,
 			);
 			productRefGroup = DDAA4DC62B17356D002F0748 /* Products */;
 			projectDirPath = "";
@@ -361,14 +361,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		DDAA4DDC2B17357F002F0748 /* XCLocalSwiftPackageReference ".." */ = {
+		DD197B112B1DF223001D4290 /* XCLocalSwiftPackageReference ".." */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ..;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		DDAA4DDD2B17357F002F0748 /* SaveJourney */ = {
+		DD197B122B1DF223001D4290 /* SaveJourney */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SaveJourney;
 		};

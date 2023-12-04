@@ -15,7 +15,6 @@ public final class SaveJourneyViewModel {
     public enum Action {
         case viewNeedsLoaded
         case mediaControlButtonDidTap
-        case nextButtonDidTap
     }
     
     public struct State {
@@ -56,8 +55,6 @@ public final class SaveJourneyViewModel {
             }
         case .mediaControlButtonDidTap:
             print("Media Control Button Tap.")
-        case .nextButtonDidTap:
-            print("Next Button Tap.")
         }
     }
     

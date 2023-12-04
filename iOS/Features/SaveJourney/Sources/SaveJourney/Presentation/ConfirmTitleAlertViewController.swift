@@ -5,9 +5,16 @@
 //  Created by 이창준 on 2023.12.04.
 //
 
+import Combine
 import UIKit
 
 import MSUIKit
+
+protocol AlertViewControllerDelegate: AnyObject {
+    
+    func titleDidConfirmed(_ title: String)
+    
+}
 
 final class ConfirmTitleAlertViewController: MSAlertViewController {
     
@@ -39,11 +46,19 @@ final class ConfirmTitleAlertViewController: MSAlertViewController {
     
     // MARK: - Properties
     
+    weak var delegate: AlertViewControllerDelegate?
+    
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.configureButtonActions()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.textField.becomeFirstResponder()
     }
     
     // MARK: - Helpers
@@ -54,12 +69,13 @@ final class ConfirmTitleAlertViewController: MSAlertViewController {
     }
     
     private func configureButtonActions() {
-        self.cancelButtonAction = UIAction { _ in
-            self.dismissBottomSheet()
+        self.cancelButtonAction = UIAction { [weak self] _ in
+            self?.dismissBottomSheet()
         }
         
-        self.doneButtonAction = UIAction { _ in
-            print("TODO: 완료 로직 구현!!")
+        self.doneButtonAction = UIAction { [weak self] _ in
+            guard let title = self?.textField.text else { return }
+            self?.delegate?.titleDidConfirmed(title)
         }
     }
     
