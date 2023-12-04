@@ -119,11 +119,11 @@ final public class ButtonStackView: UIStackView {
     
     // MARK: - Properties
 
-    private lazy var settingButton = self.createButton(image: ButtonImage.setting)
+    lazy var settingButton = self.createButton(image: ButtonImage.setting)
     
-    private lazy var mapButton = self.createButton(image: ButtonImage.map)
+    lazy var mapButton = self.createButton(image: ButtonImage.map)
     
-    private lazy var locationButton = self.createButton(image: ButtonImage.location)
+    lazy var locationButton = self.createButton(image: ButtonImage.location)
     
     
     // MARK: - Life Cycle
