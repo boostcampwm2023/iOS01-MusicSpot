@@ -6,23 +6,63 @@
 //
 
 import UIKit
-import MSUIKit
+
 import MSDesignSystem
+import MSUIKit
+
 public protocol RecordJourneyButtonViewDelegate {
-    func backButtonDidTap()
-    func spotButtonDidTap()
-    func nextButtonDidTap()
+    
+    func backButtonDidTap(_ button: MSRectButton)
+    func spotButtonDidTap(_ button: MSRectButton)
+    func nextButtonDidTap(_ button: MSRectButton)
+    
 }
 
 public final class RecordJourneyButtonView: UIView {
     
-    // MARK: - Properties
-
-    public var stackButtonView: RecordingJourneyButtonStackView = {
-        let buttonView = RecordingJourneyButtonStackView()
+    // MARK: - Constants
+    
+    private enum Typo {
         
-        return buttonView
+        static let spotButtonTitle = "스팟!"
+        
+    }
+    
+    private enum Metric {
+        
+        static let stackViewSpacing: CGFloat = 50.0
+        
+    }
+    
+    // MARK: - UI Components
+    
+    private let buttonStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = Metric.stackViewSpacing
+        stackView.alignment = .center
+        return stackView
     }()
+    
+    private let backButton: MSRectButton = {
+        let button = MSRectButton.small(isBrandColored: false)
+        button.image = .msIcon(.arrowLeft)
+        return button
+    }()
+    
+    private let spotButton: MSRectButton = {
+        let button = MSRectButton.large(isBrandColored: true)
+        button.title = Typo.spotButtonTitle
+        return button
+    }()
+    
+    private let nextButton: MSRectButton = {
+        let button = MSRectButton.small(isBrandColored: false)
+        button.image = .msIcon(.check)
+        return button
+    }()
+    
+    // MARK: - Properties
     
     public var delegate: RecordJourneyButtonViewDelegate?
     
@@ -48,111 +88,67 @@ public final class RecordJourneyButtonView: UIView {
     }
     
     private func configureLayout() {
-        self.addSubview(stackButtonView)
-        self.stackButtonView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let safeArea = self.safeAreaLayoutGuide
+        self.addSubview(self.buttonStackView)
+        self.buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            stackButtonView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 0),
-            stackButtonView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: 0),
-            stackButtonView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: 0)
+            self.buttonStackView.topAnchor.constraint(equalTo: self.topAnchor),
+            self.buttonStackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.buttonStackView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            self.buttonStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         ])
+        
+        [
+            self.backButton,
+            self.spotButton,
+            self.nextButton
+        ].forEach {
+            self.buttonStackView.addArrangedSubview($0)
+        }
     }
     
     
-    // MARK: - Configure: Action
+    // MARK: - Action Configuration
     
     private func configureAction() {
-        configureBackButtonAction()
-        configureSpotButtonAction()
-        configureNextButtonAction()
+        self.configureBackButtonAction()
+        self.configureSpotButtonAction()
+        self.configureNextButtonAction()
     }
     
     private func configureBackButtonAction() {
-        let backButtonAction = UIAction(handler: { _ in
+        let backButtonAction = UIAction { _ in
             self.backButtonDidTap()
-        })
-        self.stackButtonView.backButton.addAction(backButtonAction, for: .touchUpInside)
+        }
+        self.backButton.addAction(backButtonAction, for: .touchUpInside)
     }
     
     private func configureSpotButtonAction() {
-        let spotButtonAction = UIAction(handler: { _ in
+        let spotButtonAction = UIAction { _ in
             self.spotButtonDidTap()
-        })
-        self.stackButtonView.spotButton.addAction(spotButtonAction, for: .touchUpInside)
+        }
+        self.spotButton.addAction(spotButtonAction, for: .touchUpInside)
     }
     
     private func configureNextButtonAction() {
-        let nextButtonAction = UIAction(handler: { _ in
+        let nextButtonAction = UIAction { _ in
             self.nextButtonDidTap()
-        })
-        self.stackButtonView.nextButton.addAction(nextButtonAction, for: .touchUpInside)
+        }
+        self.nextButton.addAction(nextButtonAction, for: .touchUpInside)
     }
     
     // MARK: - Functions
 
     private func backButtonDidTap() {
-        self.delegate?.backButtonDidTap()
+        self.delegate?.backButtonDidTap(self.backButton)
     }
     
     private func spotButtonDidTap() {
-        self.delegate?.spotButtonDidTap()
+        self.delegate?.spotButtonDidTap(self.spotButton)
     }
     
     private func nextButtonDidTap() {
-        self.delegate?.nextButtonDidTap()
-    }
-}
-
-final public class RecordingJourneyButtonStackView: UIStackView {
-    
-    // MARK: - Properties
-
-    public var backButton: MSRectButton = {
-        let button = MSRectButton.small(isBrandColored: false)
-        button.image = .msIcon(.arrowLeft)
-        return button
-    }()
-    
-    public var spotButton: MSRectButton = {
-        let button = MSRectButton.large(isBrandColored: true)
-        button.title = "스팟!"
-        return button
-    }()
-    
-    public var nextButton: MSRectButton = {
-        let button = MSRectButton.small(isBrandColored: false)
-        button.image = .msIcon(.check)
-        return button
-    }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.configureStyle()
-        self.configureLayout()
-    }
-    
-    required init(coder: NSCoder) {
-        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
-    }
-    
-    // MARK: - UI Configuration
-    
-    private func configureStyle() {
-        
-    }
-    
-    private func configureLayout() {
-        
-        self.addArrangedSubview(backButton)
-        self.addArrangedSubview(spotButton)
-        self.addArrangedSubview(nextButton)
-        
-        self.axis = .horizontal
-        self.spacing = 50
-        self.alignment = .center
-        self.translatesAutoresizingMaskIntoConstraints = false
-        
+        self.delegate?.nextButtonDidTap(self.nextButton)
     }
     
 }
+

@@ -8,10 +8,10 @@
 import UIKit
 
 import JourneyList
-import MSUIKit
-import NavigateMap
-import MSUserDefaults
 import MSConstants
+import MSUIKit
+import MSUserDefaults
+import NavigateMap
 
 public protocol HomeViewControllerDelegate: AnyObject {
     
@@ -48,8 +48,10 @@ public final class HomeBottomSheetViewController: HomeViewController {
         return button
     }()
     
-    private let spotButtonView: RecordJourneyButtonView = {
+    private lazy var recordJourneyButtonView: RecordJourneyButtonView = {
         let buttonView = RecordJourneyButtonView()
+        buttonView.delegate = self
+        buttonView.isHidden = true
         return buttonView
     }()
     
@@ -57,15 +59,14 @@ public final class HomeBottomSheetViewController: HomeViewController {
     
     public weak var delegate: HomeViewControllerDelegate?
     
-    @UserDefaultsWrapped("isRecording", defaultValue: false)
-    var isRecording: Bool
+    @UserDefaultsWrapped(UserDefaultsKey.isRecording, defaultValue: false)
+    private var isRecording: Bool
     
     // MARK: - Life Cycle
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.contentViewController.delegate = self
-        self.spotButtonView.delegate = self
         self.configureStyle()
         self.configureLayout()
     }
@@ -79,14 +80,14 @@ public final class HomeBottomSheetViewController: HomeViewController {
     // MARK: - Functions
     
     private func updateButtonMode() {
-        startButton.isHidden = isRecording
-        spotButtonView.isHidden = !isRecording
+        self.startButton.isHidden = self.isRecording
+        self.recordJourneyButtonView.isHidden = !self.isRecording
     }
     
     @objc
     func startButtonDidTap() {
-        isRecording.toggle()
-        updateButtonMode()
+        self.isRecording.toggle()
+        self.updateButtonMode()
     }
     
 }
@@ -101,27 +102,26 @@ private extension HomeBottomSheetViewController {
     
     func configureLayout() {
         self.view.addSubview(self.startButton)
-        self.view.addSubview(self.spotButtonView)
         self.startButton.translatesAutoresizingMaskIntoConstraints = false
-        self.spotButtonView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            self.spotButtonView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.spotButtonView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor,
-                                                        constant: -20)
-        ])
         NSLayoutConstraint.activate([
             self.startButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             self.startButton.bottomAnchor.constraint(equalTo: self.bottomSheetViewController.view.topAnchor,
                                                      constant: -Metric.startButtonBottomInset)
         ])
         
-        updateButtonMode()
+        self.view.addSubview(self.recordJourneyButtonView)
+        self.recordJourneyButtonView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.recordJourneyButtonView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.recordJourneyButtonView.bottomAnchor.constraint(equalTo: self.bottomSheetViewController.view.topAnchor,
+                                                                 constant: -Metric.startButtonBottomInset)
+        ])
     }
     
 }
 
 extension HomeBottomSheetViewController: NavigateMapViewControllerDelegate {
+    
     public func settingButtonDidTap() {
         delegate?.navigateToSetting()
     }
@@ -134,20 +134,22 @@ extension HomeBottomSheetViewController: NavigateMapViewControllerDelegate {
         print(#function)
     }
     
-    
 }
 
+// MARK: - Button View
 
 extension HomeBottomSheetViewController: RecordJourneyButtonViewDelegate {
-    public func backButtonDidTap() {
+    
+    public func backButtonDidTap(_ button: MSRectButton) {
         print("뒤로가기 버튼 클릭")
     }
     
-    public func spotButtonDidTap() {
+    public func spotButtonDidTap(_ button: MSRectButton) {
         print("spot 버튼 클릭")
     }
     
-    public func nextButtonDidTap() {
+    public func nextButtonDidTap(_ button: MSRectButton) {
         print("체크 버튼 클릭")
     }
+    
 }

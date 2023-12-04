@@ -35,9 +35,9 @@ public final class NavigateMapViewController: UIViewController {
     let mapView = MapView()
 
     /// HomeMap 내 우상단 3버튼 View
-    var buttonStackView: NavigateMapButtonView = {
+    private lazy var buttonStackView: NavigateMapButtonView = {
         let stackView = NavigateMapButtonView()
-
+        stackView.delegate = self
         return stackView
     }()
     
@@ -82,27 +82,26 @@ public final class NavigateMapViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        view = mapView
+        self.view = self.mapView
         
-        locationManager.requestWhenInUseAuthorization()
-        mapView.map.setRegion(MKCoordinateRegion(center: tempCoordinate,
-                                                 span: MKCoordinateSpan(latitudeDelta: 0.1,
-                                                                        longitudeDelta: 0.11)),
-                              animated: true)
+        self.locationManager.requestWhenInUseAuthorization()
+        self.mapView.map.setRegion(MKCoordinateRegion(center: tempCoordinate,
+                                                      span: MKCoordinateSpan(latitudeDelta: 0.1,
+                                                                             longitudeDelta: 0.11)),
+                                   animated: true)
         
-        mapView.map.delegate = self
+        self.mapView.map.delegate = self
+        self.locationManager.delegate = self
         
-        locationManager.delegate = self
-        
-        configureLayout()
+        self.configureLayout()
     }
     
     // MARK: - UI Configuration
 
     private func configureLayout() {
-        view.addSubview(buttonStackView)
-        mapView.map.translatesAutoresizingMaskIntoConstraints = false
-        buttonStackView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(buttonStackView)
+        self.mapView.map.translatesAutoresizingMaskIntoConstraints = false
+        self.buttonStackView.translatesAutoresizingMaskIntoConstraints = false
 
         let safeArea = self.view.safeAreaLayoutGuide
 
@@ -127,8 +126,8 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
     func checkCurrentLocationAuthorization(authorizationStatus: CLAuthorizationStatus) {
         switch authorizationStatus {
         case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-            locationManager.startUpdatingLocation()
+            self.locationManager.requestWhenInUseAuthorization()
+            self.locationManager.startUpdatingLocation()
         case .restricted:
             print("restricted")
         case .denied:
@@ -137,7 +136,7 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
             print("always")
         case .authorizedWhenInUse:
             print("wheninuse")
-            locationManager.startUpdatingLocation()
+            self.locationManager.startUpdatingLocation()
         @unknown default:
             print("unknown")
         }
@@ -183,7 +182,7 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
         self.addPolylineToMap(from: previousCoordinate, to: newCoordinate)
 
         // Update previous coordinate
-        previousCoordinate = newCoordinate
+        self.previousCoordinate = newCoordinate
     }
 
     private func addPolylineToMap(from previousCoordinate: CLLocationCoordinate2D?,
@@ -205,12 +204,12 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
     
     public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         print(#function)
-        checkUserLocationServicesAuthorization()
+        self.checkUserLocationServicesAuthorization()
     }
     
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         print(#function)
-        checkUserLocationServicesAuthorization()
+        self.checkUserLocationServicesAuthorization()
     }
 
     /// 위치 가져오기 실패
@@ -269,11 +268,11 @@ extension NavigateMapViewController: NavigateMapButtonViewDelegate {
 
     public func settingButtonDidTap() {
         print("hi")
-        delegate?.settingButtonDidTap()
+        self.delegate?.settingButtonDidTap()
     }
     
     public func mapButtonDidTap() {
-        delegate?.mapButtonDidTap()
+        self.delegate?.mapButtonDidTap()
     }
     
     public func locationButtonDidTap() {

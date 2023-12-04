@@ -13,10 +13,12 @@ enum ButtonImage: String {
          location = "mappin"
 }
 
-protocol NavigateMapButtonViewDelegate {
+protocol NavigateMapButtonViewDelegate: AnyObject {
+    
     func settingButtonDidTap()
     func mapButtonDidTap()
     func locationButtonDidTap()
+    
 }
 
 /// HomeMap 내의 버튼들을 감싸는 View
@@ -31,7 +33,7 @@ public final class NavigateMapButtonView: UIView {
     
     // MARK: - Properties
 
-    var delegate: NavigateMapButtonViewDelegate?
+    weak var delegate: NavigateMapButtonViewDelegate?
     
     // MARK: - Life Cycle
     
@@ -99,7 +101,6 @@ public final class NavigateMapButtonView: UIView {
     // MARK: - Functions
     
     private func settingButtonDidTap() {
-        print("hello")
         delegate?.settingButtonDidTap()
     }
     
@@ -118,18 +119,18 @@ final public class ButtonStackView: UIStackView {
     
     // MARK: - Properties
 
-    lazy var settingButton = self.createButton(image: ButtonImage.setting)
+    private lazy var settingButton = self.createButton(image: ButtonImage.setting)
     
-    lazy var mapButton = self.createButton(image: ButtonImage.map)
+    private lazy var mapButton = self.createButton(image: ButtonImage.map)
     
-    lazy var locationButton = self.createButton(image: ButtonImage.location)
+    private lazy var locationButton = self.createButton(image: ButtonImage.location)
     
     
     // MARK: - Life Cycle
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configureLayout()
+        self.configureLayout()
     }
     
     required init(coder: NSCoder) {
