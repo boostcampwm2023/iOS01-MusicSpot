@@ -11,6 +11,7 @@ import { CheckJourneyDTO } from '../dto/journeyCheck.dto';
 import { JourneyNotFoundException } from '../../filters/journey.exception';
 import { UserNotFoundException } from 'src/filters/user.exception';
 import * as turf from '@turf/turf';
+import { LoadJourneyDTO } from '../dto/journeyLoad.dto';
 
 @Injectable()
 export class JourneyService {
@@ -49,7 +50,7 @@ export class JourneyService {
   }
 
   async end(endJourneyDTO: EndJourneyDTO) {
-    const { journeyId, title, coordinate } = endJourneyDTO;
+    const { journeyId, title, coordinate, endTimestamp } = endJourneyDTO;
     const coordinateToAdd = Array.isArray(coordinate[0])
       ? coordinate
       : [coordinate];
@@ -57,7 +58,7 @@ export class JourneyService {
       .findOneAndUpdate(
         { _id: journeyId },
         {
-          $set: { title },
+          $set: { title, endTimestamp },
           $push: { coordinates: { $each: coordinateToAdd } },
         },
         { new: true },
@@ -122,5 +123,34 @@ export class JourneyService {
       }
     }
     return journeyList;
+  }
+  async loadLastJourney(loadJourneyDTO: LoadJourneyDTO) {
+    const { userId } = loadJourneyDTO;
+    const user = await this.userModel.findById(userId).lean();
+
+    if (!user) {
+      throw new UserNotFoundException();
+    }
+    const journeys = user.journeys;
+
+    const journey = await this.findLastJourney(journeys);
+    if (journey) {
+      return journey;
+    }
+    return '진행중이었던 여정이 없습니다.';
+  }
+  async findLastJourney(journeys) {
+    let journeyList = [];
+
+    for (let i = 0; i < journeys.length; i++) {
+      let journey = await this.journeyModel.findById(journeys[i]).lean();
+      if (!journey) {
+        throw new JourneyNotFoundException();
+      }
+      if (journey.title === '') {
+        return journey;
+      }
+    }
+    return false;
   }
 }
