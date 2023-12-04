@@ -10,6 +10,8 @@ import UIKit
 import JourneyList
 import MSUIKit
 import NavigateMap
+import MSUserDefaults
+import MSConstants
 
 public protocol HomeViewControllerDelegate: AnyObject {
     
@@ -21,14 +23,7 @@ public protocol HomeViewControllerDelegate: AnyObject {
 
 public typealias HomeViewController = MSBottomSheetViewController<NavigateMapViewController, JourneyListViewController>
 
-public final class HomeBottomSheetViewController: HomeViewController, NavigationViewControllerDelegate {
-    public func navigateToSetting() {
-        delegate?.navigateToSetting()
-    }
-    
-    public func showUserLocation() {
-        print(#function)
-    }
+public final class HomeBottomSheetViewController: HomeViewController {
     
     // MARK: - Constants
     
@@ -50,7 +45,6 @@ public final class HomeBottomSheetViewController: HomeViewController, Navigation
         let button = MSButton.primary()
         button.cornerStyle = .rounded
         button.title = Typo.startButtonTitle
-        button.tag = 100
         return button
     }()
     
@@ -63,13 +57,15 @@ public final class HomeBottomSheetViewController: HomeViewController, Navigation
     
     public weak var delegate: HomeViewControllerDelegate?
     
-    public var isRecording: Bool = false
+    @UserDefaultsWrapped("isRecording", defaultValue: false)
+    var isRecording: Bool
     
     // MARK: - Life Cycle
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.contentViewController.delegate = self
+        self.spotButtonView.delegate = self
         self.configureStyle()
         self.configureLayout()
     }
@@ -93,16 +89,6 @@ public final class HomeBottomSheetViewController: HomeViewController, Navigation
         updateButtonMode()
     }
     
-    @objc
-    func spotButtonDidTap() {
-        print(#function)
-    }
-    
-    @objc
-    func nextButtonDidTap() {
-        print(#function)
-    }
-    
 }
 
 // MARK: - UI Configuration
@@ -111,15 +97,6 @@ private extension HomeBottomSheetViewController {
     
     func configureStyle() {
         self.startButton.addTarget(self, action: #selector(startButtonDidTap), for: .touchUpInside)
-        self.spotButtonView.stackButtonView.backButton.addTarget(self,
-                                                                 action: #selector(startButtonDidTap),
-                                                                 for: .touchUpInside)
-        self.spotButtonView.stackButtonView.spotButton.addTarget(self,
-                                                                 action: #selector(spotButtonDidTap),
-                                                                 for: .touchUpInside)
-        self.spotButtonView.stackButtonView.nextButton.addTarget(self,
-                                                                 action: #selector(nextButtonDidTap),
-                                                                 for: .touchUpInside)
     }
     
     func configureLayout() {
@@ -142,4 +119,35 @@ private extension HomeBottomSheetViewController {
         updateButtonMode()
     }
     
+}
+
+extension HomeBottomSheetViewController: NavigateMapViewControllerDelegate {
+    public func settingButtonDidTap() {
+        delegate?.navigateToSetting()
+    }
+    
+    public func mapButtonDidTap() {
+        print(#function)
+    }
+    
+    public func locationButtonDidTap() {
+        print(#function)
+    }
+    
+    
+}
+
+
+extension HomeBottomSheetViewController: RecordJourneyButtonViewDelegate {
+    public func backButtonDidTap() {
+        print("뒤로가기 버튼 클릭")
+    }
+    
+    public func spotButtonDidTap() {
+        print("spot 버튼 클릭")
+    }
+    
+    public func nextButtonDidTap() {
+        print("체크 버튼 클릭")
+    }
 }
