@@ -23,14 +23,15 @@ export class JourneyService {
       title: '',
       spots: [],
       coordinates: [startJourneyDTO.coordinate],
+      endTime: '',
     };
     const createdJourneyData = new this.journeyModel(journeyData);
     return await createdJourneyData.save();
   }
-  async pushJourneyIdToUser(journeyId, userEmail) {
+  async pushJourneyIdToUser(journeyId, userId) {
     const result = await this.userModel
       .findOneAndUpdate(
-        { email: userEmail },
+        { userId },
         { $push: { journeys: journeyId } },
         { new: true },
       )
@@ -41,13 +42,13 @@ export class JourneyService {
     const createdJourneyData = await this.insertJourneyData(startJourneyDTO);
     const updateUserInfo = await this.pushJourneyIdToUser(
       createdJourneyData._id,
-      startJourneyDTO.email,
+      startJourneyDTO.userId,
     );
     return createdJourneyData;
   }
 
   async end(endJourneyDTO: EndJourneyDTO) {
-    const { journeyId, title, coordinate } = endJourneyDTO;
+    const { journeyId, title, coordinate, endTime } = endJourneyDTO;
     const coordinateToAdd = Array.isArray(coordinate[0])
       ? coordinate
       : [coordinate];
@@ -55,7 +56,7 @@ export class JourneyService {
       .findOneAndUpdate(
         { _id: journeyId },
         {
-          $set: { title },
+          $set: { title, endTime },
           $push: { coordinates: { $each: coordinateToAdd } },
         },
         { new: true },
@@ -85,7 +86,9 @@ export class JourneyService {
     if (!updatedJourney) {
       throw new JourneyNotFoundException();
     }
-    return updatedJourney;
+    const { coordinates } = updatedJourney;
+    const len = coordinates.length;
+    return { coordinate: coordinates[len - 1] };
   }
 
   async checkJourney(checkJourneyDTO: CheckJourneyDTO) {
