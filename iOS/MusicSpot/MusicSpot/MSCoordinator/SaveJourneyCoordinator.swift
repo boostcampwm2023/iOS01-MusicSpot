@@ -29,8 +29,9 @@ final class SaveJourneyCoordinator: Coordinator {
     // MARK: - Functions
     
     func start() {
+        let song = Song(title: "OMG", artist: "New Jeans", albumArtURL: nil)
         let spotRepository = SpotRepositoryImplementation()
-        let saveJourneyViewModel = SaveJourneyViewModel(spotRepository: spotRepository)
+        let saveJourneyViewModel = SaveJourneyViewModel(selectedSong: song, spotRepository: spotRepository)
         let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
 //        saveJourneyViewController.delegate = self
         self.navigationController.pushViewController(saveJourneyViewController, animated: true)

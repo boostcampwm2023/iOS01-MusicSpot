@@ -46,6 +46,10 @@ let package = Package(
         .library(name: Target.selectSong,
                  targets: [Target.selectSong])
     ],
+    dependencies: [
+        .package(name: Dependency.msUIKit,
+                 path: Dependency.msUIKit.fromRootPath)
+    ],
     targets: [
         .target(name:Target.selectSong,
                 dependencies: [

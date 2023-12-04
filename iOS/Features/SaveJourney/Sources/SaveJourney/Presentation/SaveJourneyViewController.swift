@@ -168,7 +168,12 @@ private extension SaveJourneyViewController {
 private extension SaveJourneyViewController {
     
     func configureMusicPlayer() {
-        self.musicPlayer.setQueue(with: .songs())
+        let songTitleFilter = MPMediaPropertyPredicate(value: "ETA",
+                                                       forProperty: MPMediaItemPropertyTitle,
+                                                       comparisonType: .contains)
+        let filterSet = Set([songTitleFilter])
+        let query = MPMediaQuery(filterPredicates: filterSet)
+        self.musicPlayer.setQueue(with: query)
     }
     
 }
