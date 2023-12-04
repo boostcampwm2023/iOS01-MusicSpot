@@ -12,9 +12,12 @@ import MapKit
 import MSUIKit
 import MSCacheStorage
 
-public protocol NavigationViewControllerDelegate {
-    func navigateToSetting()
-    func showUserLocation()
+public protocol NavigateMapViewControllerDelegate {
+    
+    func settingButtonDidTap()
+    func mapButtonDidTap()
+    func locationButtonDidTap()
+    
 }
 
 public final class NavigateMapViewController: UIViewController {
@@ -24,8 +27,6 @@ public final class NavigateMapViewController: UIViewController {
     public var viewModel: NavigateMapViewModel
     
     private let cache: MSCacheStorage
-    
-    public var delegate: NavigationViewControllerDelegate?
     
     // 임시 위치 정보
     let tempCoordinate = CLLocationCoordinate2D(latitude: 37.495120492289026, longitude: 126.9553042366186)
@@ -39,6 +40,8 @@ public final class NavigateMapViewController: UIViewController {
 
         return stackView
     }()
+    
+    public var delegate: NavigateMapViewControllerDelegate?
     
     @objc func findMyLocation() {
         
@@ -83,33 +86,21 @@ public final class NavigateMapViewController: UIViewController {
         
         locationManager.requestWhenInUseAuthorization()
         mapView.map.setRegion(MKCoordinateRegion(center: tempCoordinate,
-                                                 span: MKCoordinateSpan(latitudeDelta: 0.1, 
+                                                 span: MKCoordinateSpan(latitudeDelta: 0.1,
                                                                         longitudeDelta: 0.11)),
                               animated: true)
         
         mapView.map.delegate = self
         
         locationManager.delegate = self
-    
-        configureLayout()
-        configureStyle()
-    }
-    
-    
-
-    // MARK: - Functions
-    
-    private func settingButtonDidTap() {
         
+        configureLayout()
     }
-
-    private func configureStyle() {
-        buttonStackView.settingButtonAction = settingButtonDidTap
-    }
+    
+    // MARK: - UI Configuration
 
     private func configureLayout() {
         view.addSubview(buttonStackView)
-        
         mapView.map.translatesAutoresizingMaskIntoConstraints = false
         buttonStackView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -271,4 +262,22 @@ extension NavigateMapViewController: MKMapViewDelegate {
         
         return annotationView
     }
+}
+
+
+extension NavigateMapViewController: NavigateMapButtonViewDelegate {
+
+    public func settingButtonDidTap() {
+        print("hi")
+        delegate?.settingButtonDidTap()
+    }
+    
+    public func mapButtonDidTap() {
+        delegate?.mapButtonDidTap()
+    }
+    
+    public func locationButtonDidTap() {
+        delegate?.locationButtonDidTap()
+    }
+    
 }

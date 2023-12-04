@@ -13,52 +13,46 @@ enum ButtonImage: String {
          location = "mappin"
 }
 
+protocol NavigateMapButtonViewDelegate {
+    func settingButtonDidTap()
+    func mapButtonDidTap()
+    func locationButtonDidTap()
+}
+
 /// HomeMap 내의 버튼들을 감싸는 View
 public final class NavigateMapButtonView: UIView {
     
-    // MARK: - Properties
+    // MARK: - UI Components
     
     public var buttonStackView: ButtonStackView = {
         let view = ButtonStackView()
         return view
     }()
     
-    // Button별 기능 주입
-    public var settingButtonAction: (() -> Void)? {
-        didSet {
-            buttonStackView.settingButtonAction = settingButtonAction
-        }
-    }
-    
-    public var mapButtonAction: (() -> Void)? {
-        didSet {
-            buttonStackView.mapButtonAction = mapButtonAction
-        }
-    }
-    
-    public var locationButtonAction: (() -> Void)? {
-        didSet {
-            buttonStackView.locationButtonAction = locationButtonAction
-        }
-    }
+    // MARK: - Properties
+
+    var delegate: NavigateMapButtonViewDelegate?
     
     // MARK: - Life Cycle
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configureStyle()
-        configureLayout()
+        
+        self.configureStyle()
+        self.configureLayout()
+        self.configureAction()
     }
     
     required init(coder: NSCoder) {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
     
-    // MARK: - Functions
+    // MARK: - UI Configuration
     
     private func configureStyle() {
         backgroundColor = .lightGray
         layer.cornerRadius = 8
+        
     }
     
     private func configureLayout() {
@@ -72,16 +66,64 @@ public final class NavigateMapButtonView: UIView {
         ])
     }
     
+    // MARK: - Configure: Action
+    
+    private func configureAction() {
+        self.configureSettingButtonAction()
+        self.configureMapButtonAction()
+        self.configureLocationButtonAction()
+    }
+    
+    
+    private func configureSettingButtonAction() {
+        let settingButtonAction = UIAction(handler: { _ in
+            self.settingButtonDidTap()
+        })
+        self.buttonStackView.settingButton.addAction(settingButtonAction, for: .touchUpInside)
+    }
+    
+    private func configureMapButtonAction() {
+        let mapButtonAction = UIAction(handler: { _ in
+            self.mapButtonDidTap()
+        })
+        self.buttonStackView.mapButton.addAction(mapButtonAction, for: .touchUpInside)
+    }
+    
+    private func configureLocationButtonAction() {
+        let locationButtonAction = UIAction(handler: { _ in
+            self.locationButtonDidTap()
+        })
+        self.buttonStackView.locationButton.addAction(locationButtonAction, for: .touchUpInside)
+    }
+    
+    // MARK: - Functions
+    
+    private func settingButtonDidTap() {
+        print("hello")
+        delegate?.settingButtonDidTap()
+    }
+    
+    private func mapButtonDidTap() {
+        delegate?.mapButtonDidTap()
+    }
+    
+    private func locationButtonDidTap() {
+        delegate?.locationButtonDidTap()
+    }
+    
 }
 
 /// HomeMap 내 3개 버튼 StackView
 final public class ButtonStackView: UIStackView {
     
     // MARK: - Properties
+
+    lazy var settingButton = self.createButton(image: ButtonImage.setting)
     
-    var settingButtonAction: (() -> Void)?
-    var mapButtonAction: (() -> Void)?
-    var locationButtonAction: (() -> Void)?
+    lazy var mapButton = self.createButton(image: ButtonImage.map)
+    
+    lazy var locationButton = self.createButton(image: ButtonImage.location)
+    
     
     // MARK: - Life Cycle
     
@@ -94,59 +136,30 @@ final public class ButtonStackView: UIStackView {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
     
-    // MARK: - Functions
+    // MARK: - UI Configuration
     
     private func configureLayout() {
+        
+        self.addArrangedSubview(settingButton)
+        self.addArrangedSubview(mapButton)
+        self.addArrangedSubview(locationButton)
+        
         self.axis = .vertical
         self.spacing = 24
         self.alignment = .fill
         self.distribution = .fillEqually
         self.translatesAutoresizingMaskIntoConstraints = false
-        
-        let settingButton = self.createButton(image: ButtonImage.setting)
-        settingButton.addTarget(self, action: #selector(settingButtondidTap), for: .touchUpInside)
-        let mapButton = self.createButton(image: ButtonImage.map)
-        mapButton.addTarget(self, action: #selector(mapButtondidTap), for: .touchUpInside)
-        let locationButton = self.createButton(image: ButtonImage.location)
-        locationButton.addTarget(self, action: #selector(locationButtondidTap), for: .touchUpInside)
-        
-        self.addArrangedSubview(settingButton)
-        self.addArrangedSubview(mapButton)
-        self.addArrangedSubview(locationButton)
     }
+    
+    // MARK: - Functions
     
     private func createButton(image: ButtonImage) -> UIButton {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
+        let buttonImage = UIImage(systemName: image.rawValue)
         
-        if #available(iOS 13.0, *) {
-            let symbolImage = UIImage(systemName: image.rawValue)
-            button.setImage(symbolImage, for: .normal)
-        } else {
-            // Fallback on earlier versions
-        }
-        button.imageView?.tintColor = .black
-        
-        button.layer.borderColor = UIColor.black.cgColor
-        button.widthAnchor.constraint(equalToConstant: 24).isActive = true
-        button.heightAnchor.constraint(equalToConstant: 24).isActive = true
-        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(buttonImage, for: .normal)
         
         return button
-    }
-    
-    // MARK: - Object Functions
-    
-    @objc private func settingButtondidTap() {
-        settingButtonAction?()
-    }
-    
-    @objc private func mapButtondidTap() {
-        mapButtonAction?()
-    }
-    
-    @objc private func locationButtondidTap() {
-        locationButtonAction?()
     }
     
 }

@@ -8,6 +8,11 @@
 import UIKit
 import MSUIKit
 import MSDesignSystem
+public protocol RecordJourneyButtonViewDelegate {
+    func backButtonDidTap()
+    func spotButtonDidTap()
+    func nextButtonDidTap()
+}
 
 public final class RecordJourneyButtonView: UIView {
     
@@ -19,19 +24,29 @@ public final class RecordJourneyButtonView: UIView {
         return buttonView
     }()
     
+    public var delegate: RecordJourneyButtonViewDelegate?
+    
     // MARK: - Initializer
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configureLayout()
+        
+        self.configureStyle()
+        self.configureLayout()
+        self.configureAction()
     }
     
     required init?(coder: NSCoder) {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
     
-    // MARK: - Functions
-
+    
+    // MARK: - UI Configuration
+    
+    private func configureStyle() {
+        
+    }
+    
     private func configureLayout() {
         self.addSubview(stackButtonView)
         self.stackButtonView.translatesAutoresizingMaskIntoConstraints = false
@@ -44,6 +59,49 @@ public final class RecordJourneyButtonView: UIView {
         ])
     }
     
+    
+    // MARK: - Configure: Action
+    
+    private func configureAction() {
+        configureBackButtonAction()
+        configureSpotButtonAction()
+        configureNextButtonAction()
+    }
+    
+    private func configureBackButtonAction() {
+        let backButtonAction = UIAction(handler: { _ in
+            self.backButtonDidTap()
+        })
+        self.stackButtonView.backButton.addAction(backButtonAction, for: .touchUpInside)
+    }
+    
+    private func configureSpotButtonAction() {
+        let spotButtonAction = UIAction(handler: { _ in
+            self.spotButtonDidTap()
+        })
+        self.stackButtonView.spotButton.addAction(spotButtonAction, for: .touchUpInside)
+    }
+    
+    private func configureNextButtonAction() {
+        let nextButtonAction = UIAction(handler: { _ in
+            self.nextButtonDidTap()
+        })
+        self.stackButtonView.nextButton.addAction(nextButtonAction, for: .touchUpInside)
+    }
+    
+    // MARK: - Functions
+
+    private func backButtonDidTap() {
+        self.delegate?.backButtonDidTap()
+    }
+    
+    private func spotButtonDidTap() {
+        self.delegate?.spotButtonDidTap()
+    }
+    
+    private func nextButtonDidTap() {
+        self.delegate?.nextButtonDidTap()
+    }
 }
 
 final public class RecordingJourneyButtonStackView: UIStackView {
@@ -70,6 +128,7 @@ final public class RecordingJourneyButtonStackView: UIStackView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.configureStyle()
         self.configureLayout()
     }
     
@@ -77,16 +136,22 @@ final public class RecordingJourneyButtonStackView: UIStackView {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
     
+    // MARK: - UI Configuration
+    
+    private func configureStyle() {
+        
+    }
+    
     private func configureLayout() {
-        self.axis = .horizontal
-        self.spacing = 50
-        self.alignment = .center
-        self.distribution = .fillEqually
-        self.translatesAutoresizingMaskIntoConstraints = false
         
         self.addArrangedSubview(backButton)
         self.addArrangedSubview(spotButton)
         self.addArrangedSubview(nextButton)
+        
+        self.axis = .horizontal
+        self.spacing = 50
+        self.alignment = .center
+        self.translatesAutoresizingMaskIntoConstraints = false
         
     }
     
