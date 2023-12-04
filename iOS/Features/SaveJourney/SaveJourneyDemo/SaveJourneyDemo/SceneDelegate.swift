@@ -28,8 +28,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         MSFont.registerFonts()
         
-        let journeyRepository = JourneyRepositoryImplementation()
-        let saveJourneyViewModel = SaveJourneyViewModel(repository: journeyRepository)
+        let spotRepository = SpotRepositoryImplementation()
+        let saveJourneyViewModel = SaveJourneyViewModel(spotRepository: spotRepository)
         let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
         let navigationViewController = UINavigationController(rootViewController: saveJourneyViewController)
         

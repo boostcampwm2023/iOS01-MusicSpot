@@ -6,20 +6,16 @@
 //
 
 import Combine
+import CoreLocation
 import MapKit
 import UIKit
 
 import MSUIKit
 import MediaPlayer
 
-enum SaveJourneySection {
-    case music
-    case spot
-}
-
 enum SaveJourneyItem: Hashable {
     case music(String)
-    case spot(Journey)
+    case spot(Spot)
 }
 
 public final class SaveJourneyViewController: UIViewController {
@@ -27,7 +23,7 @@ public final class SaveJourneyViewController: UIViewController {
     typealias SaveJourneyDataSource = UICollectionViewDiffableDataSource<SaveJourneySection, SaveJourneyItem>
     typealias HeaderRegistration = UICollectionView.SupplementaryRegistration<SaveJourneyHeaderView>
     typealias MusicCellRegistration = UICollectionView.CellRegistration<SaveJourneyMusicCell, String>
-    typealias JourneyCellRegistration = UICollectionView.CellRegistration<JourneyCell, Journey>
+    typealias SpotCellRegistration = UICollectionView.CellRegistration<SpotCell, Spot>
     typealias SaveJourneySnapshot = NSDiffableDataSourceSnapshot<SaveJourneySection, SaveJourneyItem>
     typealias MusicSnapshot = NSDiffableDataSourceSectionSnapshot<SaveJourneyItem>
     typealias SpotSnapshot = NSDiffableDataSourceSectionSnapshot<SaveJourneyItem>
@@ -48,7 +44,7 @@ public final class SaveJourneyViewController: UIViewController {
         
         static let horizontalInset: CGFloat = 24.0
         static let verticalInset: CGFloat = 12.0
-        static let innerGroupSpacing: CGFloat = 12.0
+        static let innerSpacing: CGFloat = 4.0
         static let headerTopInset: CGFloat = 24.0
         static let buttonSpacing: CGFloat = 4.0
         static let buttonBottomInset: CGFloat = 24.0
@@ -141,11 +137,11 @@ public final class SaveJourneyViewController: UIViewController {
             }
             .store(in: &self.cancellables)
         
-        self.viewModel.state.journeys
+        self.viewModel.state.spots
             .receive(on: DispatchQueue.main)
-            .sink { journeys in
+            .sink { spots in
                 var snapshot = SpotSnapshot()
-                snapshot.append(journeys.map { .spot($0) })
+                snapshot.append(spots.map { .spot($0) })
                 self.dataSource?.apply(snapshot, to: .spot)
             }
             .store(in: &self.cancellables)
@@ -202,21 +198,24 @@ private extension SaveJourneyViewController {
     }
     
     func configureSection(for section: SaveJourneySection) -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .fractionalHeight(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let item = NSCollectionLayoutItem(layoutSize: section.itemSize)
         
-        let groupHeight: NSCollectionLayoutDimension = switch section {
-        case .music: .estimated(SaveJourneyMusicCell.estimatedHeight)
-        case .spot: .estimated(JourneyCell.estimatedHeight)
+        let group: NSCollectionLayoutGroup
+        let itemCount = section == .music ? 1 : 2
+        let interItemSpacing: CGFloat = section == .music ? .zero : Metric.innerSpacing
+        if #available(iOS 16.0, *) {
+            group = NSCollectionLayoutGroup.horizontal(layoutSize: section.groupSize,
+                                                           repeatingSubitem: item,
+                                                           count: itemCount)
+        } else {
+            group = NSCollectionLayoutGroup.horizontal(layoutSize: section.groupSize,
+                                                           subitem: item,
+                                                           count: itemCount)
         }
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: groupHeight)
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
-                                                       subitems: [item])
+        group.interItemSpacing = .fixed(interItemSpacing)
         
         let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = Metric.innerGroupSpacing
+        section.interGroupSpacing = Metric.innerSpacing
         section.contentInsets = NSDirectionalEdgeInsets(top: Metric.verticalInset,
                                                         leading: Metric.horizontalInset,
                                                         bottom: Metric.verticalInset,
@@ -245,12 +244,30 @@ private extension SaveJourneyViewController {
             cell.update(with: itemIdentifier)
         }
         
-        let journeyCellRegistration = JourneyCellRegistration { cell, indexPath, itemIdentifier in
-            let cellModel = JourneyCellModel(location: itemIdentifier.location,
-                                             date: itemIdentifier.date,
-                                             songTitle: itemIdentifier.song.title,
-                                             songArtist: itemIdentifier.song.artist)
-            cell.update(with: cellModel)
+        let journeyCellRegistration = SpotCellRegistration { cell, indexPath, itemIdentifier in
+            // TODO: 별도의 모델 사용
+            let geocoder = CLGeocoder()
+            let location = CLLocation(latitude: itemIdentifier.location.latitude,
+                                      longitude: itemIdentifier.location.longitude)
+            Task {
+                guard let placemark = try? await geocoder.reverseGeocodeLocation(location).first else {
+                    return
+                }
+                var location = ""
+                
+                if let locality = placemark.locality {
+                    location += locality
+                }
+                
+                if let subLocality = placemark.subLocality {
+                    location += " \(subLocality)"
+                }
+                
+                let cellModel = SpotCellModel(location: location,
+                                              date: itemIdentifier.date,
+                                              photoURL: itemIdentifier.photoURL)
+                cell.update(with: cellModel)
+            }
             // TODO: ImageFetcher 사용해 이미지 업데이트
         }
         
@@ -260,7 +277,7 @@ private extension SaveJourneyViewController {
             case .zero:
                 header.update(with: Typo.songSectionTitle)
             case 1:
-                let spots = self.viewModel.state.journeys
+                let spots = self.viewModel.state.spots
                 header.update(with: Typo.spotSectionTitle(spots.value.count))
             default:
                 break
@@ -383,8 +400,8 @@ import MSData
 
 @available(iOS 17, *)
 #Preview {
-    let journeyRepository = JourneyRepositoryImplementation()
-    let saveJourneyViewModel = SaveJourneyViewModel(repository: journeyRepository)
+    let spotRepository = SpotRepositoryImplementation()
+    let saveJourneyViewModel = SaveJourneyViewModel(spotRepository: spotRepository)
     let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
     return saveJourneyViewController
 }

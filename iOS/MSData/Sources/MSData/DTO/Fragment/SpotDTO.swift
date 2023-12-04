@@ -23,10 +23,30 @@ public struct RequestableSpotDTO: Encodable, Identifiable {
     
 }
 
-public struct ResponsibleSpotDTO: Codable, Identifiable {
+public struct ResponsibleSpotDTO: Identifiable {
     
     public let id: UUID
-    public let coordinate: [Double]
-    public let photoURLs: [String]
+    public let coordinate: CoordinateDTO
+    public let photoURL: URL
+    
+}
+
+// MARK: - Decodable
+
+extension ResponsibleSpotDTO: Decodable {
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "journeyId"
+        case coordinate
+        case photoURL = "photoUrl"
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(UUID.self, forKey: .id)
+        let coordinate = try container.decode([Double].self, forKey: .coordinate)
+        self.coordinate = CoordinateDTO(latitude: coordinate[0], longitude: coordinate[1])
+        self.photoURL = try container.decode(URL.self, forKey: .photoURL)
+    }
     
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 import MSData
 
@@ -23,7 +24,19 @@ extension Journey {
 extension Spot {
     
     init(dto: ResponsibleSpotDTO) {
-        self.photoURLs = dto.photoURLs
+        self.id = dto.id
+        self.location = Coordinate(dto: dto.coordinate)
+        self.date = .now
+        self.photoURL = dto.photoURL
+    }
+    
+}
+
+extension Coordinate {
+    
+    init(dto: CoordinateDTO) {
+        self.latitude = dto.latitude
+        self.longitude = dto.longitude
     }
     
 }

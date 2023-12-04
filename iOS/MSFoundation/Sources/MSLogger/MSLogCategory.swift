@@ -11,8 +11,9 @@ public enum MSLogCategory: String {
     case network
     case userDefaults
     case dataCore
+    
     case recordingJourney
-    case checkJourney
+    case saveJourney
     case login
     case setting
     case camera

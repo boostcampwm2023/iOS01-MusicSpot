@@ -8,6 +8,7 @@
 import Combine
 
 import MSData
+import MSLogger
 
 public final class SaveJourneyViewModel {
     
@@ -19,19 +20,19 @@ public final class SaveJourneyViewModel {
     
     public struct State {
         var music = CurrentValueSubject<String, Never>("")
-        var journeys = CurrentValueSubject<[Journey], Never>([])
+        var spots = CurrentValueSubject<[Spot], Never>([])
     }
     
     // MARK: - Properties
     
-    private let repository: JourneyRepository
+    private let spotRepository: SpotRepository
     
     public var state = State()
     
     // MARK: - Initializer
     
-    public init(repository: JourneyRepository) {
-        self.repository = repository
+    public init(spotRepository: SpotRepository) {
+        self.spotRepository = spotRepository
     }
     
     // MARK: - Functions
@@ -40,13 +41,15 @@ public final class SaveJourneyViewModel {
         switch action {
         case .viewNeedsLoaded:
             Task {
-                let result = await self.repository.fetchJourneyList()
+                let result = await self.spotRepository.fetchRecordingSpots()
                 switch result {
-                case .success(let journeyDTOs):
-                    let journeys = journeyDTOs.map { Journey(dto: $0) }
-                    self.state.journeys.send(journeys)
+                case .success(let responseDTOs):
+                    let spots = responseDTOs.map { Spot(dto: $0) }
+                    self.state.spots.send(spots)
                 case .failure(let error):
-                    print(error)
+                    #if DEBUG
+                    MSLogger.make(category: .saveJourney).error("\(error)")
+                    #endif
                 }
             }
         case .mediaControlButtonDidTap:
