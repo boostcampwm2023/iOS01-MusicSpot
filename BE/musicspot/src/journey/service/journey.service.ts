@@ -9,7 +9,7 @@ import { EndJourneyDTO } from '../dto/journeyEnd.dto';
 import { RecordJourneyDTO } from '../dto/journeyRecord.dto';
 import { CheckJourneyDTO } from '../dto/journeyCheck.dto';
 import { JourneyNotFoundException } from '../../filters/journey.exception';
-import { UserNotFoundException } from 'src/filters/user.exception';
+import { UserNotFoundException } from '../../filters/user.exception';
 
 @Injectable()
 export class JourneyService {
@@ -36,6 +36,9 @@ export class JourneyService {
         { new: true },
       )
       .lean();
+    if (!result) {
+      new UserNotFoundException();
+    }
     return result;
   }
   async create(startJourneyDTO: StartJourneyDTO): Promise<Journey> {
