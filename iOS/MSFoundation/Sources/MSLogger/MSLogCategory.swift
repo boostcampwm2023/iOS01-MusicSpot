@@ -8,6 +8,7 @@
 import Foundation
 
 public enum MSLogCategory: String {
+    
     case network
     case userDefaults
     case dataCore
@@ -15,6 +16,8 @@ public enum MSLogCategory: String {
     case checkJourney
     case login
     case setting
+    case rewindJourney
     case camera
     case spot
+    
 }
