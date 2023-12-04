@@ -21,7 +21,6 @@
 		DD73F8652B024C4B00EE9BF2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8632B024C4B00EE9BF2 /* LaunchScreen.storyboard */; };
 		DD9782712B1902B8003CB134 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = DD9782702B1902B8003CB134 /* Home */; };
 		DDCDDA172B18F4B8008E66D1 /* NavigateMap in Frameworks */ = {isa = PBXBuildFile; productRef = DDCDDA162B18F4B8008E66D1 /* NavigateMap */; };
-		DDCDDA192B18F4B8008E66D1 /* RecordJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DDCDDA182B18F4B8008E66D1 /* RecordJourney */; };
 		DDCDDA1C2B18F4BE008E66D1 /* JourneyList in Frameworks */ = {isa = PBXBuildFile; productRef = DDCDDA1B2B18F4BE008E66D1 /* JourneyList */; };
 		DDCDDA1F2B18F4C6008E66D1 /* RewindJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DDCDDA1E2B18F4C6008E66D1 /* RewindJourney */; };
 		DDCDDA222B18F4CD008E66D1 /* SaveJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DDCDDA212B18F4CD008E66D1 /* SaveJourney */; };
@@ -52,7 +51,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDCDDA192B18F4B8008E66D1 /* RecordJourney in Frameworks */,
 				DDCDDA172B18F4B8008E66D1 /* NavigateMap in Frameworks */,
 				DDCDDA1F2B18F4C6008E66D1 /* RewindJourney in Frameworks */,
 				DDCDDA1C2B18F4BE008E66D1 /* JourneyList in Frameworks */,
@@ -144,7 +142,6 @@
 			name = MusicSpot;
 			packageProductDependencies = (
 				DDCDDA162B18F4B8008E66D1 /* NavigateMap */,
-				DDCDDA182B18F4B8008E66D1 /* RecordJourney */,
 				DDCDDA1B2B18F4BE008E66D1 /* JourneyList */,
 				DDCDDA1E2B18F4C6008E66D1 /* RewindJourney */,
 				DDCDDA212B18F4CD008E66D1 /* SaveJourney */,
@@ -494,10 +491,6 @@
 		DDCDDA162B18F4B8008E66D1 /* NavigateMap */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = NavigateMap;
-		};
-		DDCDDA182B18F4B8008E66D1 /* RecordJourney */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = RecordJourney;
 		};
 		DDCDDA1B2B18F4BE008E66D1 /* JourneyList */ = {
 			isa = XCSwiftPackageProductDependency;
