@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import Combine
 
+import MSData
 import MSDesignSystem
+import MSNetworking
 
 public final class RewindJourneyViewController: UIViewController {
     
@@ -44,6 +47,25 @@ public final class RewindJourneyViewController: UIViewController {
     
     // MARK: - Properties
     
+    private let rewindJourneyViewModel = RewindJourneyViewModel()
+    public var images: [UIImage]?
+    private var presentImageIndex: Int? {
+        didSet {
+            self.changeProgressViews()
+        }
+    }
+    
+    // MARK: - Properties: Networking
+    
+    internal var journeyRouter: Router?
+    private var journeyID: UUID?
+    
+    // MARK: - Properties: Timer
+    
+    private var timerSubscriber: Set<AnyCancellable> = []
+    
+    // MARK: - UI Components
+    
     private let stackView = UIStackView()
     private let presentImageView = UIImageView()
     private let musicView = MSMusicView()
@@ -52,14 +74,39 @@ public final class RewindJourneyViewController: UIViewController {
     private let leftTouchView = UIButton()
     private let rightTouchView = UIButton()
     
-    public var images: [UIImage]?
-    private var presentImageIndex: Int? {
-        didSet {
-            self.changeProgressViews()
-        }
+    // MARK: - Life Cycle
+    
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        self.timerBinding()
+        self.configure()
+        self.rewindJourneyViewModel.downloadImages(using: self.journeyRouter, journeyID: self.journeyID)
     }
     
-    // MARK: - UI Configuration
+    public override func viewDidAppear(_ animated: Bool) {
+        self.rewindJourneyViewModel.startTimer()
+    }
+    
+    public override func viewDidDisappear(_ animated: Bool) {
+        self.rewindJourneyViewModel.stopTimer()
+    }
+    
+    // MARK: - Timer
+    
+    private func timerBinding() {
+        self.rewindJourneyViewModel.timerPublisher
+            .sink { [weak self] _ in
+                self?.rightTouchViewTapped()
+            }
+            .store(in: &self.timerSubscriber)
+    }
+    
+    private func timerRestart() {
+        self.rewindJourneyViewModel.stopTimer()
+        self.rewindJourneyViewModel.startTimer()
+    }
+    
+    // MARK: - Configuration
     
     func configure() {
         self.configureLayout()
@@ -196,16 +243,10 @@ public final class RewindJourneyViewController: UIViewController {
         let maxIndex = images.count - 1
         
         for index in minIndex...maxIndex {
+            self.progressViews?[index].isLeftOfCurrentHighlighting = index < presentIndex ? true : false
             self.progressViews?[index].isHighlighted = index <= presentIndex ? true : false
         }
-    }
-    
-    // MARK: - Life Cycle
-    
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        self.configure()
+        self.timerRestart()
     }
     
     // MARK: - Actions
