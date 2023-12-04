@@ -52,8 +52,8 @@ let package = Package(
     dependencies: [
         .package(name: Dependency.msData,
                  path: Dependency.msData.fromRootPath),
-        .package(name: Dependency.msCoreKit,
-                 path: Dependency.msCoreKit.fromRootPath),
+//        .package(name: Dependency.msCoreKit,
+//                 path: Dependency.msCoreKit.fromRootPath),
         .package(name: Dependency.msUIKit,
                  path: Dependency.msUIKit.fromRootPath),
         .package(name: Dependency.msFoundation,
