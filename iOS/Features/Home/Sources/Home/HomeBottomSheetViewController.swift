@@ -77,13 +77,6 @@ public final class HomeBottomSheetViewController: HomeViewController {
         self.navigationController?.isNavigationBarHidden = true
     }
     
-    // MARK: - Life Cycle
-    
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        self.configureLayout()
-    
     // MARK: - Functions
     
     private func updateButtonMode() {
