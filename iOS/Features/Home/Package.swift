@@ -48,14 +48,13 @@ let package = Package(
         .library(name: Target.home,
                  targets: [Target.home]),
         .library(name: Target.navigateMap,
-                 targets: [Target.navigateMap]),
-        
+                 targets: [Target.navigateMap])
     ],
     dependencies: [
         .package(name: Dependency.journeyList,
                  path: Dependency.journeyList.fromCurrentPath),
         .package(name: Dependency.msData,
-                 path: Dependency.msData.fromCurrentPath),
+                 path: Dependency.msData.fromRootPath),
         .package(name: Dependency.msUIKit,
                  path: Dependency.msUIKit.fromRootPath),
         .package(name: Dependency.msFoundation,
