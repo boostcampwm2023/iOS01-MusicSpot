@@ -8,9 +8,7 @@
 import CoreLocation
 import UIKit
 import MapKit
-
 import MSUIKit
-import MSCacheStorage
 
 public protocol NavigateMapViewControllerDelegate {
     
@@ -25,8 +23,6 @@ public final class NavigateMapViewController: UIViewController {
     // MARK: - Properties
     
     public var viewModel: NavigateMapViewModel
-    
-    private let cache: MSCacheStorage
     
     // 임시 위치 정보
     let tempCoordinate = CLLocationCoordinate2D(latitude: 37.495120492289026, longitude: 126.9553042366186)
