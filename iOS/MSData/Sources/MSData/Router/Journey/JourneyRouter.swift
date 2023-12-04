@@ -7,7 +7,7 @@
 
 import MSNetworking
 
-public enum JourneyRouter: Router {
+public enum JourneyRouter : Router {
     
     case journeyList
     case spot
