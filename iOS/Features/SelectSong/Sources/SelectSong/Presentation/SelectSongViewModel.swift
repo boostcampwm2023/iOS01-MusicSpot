@@ -29,6 +29,8 @@ public final class SelectSongViewModel {
     
     public var state = State()
     
+    private var musicAuthorizationState: MusicAuthorization.Status?
+    
     // MARK: - Initializer
     
     public init(repository: SongRepository) {
@@ -42,17 +44,25 @@ public final class SelectSongViewModel {
         case .viewNeedsLoaded:
             // TODO: 검색 시 수행하도록 변경
             Task {
-                let result = await self.repository.fetchSongList()
-                switch result {
-                case .success(let songCollection):
-                    let songs = songCollection.map { Song(dto: $0) }
-                    self.state.songs.send(songs)
-                case .failure(let error):
-                    print(error)
-                }
+                let status = await MusicAuthorization.request()
+                self.musicAuthorizationState = status
             }
         case .searchTextFieldDidUpdate(let text):
-            print(text)
+            switch self.musicAuthorizationState {
+            case .authorized:
+                Task {
+                    let result = await self.repository.fetchSongList(with: text)
+                    switch result {
+                    case .success(let songCollection):
+                        let songs = songCollection.map { Song(dto: $0) }
+                        self.state.songs.send(songs)
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
+            default:
+                return
+            }   
         }
     }
     

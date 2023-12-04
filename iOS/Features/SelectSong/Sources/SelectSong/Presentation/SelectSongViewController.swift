@@ -93,6 +93,8 @@ public final class SelectSongViewController: BaseViewController {
     
     func bind() {
         self.searchTextField.textPublisher
+            .filter { !$0.isEmpty }
+            .print()
             .sink { text in
                 self.viewModel.trigger(.searchTextFieldDidUpdate(text))
             }
@@ -109,12 +111,13 @@ public final class SelectSongViewController: BaseViewController {
             .store(in: &self.cancellables)
     }
     
-    // MARK: - UI Configuration
+    // MARK: - UI Configursafdation
     
     public override func configureStyle() {
         super.configureStyle()
         
         self.title = Typo.title
+        self.searchTextField.becomeFirstResponder()
     }
     
     public override func configureLayout() {
