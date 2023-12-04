@@ -8,6 +8,7 @@
 import CoreLocation
 import UIKit
 import MapKit
+
 import MSUIKit
 
 public protocol NavigateMapViewControllerDelegate {
@@ -58,14 +59,12 @@ public final class NavigateMapViewController: UIViewController {
     
     // MARK: - Initializer
     
-//    public init(viewModel: NavigateMapViewModel,
-//                cache: MSCacheStorage = MSCacheStorage(),
-//                nibName nibNameOrNil: String? = nil,
-//                bundle nibBundleOrNil: Bundle? = nil) {
-//        self.viewModel = viewModel
-//        self.cache = cache
-//        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-//    }
+    public init(viewModel: NavigateMapViewModel,
+                nibName nibNameOrNil: String? = nil,
+                bundle nibBundleOrNil: Bundle? = nil) {
+        self.viewModel = viewModel
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
     
     required init?(coder: NSCoder) {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
