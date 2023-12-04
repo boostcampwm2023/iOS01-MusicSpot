@@ -24,6 +24,7 @@ export class JourneyService {
       title: '',
       spots: [],
       coordinates: [startJourneyDTO.coordinate],
+      endTimestamp: '',
     };
     const createdJourneyData = new this.journeyModel(journeyData);
     return await createdJourneyData.save();

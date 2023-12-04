@@ -42,7 +42,14 @@ export class Journey {
     required: true,
   })
   @Prop({ type: String })
-  timestamp: string;
+  startTimestamp: string;
+  @ApiProperty({
+    example: '2023-11-22T15:30:00.000+09:00',
+    description: '끝난 시간',
+    required: true,
+  })
+  @Prop({ type: String })
+  endTimestamp: string;
 }
 
 export const JourneySchema = SchemaFactory.createForClass(Journey);

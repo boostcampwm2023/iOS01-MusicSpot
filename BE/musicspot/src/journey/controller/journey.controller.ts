@@ -46,7 +46,8 @@ export class JourneyController {
     description: '여정을 종료합니다.',
   })
   @ApiCreatedResponse({
-    description: '현재는 좌표 데이터의 길이를 반환, 추후 참 거짓으로 변경 예정',
+    description:
+      '현재는 좌표 데이터의 길이를 2반환, 추후 참 거짓으로 변경 예정',
     type: EndJourneyResponseDTO,
   })
   @Post('end')
