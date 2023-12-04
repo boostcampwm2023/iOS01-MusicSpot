@@ -7,9 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		21CF388A2B1DEC80009B6E53 /* MSCacheStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 21CF38892B1DEC80009B6E53 /* MSCacheStorage */; };
+		21CF388C2B1DEC80009B6E53 /* MSFetcher in Frameworks */ = {isa = PBXBuildFile; productRef = 21CF388B2B1DEC80009B6E53 /* MSFetcher */; };
+		21CF388E2B1DEC80009B6E53 /* MSNetworking in Frameworks */ = {isa = PBXBuildFile; productRef = 21CF388D2B1DEC80009B6E53 /* MSNetworking */; };
+		21CF38902B1DEC80009B6E53 /* MSPersistentStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 21CF388F2B1DEC80009B6E53 /* MSPersistentStorage */; };
 		DDAA4DA62B173530002F0748 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA4DA52B173530002F0748 /* AppDelegate.swift */; };
 		DDAA4DA82B173530002F0748 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA4DA72B173530002F0748 /* SceneDelegate.swift */; };
-		DDAA4DAA2B173530002F0748 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAA4DA92B173530002F0748 /* ViewController.swift */; };
 		DDAA4DAD2B173530002F0748 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DDAA4DAB2B173530002F0748 /* Main.storyboard */; };
 		DDAA4DAF2B173532002F0748 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DDAA4DAE2B173532002F0748 /* Assets.xcassets */; };
 		DDAA4DB22B173532002F0748 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DDAA4DB02B173532002F0748 /* LaunchScreen.storyboard */; };
@@ -20,7 +23,6 @@
 		DDAA4DA22B173530002F0748 /* RewindJourneyDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RewindJourneyDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDAA4DA52B173530002F0748 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DDAA4DA72B173530002F0748 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		DDAA4DA92B173530002F0748 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		DDAA4DAC2B173530002F0748 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DDAA4DAE2B173532002F0748 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DDAA4DB12B173532002F0748 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -32,7 +34,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21CF388E2B1DEC80009B6E53 /* MSNetworking in Frameworks */,
 				DDAA4DBB2B173551002F0748 /* RewindJourney in Frameworks */,
+				21CF388C2B1DEC80009B6E53 /* MSFetcher in Frameworks */,
+				21CF388A2B1DEC80009B6E53 /* MSCacheStorage in Frameworks */,
+				21CF38902B1DEC80009B6E53 /* MSPersistentStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,7 +66,6 @@
 			children = (
 				DDAA4DA52B173530002F0748 /* AppDelegate.swift */,
 				DDAA4DA72B173530002F0748 /* SceneDelegate.swift */,
-				DDAA4DA92B173530002F0748 /* ViewController.swift */,
 				DDAA4DAB2B173530002F0748 /* Main.storyboard */,
 				DDAA4DAE2B173532002F0748 /* Assets.xcassets */,
 				DDAA4DB02B173532002F0748 /* LaunchScreen.storyboard */,
@@ -87,6 +92,10 @@
 			name = RewindJourneyDemo;
 			packageProductDependencies = (
 				DDAA4DBA2B173551002F0748 /* RewindJourney */,
+				21CF38892B1DEC80009B6E53 /* MSCacheStorage */,
+				21CF388B2B1DEC80009B6E53 /* MSFetcher */,
+				21CF388D2B1DEC80009B6E53 /* MSNetworking */,
+				21CF388F2B1DEC80009B6E53 /* MSPersistentStorage */,
 			);
 			productName = RewindJourneyDemo;
 			productReference = DDAA4DA22B173530002F0748 /* RewindJourneyDemo.app */;
@@ -118,6 +127,7 @@
 			mainGroup = DDAA4D992B173530002F0748;
 			packageReferences = (
 				DDAA4DB92B173551002F0748 /* XCLocalSwiftPackageReference ".." */,
+				21CF38882B1DEC80009B6E53 /* XCLocalSwiftPackageReference "../../../MSCoreKit" */,
 			);
 			productRefGroup = DDAA4DA32B173530002F0748 /* Products */;
 			projectDirPath = "";
@@ -146,7 +156,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDAA4DAA2B173530002F0748 /* ViewController.swift in Sources */,
 				DDAA4DA62B173530002F0748 /* AppDelegate.swift in Sources */,
 				DDAA4DA82B173530002F0748 /* SceneDelegate.swift in Sources */,
 			);
@@ -300,6 +309,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 26HTUC2WXR;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RewindJourneyDemo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -331,6 +341,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 26HTUC2WXR;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RewindJourneyDemo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -379,6 +390,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
+		21CF38882B1DEC80009B6E53 /* XCLocalSwiftPackageReference "../../../MSCoreKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../../MSCoreKit;
+		};
 		DDAA4DB92B173551002F0748 /* XCLocalSwiftPackageReference ".." */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ..;
@@ -386,6 +401,22 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		21CF38892B1DEC80009B6E53 /* MSCacheStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSCacheStorage;
+		};
+		21CF388B2B1DEC80009B6E53 /* MSFetcher */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSFetcher;
+		};
+		21CF388D2B1DEC80009B6E53 /* MSNetworking */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSNetworking;
+		};
+		21CF388F2B1DEC80009B6E53 /* MSPersistentStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSPersistentStorage;
+		};
 		DDAA4DBA2B173551002F0748 /* RewindJourney */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RewindJourney;
