@@ -3,8 +3,6 @@ import {
   ValidationOptions,
   ValidationArguments,
 } from 'class-validator';
-import { elementAt } from 'rxjs';
-
 export function IsCoordinate(validationOptions?: ValidationOptions) {
   return function (object: Object, propertyName: string) {
     registerDecorator({
