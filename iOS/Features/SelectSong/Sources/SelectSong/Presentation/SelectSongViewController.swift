@@ -91,9 +91,15 @@ public final class SelectSongViewController: BaseViewController {
         self.viewModel.trigger(.viewNeedsLoaded)
     }
     
+    public override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        
+        self.navigationController?.isNavigationBarHidden = false
+    }
+    
     // MARK: - Combine Binding
     
-    func bind() {
+    private func bind() {
         self.searchTextField.textPublisher
             .filter { !$0.isEmpty }
             .print()
