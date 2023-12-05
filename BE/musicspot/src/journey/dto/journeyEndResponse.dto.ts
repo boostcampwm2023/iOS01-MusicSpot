@@ -1,6 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsDateString, IsArray, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  IsDateString,
+  IsArray,
+  IsNotEmpty,
+  ValidateNested,
+} from 'class-validator';
+
 import { IsCoordinate } from '../../common/decorator/coordinate.decorator';
+import { Song } from '../schema/song.schema';
+
 export class EndJourneyResponseDTO {
   @ApiProperty({
     example: '655efda2fdc81cae36d20650',
@@ -9,6 +18,7 @@ export class EndJourneyResponseDTO {
   })
   @IsString()
   readonly journeyId: string;
+
   @ApiProperty({
     example: '여정 제목',
     description: '여정 제목',
@@ -44,4 +54,7 @@ export class EndJourneyResponseDTO {
 
   @IsDateString()
   readonly endTime: string;
+
+  @ValidateNested()
+  readonly song: Song;
 }

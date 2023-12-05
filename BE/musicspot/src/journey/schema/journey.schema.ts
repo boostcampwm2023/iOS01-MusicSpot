@@ -1,6 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
+import { Song } from './song.schema';
+
 export type JourneyDocument = HydratedDocument<Journey>;
 
 @Schema({ collection: 'journey' })
@@ -49,11 +51,10 @@ export class Journey {
     description: '여정 종료 시간',
     required: true,
   })
-  @Prop({ type: String })
   endTime: string;
 
-  // @Prop({ type: String })
-  // timestamp: string;
+  @Prop({ type: Song })
+  song: Song;
 }
 
 export const JourneySchema = SchemaFactory.createForClass(Journey);
