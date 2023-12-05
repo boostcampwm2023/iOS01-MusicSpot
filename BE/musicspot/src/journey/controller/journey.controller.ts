@@ -8,7 +8,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { JourneyService } from '../service/journey.service';
-import { StartJourneyDTO } from '.././dto/journeyStart.dto';
+import { StartJourneyDTO } from '../dto/journeyStart.dto';
 import {
   ApiCreatedResponse,
   ApiOperation,
@@ -16,8 +16,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Journey } from '../schema/journey.schema';
-import { EndJourneyDTO } from '.././dto/journeyEnd.dto';
-import { RecordJourneyDTO } from '.././dto/journeyRecord.dto';
+import { EndJourneyDTO } from '../dto/journeyEnd.dto';
+import { RecordJourneyDTO } from '../dto/journeyRecord.dto';
 import { CheckJourneyDTO } from '../dto/journeyCheck.dto';
 import { EndJourneyResponseDTO } from '../dto/journeyEndResponse.dto';
 import { CheckJourneyResponseDTO } from '../dto/journeyCheckResponse.dto';
