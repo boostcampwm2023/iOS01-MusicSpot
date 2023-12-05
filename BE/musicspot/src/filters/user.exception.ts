@@ -11,3 +11,10 @@ export class UserNotFoundException extends BaseException {
     this.message = UserExceptionMessageEnum.UserNotFound;
   }
 }
+
+export class UserAlreadyExistException extends BaseException {
+  constructor() {
+    super(UserExceptionCodeEnum.UserAlreadyExist, HttpStatus.CONFLICT);
+    this.message = UserExceptionMessageEnum.UserAlreadyExist;
+  }
+}
