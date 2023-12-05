@@ -31,7 +31,7 @@ public struct MSNetworking {
     }()
     
     private let session: Session
-    private let queue: DispatchQueue
+    public let queue: DispatchQueue
     
     // MARK: - Initializer
     
