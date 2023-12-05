@@ -9,15 +9,11 @@ import { EndJourneyDTO } from '../dto/journeyEnd/journeyEndReq.dto';
 import { RecordJourneyDTO } from '../dto/journeyRecord/journeyRecordReq.dto';
 import { CheckJourneyDTO } from '../dto/journeyCheck/journeyCheckReq.dto';
 import { JourneyNotFoundException } from '../../filters/journey.exception';
-<<<<<<< HEAD
 import { UserNotFoundException } from '../../filters/user.exception';
 import { Song } from '../schema/song.schema';
-=======
-import { UserNotFoundException } from 'src/filters/user.exception';
 import * as turf from '@turf/turf';
 import { LoadJourneyDTO } from '../dto/journeyLoad.dto';
 
->>>>>>> 22a9cc67ed0c86fe432f394c2fdc80079ef7d115
 @Injectable()
 export class JourneyService {
   constructor(
@@ -28,15 +24,11 @@ export class JourneyService {
     const journeyData: Journey = {
       ...startJourneyDTO,
       coordinates: [startJourneyDTO.coordinate],
-<<<<<<< HEAD
       spots: [],
       journeyMetadata: {
         startTimestamp: startJourneyDTO.startTimestamp,
         endTimestamp: '',
       },
-=======
-      endTimestamp: '',
->>>>>>> 22a9cc67ed0c86fe432f394c2fdc80079ef7d115
     };
     const createdJourneyData = new this.journeyModel(journeyData);
     return await createdJourneyData.save();
@@ -68,11 +60,7 @@ export class JourneyService {
   }
 
   async end(endJourneyDTO: EndJourneyDTO) {
-<<<<<<< HEAD
-    const { journeyId, title, coordinate, endTime, song } = endJourneyDTO;
-=======
-    const { journeyId, title, coordinate, endTimestamp } = endJourneyDTO;
->>>>>>> 22a9cc67ed0c86fe432f394c2fdc80079ef7d115
+    const { journeyId, title, coordinate, endTimestamp, song } = endJourneyDTO;
     const coordinateToAdd = Array.isArray(coordinate[0])
       ? coordinate
       : [coordinate];
@@ -80,11 +68,7 @@ export class JourneyService {
       .findOneAndUpdate(
         { _id: journeyId },
         {
-<<<<<<< HEAD
-          $set: { title, song, 'journeyMetadata.endTimestamp': endTime },
-=======
-          $set: { title, endTimestamp },
->>>>>>> 22a9cc67ed0c86fe432f394c2fdc80079ef7d115
+          $set: { title, song, 'journeyMetadata.endTimestamp': endTimestamp },
           $push: { coordinates: { $each: coordinateToAdd } },
         },
         { new: true },
