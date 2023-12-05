@@ -37,7 +37,11 @@ export class EndJourneyDTO {
     required: true,
   })
   @IsDateString()
+<<<<<<< HEAD:BE/musicspot/src/journey/dto/journeyEnd/journeyEndReq.dto.ts
   readonly endTime: string;
+=======
+  readonly endTimestamp: string;
+>>>>>>> 22a9cc67ed0c86fe432f394c2fdc80079ef7d115:BE/musicspot/src/journey/dto/journeyEnd.dto.ts
 
   @ApiProperty({
     example: '여정 제목',

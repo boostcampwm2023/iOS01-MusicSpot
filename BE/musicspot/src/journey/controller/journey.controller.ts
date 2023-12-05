@@ -48,7 +48,8 @@ export class JourneyController {
     description: '여정을 종료합니다.',
   })
   @ApiCreatedResponse({
-    description: '현재는 좌표 데이터의 길이를 반환, 추후 참 거짓으로 변경 예정',
+    description:
+      '현재는 좌표 데이터의 길이를 2반환, 추후 참 거짓으로 변경 예정',
     type: EndJourneyResponseDTO,
   })
   @Post('end')
@@ -127,5 +128,18 @@ export class JourneyController {
   @UsePipes(ValidationPipe) //유효성 체크
   async checkPost(@Body() checkJourneyDTO: CheckJourneyDTO) {
     return await this.journeyService.checkJourney(checkJourneyDTO);
+  }
+
+  @ApiOperation({
+    summary: '최근 여정 조회 API',
+    description: '진행 중인 여정이 있었는 지 확인',
+  })
+  @ApiCreatedResponse({
+    description: '사용자가 진행중이었던 여정 정보',
+    type: Journey,
+  })
+  @Get('loadLastData')
+  async loadLastData(@Query('userId') userId: string) {
+    return await this.journeyService.loadLastJourney(userId);
   }
 }

@@ -39,11 +39,28 @@ export class Journey {
   @Prop({ type: [[Number]] })
   coordinates?: number[][];
 
+<<<<<<< HEAD
   @Prop({ type: JourneyMetadata })
   journeyMetadata?: JourneyMetadata;
 
   @Prop({ type: Song })
   song?: Song;
+=======
+  @ApiProperty({
+    example: '2023-11-22T15:30:00.000+09:00',
+    description: '시작 시간',
+    required: true,
+  })
+  @Prop({ type: String })
+  startTimestamp: string;
+  @ApiProperty({
+    example: '2023-11-22T15:30:00.000+09:00',
+    description: '끝난 시간',
+    required: true,
+  })
+  @Prop({ type: String })
+  endTimestamp: string;
+>>>>>>> 22a9cc67ed0c86fe432f394c2fdc80079ef7d115
 }
 
 export const JourneySchema = SchemaFactory.createForClass(Journey);

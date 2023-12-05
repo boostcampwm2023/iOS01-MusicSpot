@@ -9,8 +9,15 @@ import { EndJourneyDTO } from '../dto/journeyEnd/journeyEndReq.dto';
 import { RecordJourneyDTO } from '../dto/journeyRecord/journeyRecordReq.dto';
 import { CheckJourneyDTO } from '../dto/journeyCheck/journeyCheckReq.dto';
 import { JourneyNotFoundException } from '../../filters/journey.exception';
+<<<<<<< HEAD
 import { UserNotFoundException } from '../../filters/user.exception';
 import { Song } from '../schema/song.schema';
+=======
+import { UserNotFoundException } from 'src/filters/user.exception';
+import * as turf from '@turf/turf';
+import { LoadJourneyDTO } from '../dto/journeyLoad.dto';
+
+>>>>>>> 22a9cc67ed0c86fe432f394c2fdc80079ef7d115
 @Injectable()
 export class JourneyService {
   constructor(
@@ -21,11 +28,15 @@ export class JourneyService {
     const journeyData: Journey = {
       ...startJourneyDTO,
       coordinates: [startJourneyDTO.coordinate],
+<<<<<<< HEAD
       spots: [],
       journeyMetadata: {
         startTimestamp: startJourneyDTO.startTimestamp,
         endTimestamp: '',
       },
+=======
+      endTimestamp: '',
+>>>>>>> 22a9cc67ed0c86fe432f394c2fdc80079ef7d115
     };
     const createdJourneyData = new this.journeyModel(journeyData);
     return await createdJourneyData.save();
@@ -57,7 +68,11 @@ export class JourneyService {
   }
 
   async end(endJourneyDTO: EndJourneyDTO) {
+<<<<<<< HEAD
     const { journeyId, title, coordinate, endTime, song } = endJourneyDTO;
+=======
+    const { journeyId, title, coordinate, endTimestamp } = endJourneyDTO;
+>>>>>>> 22a9cc67ed0c86fe432f394c2fdc80079ef7d115
     const coordinateToAdd = Array.isArray(coordinate[0])
       ? coordinate
       : [coordinate];
@@ -65,7 +80,11 @@ export class JourneyService {
       .findOneAndUpdate(
         { _id: journeyId },
         {
+<<<<<<< HEAD
           $set: { title, song, 'journeyMetadata.endTimestamp': endTime },
+=======
+          $set: { title, endTimestamp },
+>>>>>>> 22a9cc67ed0c86fe432f394c2fdc80079ef7d115
           $push: { coordinates: { $each: coordinateToAdd } },
         },
         { new: true },
@@ -121,38 +140,55 @@ export class JourneyService {
       throw new UserNotFoundException();
     }
     const journeys = user.journeys;
-    const journeyList = await this.findMinMaxCoordinates(
-      journeys,
-      minCoordinate,
-      maxCoordinate,
-    );
+    const boundingBox = turf.bboxPolygon([
+      minCoordinate[0],
+      minCoordinate[1],
+      maxCoordinate[0],
+      maxCoordinate[1],
+    ]);
+
+    const journeyList = await this.findMinMaxCoordinates(boundingBox, journeys);
     return journeyList;
   }
-  async findMinMaxCoordinates(journeys, minCoordinate, maxCoordinate) {
+  async findMinMaxCoordinates(boundingBox, journeys) {
     let journeyList = [];
+
     for (let i = 0; i < journeys.length; i++) {
       let journey = await this.journeyModel.findById(journeys[i]).lean();
       if (!journey) {
         throw new JourneyNotFoundException();
       }
-      let chk = true;
-      for (const [x, y] of journey.coordinates) {
-        if (
-          !(
-            x > minCoordinate[0] &&
-            y > minCoordinate[1] &&
-            x < maxCoordinate[0] &&
-            y < maxCoordinate[1]
-          )
-        ) {
-          chk = false;
-          break;
-        }
-      }
-      if (chk) {
+      let journeyLine = turf.lineString(journey.coordinates);
+      if (turf.booleanWithin(journeyLine, boundingBox)) {
         journeyList.push(journey);
       }
     }
     return journeyList;
+  }
+  async loadLastJourney(userId) {
+    const user = await this.userModel.findById(userId).lean();
+
+    if (!user) {
+      throw new UserNotFoundException();
+    }
+    const journeys = user.journeys;
+
+    const journey = await this.findLastJourney(journeys);
+    if (journey) {
+      return journey;
+    }
+    return '진행중이었던 여정이 없습니다.';
+  }
+  async findLastJourney(journeys) {
+    for (let i = 0; i < journeys.length; i++) {
+      let journey = await this.journeyModel.findById(journeys[i]).lean();
+      if (!journey) {
+        throw new JourneyNotFoundException();
+      }
+      if (journey.title === '') {
+        return journey;
+      }
+    }
+    return false;
   }
 }
