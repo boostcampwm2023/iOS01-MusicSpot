@@ -11,8 +11,18 @@
 
 public struct CoordinateDTO {
     
+    // MARK: - Properties
+    
     public let latitude: Double
     public let longitude: Double
+    
+    // MARK: - Initializer
+    
+    public init(latitude: Double,
+                longitude: Double) {
+        self.latitude = latitude
+        self.longitude = longitude
+    }
     
 }
 

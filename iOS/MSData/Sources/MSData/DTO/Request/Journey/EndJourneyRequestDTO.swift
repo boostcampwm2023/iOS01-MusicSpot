@@ -7,7 +7,9 @@
 
 import Foundation
 
-public struct EndJourneyRequestDTO: Encodable {
+public struct EndJourneyRequestDTO {
+    
+    // MARK: - Properties
     
     public let journeyID: String
     /// 완료 버튼을 누른 최종 좌표
@@ -16,6 +18,26 @@ public struct EndJourneyRequestDTO: Encodable {
     public let endTimestamp: Date
     public let title: String
     public let song: SongDTO
+    
+    // MARK: - Initializer
+    
+    public init(journeyID: String,
+                coordinates: [CoordinateDTO],
+                endTimestamp: Date,
+                title: String,
+                song: SongDTO) {
+        self.journeyID = journeyID
+        self.coordinates = coordinates
+        self.endTimestamp = endTimestamp
+        self.title = title
+        self.song = song
+    }
+    
+}
+
+// MARK: - Encodable
+
+extension EndJourneyRequestDTO: Encodable {
     
     enum CodingKeys: String, CodingKey {
         case journeyID = "journeyId"

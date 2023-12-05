@@ -7,11 +7,29 @@
 
 import Foundation
 
-public struct StartJourneyRequestDTO: Encodable {
+public struct StartJourneyRequestDTO {
+    
+    // MARK: - Properties
     
     public let coordinate: CoordinateDTO
     public let startTimestamp: Date
     public let userID: UUID
+    
+    // MARK: - Initializer
+    
+    public init(coordinate: CoordinateDTO,
+                startTimestamp: Date,
+                userID: UUID) {
+        self.coordinate = coordinate
+        self.startTimestamp = startTimestamp
+        self.userID = userID
+    }
+    
+}
+
+// MARK: - Encodable
+
+extension StartJourneyRequestDTO: Encodable {
     
     enum CodingKeys: String, CodingKey {
         case coordinate

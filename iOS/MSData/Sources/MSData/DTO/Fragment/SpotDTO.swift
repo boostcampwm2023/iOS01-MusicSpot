@@ -7,19 +7,16 @@
 
 import Foundation
 
-public struct SpotDTO: Codable {
+public struct SpotDTO {
+    
+    // MARK: - Properties
     
     public let journeyID: String?
     public let coordinate: CoordinateDTO
     public let timestamp: Date
     public let photoURL: URL
     
-    enum CodingKeys: String, CodingKey {
-        case journeyID = "journeyId"
-        case coordinate
-        case timestamp
-        case photoURL = "photoUrl"
-    }
+    // MARK: - Initializer
     
     public init(journeyID: String?,
                 coordinate: CoordinateDTO,
@@ -29,6 +26,19 @@ public struct SpotDTO: Codable {
         self.coordinate = coordinate
         self.timestamp = timestamp
         self.photoURL = photoURL
+    }
+    
+}
+
+// MARK: - Codable
+
+extension SpotDTO: Codable {
+    
+    enum CodingKeys: String, CodingKey {
+        case journeyID = "journeyId"
+        case coordinate
+        case timestamp
+        case photoURL = "photoUrl"
     }
     
 }

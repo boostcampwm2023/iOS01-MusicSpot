@@ -7,9 +7,23 @@
 
 import Foundation
 
-public struct UserRequestDTO: Encodable {
+public struct UserRequestDTO {
+    
+    // MARK: - Properties
     
     public let userID: UUID
+    
+    // MARK: - Initializer
+    
+    public init(userID: UUID) {
+        self.userID = userID
+    }
+    
+}
+
+// MARK: - Encodable
+
+extension UserRequestDTO: Encodable {
     
     enum CodingKeys: String, CodingKey {
         case userID = "userId"
