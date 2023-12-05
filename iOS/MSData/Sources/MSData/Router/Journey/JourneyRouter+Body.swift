@@ -11,6 +11,12 @@ extension JourneyRouter {
     
     public var body: HTTPBody? {
         switch self {
+        case let .startJourney(dto):
+            return HTTPBody(content: dto)
+        case let .endJourney(dto):
+            return HTTPBody(content: dto)
+        case let .recordJourney(dto):
+            return HTTPBody(content: dto)
         default: return nil
         }
     }

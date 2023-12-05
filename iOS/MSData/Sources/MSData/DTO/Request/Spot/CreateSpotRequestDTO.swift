@@ -1,24 +1,22 @@
 //
-//  SpotDTO.swift
+//  CreateSpotRequestDTO.swift
 //  MSData
 //
-//  Created by 이창준 on 2023.12.06.
+//  Created by 이창준 on 2023.12.05.
 //
 
 import Foundation
 
-public struct SpotDTO: Codable {
+public struct CreateSpotRequestDTO: Encodable {
     
-    public let journeyID: String?
+    public let journeyID: UUID
     public let coordinate: CoordinateDTO
     public let timestamp: Date
-    public let photoURL: URL
     
     enum CodingKeys: String, CodingKey {
         case journeyID = "journeyId"
         case coordinate
         case timestamp
-        case photoURL = "photoUrl"
     }
     
 }
