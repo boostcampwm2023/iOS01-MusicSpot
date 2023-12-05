@@ -1,6 +1,7 @@
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
+
 import { StartJourneyReqDTO } from '../dto/journeyStart/journeyStartReq.dto';
 import { Journey } from '../schema/journey.schema';
 
@@ -46,6 +47,7 @@ export class JourneyService {
     }
     return result;
   }
+  
   async create(startJourneyDTO: StartJourneyReqDTO) {
     const createdJourneyData = await this.insertJourneyData(startJourneyDTO);
     const updateUserInfo = await this.pushJourneyIdToUser(

@@ -8,7 +8,9 @@ import {
   Query,
 } from '@nestjs/common';
 import { JourneyService } from '../service/journey.service';
+
 import { StartJourneyReqDTO } from '../dto/journeyStart/journeyStartReq.dto';
+
 import {
   ApiCreatedResponse,
   ApiOperation,
@@ -24,6 +26,7 @@ import { CheckJourneyResponseDTO } from '../dto/journeyCheck/journeyCheckRes.dto
 import { RecordJourneyResponseDTO } from '../dto/journeyRecord/journetRecordRes.dto';
 import { StartJourneyResDTO } from '../dto/journeyStart/journeyStartRes.dto';
 import { UUID } from 'crypto';
+
 
 @Controller('journey')
 @ApiTags('journey 관련 API')

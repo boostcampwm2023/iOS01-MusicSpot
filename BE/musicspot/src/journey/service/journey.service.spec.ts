@@ -3,6 +3,7 @@ import { JourneyService } from './journey.service';
 import { User } from '../../user/schema/user.schema';
 import { Journey } from '../schema/journey.schema';
 import { getModelToken } from '@nestjs/mongoose';
+
 import { StartJourneyDTO } from '../dto/journeyStart/journeyStartReq.dto';
 import { UserService } from '../../user/serivce/user.service';
 import { EndJourneyDTO } from '../dto/journeyEnd/journeyEndReq.dto';
