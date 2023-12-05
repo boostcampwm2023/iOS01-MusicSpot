@@ -13,9 +13,9 @@ import MSData
 import MSUIKit
 import NavigateMap
 
-protocol HomeMapCoordinatorDelegate: AnyObject {
+protocol HomeCoordinatorDelegate: AnyObject {
     
-    func popToHomeMap(from coordinator: Coordinator)
+    func popToHome(from coordinator: Coordinator)
     
 }
 
@@ -27,7 +27,7 @@ final class HomeCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     
-    var delegate: AppCoordinatorDelegate?
+    weak var delegate: AppCoordinatorDelegate?
     
     // MARK: - Initializer
     
@@ -47,26 +47,24 @@ final class HomeCoordinator: Coordinator {
         let journeyRepository = JourneyRepositoryImplementation()
         let journeyListViewModel = JourneyListViewModel(repository: journeyRepository)
         let journeyListViewController = JourneyListViewController(viewModel: journeyListViewModel)
-        journeyListViewController.delegate = self
+        journeyListViewController.navigationDelegate = self
         
         // Bottom Sheet
-        let homeBottomSheetVC = HomeBottomSheetViewController(contentViewController: navigateMapViewController,
-                                                              bottomSheetViewController: journeyListViewController)
-        homeBottomSheetVC.configuration = MSBottomSheetViewController.Configuration(fullDimension: .fractional(1.0),
-                                                                                    detentDimension: .fractional(0.4),
-                                                                                    minimizedDimension: .absolute(100.0))
-        homeBottomSheetVC.delegate = self
-        self.navigationController.pushViewController(homeBottomSheetVC, animated: true)
+        let homeViewController = HomeViewController(contentViewController: navigateMapViewController,
+                                                    bottomSheetViewController: journeyListViewController)
+        let configuration = HomeViewController.Configuration(fullDimension: .fractional(1.0),
+                                                             detentDimension: .fractional(0.4),
+                                                             minimizedDimension: .absolute(100.0))
+        homeViewController.configuration = configuration
+        homeViewController.navigationDelegate = self
+        self.navigationController.pushViewController(homeViewController, animated: true)
     }
     
 }
 
-// MARK: - NavigateMapViewController
+// MARK: - Home Navigation
 
-extension HomeCoordinator: HomeViewControllerDelegate {
-    func navigateToSetting() {
-        print(#function)
-    }
+extension HomeCoordinator: HomeNavigationDelegate {
     
     func navigateToSpot() {
         let spotCoordinator = SpotCoordinator(navigationController: self.navigationController)
@@ -75,39 +73,42 @@ extension HomeCoordinator: HomeViewControllerDelegate {
         spotCoordinator.start()
     }
     
-//    func navigateToSearchMusic() {
-//        let searchMusicCoordinator = SearchMusicCoordinator(navigationController: self.navigationController)
-//        searchMusicCoordinator.delegate = self
-//        self.childCoordinators.append(searchMusicCoordinator)
-//        searchMusicCoordinator.start()
-//    }
-    
-//    func navigateToSetting() {
-//        let settingCoordinator = SettingCoordinator(navigationController: self.navigationController)
-//        settingCoordinator.delegate = self
-//        self.childCoordinators.append(settingCoordinator)
-//        settingCoordinator.start()
-//    }
+    func navigateToSelectSong() {
+        let selectSongCoordinator = SelectSongCoordinator(navigationController: self.navigationController)
+        selectSongCoordinator.delegate = self
+        self.childCoordinators.append(selectSongCoordinator)
+        selectSongCoordinator.start()
+    }
     
 }
 
-extension HomeCoordinator: JourneyListViewControllerDelegate {
+// MARK: - JourneyList Navigation
+
+extension HomeCoordinator: JourneyListNavigationDelegate {
     
-    func navigateToRewind() {
-        let rewindCoordinator = RewindCoordinator(navigationController: self.navigationController)
-        rewindCoordinator.delegate = self
-        self.childCoordinators.append(rewindCoordinator)
-        rewindCoordinator.start()
+    func navigateToRewindJourney() {
+        let rewindJourneyCoordinator = RewindJourneyCoordinator(navigationController: self.navigationController)
+        rewindJourneyCoordinator.delegate = self
+        self.childCoordinators.append(rewindJourneyCoordinator)
+        rewindJourneyCoordinator.start()
     }
     
 }
 
 // MARK: - HomeMap Coordinator
 
-extension HomeCoordinator: HomeMapCoordinatorDelegate {
+extension HomeCoordinator: HomeCoordinatorDelegate {
     
-    func popToHomeMap(from coordinator: Coordinator) {
-        self.childCoordinators.removeAll()
+    func popToHome(from coordinator: Coordinator) {
+        guard let homeViewController = self.navigationController.viewControllers.first(where: { viewController in
+            viewController is HomeViewController
+        }) else {
+            return
+        }
+        self.navigationController.dismiss(animated: true) { [weak self] in
+            self?.navigationController.popToViewController(homeViewController, animated: true)
+            self?.childCoordinators.removeAll()
+        }
     }
     
 }

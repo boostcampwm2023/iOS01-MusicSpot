@@ -53,9 +53,10 @@ final class SpotViewModel: NSObject {
             self.configureSwapMode()
         }
     }
-    let frontCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
-    let backCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
-    let session = AVCaptureSession()
+    
+    private let frontCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
+    private let backCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
+    private let session = AVCaptureSession()
     var input: AVCaptureDeviceInput?
     let output = AVCapturePhotoOutput()
     

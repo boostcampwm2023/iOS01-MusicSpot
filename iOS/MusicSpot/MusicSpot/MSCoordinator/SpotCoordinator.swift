@@ -17,7 +17,7 @@ final class SpotCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     
-    var delegate: HomeMapCoordinatorDelegate?
+    weak var delegate: HomeCoordinatorDelegate?
     
     // MARK: - Initializer
     
@@ -29,20 +29,59 @@ final class SpotCoordinator: Coordinator {
     
     func start() {
         let spotViewController = SpotViewController()
-//        spotViewController.delegate = self
         self.navigationController.pushViewController(spotViewController, animated: true)
+        spotViewController.navigationDelegate = self
+    }
+    
+}
+
+// MARK: - Spot Navigation
+
+extension SpotCoordinator: SpotNavigationDelegate {
+    
+    func presentPhotos(from viewController: UIViewController) {
+        guard let spotViewController = viewController as? SpotViewController else {
+            return
+        }
+        
+        let picker = UIImagePickerController()
+        picker.sourceType = .photoLibrary
+        picker.allowsEditing = true
+        picker.delegate = spotViewController
+        spotViewController.present(picker, animated: true)
+    }
+    
+    func presentSpotSave(using image: UIImage) {
+        let spotSaveViewController = SpotSaveViewController()
+        spotSaveViewController.modalPresentationStyle = .fullScreen
+        spotSaveViewController.image = image
+        spotSaveViewController.navigationDelegate = self
+        self.navigationController.present(spotSaveViewController, animated: true)
+    }
+    
+    func dismissToSpot() {
+        guard let presentedViewController = self.navigationController.presentedViewController,
+              let spotSaveViewController = presentedViewController as? SpotSaveViewController else {
+            return
+        }
+        
+        spotSaveViewController.dismiss(animated: true)
+    }
+    
+    func popToHome() {
+        self.popToHome(from: self)
     }
     
 }
 
 // MARK: - HomeMap Coordinator
 
-extension SpotCoordinator: HomeMapCoordinatorDelegate {
+extension SpotCoordinator: HomeCoordinatorDelegate {
     
-    func popToHomeMap(from coordinator: Coordinator) {
+    func popToHome(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()
         self.navigationController.popViewController(animated: true)
-        self.delegate?.popToHomeMap(from: self)
+        self.delegate?.popToHome(from: self)
     }
     
 }

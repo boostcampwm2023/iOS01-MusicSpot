@@ -11,12 +11,6 @@ import UIKit
 import MSCacheStorage
 import MSUIKit
 
-public protocol JourneyListViewControllerDelegate: AnyObject {
-    
-    func navigateToRewind()
-    
-}
-
 public final class JourneyListViewController: BaseViewController {
     
     typealias JourneyListDataSource = UICollectionViewDiffableDataSource<Int, Journey>
@@ -44,7 +38,7 @@ public final class JourneyListViewController: BaseViewController {
     
     // MARK: - Properties
     
-    public weak var delegate: JourneyListViewControllerDelegate?
+    public weak var navigationDelegate: JourneyListNavigationDelegate?
     
     private let cache: MSCacheStorage
     
@@ -223,8 +217,9 @@ extension JourneyListViewController: UICollectionViewDelegate {
         return dataSource
     }
     
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.delegate?.navigateToRewind()
+    public func collectionView(_ collectionView: UICollectionView,
+                               didSelectItemAt indexPath: IndexPath) {
+        self.navigationDelegate?.navigateToRewindJourney()
     }
     
 }

@@ -13,17 +13,9 @@ import MSUIKit
 import MSUserDefaults
 import NavigateMap
 
-public protocol HomeViewControllerDelegate: AnyObject {
-    
-    func navigateToSpot()
-    func navigateToRewind()
-    func navigateToSetting()
-    
-}
+public typealias HomeBottomSheetViewController = MSBottomSheetViewController<NavigateMapViewController, JourneyListViewController>
 
-public typealias HomeViewController = MSBottomSheetViewController<NavigateMapViewController, JourneyListViewController>
-
-public final class HomeBottomSheetViewController: HomeViewController {
+public final class HomeViewController: HomeBottomSheetViewController {
     
     // MARK: - Constants
     
@@ -57,7 +49,7 @@ public final class HomeBottomSheetViewController: HomeViewController {
     
     // MARK: - Properties
     
-    public weak var delegate: HomeViewControllerDelegate?
+    public weak var navigationDelegate: HomeNavigationDelegate?
     
     @UserDefaultsWrapped(UserDefaultsKey.isRecording, defaultValue: false)
     private var isRecording: Bool
@@ -66,7 +58,6 @@ public final class HomeBottomSheetViewController: HomeViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        self.contentViewController.delegate = self
         self.configureStyle()
         self.configureLayout()
     }
@@ -94,7 +85,7 @@ public final class HomeBottomSheetViewController: HomeViewController {
 
 // MARK: - UI Configuration
 
-private extension HomeBottomSheetViewController {
+private extension HomeViewController {
     
     func configureStyle() {
         self.startButton.addTarget(self, action: #selector(startButtonDidTap), for: .touchUpInside)
@@ -120,36 +111,20 @@ private extension HomeBottomSheetViewController {
     
 }
 
-extension HomeBottomSheetViewController: NavigateMapViewControllerDelegate {
-    
-    public func settingButtonDidTap() {
-        delegate?.navigateToSetting()
-    }
-    
-    public func mapButtonDidTap() {
-        print(#function)
-    }
-    
-    public func locationButtonDidTap() {
-        print(#function)
-    }
-    
-}
-
 // MARK: - Button View
 
-extension HomeBottomSheetViewController: RecordJourneyButtonViewDelegate {
+extension HomeViewController: RecordJourneyButtonViewDelegate {
     
     public func backButtonDidTap(_ button: MSRectButton) {
         print("뒤로가기 버튼 클릭")
     }
     
     public func spotButtonDidTap(_ button: MSRectButton) {
-        print("spot 버튼 클릭")
+        self.navigationDelegate?.navigateToSpot()
     }
     
     public func nextButtonDidTap(_ button: MSRectButton) {
-        print("체크 버튼 클릭")
+        self.navigationDelegate?.navigateToSelectSong()
     }
     
 }

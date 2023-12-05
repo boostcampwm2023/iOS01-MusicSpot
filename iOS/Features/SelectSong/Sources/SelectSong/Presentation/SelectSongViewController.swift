@@ -37,6 +37,8 @@ public final class SelectSongViewController: BaseViewController {
     
     // MARK: - Properties
     
+    public weak var navigationDelegate: SelectSongNavigationDelegate?
+    
     private let musicPlayer = ApplicationMusicPlayer.shared
     
     private let viewModel: SelectSongViewModel
@@ -89,9 +91,15 @@ public final class SelectSongViewController: BaseViewController {
         self.viewModel.trigger(.viewNeedsLoaded)
     }
     
+    public override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        
+        self.navigationController?.isNavigationBarHidden = false
+    }
+    
     // MARK: - Combine Binding
     
-    func bind() {
+    private func bind() {
         self.searchTextField.textPublisher
             .filter { !$0.isEmpty }
             .print()
@@ -200,7 +208,10 @@ extension SelectSongViewController: UICollectionViewDelegate {
             return
         }
         
+        #if DEBUG
         MSLogger.make(category: .selectSong).log("\(item.title) selected")
+        #endif
+        self.navigationDelegate?.navigateToSaveJourney()
     }
     
 }

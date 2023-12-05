@@ -15,6 +15,7 @@ import MSLogger
 final class SpotSaveViewModel {
     
     // MARK: - Properties
+    
     private let msNetworking = MSNetworking(session: URLSession.shared)
     private var subscriber: Set<AnyCancellable> = []
     internal var journeyID: UUID?

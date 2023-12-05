@@ -55,12 +55,14 @@ public final class SpotSaveViewController: UIViewController {
     
     // MARK: - Properties
     
+    public weak var navigationDelegate: SpotNavigationDelegate?
+    private let spotSaveViewModel = SpotSaveViewModel()
+    
     public var image: UIImage? {
         didSet {
             self.configureImageViewState()
         }
     }
-    private let spotSaveViewModel = SpotSaveViewModel()
     
     // MARK: - Properties: Networking
     
@@ -78,7 +80,12 @@ public final class SpotSaveViewController: UIViewController {
     
     // MARK: - UI Components
     
-    private let imageView = UIImageView()
+    private let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.backgroundColor = .msColor(.musicSpot)
+        return imageView
+    }()
     private let textView = UIView()
     private let textLabel = UILabel()
     private let subTextLabel = UILabel()
@@ -94,9 +101,9 @@ public final class SpotSaveViewController: UIViewController {
     
     // MARK: - Configure
     
-    func configure() {
+    private func configure() {
         self.configureLayout()
-        self.configureStyle()
+        self.configureStyles()
         self.configureAction()
         self.configureState()
     }
@@ -112,7 +119,6 @@ public final class SpotSaveViewController: UIViewController {
     
     private func configureImageViewLayout() {
         self.view.addSubview(self.imageView)
-        self.imageView.backgroundColor = .black
         self.imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.imageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
@@ -176,17 +182,10 @@ public final class SpotSaveViewController: UIViewController {
     
     // MARK: - UI Components: Style
     
-    private func configureStyle() {
-        
-        MSFont.registerFonts()
+    private func configureStyles() {
         self.view.backgroundColor = .msColor(.primaryBackground)
-        self.configureImageViewStyle()
         self.configureLabelsStyle()
         self.configureButtonsStyle()
-    }
-    
-    private func configureImageViewStyle() {
-        self.imageView.contentMode = .scaleAspectFill
     }
     
     private func configureLabelsStyle() {
@@ -208,16 +207,16 @@ public final class SpotSaveViewController: UIViewController {
     }
     
     private func configureCancelAction() {
-        let cancelButtonAction = UIAction(handler: { _ in
-            self.cancelButtonTapped()
-        })
+        let cancelButtonAction = UIAction { [weak self] _ in
+            self?.cancelButtonDidTap()
+        }
         self.cancelButton.addAction(cancelButtonAction, for: .touchUpInside)
     }
     
     private func configureCompleteAction() {
-        let completeButtonAction = UIAction(handler: { _ in
-            self.completeButtonTapped()
-        })
+        let completeButtonAction = UIAction { [weak self] _ in
+            self?.completeButtonDidTap()
+        }
         self.completeButton.addAction(completeButtonAction, for: .touchUpInside)
     }
     
@@ -242,16 +241,17 @@ public final class SpotSaveViewController: UIViewController {
     
     // MARK: - Button Actions
     
-    private func cancelButtonTapped() {
-        self.presentingViewController?.dismiss(animated: true)
+    private func cancelButtonDidTap() {
+        self.navigationDelegate?.dismissToSpot()
     }
     
-    private func completeButtonTapped() {
+    private func completeButtonDidTap() {
         guard let data = self.image?.pngData() else {
-            MSLogger.make(category: .recordJourney).debug("현재 이미지를 Data로 변환할 수 없습니다.")
+            MSLogger.make(category: .spot).debug("현재 이미지를 Data로 변환할 수 없습니다.")
             return
         }
-        self.spotSaveViewModel.upload(data: data, using: self.spotRouter)
+//        self.spotSaveViewModel.upload(data: data, using: self.spotRouter)
+        self.navigationDelegate?.popToHome()
     }
     
 }
