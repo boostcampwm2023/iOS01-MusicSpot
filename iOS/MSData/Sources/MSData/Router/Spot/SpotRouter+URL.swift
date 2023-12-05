@@ -22,7 +22,6 @@ extension SpotRouter {
     public var pathURL: String? {
         switch self {
         case .createSpot: return "create"
-        case .findSpot: return "find"
         }
     }
     

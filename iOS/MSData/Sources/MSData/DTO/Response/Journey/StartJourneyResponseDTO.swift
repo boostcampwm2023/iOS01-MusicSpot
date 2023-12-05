@@ -11,12 +11,13 @@ public struct StartJourneyResponseDTO: Decodable {
     
     public let coordinate: CoordinateDTO
     public let startTimestamp: Date
-    public let userID: UUID
+    /// 시작된 여정에 대한 ID 값
+    public let journeyID: String
     
     enum CodingKeys: String, CodingKey {
         case coordinate
         case startTimestamp
-        case userID = "userId"
+        case journeyID = "journeyId"
     }
     
 }
