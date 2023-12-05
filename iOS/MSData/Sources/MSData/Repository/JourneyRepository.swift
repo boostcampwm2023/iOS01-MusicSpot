@@ -11,7 +11,9 @@ import Foundation
 import MSNetworking
 
 public protocol JourneyRepository {
+    
     func fetchJourneyList() async -> Result<[JourneyDTO], Error>
+    
 }
 
 public struct JourneyRepositoryImplementation: JourneyRepository {
