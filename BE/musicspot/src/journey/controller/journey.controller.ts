@@ -23,6 +23,7 @@ import { EndJourneyResponseDTO } from '../dto/journeyEnd/journeyEndRes.dto';
 import { CheckJourneyResponseDTO } from '../dto/journeyCheck/journeyCheckRes.dto';
 import { RecordJourneyResponseDTO } from '../dto/journeyRecord/journetRecordRes.dto';
 import { StartJourneyResDTO } from '../dto/journeyStart/journeyStartRes.dto';
+import { UUID } from 'crypto';
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
@@ -102,7 +103,7 @@ export class JourneyController {
   @Get('check')
   @UsePipes(ValidationPipe)
   async checkGet(
-    @Query('userId') userId: string,
+    @Query('userId') userId: UUID,
     @Query('minCoordinate') minCoordinate: number[],
     @Query('maxCoordinate') maxCoordinate: number[],
   ) {
