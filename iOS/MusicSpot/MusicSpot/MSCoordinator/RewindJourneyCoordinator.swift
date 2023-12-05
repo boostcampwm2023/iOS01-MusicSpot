@@ -1,5 +1,5 @@
 //
-//  RewindCoordinator.swift
+//  RewindJourneyCoordinator.swift
 //  MusicSpot
 //
 //  Created by 윤동주 on 11/28/23.
@@ -9,7 +9,7 @@ import UIKit
 
 import RewindJourney
 
-final class RewindCoordinator: Coordinator {
+final class RewindJourneyCoordinator: Coordinator {
     
     // MARK: - Properties
     
@@ -17,7 +17,7 @@ final class RewindCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     
-    var delegate: HomeMapCoordinatorDelegate?
+    var delegate: HomeCoordinatorDelegate?
     
     // MARK: - Initializer
     
@@ -28,8 +28,8 @@ final class RewindCoordinator: Coordinator {
     // MARK: - Functions
     
     func start() {
-        let rewindViewController = RewindJourneyViewController()
-        rewindViewController.images = [
+        let rewindJourneyViewController = RewindJourneyViewController()
+        rewindJourneyViewController.images = [
             .msIcon(.arrowDown)!,
             .msIcon(.addLocation)!,
             .msIcon(.calendar)!,
@@ -37,19 +37,19 @@ final class RewindCoordinator: Coordinator {
             .msIcon(.arrowUp)!
         ]
 //        rewindViewController.delegate = self
-        self.navigationController.pushViewController(rewindViewController, animated: true)
+        self.navigationController.pushViewController(rewindJourneyViewController, animated: true)
     }
     
 }
 
 // MARK: - HomeMap Coordinator
 
-extension RewindCoordinator: HomeMapCoordinatorDelegate {
+extension RewindJourneyCoordinator: HomeCoordinatorDelegate {
     
-    func popToHomeMap(from coordinator: Coordinator) {
+    func popToHome(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()
         self.navigationController.popViewController(animated: true)
-        self.delegate?.popToHomeMap(from: self)
+        self.delegate?.popToHome(from: self)
     }
     
 }

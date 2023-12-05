@@ -29,13 +29,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         MSFont.registerFonts()
         
-        let musicSpotNavigationController = UINavigationController()
+        let musicSpotNavigationController = self.makeNavigationController()
         let appCoordinator = AppCoordinator(navigationController: musicSpotNavigationController)
         self.appCoordinator = appCoordinator
         appCoordinator.start()
         
         window.rootViewController = musicSpotNavigationController
         window.makeKeyAndVisible()
+    }
+    
+}
+
+// MARK: - NavigationController
+
+private extension SceneDelegate {
+    
+    func makeNavigationController() -> UINavigationController {
+        let navigationController = UINavigationController()
+        navigationController.navigationBar.tintColor = .msColor(.primaryTypo)
+        return navigationController
     }
     
 }

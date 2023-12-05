@@ -11,51 +11,41 @@ import MapKit
 
 import MSUIKit
 
-public protocol NavigateMapViewControllerDelegate {
-    
-    func settingButtonDidTap()
-    func mapButtonDidTap()
-    func locationButtonDidTap()
-    
-}
-
 public final class NavigateMapViewController: UIViewController {
     
-    // MARK: - Properties
+    // MARK: - Constants
     
-    public var viewModel: NavigateMapViewModel?
+    private enum Metric {
+        
+        static let buttonStackTopSpacing: CGFloat = 50.0
+        static let buttonStackTrailingSpacing: CGFloat = 16.0
+        
+    }
     
-    // 임시 위치 정보
-    let tempCoordinate = CLLocationCoordinate2D(latitude: 37.495120492289026, longitude: 126.9553042366186)
+    // MARK: - UI Components
     
     /// 전체 Map에 대한 View
-    let mapView = MapView()
+    let mapView = MKMapView()
     
     /// HomeMap 내 우상단 3버튼 View
-    private lazy var buttonStackView: NavigateMapButtonView = {
-        let stackView = NavigateMapButtonView()
+    private lazy var buttonStackView: ButtonStackView = {
+        let stackView = ButtonStackView()
         stackView.delegate = self
         return stackView
     }()
     
-    public var delegate: NavigateMapViewControllerDelegate?
+    // MARK: - Properties
     
-    @objc func findMyLocation() {
-        
-        guard self.locationManager.location != nil else {
-            self.locationManager.requestWhenInUseAuthorization()
-            return
-        }
-        
-        self.mapView.map.showsUserLocation = true
-        self.mapView.map.setUserTrackingMode(.follow, animated: true)
-    }
+    // 임시 위치 정보
+    private let tempCoordinate = CLLocationCoordinate2D(latitude: 37.495120492289026, longitude: 126.9553042366186)
     
-    var timer: Timer?
-    var previousCoordinate: CLLocationCoordinate2D?
+    public let viewModel: NavigateMapViewModel?
+    
+    private var timer: Timer?
+    private var previousCoordinate: CLLocationCoordinate2D?
     private var polyline: MKPolyline?
     
-    let locationManager = CLLocationManager()
+    private let locationManager = CLLocationManager()
     
     // MARK: - Initializer
     
@@ -78,12 +68,12 @@ public final class NavigateMapViewController: UIViewController {
         self.view = self.mapView
         
         self.locationManager.requestWhenInUseAuthorization()
-        self.mapView.map.setRegion(MKCoordinateRegion(center: self.tempCoordinate,
+        self.mapView.setRegion(MKCoordinateRegion(center: self.tempCoordinate,
                                                       span: MKCoordinateSpan(latitudeDelta: 0.1,
                                                                              longitudeDelta: 0.11)),
                                    animated: true)
         
-        self.mapView.map.delegate = self
+        self.mapView.delegate = self
         self.locationManager.delegate = self
         
         self.configureLayout()
@@ -93,18 +83,18 @@ public final class NavigateMapViewController: UIViewController {
     
     private func configureLayout() {
         self.view.addSubview(self.buttonStackView)
-        self.mapView.map.translatesAutoresizingMaskIntoConstraints = false
+        self.mapView.translatesAutoresizingMaskIntoConstraints = false
         self.buttonStackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let safeArea = self.view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
-            self.mapView.map.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.mapView.map.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.mapView.map.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.mapView.map.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.mapView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.mapView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.mapView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.mapView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             
-            self.buttonStackView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 50),
-            self.buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+            self.buttonStackView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor,
+                                                      constant: Metric.buttonStackTopSpacing),
+            self.buttonStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,
+                                                           constant: -Metric.buttonStackTrailingSpacing)
         ])
     }
     
@@ -166,8 +156,21 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
     //        mapView.map.setRegion(coordinateRegion, animated: true)
     //    }
     
+    @objc
+    private func findMyLocation() {
+        
+        guard self.locationManager.location != nil else {
+            self.locationManager.requestWhenInUseAuthorization()
+            return
+        }
+        
+        self.mapView.showsUserLocation = true
+        self.mapView.setUserTrackingMode(.follow, animated: true)
+    }
+    
     /// 이전 좌표와 현 좌표를 기준으로 polyline을 추가
-    @objc private func updatePolyline() {
+    @objc
+    private func updatePolyline() {
         guard let newCoordinate = self.locationManager.location?.coordinate else { return }
         print(newCoordinate)
         // Draw polyline
@@ -183,15 +186,15 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
         
         var points: [CLLocationCoordinate2D]
         
-        if let existingPolyline = polyline {
+        if let existingPolyline = self.polyline {
             points = [existingPolyline.coordinate] + [newCoordinate]
-            mapView.map.removeOverlay(existingPolyline)
+            self.mapView.removeOverlay(existingPolyline)
         } else {
             points = [previousCoordinate, newCoordinate]
         }
         
         self.polyline = MKPolyline(coordinates: &points, count: points.count)
-        self.mapView.map.addOverlay(polyline!) // Add the updated polyline to the map
+        self.mapView.addOverlay(self.polyline!) // Add the updated polyline to the map
     }
     
     public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
@@ -199,7 +202,8 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
         self.checkUserLocationServicesAuthorization()
     }
     
-    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+    public func locationManager(_ manager: CLLocationManager,
+                                didChangeAuthorization status: CLAuthorizationStatus) {
         print(#function)
         self.checkUserLocationServicesAuthorization()
     }
@@ -230,12 +234,13 @@ extension NavigateMapViewController: MKMapViewDelegate {
     }
     
     /// 재사용 할 수 있는 Annotation 만들어두기
-    public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+    public func mapView(_ mapView: MKMapView,
+                        viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard !annotation.isKind(of: MKUserLocation.self) else {
             return nil
         }
         
-        var annotationView = self.mapView.map.dequeueReusableAnnotationView(withIdentifier: "Custom")
+        var annotationView = self.mapView.dequeueReusableAnnotationView(withIdentifier: "Custom")
         
         if annotationView == nil {
             annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "Custom")
@@ -259,18 +264,14 @@ extension NavigateMapViewController: MKMapViewDelegate {
 
 // MARK: - ButtonView
 
-extension NavigateMapViewController: NavigateMapButtonViewDelegate {
-    
-    public func settingButtonDidTap() {
-        self.delegate?.settingButtonDidTap()
-    }
+extension NavigateMapViewController: ButtonStackViewDelegate {
     
     public func mapButtonDidTap() {
-        self.delegate?.mapButtonDidTap()
+        print(#function)
     }
     
-    public func locationButtonDidTap() {
-        self.delegate?.locationButtonDidTap()
+    public func userLocationButtonDidTap() {
+        print(#function)
     }
     
 }
