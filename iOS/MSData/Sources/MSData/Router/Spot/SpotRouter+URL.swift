@@ -19,7 +19,7 @@ extension SpotRouter {
         return urlString.appending("/spot")
     }
     
-    public var pathURL: String {
+    public var pathURL: String? {
         switch self {
         case .createSpot: return "create"
         case .findSpot: return "find"
