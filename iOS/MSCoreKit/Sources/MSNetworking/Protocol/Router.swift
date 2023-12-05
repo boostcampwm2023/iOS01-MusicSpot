@@ -39,4 +39,15 @@ extension Router {
         return request
     }
     
+    public func fetchBaseURLFromPlist(from bundle: Bundle) -> String? {
+        guard let url = bundle.url(forResource: "APIInfo", withExtension: "plist"),
+              let data = try? Data(contentsOf: url),
+              let dict = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any] else {
+            return nil
+        }
+        let urlString = dict["BaseURL"] as? String
+        
+        return urlString
+    }
+    
 }
