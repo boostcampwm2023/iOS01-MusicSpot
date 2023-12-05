@@ -79,6 +79,12 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     
     // MARK: - UI Components
     
+    private let navigationBarBackgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .msColor(.componentBackground)
+        view.isUserInteractionEnabled = false
+        return view
+    }()
     private let cameraView = CameraView()
     private let shotButton = UIButton()
     private let galleryButton = UIButton()
@@ -89,6 +95,11 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.configure()
+    }
+    
+    public override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        self.navigationController?.isNavigationBarHidden = false
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -116,12 +127,14 @@ private extension SpotViewController {
             self.cameraView,
             self.shotButton,
             self.galleryButton,
-            self.swapButton
+            self.swapButton,
+            self.navigationBarBackgroundView
         ].forEach {
             self.view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
+        self.configureNavigationBarBackgroundViewLayout()
         self.configureCameraViewLayout()
         self.configureShotButtonLayout()
         self.configureGalleryButtonLayout()
@@ -130,9 +143,9 @@ private extension SpotViewController {
     
     func configureCameraViewLayout() {
         NSLayoutConstraint.activate([
-            self.cameraView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            self.cameraView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            self.cameraView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor,
+            self.cameraView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.cameraView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.cameraView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor,
                                                     constant: -Metric.CameraView.bottomInset),
             self.cameraView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
         ])
@@ -170,6 +183,15 @@ private extension SpotViewController {
                                                       constant: -Metric.SwapButton.trailingInset),
             self.swapButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor,
                                                     constant: -Metric.SwapButton.bottomInset)
+        ])
+    }
+    
+    func configureNavigationBarBackgroundViewLayout() {
+        NSLayoutConstraint.activate([
+            self.navigationBarBackgroundView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.navigationBarBackgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.navigationBarBackgroundView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.navigationBarBackgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
         ])
     }
     

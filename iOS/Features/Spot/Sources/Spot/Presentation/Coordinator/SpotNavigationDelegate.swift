@@ -11,6 +11,7 @@ public protocol SpotNavigationDelegate: AnyObject {
     
     func presentPhotos(from viewController: UIViewController)
     func presentSpotSave(using image: UIImage)
+    func dismissToSpot()
     func navigateToSelectSong()
     
 }

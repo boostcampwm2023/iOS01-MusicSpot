@@ -53,10 +53,18 @@ extension SpotCoordinator: SpotNavigationDelegate {
     
     func presentSpotSave(using image: UIImage) {
         let spotSaveViewController = SpotSaveViewController()
+        spotSaveViewController.modalPresentationStyle = .fullScreen
         spotSaveViewController.image = image
-        self.navigationController.presentedViewController?.dismiss(animated: false)
-        self.navigationController.presentingViewController?.dismiss(animated: false)
+        spotSaveViewController.navigationDelegate = self
         self.navigationController.present(spotSaveViewController, animated: true)
+    }
+    
+    func dismissToSpot() {
+        guard let presentedViewController = self.navigationController.presentedViewController,
+              let spotSaveViewController = presentedViewController as? SpotSaveViewController else {
+            return
+        }
+        spotSaveViewController.dismiss(animated: true)
     }
     
     func navigateToSelectSong() {

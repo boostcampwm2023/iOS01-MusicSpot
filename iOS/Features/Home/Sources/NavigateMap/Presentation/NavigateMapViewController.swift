@@ -39,13 +39,13 @@ public final class NavigateMapViewController: UIViewController {
     // 임시 위치 정보
     private let tempCoordinate = CLLocationCoordinate2D(latitude: 37.495120492289026, longitude: 126.9553042366186)
     
-    public var viewModel: NavigateMapViewModel?
+    public let viewModel: NavigateMapViewModel?
     
-    var timer: Timer?
-    var previousCoordinate: CLLocationCoordinate2D?
+    private var timer: Timer?
+    private var previousCoordinate: CLLocationCoordinate2D?
     private var polyline: MKPolyline?
     
-    let locationManager = CLLocationManager()
+    private let locationManager = CLLocationManager()
     
     // MARK: - Initializer
     
