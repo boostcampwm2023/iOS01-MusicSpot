@@ -50,6 +50,12 @@ jobs:
       matrix: ${{fromJson(needs.prepare-matrix.outputs.matrix)}}
     steps:
     - uses: actions/checkout@v4
+
+    - name: Create secret file
+      env:
+        API_SECRET: ${{ secrets.API_SECRET }}
+      run: |
+        echo $API_SECRET | base64 -D -o iOS/MSData/Sources/MSData/Resources/APIInfo.plist
     
     - name: Setup Xcode
       if: ${{ !env.ACT }}
