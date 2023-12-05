@@ -1,17 +1,18 @@
 //
-//  JourneyRouter+Header.swift
+//  SpotRouter+Header.swift
 //  MSData
 //
-//  Created by 이창준 on 11/26/23.
+//  Created by 이창준 on 2023.12.05.
 //
 
 import MSNetworking
 
-extension JourneyRouter {
+extension SpotRouter {
     
     public var headers: HTTPHeaders? {
         switch self {
-        default: return nil
+        default:
+            return nil
         }
     }
     

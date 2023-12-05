@@ -19,13 +19,16 @@ extension JourneyRouter {
             fatalError("BaseURL을 가져오는데 실패했습니다.")
         }
         
-        return urlString
+        return urlString.appending("/journey")
     }
     
     public var pathURL: String {
         switch self {
-        case .journeyList: return ""
-        case .spot: return "/spot"
+        case .startJourney: return "start"
+        case .endJourney: return "end"
+        case .recordJourney: return "record"
+        case .checkJourney: return "check"
+        case .loadLastJourney: return "loadLastData"
         }
     }
     

@@ -49,7 +49,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         #else
         return await withCheckedContinuation { continuation in
             var cancellable: AnyCancellable?
-            cancellable = self.networking.request([JourneyDTO].self, router: JourneyRouter.journeyList)
+            cancellable = self.networking.request([JourneyDTO].self, router: JourneyRouter.checkJourney)
                 .sink { completion in
                     switch completion {
                     case .finished:
