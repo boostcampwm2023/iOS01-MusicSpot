@@ -15,7 +15,7 @@ import NavigateMap
 
 protocol HomeCoordinatorDelegate: AnyObject {
     
-    func popToHomeMap(from coordinator: Coordinator)
+    func popToHome(from coordinator: Coordinator)
     
 }
 
@@ -50,13 +50,14 @@ final class HomeCoordinator: Coordinator {
         journeyListViewController.navigationDelegate = self
         
         // Bottom Sheet
-        let homeBottomSheetVC = HomeViewController(contentViewController: navigateMapViewController,
-                                                              bottomSheetViewController: journeyListViewController)
-        homeBottomSheetVC.configuration = MSBottomSheetViewController.Configuration(fullDimension: .fractional(1.0),
-                                                                                    detentDimension: .fractional(0.4),
-                                                                                    minimizedDimension: .absolute(100.0))
-        homeBottomSheetVC.navigationDelegate = self
-        self.navigationController.pushViewController(homeBottomSheetVC, animated: true)
+        let homeViewController = HomeViewController(contentViewController: navigateMapViewController,
+                                                    bottomSheetViewController: journeyListViewController)
+        let configuration = HomeViewController.Configuration(fullDimension: .fractional(1.0),
+                                                             detentDimension: .fractional(0.4),
+                                                             minimizedDimension: .absolute(100.0))
+        homeViewController.configuration = configuration
+        homeViewController.navigationDelegate = self
+        self.navigationController.pushViewController(homeViewController, animated: true)
     }
     
 }
@@ -98,8 +99,16 @@ extension HomeCoordinator: JourneyListNavigationDelegate {
 
 extension HomeCoordinator: HomeCoordinatorDelegate {
     
-    func popToHomeMap(from coordinator: Coordinator) {
-        self.childCoordinators.removeAll()
+    func popToHome(from coordinator: Coordinator) {
+        guard let homeViewController = self.navigationController.viewControllers.first(where: { viewController in
+            viewController is HomeViewController
+        }) else {
+            return
+        }
+        self.navigationController.dismiss(animated: true) { [weak self] in
+            self?.navigationController.popToViewController(homeViewController, animated: true)
+            self?.childCoordinators.removeAll()
+        }
     }
     
 }

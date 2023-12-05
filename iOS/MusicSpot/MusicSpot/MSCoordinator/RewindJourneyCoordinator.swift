@@ -46,10 +46,10 @@ final class RewindJourneyCoordinator: Coordinator {
 
 extension RewindJourneyCoordinator: HomeCoordinatorDelegate {
     
-    func popToHomeMap(from coordinator: Coordinator) {
+    func popToHome(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()
         self.navigationController.popViewController(animated: true)
-        self.delegate?.popToHomeMap(from: self)
+        self.delegate?.popToHome(from: self)
     }
     
 }

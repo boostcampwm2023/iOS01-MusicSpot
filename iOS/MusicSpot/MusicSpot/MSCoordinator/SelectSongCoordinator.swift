@@ -50,7 +50,7 @@ final class SelectSongCoordinator: Coordinator {
 extension SelectSongCoordinator: SelectSongNavigationDelegate {
     
     func navigateToHomeMap() {
-        self.delegate?.popToHomeMap(from: self)
+        self.delegate?.popToHome(from: self)
     }
     
     func navigateToSaveJourney() {
@@ -68,7 +68,7 @@ extension SelectSongCoordinator: SelectSongCoordinatorDelegate {
     func popToHomeMap(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()
         self.navigationController.popViewController(animated: true)
-        self.delegate?.popToHomeMap(from: self)
+        self.delegate?.popToHome(from: self)
     }
     
     func popToSearchMusic(from coordinator: Coordinator) {

@@ -43,7 +43,7 @@ final class SaveJourneyCoordinator: Coordinator {
 //extension SaveJourneyCoordinator: SaveJourneyViewControllerDelegate {
 //    
 //    func navigateToHomeMap() {
-//        self.delegate?.popToHomeMap(from: self)
+//        self.delegate?.popToHome(from: self)
 //    }
 //    
 //    func navigateToSearchMusic() {
