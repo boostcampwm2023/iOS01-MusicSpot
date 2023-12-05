@@ -83,6 +83,10 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
         }
     }
     
+    // MARK: - Properties: Gesture
+    
+    var initialTouchPoint = CGPoint(x: 0, y: 0)
+    
     // MARK: - UI Components
     
     private let backButton = UIButton()
@@ -240,7 +244,7 @@ private extension SpotViewController {
         self.configureBackButtonAction()
         self.configureGalleryButtonAction()
         
-//        self.configure
+        self.configureUpToDownSwipeGesture()
     }
     
     func configureShotButtonAction() {
@@ -271,7 +275,35 @@ private extension SpotViewController {
         self.backButton.addAction(backButtonAction, for: .touchUpInside)
     }
     
-    private func configureCameraSetting() {
+    func configureUpToDownSwipeGesture() {
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panGestureDismiss(_:)))
+            self.view.addGestureRecognizer(panGesture)
+    }
+
+    @objc
+    func panGestureDismiss(_ sender: UIPanGestureRecognizer) {
+        let touchPoint = sender.location(in: self.view.window)
+        
+        switch sender.state {
+        case .began:
+            initialTouchPoint = touchPoint
+        case .changed:
+            if touchPoint.y - initialTouchPoint.y > 0 {
+                self.view.frame = CGRect(x: 0, y: touchPoint.y - initialTouchPoint.y, width: self.view.frame.width, height: self.view.frame.height)
+            }
+        case .ended, .cancelled:
+            if touchPoint.y - initialTouchPoint.y > 200 {
+                //                self.dismiss(animated: true, completion: nil)
+                self.navigationDelegate?.popToHome()
+            }
+        default:
+            UIView.animate(withDuration: 0.3) {
+                self.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+            }
+        }
+    }
+    
+    func configureCameraSetting() {
         self.spotViewModel.preset(screen: cameraView)
     }
     

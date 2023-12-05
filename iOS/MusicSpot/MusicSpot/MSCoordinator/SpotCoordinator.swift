@@ -22,6 +22,7 @@ final class SpotCoordinator: Coordinator {
     
     func start() {
         let spotViewController = SpotViewController()
+        self.navigationController.modalTransitionStyle = .coverVertical
         self.navigationController.pushViewController(spotViewController, animated: true)
         spotViewController.navigationDelegate = self
     }
