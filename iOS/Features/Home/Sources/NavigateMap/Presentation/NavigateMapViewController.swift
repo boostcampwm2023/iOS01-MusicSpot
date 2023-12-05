@@ -11,14 +11,6 @@ import MapKit
 
 import MSUIKit
 
-public protocol NavigateMapViewControllerDelegate {
-    
-    func settingButtonDidTap()
-    func mapButtonDidTap()
-    func locationButtonDidTap()
-    
-}
-
 public final class NavigateMapViewController: UIViewController {
     
     // MARK: - Constants
@@ -48,7 +40,6 @@ public final class NavigateMapViewController: UIViewController {
     private let tempCoordinate = CLLocationCoordinate2D(latitude: 37.495120492289026, longitude: 126.9553042366186)
     
     public var viewModel: NavigateMapViewModel?
-    public var delegate: NavigateMapViewControllerDelegate?
     
     var timer: Timer?
     var previousCoordinate: CLLocationCoordinate2D?
@@ -274,11 +265,11 @@ extension NavigateMapViewController: MKMapViewDelegate {
 extension NavigateMapViewController: NavigateMapButtonViewDelegate {
     
     public func mapButtonDidTap() {
-        self.delegate?.mapButtonDidTap()
+        print(#function)
     }
     
     public func userLocationButtonDidTap() {
-        self.delegate?.locationButtonDidTap()
+        print(#function)
     }
     
 }

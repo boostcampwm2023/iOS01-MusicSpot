@@ -58,7 +58,6 @@ public final class HomeViewController: HomeBottomSheetViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        self.contentViewController.delegate = self
         self.configureStyle()
         self.configureLayout()
     }
@@ -108,22 +107,6 @@ private extension HomeViewController {
             self.recordJourneyButtonView.bottomAnchor.constraint(equalTo: self.bottomSheetViewController.view.topAnchor,
                                                                  constant: -Metric.startButtonBottomInset)
         ])
-    }
-    
-}
-
-extension HomeViewController: NavigateMapViewControllerDelegate {
-    
-    public func settingButtonDidTap() {
-        // 
-    }
-    
-    public func mapButtonDidTap() {
-        print(#function)
-    }
-    
-    public func locationButtonDidTap() {
-        print(#function)
     }
     
 }

@@ -51,6 +51,7 @@ final class ButtonStackView: UIStackView {
         super.init(frame: frame)
         self.configureStyles()
         self.configureLayout()
+        self.configureAction()
     }
     
     required init(coder: NSCoder) {
