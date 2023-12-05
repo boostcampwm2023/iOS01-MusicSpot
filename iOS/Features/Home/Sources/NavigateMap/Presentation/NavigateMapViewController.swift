@@ -264,7 +264,7 @@ extension NavigateMapViewController: MKMapViewDelegate {
 
 // MARK: - ButtonView
 
-extension NavigateMapViewController: NavigateMapButtonViewDelegate {
+extension NavigateMapViewController: ButtonStackViewDelegate {
     
     public func mapButtonDidTap() {
         print(#function)

@@ -9,7 +9,7 @@ import UIKit
 
 import MSUIKit
 
-protocol NavigateMapButtonViewDelegate: AnyObject {
+protocol ButtonStackViewDelegate: AnyObject {
     
     func mapButtonDidTap()
     func userLocationButtonDidTap()
@@ -43,7 +43,7 @@ final class ButtonStackView: UIStackView {
     
     // MARK: - Properties
     
-    weak var delegate: NavigateMapButtonViewDelegate?
+    weak var delegate: ButtonStackViewDelegate?
     
     // MARK: - Life Cycle
     
