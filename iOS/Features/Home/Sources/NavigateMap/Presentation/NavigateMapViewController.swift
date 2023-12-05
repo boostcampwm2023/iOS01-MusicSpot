@@ -21,6 +21,15 @@ public protocol NavigateMapViewControllerDelegate {
 
 public final class NavigateMapViewController: UIViewController {
     
+    // MARK: - Constants
+    
+    private enum Metric {
+        
+        static let buttonStackTopSpacing: CGFloat = 50.0
+        static let buttonStackTrailingSpacing: CGFloat = 16.0
+        
+    }
+    
     // MARK: - UI Components
     
     /// 전체 Map에 대한 View
@@ -85,16 +94,16 @@ public final class NavigateMapViewController: UIViewController {
         self.view.addSubview(self.buttonStackView)
         self.mapView.map.translatesAutoresizingMaskIntoConstraints = false
         self.buttonStackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let safeArea = self.view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
             self.mapView.map.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.mapView.map.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.mapView.map.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.mapView.map.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             
-            self.buttonStackView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 50),
-            self.buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+            self.buttonStackView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor,
+                                                      constant: Metric.buttonStackTopSpacing),
+            self.buttonStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,
+                                                           constant: -Metric.buttonStackTrailingSpacing)
         ])
     }
     
