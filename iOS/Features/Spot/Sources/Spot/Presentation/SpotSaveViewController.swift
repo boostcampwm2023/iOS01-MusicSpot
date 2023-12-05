@@ -56,13 +56,13 @@ public final class SpotSaveViewController: UIViewController {
     // MARK: - Properties
     
     public weak var navigationDelegate: SpotNavigationDelegate?
+    private let spotSaveViewModel = SpotSaveViewModel()
     
     public var image: UIImage? {
         didSet {
             self.configureImageViewState()
         }
     }
-    private let spotSaveViewModel = SpotSaveViewModel()
     
     // MARK: - Properties: Networking
     

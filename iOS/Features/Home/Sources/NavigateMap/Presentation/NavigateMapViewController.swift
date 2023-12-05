@@ -21,12 +21,7 @@ public protocol NavigateMapViewControllerDelegate {
 
 public final class NavigateMapViewController: UIViewController {
     
-    // MARK: - Properties
-    
-    public var viewModel: NavigateMapViewModel?
-    
-    // 임시 위치 정보
-    let tempCoordinate = CLLocationCoordinate2D(latitude: 37.495120492289026, longitude: 126.9553042366186)
+    // MARK: - UI Components
     
     /// 전체 Map에 대한 View
     let mapView = MapView()
@@ -38,18 +33,13 @@ public final class NavigateMapViewController: UIViewController {
         return stackView
     }()
     
-    public var delegate: NavigateMapViewControllerDelegate?
+    // MARK: - Properties
     
-    @objc func findMyLocation() {
-        
-        guard self.locationManager.location != nil else {
-            self.locationManager.requestWhenInUseAuthorization()
-            return
-        }
-        
-        self.mapView.map.showsUserLocation = true
-        self.mapView.map.setUserTrackingMode(.follow, animated: true)
-    }
+    // 임시 위치 정보
+    private let tempCoordinate = CLLocationCoordinate2D(latitude: 37.495120492289026, longitude: 126.9553042366186)
+    
+    public var viewModel: NavigateMapViewModel?
+    public var delegate: NavigateMapViewControllerDelegate?
     
     var timer: Timer?
     var previousCoordinate: CLLocationCoordinate2D?
@@ -166,8 +156,21 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
     //        mapView.map.setRegion(coordinateRegion, animated: true)
     //    }
     
+    @objc
+    private func findMyLocation() {
+        
+        guard self.locationManager.location != nil else {
+            self.locationManager.requestWhenInUseAuthorization()
+            return
+        }
+        
+        self.mapView.map.showsUserLocation = true
+        self.mapView.map.setUserTrackingMode(.follow, animated: true)
+    }
+    
     /// 이전 좌표와 현 좌표를 기준으로 polyline을 추가
-    @objc private func updatePolyline() {
+    @objc
+    private func updatePolyline() {
         guard let newCoordinate = self.locationManager.location?.coordinate else { return }
         print(newCoordinate)
         // Draw polyline

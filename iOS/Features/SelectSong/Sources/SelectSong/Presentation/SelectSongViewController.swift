@@ -37,6 +37,8 @@ public final class SelectSongViewController: BaseViewController {
     
     // MARK: - Properties
     
+    public weak var navigationDelegate: SelectSongNavigationDelegate?
+    
     private let musicPlayer = ApplicationMusicPlayer.shared
     
     private let viewModel: SelectSongViewModel
@@ -200,7 +202,10 @@ extension SelectSongViewController: UICollectionViewDelegate {
             return
         }
         
+        #if DEBUG
         MSLogger.make(category: .selectSong).log("\(item.title) selected")
+        #endif
+        self.navigationDelegate?.navigateToSaveJourney()
     }
     
 }

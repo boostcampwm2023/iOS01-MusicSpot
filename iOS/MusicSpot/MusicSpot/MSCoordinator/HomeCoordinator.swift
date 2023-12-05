@@ -27,7 +27,7 @@ final class HomeCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     
-    var delegate: AppCoordinatorDelegate?
+    weak var delegate: AppCoordinatorDelegate?
     
     // MARK: - Initializer
     
@@ -50,12 +50,12 @@ final class HomeCoordinator: Coordinator {
         journeyListViewController.navigationDelegate = self
         
         // Bottom Sheet
-        let homeBottomSheetVC = HomeBottomSheetViewController(contentViewController: navigateMapViewController,
+        let homeBottomSheetVC = HomeViewController(contentViewController: navigateMapViewController,
                                                               bottomSheetViewController: journeyListViewController)
         homeBottomSheetVC.configuration = MSBottomSheetViewController.Configuration(fullDimension: .fractional(1.0),
                                                                                     detentDimension: .fractional(0.4),
                                                                                     minimizedDimension: .absolute(100.0))
-        homeBottomSheetVC.delegate = self
+        homeBottomSheetVC.navigationDelegate = self
         self.navigationController.pushViewController(homeBottomSheetVC, animated: true)
     }
     
@@ -70,6 +70,13 @@ extension HomeCoordinator: HomeNavigationDelegate {
         spotCoordinator.delegate = self
         self.childCoordinators.append(spotCoordinator)
         spotCoordinator.start()
+    }
+    
+    func navigateToSelectSong() {
+        let selectSongCoordinator = SelectSongCoordinator(navigationController: self.navigationController)
+        selectSongCoordinator.delegate = self
+        self.childCoordinators.append(selectSongCoordinator)
+        selectSongCoordinator.start()
     }
     
 }

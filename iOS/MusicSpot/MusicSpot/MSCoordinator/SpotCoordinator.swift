@@ -17,7 +17,7 @@ final class SpotCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     
-    var delegate: HomeCoordinatorDelegate?
+    weak var delegate: HomeCoordinatorDelegate?
     
     // MARK: - Initializer
     
@@ -30,6 +30,40 @@ final class SpotCoordinator: Coordinator {
     func start() {
         let spotViewController = SpotViewController()
         self.navigationController.pushViewController(spotViewController, animated: true)
+        spotViewController.navigationDelegate = self
+    }
+    
+}
+
+// MARK: - Spot Navigation
+
+extension SpotCoordinator: SpotNavigationDelegate {
+    
+    func presentPhotos(from viewController: UIViewController) {
+        guard let spotViewController = viewController as? SpotViewController else {
+            return
+        }
+        
+        let picker = UIImagePickerController()
+        picker.sourceType = .photoLibrary
+        picker.allowsEditing = true
+        picker.delegate = spotViewController
+        spotViewController.present(picker, animated: true)
+    }
+    
+    func presentSpotSave(using image: UIImage) {
+        let spotSaveViewController = SpotSaveViewController()
+        spotSaveViewController.image = image
+        self.navigationController.presentedViewController?.dismiss(animated: false)
+        self.navigationController.presentingViewController?.dismiss(animated: false)
+        self.navigationController.present(spotSaveViewController, animated: true)
+    }
+    
+    func navigateToSelectSong() {
+        let selectSongCoordinator = SelectSongCoordinator(navigationController: self.navigationController)
+        selectSongCoordinator.delegate = self
+        self.childCoordinators.append(selectSongCoordinator)
+        selectSongCoordinator.start()
     }
     
 }

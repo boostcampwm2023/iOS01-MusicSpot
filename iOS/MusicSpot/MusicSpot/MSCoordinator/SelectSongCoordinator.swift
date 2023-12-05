@@ -25,7 +25,7 @@ final class SelectSongCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     
-    var delegate: HomeCoordinatorDelegate?
+    weak var delegate: HomeCoordinatorDelegate?
     
     // MARK: - Initializer
     
@@ -39,6 +39,7 @@ final class SelectSongCoordinator: Coordinator {
         let songRepository = SongRepositoryImplementation()
         let selectSongViewModel = SelectSongViewModel(repository: songRepository)
         let searchMusicViewController = SelectSongViewController(viewModel: selectSongViewModel)
+        searchMusicViewController.navigationDelegate = self
         self.navigationController.pushViewController(searchMusicViewController, animated: true)
     }
     
@@ -46,7 +47,7 @@ final class SelectSongCoordinator: Coordinator {
 
 // MARK: - SelectSong Navigation
 
-extension SelectSongCoordinator {
+extension SelectSongCoordinator: SelectSongNavigationDelegate {
     
     func navigateToHomeMap() {
         self.delegate?.popToHomeMap(from: self)
