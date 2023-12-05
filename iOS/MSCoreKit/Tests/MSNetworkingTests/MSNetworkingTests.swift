@@ -80,7 +80,7 @@ final class MSNetworkingTests: XCTestCase {
             .receive(on: self.networking.queue)
             .sink { completion in
                 if case .failure(let error) = completion {
-                    //swiftlint:disable force_cast
+                    // swiftlint: disable force_cast
                     XCTAssertEqual(error as! MSNetworkError,
                                    MSNetworkError.invalidStatusCode(statusCode: 404, description: ""),
                                    "404 status code 응답은 invalidStatusCode 에러를 발생시켜야 합니다.")
