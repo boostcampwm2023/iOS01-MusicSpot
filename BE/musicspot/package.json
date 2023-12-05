@@ -25,6 +25,7 @@
     "@nestjs/mongoose": "^10.0.2",
     "@nestjs/platform-express": "^10.2.10",
     "@nestjs/swagger": "^7.1.15",
+    "@turf/turf": "^6.5.0",
     "@types/dotenv": "^8.2.0",
     "@types/multer": "^1.4.10",
     "aws-sdk": "^2.348.0",

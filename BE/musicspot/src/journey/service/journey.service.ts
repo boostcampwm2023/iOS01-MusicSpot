@@ -10,6 +10,8 @@ import { RecordJourneyDTO } from '../dto/journeyRecord.dto';
 import { CheckJourneyDTO } from '../dto/journeyCheck.dto';
 import { JourneyNotFoundException } from '../../filters/journey.exception';
 import { UserNotFoundException } from 'src/filters/user.exception';
+import * as turf from '@turf/turf';
+import { LoadJourneyDTO } from '../dto/journeyLoad.dto';
 
 @Injectable()
 export class JourneyService {
@@ -23,6 +25,7 @@ export class JourneyService {
       title: '',
       spots: [],
       coordinates: [startJourneyDTO.coordinate],
+      endTimestamp: '',
     };
     const createdJourneyData = new this.journeyModel(journeyData);
     return await createdJourneyData.save();
@@ -47,7 +50,7 @@ export class JourneyService {
   }
 
   async end(endJourneyDTO: EndJourneyDTO) {
-    const { journeyId, title, coordinate } = endJourneyDTO;
+    const { journeyId, title, coordinate, endTimestamp } = endJourneyDTO;
     const coordinateToAdd = Array.isArray(coordinate[0])
       ? coordinate
       : [coordinate];
@@ -55,7 +58,7 @@ export class JourneyService {
       .findOneAndUpdate(
         { _id: journeyId },
         {
-          $set: { title },
+          $set: { title, endTimestamp },
           $push: { coordinates: { $each: coordinateToAdd } },
         },
         { new: true },
@@ -96,38 +99,55 @@ export class JourneyService {
       throw new UserNotFoundException();
     }
     const journeys = user.journeys;
-    const journeyList = await this.findMinMaxCoordinates(
-      journeys,
-      minCoordinate,
-      maxCoordinate,
-    );
+    const boundingBox = turf.bboxPolygon([
+      minCoordinate[0],
+      minCoordinate[1],
+      maxCoordinate[0],
+      maxCoordinate[1],
+    ]);
+
+    const journeyList = await this.findMinMaxCoordinates(boundingBox, journeys);
     return journeyList;
   }
-  async findMinMaxCoordinates(journeys, minCoordinate, maxCoordinate) {
+  async findMinMaxCoordinates(boundingBox, journeys) {
     let journeyList = [];
+
     for (let i = 0; i < journeys.length; i++) {
       let journey = await this.journeyModel.findById(journeys[i]).lean();
       if (!journey) {
         throw new JourneyNotFoundException();
       }
-      let chk = true;
-      for (const [x, y] of journey.coordinates) {
-        if (
-          !(
-            x > minCoordinate[0] &&
-            y > minCoordinate[1] &&
-            x < maxCoordinate[0] &&
-            y < maxCoordinate[1]
-          )
-        ) {
-          chk = false;
-          break;
-        }
-      }
-      if (chk) {
+      let journeyLine = turf.lineString(journey.coordinates);
+      if (turf.booleanWithin(journeyLine, boundingBox)) {
         journeyList.push(journey);
       }
     }
     return journeyList;
+  }
+  async loadLastJourney(userId) {
+    const user = await this.userModel.findById(userId).lean();
+
+    if (!user) {
+      throw new UserNotFoundException();
+    }
+    const journeys = user.journeys;
+
+    const journey = await this.findLastJourney(journeys);
+    if (journey) {
+      return journey;
+    }
+    return '진행중이었던 여정이 없습니다.';
+  }
+  async findLastJourney(journeys) {
+    for (let i = 0; i < journeys.length; i++) {
+      let journey = await this.journeyModel.findById(journeys[i]).lean();
+      if (!journey) {
+        throw new JourneyNotFoundException();
+      }
+      if (journey.title === '') {
+        return journey;
+      }
+    }
+    return false;
   }
 }

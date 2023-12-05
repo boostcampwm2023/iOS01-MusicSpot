@@ -18,7 +18,7 @@ export class StartJourneyDTO {
     required: true,
   })
   @IsDateString()
-  readonly timestamp: string;
+  readonly startTimestamp: string;
 
   @ApiProperty({
     example: 'hello@gmail.com',
