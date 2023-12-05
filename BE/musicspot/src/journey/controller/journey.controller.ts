@@ -8,7 +8,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { JourneyService } from '../service/journey.service';
-import { StartJourneyDTO } from '../dto/journeyStart.dto';
+import { StartJourneyDTO } from '../dto/journeyStart/journeyStart.dto';
 import {
   ApiCreatedResponse,
   ApiOperation,
@@ -37,7 +37,9 @@ export class JourneyController {
     type: Journey,
   })
   @Post('start')
-  async create(@Body() startJourneyDTO: StartJourneyDTO): Promise<Journey> {
+  async create(
+    @Body() startJourneyDTO: StartJourneyDTO,
+  ): Promise<StartJourneyDTO> {
     return await this.journeyService.create(startJourneyDTO);
   }
 

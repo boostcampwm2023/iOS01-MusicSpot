@@ -1,7 +1,7 @@
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
-import { StartJourneyDTO } from '../dto/journeyStart.dto';
+import { StartJourneyDTO } from '../dto/journeyStart/journeyStart.dto';
 import { Journey } from '../schema/journey.schema';
 
 import { User } from '../../user/schema/user.schema';
@@ -20,11 +20,12 @@ export class JourneyService {
   async insertJourneyData(startJourneyDTO: StartJourneyDTO) {
     const journeyData: Journey = {
       ...startJourneyDTO,
-      title: '',
-      spots: [],
       coordinates: [startJourneyDTO.coordinate],
-      endTime: '',
-      song: {},
+      spots: [],
+      journeyMetadata: {
+        startTimestamp: startJourneyDTO.startTimestamp,
+        endTimestamp: '',
+      },
     };
     const createdJourneyData = new this.journeyModel(journeyData);
     return await createdJourneyData.save();
@@ -42,13 +43,17 @@ export class JourneyService {
     }
     return result;
   }
-  async create(startJourneyDTO: StartJourneyDTO): Promise<Journey> {
+  async create(startJourneyDTO: StartJourneyDTO): Promise<StartJourneyDTO> {
     const createdJourneyData = await this.insertJourneyData(startJourneyDTO);
     const updateUserInfo = await this.pushJourneyIdToUser(
       createdJourneyData._id,
       startJourneyDTO.userId,
     );
-    return createdJourneyData;
+    const { coordinates, journeyMetadata } = createdJourneyData;
+    const [coordinate] = coordinates;
+    const { startTimestamp } = journeyMetadata;
+    const { userId } = updateUserInfo;
+    return { coordinate, startTimestamp, userId };
   }
 
   async end(endJourneyDTO: EndJourneyDTO) {
@@ -60,7 +65,7 @@ export class JourneyService {
       .findOneAndUpdate(
         { _id: journeyId },
         {
-          $set: { title, endTime, song },
+          $set: { title, song, 'journeyMetadata.endTimestamp': endTime },
           $push: { coordinates: { $each: coordinateToAdd } },
         },
         { new: true },
@@ -70,7 +75,20 @@ export class JourneyService {
     if (!updatedJourney) {
       throw new JourneyNotFoundException();
     }
-    return updatedJourney;
+
+    const updatedCoordinates = updatedJourney.coordinates;
+    const updatedEndTimestamp = updatedJourney.journeyMetadata.endTimestamp;
+    const updatedId = updatedJourney._id;
+    const updatedSong = updatedJourney.song;
+    const updatedCoordinatesLen = updatedCoordinates.length;
+    const updatedCoordinate = updatedCoordinates[updatedCoordinatesLen - 1];
+    return {
+      id: updatedId,
+      coordinate: updatedCoordinate,
+      endTimestamp: updatedEndTimestamp,
+      song: updatedSong,
+      numberOfCoordinates: updatedCoordinatesLen,
+    };
   }
 
   async pushCoordianteToJourney(recordJourneyDTO: RecordJourneyDTO) {
