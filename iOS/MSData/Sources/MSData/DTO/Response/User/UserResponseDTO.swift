@@ -10,11 +10,9 @@ import Foundation
 public struct UserResponseDTO: Encodable {
     
     public let userID: UUID
-    public let journeys: [RecordJourneyRequestDTO]
     
     enum CodingKeys: String, CodingKey {
         case userID = "userId"
-        case journeys
     }
     
 }

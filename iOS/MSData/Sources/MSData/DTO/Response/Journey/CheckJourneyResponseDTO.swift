@@ -7,18 +7,8 @@
 
 import Foundation
 
-public struct CheckJourneyResponseDTO: Decodable, Identifiable {
+public struct CheckJourneyResponseDTO: Decodable {
     
-    public let id: String
-    public let title: String
-    public let spots: [SpotDTO]
-    public let coordinates: [CoordinateDTO]
-    
-    enum CodingKeys: String, CodingKey {
-        case id = "_id"
-        case title
-        case spots
-        case coordinates
-    }
+    public let journeys: [JourneyDTO]
     
 }

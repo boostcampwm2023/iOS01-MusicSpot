@@ -186,7 +186,7 @@ extension JourneyListViewController: UICollectionViewDelegate {
     private func configureDataSource() -> JourneyListDataSource {
         // TODO: 최적화 & 캐싱
         let cellRegistration = JourneyCellRegistration { cell, indexPath, itemIdentifier in
-            let cellModel = JourneyCellModel(location: itemIdentifier.location,
+            let cellModel = JourneyCellModel(location: itemIdentifier.title,
                                              date: itemIdentifier.date,
                                              songTitle: itemIdentifier.song.title,
                                              songArtist: itemIdentifier.song.artist)

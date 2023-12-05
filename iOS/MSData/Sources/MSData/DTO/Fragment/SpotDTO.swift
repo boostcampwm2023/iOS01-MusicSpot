@@ -21,4 +21,14 @@ public struct SpotDTO: Codable {
         case photoURL = "photoUrl"
     }
     
+    public init(journeyID: String?,
+                coordinate: CoordinateDTO,
+                timestamp: Date,
+                photoURL: URL) {
+        self.journeyID = journeyID
+        self.coordinate = coordinate
+        self.timestamp = timestamp
+        self.photoURL = photoURL
+    }
+    
 }
