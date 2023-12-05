@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Song } from './song.schema';
+import { JourneyMetadata } from './journeyMetadata.schema';
 
 export type JourneyDocument = HydratedDocument<Journey>;
 
@@ -13,7 +14,7 @@ export class Journey {
     required: true,
   })
   @Prop()
-  title: string;
+  title?: string;
 
   @ApiProperty({
     example: [
@@ -25,7 +26,7 @@ export class Journey {
     required: true,
   })
   @Prop()
-  spots: string[];
+  spots?: string[];
 
   @ApiProperty({
     example: [
@@ -36,25 +37,13 @@ export class Journey {
     required: true,
   })
   @Prop({ type: [[Number]] })
-  coordinates: number[][];
+  coordinates?: number[][];
 
-  @ApiProperty({
-    example: '2023-11-22T15:30:00.000+09:00',
-    description: '여정 시작 시간',
-    required: true,
-  })
-  @Prop({ type: String })
-  startTime: string;
-
-  @ApiProperty({
-    example: '2023-11-22T16:30:00.000+09:00',
-    description: '여정 종료 시간',
-    required: true,
-  })
-  endTime: string;
+  @Prop({ type: JourneyMetadata })
+  journeyMetadata?: JourneyMetadata;
 
   @Prop({ type: Song })
-  song: Song;
+  song?: Song;
 }
 
 export const JourneySchema = SchemaFactory.createForClass(Journey);

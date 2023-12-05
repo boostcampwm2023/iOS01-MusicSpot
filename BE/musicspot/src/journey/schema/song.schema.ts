@@ -8,7 +8,7 @@ export class Song {
     required: true,
   })
   @Prop({ type: String })
-  id: string;
+  id?: string;
 
   @ApiProperty({
     example: '655efda2fdc81cae36d20650',
@@ -21,7 +21,7 @@ export class Song {
     required: true,
   })
   @Prop({ type: String })
-  name: string;
+  name?: string;
 
   @ApiProperty({
     example: 'newjeans',
@@ -29,8 +29,8 @@ export class Song {
     required: true,
   })
   @Prop({ type: String })
-  artistName: string;
+  artistName?: string;
 
   @Prop({ type: Artwork })
-  artwork: Artwork;
+  artwork?: Artwork;
 }
