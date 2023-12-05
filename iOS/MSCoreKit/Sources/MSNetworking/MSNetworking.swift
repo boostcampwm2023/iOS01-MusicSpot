@@ -31,7 +31,7 @@ public struct MSNetworking {
     }()
     
     private let session: Session
-    public let queue: DispatchQueue
+    private let queue: DispatchQueue
     
     // MARK: - Initializer
     
@@ -42,6 +42,12 @@ public struct MSNetworking {
     
     // MARK: - Functions
     
+    /// ``Router``를 사용해 HTTP 네트워킹을 수행합니다. Combine을 사용합니다.
+    /// - Parameters:
+    ///   - type: 결과로 받을 값의 타입. `String.self`의 형태로 제공합니다.
+    ///   - router: 네트워킹에 대한 정보를 담은 ``Router``
+    ///   - timeoutInterval: 네트워킹에 대한 타임아웃 시간
+    /// - Returns: 결과값과 에러를 담은 AnyPublisher
     public func request<T: Decodable>(_ type: T.Type,
                                       router: Router,
                                       timeoutInterval: TimeoutInterval = .seconds(3)) -> AnyPublisher<T, Error> {
@@ -49,7 +55,7 @@ public struct MSNetworking {
             return Fail(error: MSNetworkError.invalidRouter).eraseToAnyPublisher()
         }
         
-        return session
+        return self.session
             .dataTaskPublisher(for: request)
             .timeout(timeoutInterval, scheduler: self.queue)
             .tryMap { data, response -> Data in
@@ -64,6 +70,52 @@ public struct MSNetworking {
             }
             .decode(type: T.self, decoder: self.decoder)
             .eraseToAnyPublisher()
+    }
+    
+    /// ``Router``를 사용해 HTTP 네트워킹을 수행합니다. Swift Concurrency을 사용합니다.
+    /// - Parameters:
+    ///   - type: 결과로 받을 값의 타입. `String.self`의 형태로 제공합니다.
+    ///   - router: 네트워킹에 대한 정보를 담은 ``Router``
+    ///   - timeoutInterval: 네트워킹에 대한 타임아웃 시간
+    /// - Returns: 결과값과 에러를 담은 Result
+    public func request<T: Decodable>(_ type: T.Type,
+                                      router: Router,
+                                      timeoutInterval: TimeoutInterval = .seconds(3)) async -> Result<T, Error> {
+        guard let request = router.request else {
+            return .failure(MSNetworkError.invalidRouter)
+        }
+        
+        let dataTask = Task {
+            try await self.session.data(for: request, delegate: nil)
+        }
+        
+        let timeoutTask = Task {
+            try await Task.sleep(nanoseconds: UInt64(timeoutInterval.magnitude) * 1_000_000_000)
+            dataTask.cancel()
+        }
+        
+        do {
+            return try await withTaskCancellationHandler {
+                let (data, response) = try await dataTask.value
+                timeoutTask.cancel()
+                
+                guard let response = response as? HTTPURLResponse else {
+                    return .failure(MSNetworkError.unknownResponse)
+                }
+                guard 200..<300 ~= response.statusCode else {
+                    throw MSNetworkError.invalidStatusCode(statusCode: response.statusCode,
+                                                           description: response.description)
+                }
+                
+                let result = try self.decoder.decode(T.self, from: data)
+                return .success(result)
+            } onCancel: {
+                dataTask.cancel()
+                timeoutTask.cancel()
+            }
+        } catch {
+            return .failure(error)
+        }
     }
     
 }
