@@ -122,39 +122,19 @@ public final class NavigateMapViewController: UIViewController {
                     let coordinate = CLLocationCoordinate2D(latitude: spot.coordinate.latitude, longitude: spot.coordinate.longitude)
                     self.mapView.addAnnotation(title: journey.location, coordinate: coordinate, photoData: photoData)
                 }
-        if #available(iOS 14.0, *) {
-            let accuracyState = self.locationManager.accuracyAuthorization
-            switch accuracyState {
-            case .fullAccuracy:
-                print("full")
-            case .reducedAccuracy:
-                print("reduced")
-            @unknown default:
-                print("Unknown")
             }
         }
     }
     
-    func checkUserLocationServicesAuthorization() {
-        let authorizationStatus: CLAuthorizationStatus
-        if #available(iOS 14, *) {
-            authorizationStatus = self.locationManager.authorizationStatus
-        } else {
-            authorizationStatus = CLLocationManager.authorizationStatus()
-        }
-        
-        if CLLocationManager.locationServicesEnabled() {
-            self.checkCurrentLocationAuthorization(authorizationStatus: authorizationStatus)
+    func drawPolyLines(journeys: [Journey]) {
+        journeys.forEach { journey in
+            Task {
+                self.mapView.createPolyLine(coordinates: journey.coordinates)
+            }
         }
     }
     
-    //    /// 현재 보고있는 화면을 내 현위치로 맞춤
-    //    private func centerMapOnLocation(_ location: CLLocation) {
-    //        let coordinateRegion = MKCoordinateRegion(center: location.coordinate,
-    //                                                  latitudinalMeters: 500,
-    //                                                  longitudinalMeters: 500)
-    //        mapView.map.setRegion(coordinateRegion, animated: true)
-    //    }
+    // MARK: - Combine Binding
     
     func bind() {
         self.viewModel.state.journeys
