@@ -273,10 +273,6 @@ extension NavigateMapViewController: MKMapViewDelegate {
 
 extension NavigateMapViewController: NavigateMapButtonViewDelegate {
     
-    public func settingButtonDidTap() {
-        self.delegate?.settingButtonDidTap()
-    }
-    
     public func mapButtonDidTap() {
         self.delegate?.mapButtonDidTap()
     }

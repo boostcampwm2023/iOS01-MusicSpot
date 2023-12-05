@@ -11,7 +11,6 @@ import MSUIKit
 
 protocol NavigateMapButtonViewDelegate: AnyObject {
     
-    func settingButtonDidTap()
     func mapButtonDidTap()
     func userLocationButtonDidTap()
     
