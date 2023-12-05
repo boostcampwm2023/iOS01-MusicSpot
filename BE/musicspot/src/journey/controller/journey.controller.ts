@@ -138,7 +138,6 @@ export class JourneyController {
   })
   @Get('loadLastData')
   async loadLastData(@Query('userId') userId: string) {
-    // 여기서 userid를 이용하여 필요한 동작 수행
     return await this.journeyService.loadLastJourney(userId);
   }
 }
