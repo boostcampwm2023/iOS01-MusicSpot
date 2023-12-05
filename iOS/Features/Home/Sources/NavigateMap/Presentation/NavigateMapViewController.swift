@@ -111,24 +111,17 @@ public final class NavigateMapViewController: UIViewController {
         
     }
     
-    /// 위치 정보 권한 변경에 따른 동작
-    func checkCurrentLocationAuthorization(authorizationStatus: CLAuthorizationStatus) {
-        switch authorizationStatus {
-        case .notDetermined:
-            self.locationManager.requestWhenInUseAuthorization()
-            self.locationManager.startUpdatingLocation()
-        case .restricted:
-            print("restricted")
-        case .denied:
-            print("denided")
-        case .authorizedAlways:
-            print("always")
-        case .authorizedWhenInUse:
-            print("wheninuse")
-            self.locationManager.startUpdatingLocation()
-        @unknown default:
-            print("unknown")
-        }
+    func addAnnotations(journeys: [Journey]){
+        
+        journeys.forEach { journey in
+            journey.spots.forEach { spot in
+                Task {
+                    guard let photoData = await MSImageFetcher.shared.fetchImage(from: spot.photoURL, forKey: spot.journeyID.uuidString)
+                    else { return }
+                    
+                    let coordinate = CLLocationCoordinate2D(latitude: spot.coordinate.latitude, longitude: spot.coordinate.longitude)
+                    self.mapView.addAnnotation(title: journey.location, coordinate: coordinate, photoData: photoData)
+                }
         if #available(iOS 14.0, *) {
             let accuracyState = self.locationManager.accuracyAuthorization
             switch accuracyState {
