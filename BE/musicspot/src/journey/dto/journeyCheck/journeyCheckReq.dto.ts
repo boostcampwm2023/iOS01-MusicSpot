@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { UUID } from 'crypto';
 import { IsCoordinate } from 'src/common/decorator/coordinate.decorator';
 
 export class CheckJourneyDTO {
@@ -9,8 +10,8 @@ export class CheckJourneyDTO {
     description: '유저 id',
     required: true,
   })
-  @IsString()
-  readonly userId: string;
+  @IsUUID()
+  readonly userId: UUID;
 
   @ApiProperty({
     example: [37.555946, 126.972384],

@@ -1,6 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsDateString } from 'class-validator';
-import { IsCoordinate } from '../../common/decorator/coordinate.decorator';
+import {
+  IsString,
+  IsDateString,
+  ValidateNested,
+  IsDefined,
+} from 'class-validator';
+import { IsCoordinate } from '../../../common/decorator/coordinate.decorator';
+import { Type } from 'class-transformer';
+import { SongDTO } from '../song/song.dto';
+
 export class EndJourneyDTO {
   @ApiProperty({
     example: '655efda2fdc81cae36d20650',
@@ -29,7 +37,7 @@ export class EndJourneyDTO {
     required: true,
   })
   @IsDateString()
-  readonly timestamp: string;
+  readonly endTimestamp: string;
 
   @ApiProperty({
     example: '여정 제목',
@@ -38,4 +46,9 @@ export class EndJourneyDTO {
   })
   @IsString()
   readonly title: string;
+
+  @ValidateNested()
+  @Type(() => SongDTO)
+  @IsDefined()
+  readonly song: SongDTO;
 }

@@ -8,20 +8,25 @@ import {
   Query,
 } from '@nestjs/common';
 import { JourneyService } from '../service/journey.service';
-import { StartJourneyDTO } from '.././dto/journeyStart.dto';
+
+import { StartJourneyReqDTO } from '../dto/journeyStart/journeyStartReq.dto';
+
 import {
-  ApiBody,
   ApiCreatedResponse,
   ApiOperation,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 import { Journey } from '../schema/journey.schema';
-import { EndJourneyDTO } from '.././dto/journeyEnd.dto';
-import { RecordJourneyDTO } from '.././dto/journeyRecord.dto';
-import { CheckJourneyDTO } from '../dto/journeyCheck.dto';
-import { EndJourneyResponseDTO } from '../dto/journeyEndResponse.dto';
-import { CheckJourneyResponseDTO } from '../dto/journeyCheckResponse.dto';
+import { EndJourneyDTO } from '../dto/journeyEnd/journeyEndReq.dto';
+import { RecordJourneyDTO } from '../dto/journeyRecord/journeyRecordReq.dto';
+import { CheckJourneyDTO } from '../dto/journeyCheck/journeyCheckReq.dto';
+import { EndJourneyResponseDTO } from '../dto/journeyEnd/journeyEndRes.dto';
+import { CheckJourneyResponseDTO } from '../dto/journeyCheck/journeyCheckRes.dto';
+import { RecordJourneyResponseDTO } from '../dto/journeyRecord/journetRecordRes.dto';
+import { StartJourneyResDTO } from '../dto/journeyStart/journeyStartRes.dto';
+import { UUID } from 'crypto';
+
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
@@ -34,10 +39,10 @@ export class JourneyController {
   })
   @ApiCreatedResponse({
     description: '생성된 여정 데이터를 반환',
-    type: Journey,
+    type: StartJourneyResDTO,
   })
   @Post('start')
-  async create(@Body() startJourneyDTO: StartJourneyDTO): Promise<Journey> {
+  async create(@Body() startJourneyDTO: StartJourneyReqDTO) {
     return await this.journeyService.create(startJourneyDTO);
   }
 
@@ -46,7 +51,7 @@ export class JourneyController {
     description: '여정을 종료합니다.',
   })
   @ApiCreatedResponse({
-    description: '현재는 좌표 데이터의 길이를 반환, 추후 참 거짓으로 변경 예정',
+    description: '여정 종료 정보 반환',
     type: EndJourneyResponseDTO,
   })
   @Post('end')
@@ -60,7 +65,7 @@ export class JourneyController {
   })
   @ApiCreatedResponse({
     description: '생성된 여정 데이터를 반환',
-    type: Journey,
+    type: RecordJourneyResponseDTO,
   })
   @Post('record')
   async record(@Body() recordJourneyDTO: RecordJourneyDTO) {
@@ -101,7 +106,7 @@ export class JourneyController {
   @Get('check')
   @UsePipes(ValidationPipe)
   async checkGet(
-    @Query('userId') userId: string,
+    @Query('userId') userId: UUID,
     @Query('minCoordinate') minCoordinate: number[],
     @Query('maxCoordinate') maxCoordinate: number[],
   ) {
@@ -125,5 +130,18 @@ export class JourneyController {
   @UsePipes(ValidationPipe) //유효성 체크
   async checkPost(@Body() checkJourneyDTO: CheckJourneyDTO) {
     return await this.journeyService.checkJourney(checkJourneyDTO);
+  }
+
+  @ApiOperation({
+    summary: '최근 여정 조회 API',
+    description: '진행 중인 여정이 있었는 지 확인',
+  })
+  @ApiCreatedResponse({
+    description: '사용자가 진행중이었던 여정 정보',
+    type: Journey,
+  })
+  @Get('loadLastData')
+  async loadLastData(@Query('userId') userId: string) {
+    return await this.journeyService.loadLastJourney(userId);
   }
 }
