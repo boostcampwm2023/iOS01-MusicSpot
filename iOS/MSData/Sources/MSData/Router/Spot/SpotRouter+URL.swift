@@ -12,7 +12,9 @@ import MSNetworking
 extension SpotRouter {
     
     public var baseURL: String {
-        let urlString = self.fetchBaseURLFromPlist(from: Bundle.module)
+        guard let urlString = self.fetchBaseURLFromPlist(from: Bundle.module) else {
+            return ""
+        }
         
         return urlString.appending("/spot")
     }
