@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsCoordinate } from '../../common/decorator/coordinate.decorator';
+import { IsCoordinate } from '../../../common/decorator/coordinate.decorator';
 export class RecordJourneyResponseDTO {
   @ApiProperty({
     example: [37.555946, 126.972384],

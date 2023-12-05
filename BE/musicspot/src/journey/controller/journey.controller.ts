@@ -16,12 +16,12 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Journey } from '../schema/journey.schema';
-import { EndJourneyDTO } from '../dto/journeyEnd.dto';
-import { RecordJourneyDTO } from '../dto/journeyRecord.dto';
-import { CheckJourneyDTO } from '../dto/journeyCheck.dto';
-import { EndJourneyResponseDTO } from '../dto/journeyEndResponse.dto';
-import { CheckJourneyResponseDTO } from '../dto/journeyCheckResponse.dto';
-import { RecordJourneyResponseDTO } from '../dto/journetRecordResponse.dto';
+import { EndJourneyDTO } from '../dto/journeyEnd/journeyEndReq.dto';
+import { RecordJourneyDTO } from '../dto/journeyRecord/journeyRecordReq.dto';
+import { CheckJourneyDTO } from '../dto/journeyCheck/journeyCheckReq.dto';
+import { EndJourneyResponseDTO } from '../dto/journeyEnd/journeyEndRes.dto';
+import { CheckJourneyResponseDTO } from '../dto/journeyCheck/journeyCheckResponse.dto';
+import { RecordJourneyResponseDTO } from '../dto/journeyRecord/journetRecordRes.dto';
 
 @Controller('journey')
 @ApiTags('journey 관련 API')

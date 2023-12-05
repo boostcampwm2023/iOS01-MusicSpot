@@ -5,9 +5,9 @@ import { StartJourneyDTO } from '../dto/journeyStart/journeyStart.dto';
 import { Journey } from '../schema/journey.schema';
 
 import { User } from '../../user/schema/user.schema';
-import { EndJourneyDTO } from '../dto/journeyEnd.dto';
-import { RecordJourneyDTO } from '../dto/journeyRecord.dto';
-import { CheckJourneyDTO } from '../dto/journeyCheck.dto';
+import { EndJourneyDTO } from '../dto/journeyEnd/journeyEndReq.dto';
+import { RecordJourneyDTO } from '../dto/journeyRecord/journeyRecordReq.dto';
+import { CheckJourneyDTO } from '../dto/journeyCheck/journeyCheckReq.dto';
 import { JourneyNotFoundException } from '../../filters/journey.exception';
 import { UserNotFoundException } from '../../filters/user.exception';
 import { Song } from '../schema/song.schema';

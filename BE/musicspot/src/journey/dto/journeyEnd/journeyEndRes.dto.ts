@@ -8,8 +8,8 @@ import {
   IsNumber,
 } from 'class-validator';
 
-import { IsCoordinate } from '../../common/decorator/coordinate.decorator';
-import { Song } from '../schema/song.schema';
+import { IsCoordinate } from '../../../common/decorator/coordinate.decorator';
+import { Song } from '../../schema/song.schema';
 
 export class EndJourneyResponseDTO {
   @ApiProperty({

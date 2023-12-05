@@ -5,7 +5,7 @@ import { Journey } from '../schema/journey.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import { StartJourneyDTO } from '../dto/journeyStart/journeyStart.dto';
 import { UserService } from '../../user/serivce/user.service';
-import { EndJourneyDTO } from '../dto/journeyEnd.dto';
+import { EndJourneyDTO } from '../dto/journeyEnd/journeyEndReq.dto';
 import { UserNotFoundException } from '../../filters/user.exception';
 
 let service: JourneyService;

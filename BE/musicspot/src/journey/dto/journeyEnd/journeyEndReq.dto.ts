@@ -5,9 +5,9 @@ import {
   ValidateNested,
   IsDefined,
 } from 'class-validator';
-import { IsCoordinate } from '../../common/decorator/coordinate.decorator';
+import { IsCoordinate } from '../../../common/decorator/coordinate.decorator';
 import { Type } from 'class-transformer';
-import { SongDTO } from './song.dto';
+import { SongDTO } from '../song/song.dto';
 
 export class EndJourneyDTO {
   @ApiProperty({
