@@ -8,7 +8,9 @@ import {
   Query,
 } from '@nestjs/common';
 import { JourneyService } from '../service/journey.service';
-import { StartJourneyDTO } from '../dto/journeyStart/journeyStart.dto';
+
+import { StartJourneyReqDTO } from '../dto/journeyStart/journeyStartReq.dto';
+
 import {
   ApiCreatedResponse,
   ApiOperation,
@@ -22,6 +24,9 @@ import { CheckJourneyDTO } from '../dto/journeyCheck/journeyCheckReq.dto';
 import { EndJourneyResponseDTO } from '../dto/journeyEnd/journeyEndRes.dto';
 import { CheckJourneyResponseDTO } from '../dto/journeyCheck/journeyCheckRes.dto';
 import { RecordJourneyResponseDTO } from '../dto/journeyRecord/journetRecordRes.dto';
+import { StartJourneyResDTO } from '../dto/journeyStart/journeyStartRes.dto';
+import { UUID } from 'crypto';
+
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
@@ -34,12 +39,10 @@ export class JourneyController {
   })
   @ApiCreatedResponse({
     description: '생성된 여정 데이터를 반환',
-    type: Journey,
+    type: StartJourneyResDTO,
   })
   @Post('start')
-  async create(
-    @Body() startJourneyDTO: StartJourneyDTO,
-  ): Promise<StartJourneyDTO> {
+  async create(@Body() startJourneyDTO: StartJourneyReqDTO) {
     return await this.journeyService.create(startJourneyDTO);
   }
 
@@ -48,8 +51,7 @@ export class JourneyController {
     description: '여정을 종료합니다.',
   })
   @ApiCreatedResponse({
-    description:
-      '현재는 좌표 데이터의 길이를 2반환, 추후 참 거짓으로 변경 예정',
+    description: '여정 종료 정보 반환',
     type: EndJourneyResponseDTO,
   })
   @Post('end')
@@ -104,7 +106,7 @@ export class JourneyController {
   @Get('check')
   @UsePipes(ValidationPipe)
   async checkGet(
-    @Query('userId') userId: string,
+    @Query('userId') userId: UUID,
     @Query('minCoordinate') minCoordinate: number[],
     @Query('maxCoordinate') maxCoordinate: number[],
   ) {

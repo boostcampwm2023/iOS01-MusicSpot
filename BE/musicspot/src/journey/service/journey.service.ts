@@ -1,7 +1,8 @@
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
-import { StartJourneyDTO } from '../dto/journeyStart/journeyStart.dto';
+
+import { StartJourneyReqDTO } from '../dto/journeyStart/journeyStartReq.dto';
 import { Journey } from '../schema/journey.schema';
 
 import { User } from '../../user/schema/user.schema';
@@ -20,7 +21,7 @@ export class JourneyService {
     @InjectModel(Journey.name) private journeyModel: Model<Journey>,
     @InjectModel(User.name) private userModel: Model<User>,
   ) {}
-  async insertJourneyData(startJourneyDTO: StartJourneyDTO) {
+  async insertJourneyData(startJourneyDTO: StartJourneyReqDTO) {
     const journeyData: Journey = {
       ...startJourneyDTO,
       coordinates: [startJourneyDTO.coordinate],
@@ -46,17 +47,17 @@ export class JourneyService {
     }
     return result;
   }
-  async create(startJourneyDTO: StartJourneyDTO): Promise<StartJourneyDTO> {
+  
+  async create(startJourneyDTO: StartJourneyReqDTO) {
     const createdJourneyData = await this.insertJourneyData(startJourneyDTO);
     const updateUserInfo = await this.pushJourneyIdToUser(
       createdJourneyData._id,
       startJourneyDTO.userId,
     );
-    const { coordinates, journeyMetadata } = createdJourneyData;
+    const { coordinates, journeyMetadata, _id } = createdJourneyData;
     const [coordinate] = coordinates;
     const { startTimestamp } = journeyMetadata;
-    const { userId } = updateUserInfo;
-    return { coordinate, startTimestamp, userId };
+    return { coordinate, startTimestamp, journeyId: _id };
   }
 
   async end(endJourneyDTO: EndJourneyDTO) {
@@ -118,7 +119,7 @@ export class JourneyService {
 
   async checkJourney(checkJourneyDTO: CheckJourneyDTO) {
     const { userId, minCoordinate, maxCoordinate } = checkJourneyDTO;
-    const user = await this.userModel.findById(userId).lean();
+    const user = await this.userModel.findOne({ userId }).lean();
 
     if (!user) {
       throw new UserNotFoundException();
