@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDateString } from 'class-validator';
 import { IsCoordinate } from '../../../common/decorator/coordinate.decorator';
 import { UUID } from 'crypto';
-export class StartJourneyDTO {
+export class StartJourneyReqDTO {
   @ApiProperty({
     example: [37.555946, 126.972384],
     description: '위치 좌표',
