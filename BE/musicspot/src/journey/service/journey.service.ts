@@ -10,7 +10,7 @@ import { RecordJourneyDTO } from '../dto/journeyRecord.dto';
 import { CheckJourneyDTO } from '../dto/journeyCheck.dto';
 import { JourneyNotFoundException } from '../../filters/journey.exception';
 import { UserNotFoundException } from '../../filters/user.exception';
-
+import { Song } from '../schema/song.schema';
 @Injectable()
 export class JourneyService {
   constructor(
@@ -24,6 +24,7 @@ export class JourneyService {
       spots: [],
       coordinates: [startJourneyDTO.coordinate],
       endTime: '',
+      song: {},
     };
     const createdJourneyData = new this.journeyModel(journeyData);
     return await createdJourneyData.save();
@@ -51,7 +52,7 @@ export class JourneyService {
   }
 
   async end(endJourneyDTO: EndJourneyDTO) {
-    const { journeyId, title, coordinate, endTime } = endJourneyDTO;
+    const { journeyId, title, coordinate, endTime, song } = endJourneyDTO;
     const coordinateToAdd = Array.isArray(coordinate[0])
       ? coordinate
       : [coordinate];
@@ -59,7 +60,7 @@ export class JourneyService {
       .findOneAndUpdate(
         { _id: journeyId },
         {
-          $set: { title, endTime },
+          $set: { title, endTime, song },
           $push: { coordinates: { $each: coordinateToAdd } },
         },
         { new: true },
