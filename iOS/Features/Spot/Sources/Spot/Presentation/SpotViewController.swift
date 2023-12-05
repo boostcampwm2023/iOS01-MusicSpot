@@ -50,13 +50,19 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
             static let trailingInset: CGFloat = 30.0
             static let radius: CGFloat = width / 2
         }
+        
+        // back button
+        enum BackButton {
+            static let height: CGFloat = 35.0
+            static let width: CGFloat = 35.0
+            static let inset: CGFloat = 10.0
+        }
     }
     
     // MARK: - Properties
     
     public weak var navigationDelegate: SpotNavigationDelegate?
     private let spotViewModel = SpotViewModel()
-    
     private let spotSaveViewController = SpotSaveViewController()
     
     // MARK: - Properties: Networking
@@ -79,12 +85,7 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     
     // MARK: - UI Components
     
-    private let navigationBarBackgroundView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .msColor(.componentBackground)
-        view.isUserInteractionEnabled = false
-        return view
-    }()
+    private let backButton = UIButton()
     private let cameraView = CameraView()
     private let shotButton = UIButton()
     private let galleryButton = UIButton()
@@ -95,11 +96,6 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.configure()
-    }
-    
-    public override func viewIsAppearing(_ animated: Bool) {
-        super.viewIsAppearing(animated)
-        self.navigationController?.isNavigationBarHidden = false
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -128,7 +124,7 @@ private extension SpotViewController {
             self.shotButton,
             self.galleryButton,
             self.swapButton,
-            self.navigationBarBackgroundView
+            self.backButton
         ].forEach {
             self.view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -143,9 +139,9 @@ private extension SpotViewController {
     
     func configureCameraViewLayout() {
         NSLayoutConstraint.activate([
-            self.cameraView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.cameraView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.cameraView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor,
+            self.cameraView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.cameraView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            self.cameraView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor,
                                                     constant: -Metric.CameraView.bottomInset),
             self.cameraView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
         ])
@@ -188,10 +184,13 @@ private extension SpotViewController {
     
     func configureNavigationBarBackgroundViewLayout() {
         NSLayoutConstraint.activate([
-            self.navigationBarBackgroundView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.navigationBarBackgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.navigationBarBackgroundView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            self.navigationBarBackgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+            self.backButton.heightAnchor.constraint(equalToConstant: Metric.BackButton.height),
+            self.backButton.widthAnchor.constraint(equalToConstant: Metric.BackButton.width),
+            
+            self.backButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor,
+                                                 constant: Metric.BackButton.inset),
+            self.backButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor,
+                                                     constant: Metric.BackButton.inset)
         ])
     }
     
@@ -219,6 +218,12 @@ private extension SpotViewController {
         self.swapButton.setImage(UIImage(systemName: "arrow.triangle.2.circlepath"), for: .normal)
         self.swapButton.tintColor = .white
         
+        self.backButton.backgroundColor = .darkGray
+        self.backButton.alpha = 0.5
+        self.backButton.layer.cornerRadius = Metric.SwapButton.radius
+        self.backButton.setImage(UIImage(systemName: "xmark"), for: .normal)
+        self.backButton.tintColor = .white
+        
         self.spotSaveViewController.modalPresentationStyle = .fullScreen
     }
     
@@ -232,7 +237,10 @@ private extension SpotViewController {
         self.configureCameraSetting()
         self.configureShotButtonAction()
         self.configureSwapButtonAction()
+        self.configureBackButtonAction()
         self.configureGalleryButtonAction()
+        
+//        self.configure
     }
     
     func configureShotButtonAction() {
@@ -256,6 +264,13 @@ private extension SpotViewController {
         self.galleryButton.addAction(galleryButtonAction, for: .touchUpInside)
     }
     
+    func configureBackButtonAction() {
+        let backButtonAction = UIAction(handler: { _ in
+            self.backButtonTapped()
+        })
+        self.backButton.addAction(backButtonAction, for: .touchUpInside)
+    }
+    
     private func configureCameraSetting() {
         self.spotViewModel.preset(screen: cameraView)
     }
@@ -277,6 +292,11 @@ private extension SpotViewController {
     func galleryButtonTapped() {
         self.navigationDelegate?.presentPhotos(from: self)
     }
+    
+    func backButtonTapped() {
+        self.navigationDelegate?.popToHome()
+    }
+    
 }
 
 // MARK: - Configuration: Delegate
