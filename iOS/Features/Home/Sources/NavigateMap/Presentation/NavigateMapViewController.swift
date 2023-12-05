@@ -27,8 +27,8 @@ public final class NavigateMapViewController: UIViewController {
     let mapView = MapView()
     
     /// HomeMap 내 우상단 3버튼 View
-    private lazy var buttonStackView: NavigateMapButtonView = {
-        let stackView = NavigateMapButtonView()
+    private lazy var buttonStackView: ButtonStackView = {
+        let stackView = ButtonStackView()
         stackView.delegate = self
         return stackView
     }()
@@ -272,7 +272,7 @@ extension NavigateMapViewController: NavigateMapButtonViewDelegate {
         self.delegate?.mapButtonDidTap()
     }
     
-    public func locationButtonDidTap() {
+    public func userLocationButtonDidTap() {
         self.delegate?.locationButtonDidTap()
     }
     
