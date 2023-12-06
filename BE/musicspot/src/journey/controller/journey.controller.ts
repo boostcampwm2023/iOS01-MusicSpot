@@ -6,6 +6,8 @@ import {
   ValidationPipe,
   Get,
   Query,
+  Res,
+  Req,
 } from '@nestjs/common';
 import { JourneyService } from '../service/journey.service';
 
