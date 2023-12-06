@@ -18,15 +18,18 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Journey } from '../schema/journey.schema';
-import { EndJourneyDTO } from '../dto/journeyEnd/journeyEndReq.dto';
-import { RecordJourneyDTO } from '../dto/journeyRecord/journeyRecordReq.dto';
 import { CheckJourneyDTO } from '../dto/journeyCheck/journeyCheckReq.dto';
-import { EndJourneyResponseDTO } from '../dto/journeyEnd/journeyEndRes.dto';
 import { CheckJourneyResponseDTO } from '../dto/journeyCheck/journeyCheckRes.dto';
-import { RecordJourneyResponseDTO } from '../dto/journeyRecord/journetRecordRes.dto';
 import { StartJourneyResDTO } from '../dto/journeyStart/journeyStartRes.dto';
 import { UUID } from 'crypto';
-
+import {
+  EndJourneyReqDTO,
+  EndJourneyResDTO,
+} from '../dto/journeyEnd/journeyEnd.dto';
+import {
+  RecordJourneyReqDTO,
+  RecordJourneyResDTO,
+} from '../dto/journeyRecord/journeyRecord.dto';
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
@@ -52,11 +55,11 @@ export class JourneyController {
   })
   @ApiCreatedResponse({
     description: '여정 종료 정보 반환',
-    type: EndJourneyResponseDTO,
+    type: EndJourneyResDTO,
   })
   @Post('end')
-  async end(@Body() endJourneyDTO: EndJourneyDTO) {
-    return await this.journeyService.end(endJourneyDTO);
+  async end(@Body() endJourneyReqDTO: EndJourneyReqDTO) {
+    return await this.journeyService.end(endJourneyReqDTO);
   }
 
   @ApiOperation({
@@ -65,10 +68,10 @@ export class JourneyController {
   })
   @ApiCreatedResponse({
     description: '생성된 여정 데이터를 반환',
-    type: RecordJourneyResponseDTO,
+    type: RecordJourneyResDTO,
   })
   @Post('record')
-  async record(@Body() recordJourneyDTO: RecordJourneyDTO) {
+  async record(@Body() recordJourneyDTO: RecordJourneyReqDTO) {
     const returnData =
       await this.journeyService.pushCoordianteToJourney(recordJourneyDTO);
     return returnData;
