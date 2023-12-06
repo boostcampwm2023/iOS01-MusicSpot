@@ -11,3 +11,13 @@ export class SpotNotFoundException extends BaseException {
     this.message = SpotExceptionMessageEnum.SpotNotFound;
   }
 }
+
+export class SpotRecordFail extends BaseException {
+  constructor() {
+    super(
+      SpotExceptionCodeEnum.SpotRecordFail,
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
+    this.message = SpotExceptionMessageEnum.SpotRecordFail;
+  }
+}
