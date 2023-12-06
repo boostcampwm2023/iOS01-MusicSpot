@@ -9,6 +9,7 @@ import CoreLocation
 import UIKit
 import MapKit
 
+import MSDomain
 import MSUIKit
 
 public final class NavigateMapViewController: UIViewController {
@@ -17,7 +18,7 @@ public final class NavigateMapViewController: UIViewController {
     
     private enum Metric {
         
-        static let buttonStackTopSpacing: CGFloat = 50.0
+        static let buttonStackTopSpacing: CGFloat = 55.0
         static let buttonStackTrailingSpacing: CGFloat = 16.0
         
     }
@@ -36,10 +37,16 @@ public final class NavigateMapViewController: UIViewController {
     
     // MARK: - Properties
     
+    public var currentCoordinate: Coordinate? {
+        let centerCoordinate = self.mapView.centerCoordinate
+        return Coordinate(latitude: centerCoordinate.latitude,
+                          longitude: centerCoordinate.longitude)
+    }
+    
     // 임시 위치 정보
     private let tempCoordinate = CLLocationCoordinate2D(latitude: 37.495120492289026, longitude: 126.9553042366186)
     
-    public let viewModel: NavigateMapViewModel?
+    private let viewModel: NavigateMapViewModel?
     
     private var timer: Timer?
     private var previousCoordinate: CLLocationCoordinate2D?

@@ -9,6 +9,7 @@ import UIKit
 
 import JourneyList
 import MSConstants
+import MSDesignSystem
 import MSUIKit
 import MSUserDefaults
 import NavigateMap
@@ -22,12 +23,21 @@ public final class HomeViewController: HomeBottomSheetViewController {
     private enum Typo {
         
         static let startButtonTitle = "시작하기"
+        static let refreshButtonTitle = "여기서 다시 검색"
         
     }
     
     private enum Metric {
         
         static let startButtonBottomInset: CGFloat = 16.0
+        
+        enum RefreshButton {
+            
+            static let topSpacing: CGFloat = 80.0
+            static let horizontalEdgeInsets: CGFloat = 24.0
+            static let verticalEdgeInsets: CGFloat = 10.0
+            
+        }
         
     }
     
@@ -37,6 +47,23 @@ public final class HomeViewController: HomeBottomSheetViewController {
         let button = MSButton.primary()
         button.cornerStyle = .rounded
         button.title = Typo.startButtonTitle
+        return button
+    }()
+    
+    private let refreshButton: UIButton = {
+        var configuration = UIButton.Configuration.filled()
+        var container = AttributeContainer()
+        container.font = .msFont(.boldCaption)
+        configuration.attributedTitle = AttributedString(Typo.refreshButtonTitle, attributes: container)
+        configuration.contentInsets = NSDirectionalEdgeInsets(top: Metric.RefreshButton.verticalEdgeInsets,
+                                                              leading: Metric.RefreshButton.horizontalEdgeInsets,
+                                                              bottom: Metric.RefreshButton.verticalEdgeInsets,
+                                                              trailing: Metric.RefreshButton.horizontalEdgeInsets)
+        configuration.baseBackgroundColor = .msColor(.secondaryButtonBackground).withAlphaComponent(0.8)
+        configuration.baseForegroundColor = .msColor(.secondaryButtonTypo)
+        configuration.cornerStyle = .capsule
+        
+        let button = UIButton(configuration: configuration)
         return button
     }()
     
@@ -60,6 +87,7 @@ public final class HomeViewController: HomeBottomSheetViewController {
         super.viewDidLoad()
         self.configureStyle()
         self.configureLayout()
+        self.configureAction()
     }
     
     public override func viewIsAppearing(_ animated: Bool) {
@@ -75,38 +103,20 @@ public final class HomeViewController: HomeBottomSheetViewController {
         self.recordJourneyButtonView.isHidden = !self.isRecording
     }
     
-    @objc
-    func startButtonDidTap() {
-        self.isRecording.toggle()
-        self.updateButtonMode()
-    }
-    
-}
-
-// MARK: - UI Configuration
-
-private extension HomeViewController {
-    
-    func configureStyle() {
-        self.startButton.addTarget(self, action: #selector(startButtonDidTap), for: .touchUpInside)
-    }
-    
-    func configureLayout() {
-        self.view.addSubview(self.startButton)
-        self.startButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            self.startButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.startButton.bottomAnchor.constraint(equalTo: self.bottomSheetViewController.view.topAnchor,
-                                                     constant: -Metric.startButtonBottomInset)
-        ])
+    private func configureAction() {
+        let startButtonAction = UIAction { [weak self] _ in
+            self?.isRecording.toggle()
+            self?.updateButtonMode()
+        }
+        self.startButton.addAction(startButtonAction, for: .touchUpInside)
         
-        self.view.addSubview(self.recordJourneyButtonView)
-        self.recordJourneyButtonView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            self.recordJourneyButtonView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.recordJourneyButtonView.bottomAnchor.constraint(equalTo: self.bottomSheetViewController.view.topAnchor,
-                                                                 constant: -Metric.startButtonBottomInset)
-        ])
+        let refreshButtonAction = UIAction { [weak self] _ in
+            guard let coordinate = self?.contentViewController.currentCoordinate else {
+                return
+            }
+            self?.bottomSheetViewController.fetchJourneys(from: coordinate)
+        }
+        self.refreshButton.addAction(refreshButtonAction, for: .touchUpInside)
     }
     
 }
@@ -125,6 +135,42 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
     
     public func nextButtonDidTap(_ button: MSRectButton) {
         self.navigationDelegate?.navigateToSelectSong()
+    }
+    
+}
+
+// MARK: - UI Configuration
+
+private extension HomeViewController {
+    
+    func configureStyle() {
+        
+    }
+    
+    func configureLayout() {
+        self.view.addSubview(self.startButton)
+        self.startButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.startButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.startButton.bottomAnchor.constraint(equalTo: self.bottomSheetViewController.view.topAnchor,
+                                                     constant: -Metric.startButtonBottomInset)
+        ])
+        
+        self.view.addSubview(self.recordJourneyButtonView)
+        self.recordJourneyButtonView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.recordJourneyButtonView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.recordJourneyButtonView.bottomAnchor.constraint(equalTo: self.bottomSheetViewController.view.topAnchor,
+                                                                 constant: -Metric.startButtonBottomInset)
+        ])
+        
+        self.view.insertSubview(self.refreshButton, belowSubview: self.bottomSheetViewController.view)
+        self.refreshButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.refreshButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor,
+                                                    constant: Metric.RefreshButton.topSpacing),
+            self.refreshButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+        ])
     }
     
 }

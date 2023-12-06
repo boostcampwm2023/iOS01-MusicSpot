@@ -9,7 +9,19 @@ import Combine
 import UIKit
 
 import MSCacheStorage
+import MSDomain
 import MSUIKit
+
+public protocol MapCoordinateDataSource: AnyObject {
+    
+    /// 지도를 사용하는 ViewController로부터 Coordinate 정보를 받아옵니다.
+    /// - Parameters:
+    ///   - requestingViewController: 정보를 요청하는 ViewController
+    ///   - usingCoordinate: 요청하는 ViewController가 사용하고 있는 현재 Coordinate
+    /// - Returns: 지도 ViewController의 현재 Coordinate를 반환합니다. 변화가 없거나 미미하다면 nil을 반환할 수 있습니다.
+    func currentCoordinate(_ requestingViewController: UIViewController, usingCoordinate: Coordinate) -> Coordinate?
+    
+}
 
 public final class JourneyListViewController: BaseViewController {
     
@@ -39,6 +51,8 @@ public final class JourneyListViewController: BaseViewController {
     // MARK: - Properties
     
     public weak var navigationDelegate: JourneyListNavigationDelegate?
+    public weak var coordinateDataSource: MapCoordinateDataSource?
+    
     
     private let cache: MSCacheStorage
     
@@ -226,9 +240,9 @@ extension JourneyListViewController: UICollectionViewDelegate {
 
 // MARK: - Preview
 
+#if DEBUG
 import MSData
 import MSDesignSystem
-import MSData
 import MSNetworking
 @available(iOS 17, *)
 #Preview {
@@ -238,3 +252,4 @@ import MSNetworking
     let testViewController = JourneyListViewController(viewModel: testViewModel)
     return testViewController
 }
+#endif

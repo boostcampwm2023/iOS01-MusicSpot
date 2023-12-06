@@ -9,6 +9,7 @@ import Combine
 import Foundation
 
 import MSData
+import MSDomain
 
 public final class JourneyListViewModel {
     

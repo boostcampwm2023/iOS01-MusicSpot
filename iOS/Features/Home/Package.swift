@@ -29,6 +29,7 @@ private enum Target {
 private enum Dependency {
     
     static let journeyList = "JourneyList"
+    static let msDomain = "MSDomain"
     static let msData = "MSData"
     static let msUIKit = "MSUIKit"
     static let msCoreKit = "MSCoreKit"
@@ -53,6 +54,8 @@ let package = Package(
     dependencies: [
         .package(name: Dependency.journeyList,
                  path: Dependency.journeyList.fromCurrentPath),
+        .package(name: Dependency.msDomain,
+                 path: Dependency.msDomain.fromRootPath),
         .package(name: Dependency.msData,
                  path: Dependency.msData.fromRootPath),
         .package(name: Dependency.msUIKit,
@@ -64,6 +67,8 @@ let package = Package(
         .target(name: Target.home,
                 dependencies: [
                     .target(name: Target.navigateMap),
+                    .product(name: Dependency.msDomain,
+                             package: Dependency.msDomain),
                     .product(name: Dependency.journeyList,
                              package: Dependency.journeyList),
                     .product(name: Dependency.msUserDefaults,
@@ -71,6 +76,8 @@ let package = Package(
                 ]),
         .target(name: Target.navigateMap,
                 dependencies: [
+                    .product(name: Dependency.msDomain,
+                             package: Dependency.msDomain),
                     .product(name: Dependency.msData,
                              package: Dependency.msData),
                     .product(name: Dependency.msUIKit,
