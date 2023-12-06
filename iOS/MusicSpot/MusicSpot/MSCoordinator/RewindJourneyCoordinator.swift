@@ -7,6 +7,7 @@
 
 import UIKit
 
+import MSData
 import RewindJourney
 
 final class RewindJourneyCoordinator: Coordinator {
@@ -28,15 +29,9 @@ final class RewindJourneyCoordinator: Coordinator {
     // MARK: - Functions
     
     func start() {
-        let rewindJourneyViewController = RewindJourneyViewController()
-        rewindJourneyViewController.images = [
-            .msIcon(.arrowDown)!,
-            .msIcon(.addLocation)!,
-            .msIcon(.calendar)!,
-            .msIcon(.arrowDown)!,
-            .msIcon(.arrowUp)!
-        ]
-//        rewindViewController.delegate = self
+        let repository = SpotRepositoryImplementation()
+        let viewModel = RewindJourneyViewModel(repository: repository)
+        let rewindJourneyViewController = RewindJourneyViewController(viewModel: viewModel)
         self.navigationController.pushViewController(rewindJourneyViewController, animated: true)
     }
     
