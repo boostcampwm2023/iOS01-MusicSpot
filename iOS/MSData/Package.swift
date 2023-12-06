@@ -30,6 +30,7 @@ private enum Dependency {
     
     static let msDomain = "MSDomain"
     static let msNetworking = "MSNetworking"
+    static let msKeychainStorage = "MSKeychainStorage"
     static let msCoreKit = "MSCoreKit"
     
 }
@@ -57,6 +58,8 @@ let package = Package(
                     .product(name: Dependency.msDomain,
                              package: Dependency.msDomain),
                     .product(name: Dependency.msNetworking,
+                             package: Dependency.msCoreKit),
+                    .product(name: Dependency.msKeychainStorage,
                              package: Dependency.msCoreKit)
                 ],
                 resources: [
