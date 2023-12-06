@@ -10,6 +10,7 @@ import Foundation
 public protocol Session {
     
     func dataTaskPublisher(for request: URLRequest) -> URLSession.DataTaskPublisher
+    func data(for request: URLRequest, delegate: URLSessionTaskDelegate?) async throws -> (Data, URLResponse)
     
 }
 

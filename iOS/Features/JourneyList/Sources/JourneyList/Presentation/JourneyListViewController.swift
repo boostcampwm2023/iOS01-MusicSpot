@@ -9,6 +9,7 @@ import Combine
 import UIKit
 
 import MSCacheStorage
+import MSDomain
 import MSUIKit
 
 public final class JourneyListViewController: BaseViewController {
@@ -104,8 +105,8 @@ public final class JourneyListViewController: BaseViewController {
     
     // MARK: - Functions
     
-    public func fetchJourneys(from coordinate: Coordinate) {
-        self.viewModel.trigger(.fetchJourney(at: coordinate))
+    public func fetchJourneys(from coordinates: (Coordinate, Coordinate)) {
+        self.viewModel.trigger(.fetchJourney(at: coordinates))
     }
     
     // MARK: - UI Configuration
@@ -186,7 +187,7 @@ extension JourneyListViewController: UICollectionViewDelegate {
     private func configureDataSource() -> JourneyListDataSource {
         // TODO: 최적화 & 캐싱
         let cellRegistration = JourneyCellRegistration { cell, indexPath, itemIdentifier in
-            let cellModel = JourneyCellModel(location: itemIdentifier.location,
+            let cellModel = JourneyCellModel(location: itemIdentifier.title,
                                              date: itemIdentifier.date,
                                              songTitle: itemIdentifier.song.title,
                                              songArtist: itemIdentifier.song.artist)
@@ -226,9 +227,9 @@ extension JourneyListViewController: UICollectionViewDelegate {
 
 // MARK: - Preview
 
+#if DEBUG
 import MSData
 import MSDesignSystem
-import MSData
 import MSNetworking
 @available(iOS 17, *)
 #Preview {
@@ -238,3 +239,4 @@ import MSNetworking
     let testViewController = JourneyListViewController(viewModel: testViewModel)
     return testViewController
 }
+#endif
