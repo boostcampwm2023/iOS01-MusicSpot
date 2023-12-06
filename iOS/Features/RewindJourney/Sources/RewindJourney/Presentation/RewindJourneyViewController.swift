@@ -49,12 +49,7 @@ public final class RewindJourneyViewController: UIViewController {
     // MARK: - Properties
     
     private let viewModel: RewindJourneyViewModel
-    public var images: [UIImage] = [] {
-        didSet {
-//            self.configureProgressbarsLayout()
-//            self.timerRestart()
-        }
-    }
+    public var images: [UIImage] = []
     private let cache: MSCacheStorage
     private var cancellables: Set<AnyCancellable> = []
     private var presentImageIndex: Int? {
@@ -66,6 +61,10 @@ public final class RewindJourneyViewController: UIViewController {
     // MARK: - Properties: Timer
     
     private var timerSubscriber: Set<AnyCancellable> = []
+    
+    // MARK: - Properties: Gesture
+    public weak var navigationDelegate: RewindJourneyNavigationDelegate?
+    var initialTouchPoint = CGPoint(x: 0, y: 0)
     
     // MARK: - UI Components
     
@@ -99,7 +98,7 @@ public final class RewindJourneyViewController: UIViewController {
         self.imageBinding()
         self.configure()
         self.timerBinding()
-        self.viewModel.trigger(.viewNeedsLoaded)
+//        self.viewModel.trigger(.viewNeedsLoaded)
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -159,6 +158,7 @@ public final class RewindJourneyViewController: UIViewController {
         self.configureAction()
         
         self.musicView.configure()
+        self.configureLeftToRightSwipeGesture()
     }
     
     // MARK: - UI Configuration: Layout
