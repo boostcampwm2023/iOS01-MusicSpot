@@ -49,3 +49,21 @@ extension CoordinateDTO: Codable {
     }
     
 }
+
+// MARK: - Domain Mapping
+
+import MSDomain
+
+extension CoordinateDTO {
+    
+    public init(_ domain: Coordinate) {
+        self.latitude = domain.latitude
+        self.longitude = domain.longitude
+    }
+    
+    public func toDomain() -> Coordinate {
+        return Coordinate(latitude: self.latitude,
+                          longitude: self.longitude)
+    }
+    
+}
