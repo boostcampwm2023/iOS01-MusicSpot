@@ -8,9 +8,10 @@
 import UIKit
 import Combine
 
+import MSCacheStorage
 import MSData
 import MSDesignSystem
-import MSNetworking
+import MSLogger
 
 public final class RewindJourneyViewController: UIViewController {
     
@@ -47,18 +48,20 @@ public final class RewindJourneyViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let rewindJourneyViewModel = RewindJourneyViewModel()
-    public var images: [UIImage]?
+    private let viewModel: RewindJourneyViewModel
+    public var images: [UIImage] = [] {
+        didSet {
+//            self.configureProgressbarsLayout()
+//            self.timerRestart()
+        }
+    }
+    private let cache: MSCacheStorage
+    private var cancellables: Set<AnyCancellable> = []
     private var presentImageIndex: Int? {
         didSet {
             self.changeProgressViews()
         }
     }
-    
-    // MARK: - Properties: Networking
-    
-    internal var journeyRouter: Router?
-    private var journeyID: UUID?
     
     // MARK: - Properties: Timer
     
@@ -74,27 +77,69 @@ public final class RewindJourneyViewController: UIViewController {
     private let leftTouchView = UIButton()
     private let rightTouchView = UIButton()
     
+    // MARK: - Initializer
+    
+    public init(viewModel: RewindJourneyViewModel,
+                cache: MSCacheStorage = MSCacheStorage(),
+                nibName nibNameOrNil: String? = nil,
+                bundle nibBundleOrNil: Bundle? = nil) {
+        self.cache = cache
+        self.viewModel = viewModel
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
+    }
+    
     // MARK: - Life Cycle
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        self.timerBinding()
+        self.imageBinding()
         self.configure()
-        self.rewindJourneyViewModel.downloadImages(using: self.journeyRouter, journeyID: self.journeyID)
+        self.timerBinding()
+        self.viewModel.trigger(.viewNeedsLoaded)
     }
     
     public override func viewDidAppear(_ animated: Bool) {
-        self.rewindJourneyViewModel.startTimer()
+        self.viewModel.startTimer()
     }
     
     public override func viewDidDisappear(_ animated: Bool) {
-        self.rewindJourneyViewModel.stopTimer()
+        self.viewModel.stopTimer()
+    }
+    
+    // MARK: - Combine Binding
+    
+    func imageBinding() {
+        self.viewModel.state.stateJourneyPhotoURLs
+            .receive(on: DispatchQueue.main)
+            .sink { photoURLs in
+                for (index, url) in photoURLs.enumerated() {
+                    self.images.append(UIImage())
+                    self.load(url: url, key: index)
+                }
+                self.configureProgressbarsLayout()
+            }
+            .store(in: &self.cancellables)
+    }
+    
+    private func load(url: URL, key: Int) {
+        DispatchQueue.global().async { [weak self] in
+            if let data = try? Data(contentsOf: url),
+               let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    self?.images[key] = image
+                }
+            }
+        }
     }
     
     // MARK: - Timer
     
     private func timerBinding() {
-        self.rewindJourneyViewModel.timerPublisher
+        self.viewModel.timerPublisher
             .sink { [weak self] _ in
                 self?.rightTouchViewTapped()
             }
@@ -102,8 +147,8 @@ public final class RewindJourneyViewController: UIViewController {
     }
     
     private func timerRestart() {
-        self.rewindJourneyViewModel.stopTimer()
-        self.rewindJourneyViewModel.startTimer()
+        self.viewModel.stopTimer()
+        self.viewModel.startTimer()
     }
     
     // MARK: - Configuration
@@ -156,12 +201,16 @@ public final class RewindJourneyViewController: UIViewController {
     }
     
     private func configureProgressbarsLayout() {
-        guard let images else { return }
+        self.progressViews?.forEach { progressView in
+            progressView.removeFromSuperview()
+        }
+        self.progressViews?.removeAll()
+        
         var views = [MSProgressView]()
-        images.forEach {_ in
+        self.images.forEach { _ in
             let progressView = MSProgressView()
             views.append(progressView)
-            stackView.addArrangedSubview(progressView)
+            self.stackView.addArrangedSubview(progressView)
         }
         
         self.progressViews = views
@@ -232,8 +281,8 @@ public final class RewindJourneyViewController: UIViewController {
     }
     
     private func changeProgressViews() {
-        guard let presentIndex = self.presentImageIndex,
-              let images else { return }
+        guard let presentIndex = self.presentImageIndex else { return }
+        if self.images.count == 0 { return }
         
         self.presentImageView.image = images[presentIndex]
         self.preHighlightenProgressView = self.progressViews?[presentIndex]
@@ -262,7 +311,7 @@ public final class RewindJourneyViewController: UIViewController {
     }
     
     @objc private func rightTouchViewTapped() {
-        guard let images, let presentImageIndex else {
+        guard let presentImageIndex else {
             return
         }
         if presentImageIndex < images.count - 1 {
@@ -278,9 +327,8 @@ public final class RewindJourneyViewController: UIViewController {
 @available(iOS 17, *)
 #Preview {
     MSFont.registerFonts()
-    let viewController = RewindJourneyViewController()
-    viewController.images = [UIImage(systemName: "pencil")!,
-                             UIImage(systemName: "pencil")!,
-                             UIImage(systemName: "pencil")!]
-    return viewController
+    let spotRepository = SpotRepositoryImplementation()
+    let rewindJourneyViewModel = RewindJourneyViewModel(repository: spotRepository)
+    let rewindJourneyViewController = RewindJourneyViewController(viewModel: rewindJourneyViewModel)
+    return rewindJourneyViewController
 }

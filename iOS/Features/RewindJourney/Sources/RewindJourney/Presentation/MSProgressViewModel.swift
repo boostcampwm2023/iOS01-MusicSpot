@@ -30,6 +30,7 @@ final class MSProgressViewModel {
     // MARK: - Functions: Timers
 
     internal func startTimer() {
+        print("progressbar reset")
         self.timer = Timer.publish(every: self.timerTimeInterval, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
