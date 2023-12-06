@@ -12,7 +12,9 @@ extension UserRouter {
     public var headers: HTTPHeaders? {
         switch self {
         default:
-            return nil
+            return [
+                (key: "Content-Type", value: "application/json")
+            ]
         }
     }
     
