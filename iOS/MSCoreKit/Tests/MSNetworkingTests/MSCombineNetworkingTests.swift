@@ -1,5 +1,5 @@
 //
-//  MSNetworkingTests.swift
+//  MSCombineNetworkingTests.swift
 //  MSCoreKit
 //
 //  Created by 이창준 on 11/14/23.
@@ -10,7 +10,7 @@ import XCTest
 
 @testable import MSNetworking
 
-final class MSNetworkingTests: XCTestCase {
+final class MSCombineNetworkingTests: XCTestCase {
     
     // MARK: - Properties
     

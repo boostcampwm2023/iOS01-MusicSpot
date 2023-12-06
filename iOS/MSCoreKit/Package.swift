@@ -26,6 +26,7 @@ private enum Target {
     static let msNetworking = "MSNetworking"
     static let msFetcher = "MSFetcher"
     static let msCacheStorage = "MSCacheStorage"
+    static let msKeychainStorage = "MSKeychainStorage"
     
 }
 
@@ -54,7 +55,9 @@ let package = Package(
         .library(name: Target.msFetcher,
                  targets: [Target.msFetcher]),
         .library(name: Target.msCacheStorage,
-                 targets: [Target.msCacheStorage])
+                 targets: [Target.msCacheStorage]),
+        .library(name: Target.msKeychainStorage,
+                 targets: [Target.msKeychainStorage])
     ],
     dependencies: [
         .package(name: Dependency.msFoundation,
@@ -69,7 +72,11 @@ let package = Package(
                              package: Dependency.msFoundation)
                ]),
         .target(name: Target.msPersistentStorage),
-        .target(name: Target.msNetworking),
+        .target(name: Target.msNetworking,
+               dependencies: [
+                .product(name: Dependency.msLogger,
+                         package: Dependency.msFoundation)
+               ]),
         .target(name: Target.msFetcher,
                 dependencies: [
                     .target(name: Target.msPersistentStorage),
@@ -80,6 +87,13 @@ let package = Package(
                     .product(name: Dependency.msConstants,
                              package: Dependency.msFoundation)
                 ]),
+        .target(name: Target.msKeychainStorage,
+               dependencies: [
+                .product(name: Dependency.msLogger,
+                         package: Dependency.msFoundation),
+                .product(name: Dependency.msConstants,
+                         package: Dependency.msFoundation)
+               ]),
 
         // Tests
         .testTarget(name: Target.msPersistentStorage.testTarget,

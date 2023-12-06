@@ -13,9 +13,10 @@ import MSData
 extension Journey {
     
     init(dto: JourneyDTO) {
-        self.location = dto.location
+        self.title = dto.title
         self.spots = dto.spots.map { Spot(dto: $0) }
-        self.date = dto.metaData.date
+        // TODO: API 변경 후 적용
+        self.date = .now
         self.song = Song(dto: dto.song)
     }
     
@@ -23,8 +24,7 @@ extension Journey {
 
 extension Spot {
     
-    init(dto: ResponsibleSpotDTO) {
-        self.id = dto.id
+    init(dto: SpotDTO) {
         self.location = Coordinate(dto: dto.coordinate)
         self.date = .now
         self.photoURL = dto.photoURL
@@ -46,7 +46,7 @@ extension Song {
     init(dto: SongDTO) {
         self.title = dto.title
         self.artist = dto.artist
-        self.albumArtURL = URL(string: dto.artwork)
+        self.albumArtURL = dto.artwork.url
     }
     
 }

@@ -64,14 +64,12 @@ extension SpotCoordinator: SpotNavigationDelegate {
               let spotSaveViewController = presentedViewController as? SpotSaveViewController else {
             return
         }
+        
         spotSaveViewController.dismiss(animated: true)
     }
     
-    func navigateToSelectSong() {
-        let selectSongCoordinator = SelectSongCoordinator(navigationController: self.navigationController)
-        selectSongCoordinator.delegate = self
-        self.childCoordinators.append(selectSongCoordinator)
-        selectSongCoordinator.start()
+    func popToHome() {
+        self.popToHome(from: self)
     }
     
 }
@@ -80,10 +78,10 @@ extension SpotCoordinator: SpotNavigationDelegate {
 
 extension SpotCoordinator: HomeCoordinatorDelegate {
     
-    func popToHomeMap(from coordinator: Coordinator) {
+    func popToHome(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()
         self.navigationController.popViewController(animated: true)
-        self.delegate?.popToHomeMap(from: self)
+        self.delegate?.popToHome(from: self)
     }
     
 }

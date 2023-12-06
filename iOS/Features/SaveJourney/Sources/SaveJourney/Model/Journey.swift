@@ -9,7 +9,7 @@ import Foundation
 
 struct Journey: Hashable {
     
-    let location: String
+    let title: String
     let date: Date
     let spots: [Spot]
     let song: Song

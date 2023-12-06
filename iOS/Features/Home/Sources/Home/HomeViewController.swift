@@ -71,23 +71,8 @@ public final class HomeViewController: HomeBottomSheetViewController {
     // MARK: - Functions
     
     private func updateButtonMode() {
-        UIView.transition(with: startButton, duration: 0.5,
-                          options: .transitionCrossDissolve,
-                          animations: {
-            self.startButton.isHidden = self.isRecording
-                      })
-        UIView.transition(with: recordJourneyButtonView, duration: 0.5,
-                          options: .transitionCrossDissolve,
-                          animations: {
-            self.recordJourneyButtonView.isHidden = !self.isRecording
-                      })
-        if self.startButton.isHidden {
-            setUserLocationToCenter()
-        }
-    }
-    
-    private func setUserLocationToCenter() {
-        
+        self.startButton.isHidden = self.isRecording
+        self.recordJourneyButtonView.isHidden = !self.isRecording
     }
     
     @objc
@@ -131,7 +116,7 @@ private extension HomeViewController {
 extension HomeViewController: RecordJourneyButtonViewDelegate {
     
     public func backButtonDidTap(_ button: MSRectButton) {
-        startButtonDidTap()
+        print("뒤로가기 버튼 클릭")
     }
     
     public func spotButtonDidTap(_ button: MSRectButton) {
