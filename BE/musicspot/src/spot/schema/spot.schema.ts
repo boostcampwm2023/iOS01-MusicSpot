@@ -34,7 +34,7 @@ export class Spot {
     required: true,
   })
   @Prop({ type: String })
-  photoUrl: string;
+  photoKey: string;
 }
 
 export const SpotSchema = SchemaFactory.createForClass(Spot);
