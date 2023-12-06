@@ -73,7 +73,6 @@ public final class NavigateMapViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        self.view = self.mapView
         
         self.locationManager.delegate = self
         self.locationManager.requestWhenInUseAuthorization()
@@ -86,8 +85,9 @@ public final class NavigateMapViewController: UIViewController {
     // MARK: - UI Configuration
     
     private func configureLayout() {
-        self.view.addSubview(self.buttonStackView)
+        self.view = self.mapView
         
+        self.view.addSubview(self.buttonStackView)
         self.buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.buttonStackView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor,
