@@ -48,6 +48,7 @@ final class MSMapView: MKMapView {
                                                      for: annotation)
     }
     
+    @MainActor
     func addAnnotation(title: String, coordinate: CLLocationCoordinate2D, photoData: Data) {
         let annotation = CustomAnnotation(title: title,
                                           coordinate: coordinate,

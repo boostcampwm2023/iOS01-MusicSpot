@@ -113,20 +113,29 @@ public final class NavigateMapViewController: UIViewController {
         }
     }
     
-    func addAnnotations(journeys: [Journey]){
-        journeys.forEach { journey in
-            journey.spots.forEach { spot in
-                Task {
-                    guard let photoData = await MSImageFetcher.shared.fetchImage(from: spot.photoURL,
-                                                                                 forKey: spot.journeyID.uuidString) else {
-                        return
+    func addAnnotations(journeys: [Journey]) {
+        let datas = journeys.flatMap { journey in
+            journey.spots.map { (location: journey.location, spot: $0) }
+        }
+        
+        Task {
+            await withThrowingTaskGroup(of: Bool.self) { group in
+                for (location, spot) in datas {
+                    group.addTask {
+                        guard let photoData = await MSImageFetcher.shared.fetchImage(from: spot.photoURL,
+                                                                                     forKey: spot.journeyID.uuidString) else {
+                            throw ImageFetchError.imageFetchFailed
+                        }
+                        
+                        let coordinate = CLLocationCoordinate2D(latitude: spot.coordinate.latitude,
+                                                                longitude: spot.coordinate.longitude)
+                        
+                        await self.mapView.addAnnotation(title: location,
+                                                         coordinate: coordinate,
+                                                         photoData: photoData)
+                        
+                        return true
                     }
-                    
-                    let coordinate = CLLocationCoordinate2D(latitude: spot.coordinate.latitude,
-                                                            longitude: spot.coordinate.longitude)
-                    self.mapView.addAnnotation(title: journey.location,
-                                               coordinate: coordinate,
-                                               photoData: photoData)
                 }
             }
         }
