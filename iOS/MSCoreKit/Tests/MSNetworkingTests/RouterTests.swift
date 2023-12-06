@@ -39,7 +39,7 @@ final class RouterTests: XCTestCase {
     func test_PathURL을포함하는_Router_생성_성공() {
         struct SUTRouter: Router {
             var baseURL: String { return "https://www.naver.com" }
-            var pathURL: String? { return "/api" }
+            var pathURL: String? { return "api" }
             var method: HTTPMethod { return .get }
             var body: HTTPBody?
             var headers: HTTPHeaders?
@@ -66,7 +66,7 @@ final class RouterTests: XCTestCase {
     func test_Body를포함하는_Router_생성_성공() throws {
         struct SUTRouter: Router {
             var baseURL: String { return "https://www.naver.com" }
-            var pathURL: String? { return "/api" }
+            var pathURL: String? { return "api" }
             var method: HTTPMethod { return .get }
             var body: HTTPBody? { return HTTPBody(content: "Data") }
             var headers: HTTPHeaders?
@@ -96,7 +96,7 @@ final class RouterTests: XCTestCase {
     func test_Header를포함하는_Router_생성_성공() {
         struct SUTRouter: Router {
             var baseURL: String { return "https://www.naver.com" }
-            var pathURL: String? { return "/api" }
+            var pathURL: String? { return "api" }
             var method: HTTPMethod { return .get }
             var body: HTTPBody?
             var headers: HTTPHeaders? { return [(key: "boostcamp", value: "WM8")] }
@@ -125,7 +125,7 @@ final class RouterTests: XCTestCase {
     func test_Query를포함하는_Router_생성_성공() {
         struct SUTRouter: Router {
             var baseURL: String { return "https://www.naver.com" }
-            var pathURL: String? { return "/api" }
+            var pathURL: String? { return "api" }
             var method: HTTPMethod { return .get }
             var body: HTTPBody?
             var headers: HTTPHeaders?

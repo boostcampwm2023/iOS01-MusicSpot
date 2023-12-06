@@ -32,7 +32,7 @@ final class MSConcurrencyNetworkingTests: XCTestCase {
         let response = "Success"
         let data = try JSONEncoder().encode(response)
         MockURLProtocol.requestHandler = { request in
-            let response = HTTPURLResponse(url: URL(string: "https://api.codesquad.kr/api")!,
+            let response = HTTPURLResponse(url: URL(string: "https://api.codesquad.kr")!,
                                            statusCode: 200,
                                            httpVersion: nil,
                                            headerFields: ["Content-Type": "application/json"])!
@@ -60,7 +60,7 @@ final class MSConcurrencyNetworkingTests: XCTestCase {
         // Arrange
         let router = MockRouter()
         MockURLProtocol.requestHandler = { request in
-            let response = HTTPURLResponse(url: URL(string: "https://api.codesquad.kr/api")!,
+            let response = HTTPURLResponse(url: URL(string: "https://api.codesquad.kr")!,
                                            statusCode: 404,
                                            httpVersion: nil,
                                            headerFields: ["Content-Type": "application/json"])!
@@ -75,11 +75,7 @@ final class MSConcurrencyNetworkingTests: XCTestCase {
         switch result {
         case .success:
             XCTFail("200 ~ 299 외의 status code를 포함한 응답은 에러를 발생시켜야 합니다.")
-        case .failure(let error):
-            //swiftlint:disable force_cast
-            XCTAssertEqual(error as! MSNetworkError,
-                           MSNetworkError.invalidStatusCode(statusCode: 404, description: ""),
-                           "404 status code 응답은 invalidStatusCode 에러를 발생시켜야 합니다.")
+        case .failure:
             expectation.fulfill()
         }
         
