@@ -9,13 +9,13 @@ export enum JourneyExceptionMessageEnum {
 }
 
 export enum SpotExceptionCodeEnum {
-  SpotNotFound = '0003',
-  UnexpectedError = '9997',
+  SpotNotFound = '0020',
+  SpotRecordFail = '0021',
 }
 
 export enum SpotExceptionMessageEnum {
   SpotNotFound = 'SpotId에 해당하는 Spot이 없습니다.',
-  UnexpectedError = '예상치 못한 오류입니다.',
+  SpotRecordFail = 'Spot 이미지 저장 중 에러가 발생했습니다.',
 }
 
 export enum UserExceptionMessageEnum {
