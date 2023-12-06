@@ -96,9 +96,9 @@ public final class RewindJourneyViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.imageBinding()
-        self.configure()
         self.timerBinding()
-//        self.viewModel.trigger(.viewNeedsLoaded)
+        self.configure()
+        self.viewModel.trigger(.viewNeedsLoaded)
     }
     
     public override func viewDidAppear(_ animated: Bool) {
