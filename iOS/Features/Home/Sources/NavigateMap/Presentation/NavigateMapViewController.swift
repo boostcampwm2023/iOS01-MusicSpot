@@ -19,6 +19,14 @@ public final class NavigateMapViewController: UIViewController {
     
     // MARK: - Constants
     
+    private enum Typo {
+        
+        static let locationAlertTitle = "위치 권한"
+        static let locationAlertMessage = "위치 권한을 허용하시지 않아서 위치 접근이 불가능합니다."
+        static let locationAlertConfirm = "확인"
+        
+    }
+    
     private enum Metric {
         
         static let buttonStackTopSpacing: CGFloat = 50.0
@@ -64,7 +72,6 @@ public final class NavigateMapViewController: UIViewController {
     // MARK: - Life Cycle
     
     public override func viewDidLoad() {
-        print(#function)
         super.viewDidLoad()
         self.view = self.mapView
         
@@ -72,20 +79,17 @@ public final class NavigateMapViewController: UIViewController {
         self.locationManager.requestWhenInUseAuthorization()
         
         self.configureLayout()
-        self.viewModel.trigger(.viewNeedsLoaded)
         self.bind()
-        
+        self.viewModel.trigger(.viewNeedsLoaded)
     }
     
     // MARK: - UI Configuration
     
     private func configureLayout() {
-        print(#function)
         self.view.addSubview(self.buttonStackView)
         
         self.buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            
             self.buttonStackView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor,
                                                       constant: Metric.buttonStackTopSpacing),
             self.buttonStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,
@@ -106,21 +110,23 @@ public final class NavigateMapViewController: UIViewController {
                 // 위치 권한 확인 및 권한 요청
                 self.checkCurrentLocationAuthorization(authorizationStatus)
             }
-            
         }
-        
     }
     
     func addAnnotations(journeys: [Journey]){
-        
         journeys.forEach { journey in
             journey.spots.forEach { spot in
                 Task {
-                    guard let photoData = await MSImageFetcher.shared.fetchImage(from: spot.photoURL, forKey: spot.journeyID.uuidString)
-                    else { return }
+                    guard let photoData = await MSImageFetcher.shared.fetchImage(from: spot.photoURL,
+                                                                                 forKey: spot.journeyID.uuidString) else {
+                        return
+                    }
                     
-                    let coordinate = CLLocationCoordinate2D(latitude: spot.coordinate.latitude, longitude: spot.coordinate.longitude)
-                    self.mapView.addAnnotation(title: journey.location, coordinate: coordinate, photoData: photoData)
+                    let coordinate = CLLocationCoordinate2D(latitude: spot.coordinate.latitude,
+                                                            longitude: spot.coordinate.longitude)
+                    self.mapView.addAnnotation(title: journey.location,
+                                               coordinate: coordinate,
+                                               photoData: photoData)
                 }
             }
         }
@@ -154,27 +160,24 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
     
     /// 앱에 대한 권한 설정이 변경되면 호출
     public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        print(#function)
         self.checkUserLocationServicesAuthorization()
     }
     
     /// 위치 정보 권한 상태에 따른 동작
     func checkCurrentLocationAuthorization(_ authorizationStatus: CLAuthorizationStatus) {
-        print(#function)
         switch authorizationStatus {
         case .notDetermined:
-            
             // 앱 사용 중 위치 권한 요청
             self.locationManager.requestWhenInUseAuthorization()
             
             // 위치 접근 시작
             self.locationManager.startUpdatingLocation()
         case .restricted, .denied:
-            let sheet = UIAlertController(title: "위치 권한",
-                                          message: "위치 권한을 허용하시지 않아서 위치 접근이 불가능합니다.",
+            let sheet = UIAlertController(title: Typo.locationAlertTitle,
+                                          message: Typo.locationAlertMessage,
                                           preferredStyle: .alert)
-            sheet.addAction(UIAlertAction(title: "확인", style: .default))
-            present(sheet, animated: true)
+            sheet.addAction(UIAlertAction(title: Typo.locationAlertConfirm, style: .default))
+            self.present(sheet, animated: true)
         case .authorizedAlways:
             // 위치 접근 시작
             self.locationManager.startUpdatingLocation()

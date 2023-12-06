@@ -1,6 +1,6 @@
 //
 //  MSMapView.swift
-//
+//  Home
 //
 //  Created by 윤동주 on 12/5/23.
 //
@@ -8,8 +8,15 @@
 import UIKit
 import MapKit
 
-class MSMapView: MKMapView {
+final class MSMapView: MKMapView {
     
+    // MARK: - Constants
+    
+    private enum Metric {
+        
+        static let lineWidth: CGFloat = 5.0
+        
+    }
     
     // MARK: - Initializer
     
@@ -20,7 +27,7 @@ class MSMapView: MKMapView {
         
         /// 재사용 가능하도록 CustomAnnotation 등록
         self.register(CustomAnnotationView.self,
-                      forAnnotationViewWithReuseIdentifier: NSStringFromClass(CustomAnnotationView.self))
+                      forAnnotationViewWithReuseIdentifier: CustomAnnotationView.identifier)
         self.register(ClusterAnnotationView.self,
                       forAnnotationViewWithReuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
         self.delegate = self
@@ -35,7 +42,8 @@ class MSMapView: MKMapView {
     // 식별자를 갖고 Annotation view 생성
     func setupAnnotationView(for annotation: CustomAnnotation, on mapView: MKMapView) -> MKAnnotationView {
         // dequeueReusableAnnotationView: 식별자를 확인하여 사용가능한 뷰가 있으면 해당 뷰를 반환
-        return mapView.dequeueReusableAnnotationView(withIdentifier: NSStringFromClass(CustomAnnotationView.self), for: annotation)
+        return mapView.dequeueReusableAnnotationView(withIdentifier: CustomAnnotationView.identifier,
+                                                     for: annotation)
     }
     
     func addAnnotation(title: String, coordinate: CLLocationCoordinate2D, photoData: Data) {
@@ -48,49 +56,47 @@ class MSMapView: MKMapView {
     
     func createPolyLine(coordinates: [Coordinate]) {
         let locations = coordinates.map { coordinate in
-            return CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            return CLLocation(latitude: coordinate.latitude,
+                              longitude: coordinate.longitude)
         }
         
-        addPolyLineToMap(locations: locations)
-        
+        self.addPolyLineToMap(locations: locations)
     }
     
     func addPolyLineToMap(locations: [CLLocation?]) {
-        let coordinates = locations.map({ (location: CLLocation!) -> CLLocationCoordinate2D in
-            return location.coordinate
-        })
-        dump(coordinates)
-        let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
-        print(polyline)
+        let coordinates = locations.compactMap { $0?.coordinate }
+        let polyline = MKPolyline(coordinates: coordinates,
+                                  count: coordinates.count)
         self.addOverlay(polyline)
-        
     }
     
 }
 
 extension MSMapView: MKMapViewDelegate {
-        /// 현재까지의 polyline들을 지도 위에 그림
-        public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-            guard let polyLine = overlay as? MKPolyline else {
-                return MKOverlayRenderer()
-            }
     
-            let renderer = MKPolylineRenderer(polyline: polyLine)
-            renderer.strokeColor = .orange
-            renderer.lineWidth = 5.0
-    
-            return renderer
+    /// 현재까지의 polyline들을 지도 위에 그림
+    public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        guard let polyLine = overlay as? MKPolyline else {
+            return MKOverlayRenderer()
         }
+        
+        let renderer = MKPolylineRenderer(polyline: polyLine)
+        renderer.strokeColor = .msColor(.musicSpot)
+        renderer.lineWidth = Metric.lineWidth
+        
+        return renderer
+    }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        
         guard !(annotation is MKUserLocation) else { return nil }
-        if annotation is MKClusterAnnotation {
-            return ClusterAnnotationView(annotation: annotation, reuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
-        }
-        var annotationView: MKAnnotationView?
         
-        annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: NSStringFromClass(CustomAnnotationView.self),
+        if annotation is MKClusterAnnotation {
+            return ClusterAnnotationView(annotation: annotation,
+                                         reuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
+        }
+        
+        let annotationView: MKAnnotationView?
+        annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: CustomAnnotationView.identifier,
                                                                for: annotation)
         return annotationView
     }
