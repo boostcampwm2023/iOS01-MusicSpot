@@ -27,6 +27,9 @@
       </FileRef>
    </Group>
    <FileRef
+      location = "group:MSDomain">
+   </FileRef>
+   <FileRef
       location = "group:MSData">
    </FileRef>
    <FileRef

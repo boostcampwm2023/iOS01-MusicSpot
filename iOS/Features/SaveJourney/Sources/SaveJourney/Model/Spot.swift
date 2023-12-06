@@ -7,9 +7,8 @@
 
 import Foundation
 
-struct Spot: Hashable, Identifiable {
+struct Spot: Hashable {
     
-    let id: UUID
     let location: Coordinate
     let date: Date
     let photoURL: URL

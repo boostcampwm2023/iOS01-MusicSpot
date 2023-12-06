@@ -11,8 +11,9 @@ extension Journey {
     
     init(dto: JourneyDTO) {
         self.id = dto.id
-        self.location = dto.location
-        self.date = dto.metaData.date
+        self.title = dto.title
+        // TODO: API 수정 후 적용
+        self.date = .now
         self.spots = dto.spots.map { Spot(dto: $0) }
         self.song = Song(dto: dto.song)
     }
@@ -21,7 +22,7 @@ extension Journey {
 
 extension Spot {
     
-    init(dto: ResponsibleSpotDTO) {
+    init(dto: SpotDTO) {
         self.photoURL = dto.photoURL
     }
     
