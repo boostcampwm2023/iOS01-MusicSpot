@@ -69,6 +69,8 @@ let package = Package(
                     .target(name: Target.navigateMap),
                     .product(name: Dependency.msDomain,
                              package: Dependency.msDomain),
+                    .product(name: Dependency.msData,
+                             package: Dependency.msData),
                     .product(name: Dependency.journeyList,
                              package: Dependency.journeyList),
                     .product(name: Dependency.msUserDefaults,

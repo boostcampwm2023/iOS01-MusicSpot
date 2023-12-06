@@ -16,7 +16,7 @@ extension UserRouter {
             return ""
         }
         
-        return urlString.appending("/user")
+        return urlString + "/user"
     }
     
     public var pathURL: String? {

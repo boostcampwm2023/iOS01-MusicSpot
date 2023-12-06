@@ -76,10 +76,26 @@ public final class HomeViewController: HomeBottomSheetViewController {
     
     // MARK: - Properties
     
+    private let viewModel: HomeViewModel
+    
     public weak var navigationDelegate: HomeNavigationDelegate?
     
     @UserDefaultsWrapped(UserDefaultsKey.isRecording, defaultValue: false)
     private var isRecording: Bool
+    
+    // MARK: - Initializer
+    
+    public init(viewModel: HomeViewModel,
+                contentViewController: NavigateMapViewController,
+                bottomSheetViewController: JourneyListViewController) {
+        self.viewModel = viewModel
+        super.init(contentViewController: contentViewController,
+                   bottomSheetViewController: bottomSheetViewController)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
+    }
     
     // MARK: - Life Cycle
     
@@ -88,12 +104,20 @@ public final class HomeViewController: HomeBottomSheetViewController {
         self.configureStyle()
         self.configureLayout()
         self.configureAction()
+        self.bind()
+        self.viewModel.trigger(.viewNeedsLoaded)
     }
     
     public override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         
         self.navigationController?.isNavigationBarHidden = true
+    }
+    
+    // MARK: - Combine Binding
+    
+    private func bind() {
+        
     }
     
     // MARK: - Functions
@@ -117,6 +141,16 @@ public final class HomeViewController: HomeBottomSheetViewController {
             self?.bottomSheetViewController.fetchJourneys(from: coordinates)
         }
         self.refreshButton.addAction(refreshButtonAction, for: .touchUpInside)
+    }
+    
+}
+
+// MARK: - FTUX
+
+private extension HomeViewController {
+    
+    func checkFirstLaunch() {
+        
     }
     
 }

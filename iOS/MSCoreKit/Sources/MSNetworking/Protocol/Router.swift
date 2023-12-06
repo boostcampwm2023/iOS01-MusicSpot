@@ -50,9 +50,11 @@ extension Router {
             baseURLComponents.queryItems = self.queries
         }
         
+        #if DEBUG
         MSLogger.make(category: .network).log("\(baseURLComponents)")
-        guard let url = baseURLComponents.url else { return nil }
+        #endif
         
+        guard let url = baseURLComponents.url else { return nil }
         var request = URLRequest(url: url)
         request.httpMethod = self.method.rawValue
         if let body = self.body {
