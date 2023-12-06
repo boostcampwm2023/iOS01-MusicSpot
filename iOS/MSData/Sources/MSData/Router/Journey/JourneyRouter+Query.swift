@@ -18,7 +18,7 @@ extension JourneyRouter {
                 URLQueryItem(name: "userId", value: "\(userID)"),
                 URLQueryItem(name: "minCoordinate", value: "\(minCoordinate.latitude)"),
                 URLQueryItem(name: "minCoordinate", value: "\(minCoordinate.longitude)"),
-                URLQueryItem(name: "minCoordinate", value: "\(maxCoordinate.latitude)"),
+                URLQueryItem(name: "maxCoordinate", value: "\(maxCoordinate.latitude)"),
                 URLQueryItem(name: "maxCoordinate", value: "\(maxCoordinate.longitude)")
             ]
         case let .loadLastJourney(userID):

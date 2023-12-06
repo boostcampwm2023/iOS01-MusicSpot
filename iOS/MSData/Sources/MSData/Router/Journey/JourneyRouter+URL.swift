@@ -13,10 +13,10 @@ extension JourneyRouter {
     
     public var baseURL: String {
         guard let urlString = self.fetchBaseURLFromPlist(from: Bundle.module) else {
-            return ""
+            fatalError("APIInfo.plist 파일을 읽을 수 없습니다.")
         }
         
-        return urlString.appending("/journey")
+        return urlString + "/journey"
     }
     
     public var pathURL: String? {

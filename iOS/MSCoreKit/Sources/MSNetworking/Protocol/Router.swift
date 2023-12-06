@@ -1,11 +1,13 @@
 //
-//  Requestable.swift
+//  Router.swift
 //  MSCoreKit
 //
 //  Created by 전민건 on 11/16/23.
 //
 
 import Foundation
+
+import MSLogger
 
 public protocol Router {
     
@@ -36,17 +38,21 @@ public protocol Router {
 extension Router {
     
     public var request: URLRequest? {
-        guard var baseURLComponents = URLComponents(string: self.baseURL) else { return nil }
+        var urlString = self.baseURL
         
         if let path = self.pathURL {
-            baseURLComponents.path = path
+            urlString += "/\(path)"
         }
+        
+        guard var baseURLComponents = URLComponents(string: urlString) else { return nil }
         
         if let queries = self.queries, !queries.isEmpty {
             baseURLComponents.queryItems = self.queries
         }
         
+        MSLogger.make(category: .network).log("\(baseURLComponents)")
         guard let url = baseURLComponents.url else { return nil }
+        
         var request = URLRequest(url: url)
         request.httpMethod = self.method.rawValue
         if let body = self.body {

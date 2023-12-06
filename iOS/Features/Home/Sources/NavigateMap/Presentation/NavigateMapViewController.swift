@@ -37,10 +37,13 @@ public final class NavigateMapViewController: UIViewController {
     
     // MARK: - Properties
     
-    public var currentCoordinate: Coordinate? {
-        let centerCoordinate = self.mapView.centerCoordinate
-        return Coordinate(latitude: centerCoordinate.latitude,
-                          longitude: centerCoordinate.longitude)
+    public var currentCoordinate: (minCoordinate: Coordinate, maxCoordinate: Coordinate) {
+        let region = self.mapView.region
+        let minCoordinate = Coordinate(latitude: region.center.latitude + region.span.latitudeDelta / 2,
+                                       longitude: region.center.longitude - region.span.longitudeDelta / 2)
+        let maxCoordinate = Coordinate(latitude: region.center.latitude - region.span.latitudeDelta / 2,
+                                       longitude: region.center.longitude + region.span.longitudeDelta / 2)
+        return (minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)
     }
     
     // 임시 위치 정보

@@ -8,10 +8,12 @@
 import Combine
 import Foundation
 
+import MSDomain
 import MSNetworking
 
 public protocol NavigateMapRepository {
-    func fetchJourneyList() async -> Result<[JourneyDTO], Error>
+    func fetchJourneyList(minCoordinate: Coordinate,
+                          maxCoordinate: Coordinate) async -> Result<CheckJourneyResponseDTO, Error>
 }
 
 public struct NavigateMapRepositoryImplementation: NavigateMapRepository {
@@ -28,7 +30,8 @@ public struct NavigateMapRepositoryImplementation: NavigateMapRepository {
     
     // MARK: - Functions
     
-    public func fetchJourneyList() async -> Result<[JourneyDTO], Error> {
+    public func fetchJourneyList(minCoordinate: Coordinate,
+                                 maxCoordinate: Coordinate) async -> Result<CheckJourneyResponseDTO, Error> {
         #if DEBUG
         guard let jsonURL = Bundle.module.url(forResource: "MockJourney", withExtension: "json") else {
             return .failure((MSNetworkError.invalidRouter))
@@ -39,31 +42,23 @@ public struct NavigateMapRepositoryImplementation: NavigateMapRepository {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
             decoder.dateDecodingStrategy = .formatted(dateFormatter)
-            let journeys = try decoder.decode([JourneyDTO].self, from: jsonData)
+            let journeys = try decoder.decode(CheckJourneyResponseDTO.self, from: jsonData)
             return .success(journeys)
         } catch {
-            print(error)
+            return .failure(error)
         }
         #else
-        return await withCheckedContinuation { continuation in
-            var cancellable: AnyCancellable?
-            cancellable = self.networking.request([JourneyDTO].self, router: JourneyRouter.checkJourney)
-                .sink { completion in
-                    switch completion {
-                    case .finished:
-                        continuation.resume(returning: .failure(MSNetworkError.timeout))
-                    case .failure(let error):
-                        continuation.resume(returning: .failure(error))
-                    }
-                    cancellable?.cancel()
-                } receiveValue: { journeys in
-                    continuation.resume(returning: .success(journeys))
-                    cancellable?.cancel()
-                }
+        let router = JourneyRouter.checkJourney(userID: UUID(uuidString: "ACB46D2C-aa-444F-84C5-4EF7E81E62E8")!,
+                                                minCoordinate: CoordinateDTO(minCoordinate),
+                                                maxCoordinate: CoordinateDTO(maxCoordinate))
+        let result = await self.networking.request(CheckJourneyResponseDTO.self, router: router)
+        switch result {
+        case .success(let journeys):
+            return .success(journeys)
+        case .failure(let error):
+            return .failure(error)
         }
         #endif
-        
-        return .failure(MSNetworkError.unknownResponse)
     }
     
 }

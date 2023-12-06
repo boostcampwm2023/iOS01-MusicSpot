@@ -111,10 +111,10 @@ public final class HomeViewController: HomeBottomSheetViewController {
         self.startButton.addAction(startButtonAction, for: .touchUpInside)
         
         let refreshButtonAction = UIAction { [weak self] _ in
-            guard let coordinate = self?.contentViewController.currentCoordinate else {
+            guard let coordinates = self?.contentViewController.currentCoordinate else {
                 return
             }
-            self?.bottomSheetViewController.fetchJourneys(from: coordinate)
+            self?.bottomSheetViewController.fetchJourneys(from: coordinates)
         }
         self.refreshButton.addAction(refreshButtonAction, for: .touchUpInside)
     }

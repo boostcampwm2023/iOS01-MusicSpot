@@ -26,7 +26,17 @@ public struct MSNetworking {
     
     private let decoder: JSONDecoder = {
         let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions = [.withFractionalSeconds, .withTimeZone, .withInternetDateTime]
+        decoder.dateDecodingStrategy = .custom({ decoder in
+            let container = try decoder.singleValueContainer()
+            let dateString = try container.decode(String.self)
+            if let date = dateFormatter.date(from: dateString) {
+                return date
+            }
+            throw DecodingError.dataCorruptedError(in: container,
+                                                   debugDescription: "Date 디코딩 실패: \(dateString)")
+        })
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         return decoder
     }()
@@ -104,8 +114,9 @@ public struct MSNetworking {
                     return .failure(MSNetworkError.unknownResponse)
                 }
                 guard 200..<300 ~= response.statusCode else {
-                    throw MSNetworkError.invalidStatusCode(statusCode: response.statusCode,
-                                                           description: response.description)
+                    let errorResponse = try self.decoder.decode(ErrorResponseDTO.self, from: data)
+                    throw MSNetworkError.invalidStatusCode(statusCode: errorResponse.statusCode,
+                                                           description: errorResponse.message)
                 }
                 
                 let result = try self.decoder.decode(T.self, from: data)
