@@ -8,6 +8,8 @@
 import UIKit
 import MapKit
 
+import MSDesignSystem
+
 final class MSMapView: MKMapView {
     
     // MARK: - Constants
@@ -75,7 +77,8 @@ final class MSMapView: MKMapView {
 extension MSMapView: MKMapViewDelegate {
     
     /// 현재까지의 polyline들을 지도 위에 그림
-    public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+    public func mapView(_ mapView: MKMapView,
+                        rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         guard let polyLine = overlay as? MKPolyline else {
             return MKOverlayRenderer()
         }
@@ -87,7 +90,8 @@ extension MSMapView: MKMapViewDelegate {
         return renderer
     }
     
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+    func mapView(_ mapView: MKMapView,
+                 viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard !(annotation is MKUserLocation) else { return nil }
         
         if annotation is MKClusterAnnotation {
