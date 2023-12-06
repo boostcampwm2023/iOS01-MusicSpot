@@ -72,7 +72,11 @@ let package = Package(
                              package: Dependency.msFoundation)
                ]),
         .target(name: Target.msPersistentStorage),
-        .target(name: Target.msNetworking),
+        .target(name: Target.msNetworking,
+               dependencies: [
+                .product(name: Dependency.msLogger,
+                         package: Dependency.msFoundation)
+               ]),
         .target(name: Target.msFetcher,
                 dependencies: [
                     .target(name: Target.msPersistentStorage),
