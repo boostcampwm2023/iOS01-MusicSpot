@@ -1,17 +1,25 @@
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
-import { StartJourneyDTO } from '../dto/journeyStart.dto';
+
+import { StartJourneyReqDTO } from '../dto/journeyStart/journeyStartReq.dto';
 import { Journey } from '../schema/journey.schema';
 
 import { User } from '../../user/schema/user.schema';
-import { EndJourneyDTO } from '../dto/journeyEnd.dto';
-import { RecordJourneyDTO } from '../dto/journeyRecord.dto';
-import { CheckJourneyDTO } from '../dto/journeyCheck.dto';
+// import { EndJourneyDTO } from '../dto/journeyEnd/journeyEndReq.dto';
+// import { RecordJourneyDTO } from '../dto/journeyRecord/journeyRecordReq.dto';
+import { CheckJourneyDTO } from '../dto/journeyCheck/journeyCheckReq.dto';
 import { JourneyNotFoundException } from '../../filters/journey.exception';
-import { UserNotFoundException } from 'src/filters/user.exception';
+import { UserNotFoundException } from '../../filters/user.exception';
+import { Song } from '../schema/song.schema';
 import * as turf from '@turf/turf';
 import { LoadJourneyDTO } from '../dto/journeyLoad.dto';
+
+import {
+  EndJourneyReqDTO,
+  EndJourneyResDTO,
+} from '../dto/journeyEnd/journeyEnd.dto';
+import { RecordJourneyReqDTO } from '../dto/journeyRecord/journeyRecord.dto';
 
 @Injectable()
 export class JourneyService {
@@ -19,47 +27,58 @@ export class JourneyService {
     @InjectModel(Journey.name) private journeyModel: Model<Journey>,
     @InjectModel(User.name) private userModel: Model<User>,
   ) {}
-  async insertJourneyData(startJourneyDTO: StartJourneyDTO) {
+  async insertJourneyData(startJourneyDTO: StartJourneyReqDTO) {
     const journeyData: Journey = {
       ...startJourneyDTO,
-      title: '',
-      spots: [],
       coordinates: [startJourneyDTO.coordinate],
-      endTimestamp: '',
+      spots: [],
+      journeyMetadata: {
+        startTimestamp: startJourneyDTO.startTimestamp,
+        endTimestamp: '',
+      },
     };
     const createdJourneyData = new this.journeyModel(journeyData);
     return await createdJourneyData.save();
   }
-  async pushJourneyIdToUser(journeyId, userEmail) {
+  async pushJourneyIdToUser(journeyId, userId) {
     const result = await this.userModel
       .findOneAndUpdate(
-        { email: userEmail },
+        { userId },
         { $push: { journeys: journeyId } },
         { new: true },
       )
       .lean();
+    if (!result) {
+      new UserNotFoundException();
+    }
     return result;
   }
-  async create(startJourneyDTO: StartJourneyDTO): Promise<Journey> {
+
+  async create(startJourneyDTO: StartJourneyReqDTO) {
     const createdJourneyData = await this.insertJourneyData(startJourneyDTO);
     const updateUserInfo = await this.pushJourneyIdToUser(
       createdJourneyData._id,
-      startJourneyDTO.email,
+      startJourneyDTO.userId,
     );
-    return createdJourneyData;
+    const { coordinates, journeyMetadata, _id } = createdJourneyData;
+    const [coordinate] = coordinates;
+    const { startTimestamp } = journeyMetadata;
+    return { coordinate, startTimestamp, journeyId: _id };
   }
 
-  async end(endJourneyDTO: EndJourneyDTO) {
-    const { journeyId, title, coordinate, endTimestamp } = endJourneyDTO;
-    const coordinateToAdd = Array.isArray(coordinate[0])
-      ? coordinate
-      : [coordinate];
+  async end(endJourneyDTO: EndJourneyReqDTO) {
+    const { journeyId, title, coordinates, endTimestamp, song } = endJourneyDTO;
+    // const coordinateToAdd = Array.isArray(coordinate[0])
+    //   ? coordinate
+    //   : [coordinate];
+    const coordinatesLen = coordinates.length;
+
     const updatedJourney = await this.journeyModel
       .findOneAndUpdate(
         { _id: journeyId },
         {
-          $set: { title, endTimestamp },
-          $push: { coordinates: { $each: coordinateToAdd } },
+          $set: { title, song, 'journeyMetadata.endTimestamp': endTimestamp },
+          $push: { coordinates: { $each: coordinates } },
         },
         { new: true },
       )
@@ -68,32 +87,51 @@ export class JourneyService {
     if (!updatedJourney) {
       throw new JourneyNotFoundException();
     }
-    return updatedJourney;
+
+    const updatedCoordinates = updatedJourney.coordinates;
+    const updatedEndTimestamp = updatedJourney.journeyMetadata.endTimestamp;
+    const updatedId = updatedJourney._id;
+    const updatedSong = updatedJourney.song;
+    const updatedCoordinatesLen = coordinates.length;
+    const totalCoordinatesLen = updatedCoordinates.length;
+    const slicedCoordinates = updatedCoordinates.slice(-updatedCoordinatesLen);
+    return {
+      id: updatedId,
+      coordinates: slicedCoordinates,
+      endTimestamp: updatedEndTimestamp,
+      song: updatedSong,
+      numberOfCoordinates: totalCoordinatesLen,
+    };
   }
 
-  async pushCoordianteToJourney(recordJourneyDTO: RecordJourneyDTO) {
-    const { journeyId, coordinate } = recordJourneyDTO;
+  async pushCoordianteToJourney(recordJourneyDTO: RecordJourneyReqDTO) {
+    const { journeyId, coordinates } = recordJourneyDTO;
+    const coordinatesLen = coordinates.length;
     // coordinate가 단일 배열인 경우 이를 이중 배열로 감싸서 처리
 
-    const coordinateToAdd = Array.isArray(coordinate[0])
-      ? coordinate
-      : [coordinate];
+    // const coordinateToAdd = Array.isArray(coordinate[0])
+    //   ? coordinate
+    //   : [coordinate];
     const updatedJourney = await this.journeyModel
       .findOneAndUpdate(
         { _id: journeyId },
-        { $push: { coordinates: { $each: coordinateToAdd } } },
+        { $push: { coordinates: { $each: coordinates } } },
         { new: true },
       )
       .lean();
     if (!updatedJourney) {
       throw new JourneyNotFoundException();
     }
-    return updatedJourney;
+    const updatedCoordinates = updatedJourney.coordinates;
+    return { coordinates: updatedCoordinates.slice(-coordinatesLen) };
+    // const { coordinates } = updatedJourney;
+    // const len = coordinates.length;
+    // return { coordinate: coordinates[len - 1] };
   }
 
   async checkJourney(checkJourneyDTO: CheckJourneyDTO) {
     const { userId, minCoordinate, maxCoordinate } = checkJourneyDTO;
-    const user = await this.userModel.findById(userId).lean();
+    const user = await this.userModel.findOne({ userId }).lean();
 
     if (!user) {
       throw new UserNotFoundException();

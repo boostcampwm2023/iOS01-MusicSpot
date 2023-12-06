@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
-import { IsCoordinate } from '../../common/decorator/coordinate.decorator';
+import { IsCoordinate } from '../../../common/decorator/coordinate.decorator';
 export class RecordJourneyDTO {
   @ApiProperty({
     example: '655efda2fdc81cae36d20650',

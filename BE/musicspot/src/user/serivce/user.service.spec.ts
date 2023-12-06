@@ -3,39 +3,43 @@ import { UserService } from './user.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { User, UserSchema } from '../schema/user.schema';
 import mongoose from 'mongoose';
+import { CreateUserDTO } from '../dto/createUser.dto';
 
 describe('UserService', () => {
   let service: UserService;
   let userModel;
   beforeEach(async () => {
-    mongoose.connect(
-      `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
-    );
-    userModel = mongoose.model(User.name, UserSchema);
+    const MockUserModel = {
+      exists: jest.fn(),
+      save: jest.fn(),
+    };
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserService,
         {
           provide: getModelToken(User.name),
-          useValue: userModel,
+          useValue: MockUserModel,
         },
       ],
     }).compile();
 
     service = module.get<UserService>(UserService);
+    userModel = module.get(getModelToken(User.name));
   });
 
-  it('journey id 삽입 테스트', async () => {
-    const data = new Object(await userModel.find({ email: 'test' }))[0];
+  it('create user test(success)', async () => {
+    userModel.exists.mockResolvedValue(false);
+    userModel.save.mockResolvedValue(true);
+    const createUserDto: CreateUserDTO = {
+      userId: 'ab4068ef-95ed-40c3-be6d-3db35df866b7',
+    };
+    const updatedUser = await service.create(createUserDto);
+    console.log(updatedUser);
+    const { userId, journeys } = updatedUser;
 
-    const pervLength = data.journeys.length;
-    await service.appendJourneyIdToUser('test', '2');
-
-    const nextData = new Object(await userModel.find({ email: 'test' }))[0];
-    const nextLength = nextData.journeys.length;
-    expect(nextLength).toEqual(pervLength + 1);
+    expect(userId).toEqual(createUserDto.userId);
+    expect(journeys).toEqual([]);
   });
-
   afterAll(async () => {
     mongoose.connection.close();
   });

@@ -8,7 +8,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { RecordSpotDTO } from '../dto/recordSpot.dto';
+import { RecordSpotReqDTO } from '../dto/recordSpot.dto';
 import { SpotService } from '../service/spot.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Spot } from '../schema/spot.schema';
@@ -26,10 +26,10 @@ export class SpotController {
     type: Spot,
   })
   @UseInterceptors(FileInterceptor('image'))
-  @Post('create')
+  @Post('')
   async create(
     @UploadedFile() file: Express.Multer.File,
-    @Body() recordSpotDTO: RecordSpotDTO,
+    @Body() recordSpotDTO: RecordSpotReqDTO,
   ) {
     return await this.spotService.create(file, recordSpotDTO);
   }
