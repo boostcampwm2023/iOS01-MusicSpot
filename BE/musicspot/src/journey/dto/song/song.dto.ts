@@ -34,6 +34,5 @@ export class SongDTO {
   })
   @ValidateNested({ each: true })
   @Type(() => ArtworkDTO)
-  @IsDefined()
   artwork: ArtworkDTO;
 }
