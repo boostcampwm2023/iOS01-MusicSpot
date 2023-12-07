@@ -10,7 +10,11 @@ import { JourneyNotFoundException } from '../../filters/journey.exception';
 import { UserNotFoundException } from '../../filters/user.exception';
 import * as turf from '@turf/turf';
 import { LoadJourneyDTO } from '../dto/journeyLoad.dto';
-import { S3, bucketName } from '../../common/s3/objectStorage';
+import {
+  S3,
+  bucketName,
+  makePresignedUrl,
+} from '../../common/s3/objectStorage';
 import { EndJourneyReqDTO } from '../dto/journeyEnd/journeyEnd.dto';
 import { CheckJourneyReqDTO } from '../dto/journeyCheck/journeyCheck.dto';
 import { RecordJourneyReqDTO } from '../dto/journeyRecord/journeyRecord.dto';
@@ -145,22 +149,20 @@ export class JourneyService {
     let journeyList = [];
 
     for (let i = 0; i < journeys.length; i++) {
-      let journey = await this.journeyModel
-        .findById(journeys[i])
-        .populate({
-          path: 'spots',
-          model: 'Spot',
-          options: {
-            transform: (spot) => {
-              return {
-                coordinate: spot.coordinate,
-                timestamp: spot.timestamp,
-                photoUrl: this.makePresignedUrl(spot.photoKey),
-              };
-            },
+      let journey = await this.findByIdWithPopulate(
+        journeys[i],
+        'spots',
+        'Spot',
+        {
+          transform: (spot) => {
+            return {
+              coordinate: spot.coordinate,
+              timestamp: spot.timestamp,
+              photoUrl: makePresignedUrl(spot.photoKey),
+            };
           },
-        })
-        .lean();
+        },
+      );
       if (!journey) {
         throw new JourneyNotFoundException();
       }
@@ -171,16 +173,7 @@ export class JourneyService {
     }
     return journeyList;
   }
-  makePresignedUrl(key) {
-    const config = {
-      Bucket: bucketName,
-      Key: key,
-      Expires: 60,
-    };
 
-    const presignedUrl = S3.getSignedUrl('getObject', config);
-    return presignedUrl;
-  }
   async loadLastJourney(userId) {
     const user = await this.userModel.findById(userId).lean();
 
@@ -206,5 +199,32 @@ export class JourneyService {
       }
     }
     return false;
+  }
+
+  async getJourneyById(journeyId) {
+    try {
+      return await this.findByIdWithPopulate(journeyId, 'spots', 'Spot', {
+        transform: (spot) => {
+          return {
+            coordinate: spot.coordinate,
+            timestamp: spot.timestamp,
+            photoUrl: makePresignedUrl(spot.photoKey),
+          };
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async findByIdWithPopulate(id, path, model, options?) {
+    return await this.journeyModel
+      .findById(id)
+      .populate({
+        path,
+        model,
+        options,
+      })
+      .lean();
   }
 }
