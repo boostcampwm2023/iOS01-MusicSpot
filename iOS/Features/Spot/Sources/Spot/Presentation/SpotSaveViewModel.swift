@@ -34,11 +34,8 @@ internal extension SpotSaveViewModel {
         }
         let timestamp = Data().base64EncodedString()
         print(timestamp)
-        let spotDTO = RequestableSpotDTO(id: journeyID,
-                                         timestamp: timestamp,
-                                         coordinate: coordinate,
-                                         photoData: data)
-        self.msNetworking.request(ResponsibleSpotDTO.self, router: router)
+        
+        self.msNetworking.request(SpotDTO.self, router: router)
             .sink { response in
                 switch response {
                 case .failure(let error):

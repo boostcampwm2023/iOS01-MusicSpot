@@ -10,7 +10,7 @@ import Foundation
 import MSNetworking
 
 public protocol SpotRepository {
-    func fetchRecordingSpots() async -> Result<[ResponsibleSpotDTO], Error>
+    func fetchRecordingSpots() async -> Result<[SpotDTO], Error>
 }
 
 public struct SpotRepositoryImplementation: SpotRepository {
@@ -21,7 +21,7 @@ public struct SpotRepositoryImplementation: SpotRepository {
     
     // MARK: - Functions
     
-    public func fetchRecordingSpots() async -> Result<[ResponsibleSpotDTO], Error> {
+    public func fetchRecordingSpots() async -> Result<[SpotDTO], Error> {
         
         #if DEBUG
         guard let jsonURL = Bundle.module.url(forResource: "MockSpot", withExtension: "json") else {
@@ -30,7 +30,7 @@ public struct SpotRepositoryImplementation: SpotRepository {
         do {
             let jsonData = try Data(contentsOf: jsonURL)
             let decoder = JSONDecoder()
-            let spots = try decoder.decode([ResponsibleSpotDTO].self, from: jsonData)
+            let spots = try decoder.decode([SpotDTO].self, from: jsonData)
             return .success(spots)
         } catch {
             print(error)

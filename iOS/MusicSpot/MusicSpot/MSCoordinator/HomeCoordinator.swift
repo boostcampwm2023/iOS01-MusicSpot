@@ -50,7 +50,10 @@ final class HomeCoordinator: Coordinator {
         journeyListViewController.navigationDelegate = self
         
         // Bottom Sheet
-        let homeViewController = HomeViewController(contentViewController: navigateMapViewController,
+        let userRepository = UserRepositoryImplementation()
+        let homeViewModel = HomeViewModel(repository: userRepository)
+        let homeViewController = HomeViewController(viewModel: homeViewModel,
+                                                    contentViewController: navigateMapViewController,
                                                     bottomSheetViewController: journeyListViewController)
         let configuration = HomeViewController.Configuration(fullDimension: .fractional(1.0),
                                                              detentDimension: .fractional(0.4),

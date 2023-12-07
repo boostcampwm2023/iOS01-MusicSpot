@@ -11,8 +11,10 @@ extension JourneyRouter {
     
     public var headers: HTTPHeaders? {
         switch self {
-        case .journeyList: return nil
-        case .spot: return nil
+        default:
+            return [
+                (key: "Content-Type", value: "application/json")
+            ]
         }
     }
     
