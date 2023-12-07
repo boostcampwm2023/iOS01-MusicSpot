@@ -33,6 +33,7 @@ export class SpotController {
     @Body() recordSpotDTO,
   ) {
     try {
+      console.log(file);
       return await this.spotService.create(file, recordSpotDTO);
     } catch (err) {
       console.log(err);
