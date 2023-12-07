@@ -27,6 +27,7 @@ private enum Target {
 
 private enum Dependency {
     
+    static let msDomain = "MSDomain"
     static let msData = "MSData"
     static let msImageFetcher = "MSImageFetcher"
     static let msCoreKit = "MSCoreKit"
@@ -50,6 +51,8 @@ let package = Package(
                  targets: [Target.selectSong])
     ],
     dependencies: [
+        .package(name: Dependency.msDomain,
+                 path: Dependency.msDomain.fromRootPath),
         .package(name: Dependency.msData,
                  path: Dependency.msData.fromRootPath),
 //        .package(name: Dependency.msCoreKit,
@@ -62,6 +65,8 @@ let package = Package(
     targets: [
         .target(name:Target.selectSong,
                 dependencies: [
+                    .product(name: Dependency.msDomain,
+                             package: Dependency.msDomain),
                     .product(name: Dependency.msData,
                              package: Dependency.msData),
                     // TODO: MSImageFetcher Merge 후 적용

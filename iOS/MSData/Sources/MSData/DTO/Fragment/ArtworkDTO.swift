@@ -58,3 +58,33 @@ extension ArtworkDTO: Codable {
     }
     
 }
+
+// MARK: - Domain Mapping
+
+import MSDomain
+
+extension ArtworkDTO {
+    
+    public init(_ domain: Artwork) {
+        self.width = domain.width
+        self.height = domain.height
+        self.url = domain.url
+        self.backgroundColor = domain.backgroundColor
+        self.textColor1 = domain.textColor1
+        self.textColor2 = domain.textColor2
+        self.textColor3 = domain.textColor3
+        self.textColor4 = domain.textColor4
+    }
+    
+    public func toDomain() -> Artwork {
+        return Artwork(width: self.width,
+                       height: self.height,
+                       url: self.url,
+                       backgroundColor: self.backgroundColor,
+                       textColor1: self.textColor1,
+                       textColor2: self.textColor2,
+                       textColor3: self.textColor3,
+                       textColor4: self.textColor4)
+    }
+    
+}

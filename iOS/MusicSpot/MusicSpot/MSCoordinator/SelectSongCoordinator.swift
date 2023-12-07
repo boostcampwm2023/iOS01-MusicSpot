@@ -8,6 +8,7 @@
 import UIKit
 
 import MSData
+import MSDomain
 import SelectSong
 
 protocol SelectSongCoordinatorDelegate {
@@ -53,10 +54,10 @@ extension SelectSongCoordinator: SelectSongNavigationDelegate {
         self.delegate?.popToHome(from: self)
     }
     
-    func navigateToSaveJourney() {
+    func navigateToSaveJourney(with music: Music) {
         let saveJourneyCoordinator = SaveJourneyCoordinator(navigationController: self.navigationController)
         self.childCoordinators.append(saveJourneyCoordinator)
-        saveJourneyCoordinator.start()
+        saveJourneyCoordinator.start(with: music)
     }
     
 }

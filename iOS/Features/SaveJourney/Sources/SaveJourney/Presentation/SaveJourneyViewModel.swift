@@ -8,6 +8,7 @@
 import Combine
 
 import MSData
+import MSDomain
 import MSLogger
 
 public final class SaveJourneyViewModel {
@@ -18,7 +19,7 @@ public final class SaveJourneyViewModel {
     }
     
     public struct State {
-        var song: CurrentValueSubject<Song, Never>
+        var song: CurrentValueSubject<Music, Never>
         var spots = CurrentValueSubject<[Spot], Never>([])
     }
     
@@ -30,10 +31,10 @@ public final class SaveJourneyViewModel {
     
     // MARK: - Initializer
     
-    public init(selectedSong: Song,
+    public init(selectedMusic: Music,
                 journeyRepository: JourneyRepository) {
         self.journeyRepository = journeyRepository
-        self.state = State(song: CurrentValueSubject<Song, Never>(selectedSong))
+        self.state = State(song: CurrentValueSubject<Music, Never>(selectedMusic))
     }
     
     // MARK: - Functions
@@ -45,9 +46,7 @@ public final class SaveJourneyViewModel {
                 let result = await self.journeyRepository.fetchRecordingJourney()
                 switch result {
                 case .success(let journey):
-                    let spots = journey.spots.map { Spot(dto: $0) }
-                    self.state.spots.send(spots)
-                    print("sdkfjs")
+                    self.state.spots.send(journey.spots)
                 case .failure(let error):
                     #if DEBUG
                     MSLogger.make(category: .saveJourney).error("\(error)")

@@ -143,8 +143,9 @@ public final class NavigateMapViewController: UIViewController {
             await withThrowingTaskGroup(of: Bool.self) { group in
                 for (location, spot) in datas {
                     group.addTask {
+                        // TODO: Key 수정
                         guard let photoData = await MSImageFetcher.shared.fetchImage(from: spot.photoURL,
-                                                                                     forKey: spot.journeyID) else {
+                                                                                     forKey: spot.photoURL.absoluteString) else {
                             throw ImageFetchError.imageFetchFailed
                         }
                         

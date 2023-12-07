@@ -13,9 +13,9 @@ import MSNetworking
 
 public protocol JourneyRepository {
     
-    func fetchRecordingJourney() async -> Result<JourneyDTO, Error>
+    func fetchRecordingJourney() async -> Result<Journey, Error>
     func fetchJourneyList(minCoordinate: Coordinate,
-                          maxCoordinate: Coordinate) async -> Result<CheckJourneyResponseDTO, Error>
+                          maxCoordinate: Coordinate) async -> Result<[Journey], Error>
     
 }
 
@@ -33,12 +33,12 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     
     // MARK: - Functions
     
-    public func fetchRecordingJourney() async -> Result<JourneyDTO, Error> {
+    public func fetchRecordingJourney() async -> Result<Journey, Error> {
         return .failure(MSNetworkError.invalidRouter)
     }
     
     public func fetchJourneyList(minCoordinate: Coordinate,
-                                 maxCoordinate: Coordinate) async -> Result<CheckJourneyResponseDTO, Error> {
+                                 maxCoordinate: Coordinate) async -> Result<[Journey], Error> {
         #if DEBUG
         guard let jsonURL = Bundle.module.url(forResource: "MockJourney", withExtension: "json") else {
             return .failure((MSNetworkError.invalidRouter))
@@ -49,8 +49,8 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
             decoder.dateDecodingStrategy = .formatted(dateFormatter)
-            let journeys = try decoder.decode(CheckJourneyResponseDTO.self, from: jsonData)
-            return .success(journeys)
+            let responseDTO = try decoder.decode(CheckJourneyResponseDTO.self, from: jsonData)
+            return .success(responseDTO.journeys.map { $0.toDomain() })
         } catch {
             return .failure(error)
         }

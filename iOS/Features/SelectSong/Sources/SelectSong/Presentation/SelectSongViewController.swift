@@ -11,14 +11,15 @@ import UIKit
 
 import CombineCocoa
 import MSDesignSystem
+import MSDomain
 import MSLogger
 import MSUIKit
 
 public final class SelectSongViewController: BaseViewController {
     
-    typealias SongListDataSource = UICollectionViewDiffableDataSource<Int, Song>
-    typealias SongListCellRegistration = UICollectionView.CellRegistration<SongListCell, Song>
-    typealias SongListSnapshot = NSDiffableDataSourceSnapshot<Int, Song>
+    typealias SongListDataSource = UICollectionViewDiffableDataSource<Int, Music>
+    typealias SongListCellRegistration = UICollectionView.CellRegistration<SongListCell, Music>
+    typealias SongListSnapshot = NSDiffableDataSourceSnapshot<Int, Music>
     
     // MARK: - Constants
     
@@ -182,7 +183,7 @@ private extension SelectSongViewController {
         let cellRegistration = SongListCellRegistration { cell, indexPath, itemIdentifier in
             let cellModel = SongListCellModel(title: itemIdentifier.title,
                                               artist: itemIdentifier.artist,
-                                              albumArtURL: itemIdentifier.albumArtURL)
+                                              albumArtURL: itemIdentifier.artwork.url)
             cell.update(with: cellModel)
         }
         
@@ -211,7 +212,13 @@ extension SelectSongViewController: UICollectionViewDelegate {
         #if DEBUG
         MSLogger.make(category: .selectSong).log("\(item.title) selected")
         #endif
-        self.navigationDelegate?.navigateToSaveJourney()
+        
+        // TODO: 실제 데이터 바인딩
+        let artwork = Artwork(width: 52, height: 52,
+                              url: URL(string: "")!,
+                              backgroundColor: "", textColor1: "", textColor2: "", textColor3: "", textColor4: "")
+        let music = Music(id: 23, title: "Super Shy", artist: "NewJeans", artwork: artwork)
+        self.navigationDelegate?.navigateToSaveJourney(with: music)
     }
     
 }

@@ -8,6 +8,7 @@
 import UIKit
 
 import MSData
+import MSDomain
 import SaveJourney
 
 final class SaveJourneyCoordinator: Coordinator {
@@ -28,10 +29,9 @@ final class SaveJourneyCoordinator: Coordinator {
     
     // MARK: - Functions
     
-    func start() {
-        let song = Song(title: "OMG", artist: "New Jeans", albumArtURL: nil)
+    func start(with music: Music) {
         let journeyRepository = JourneyRepositoryImplementation()
-        let saveJourneyViewModel = SaveJourneyViewModel(selectedSong: song, journeyRepository: journeyRepository)
+        let saveJourneyViewModel = SaveJourneyViewModel(selectedMusic: music, journeyRepository: journeyRepository)
         let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
         self.navigationController.pushViewController(saveJourneyViewController, animated: true)
     }

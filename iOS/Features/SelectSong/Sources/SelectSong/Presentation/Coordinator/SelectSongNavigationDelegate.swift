@@ -7,8 +7,10 @@
 
 import Foundation
 
+import MSDomain
+
 public protocol SelectSongNavigationDelegate: AnyObject {
     
-    func navigateToSaveJourney()
+    func navigateToSaveJourney(with music: Music)
     
 }
