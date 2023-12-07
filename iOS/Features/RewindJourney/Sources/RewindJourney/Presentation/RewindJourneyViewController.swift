@@ -49,12 +49,7 @@ public final class RewindJourneyViewController: UIViewController {
     // MARK: - Properties
     
     private let viewModel: RewindJourneyViewModel
-    public var images: [UIImage] = [] {
-        didSet {
-//            self.configureProgressbarsLayout()
-//            self.timerRestart()
-        }
-    }
+    public var images: [UIImage] = []
     private let cache: MSCacheStorage
     private var cancellables: Set<AnyCancellable> = []
     private var presentImageIndex: Int? {
