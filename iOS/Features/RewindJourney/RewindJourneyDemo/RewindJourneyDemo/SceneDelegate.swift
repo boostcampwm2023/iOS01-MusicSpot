@@ -6,6 +6,8 @@
 //
 
 import UIKit
+
+import MSData
 import MSDesignSystem
 import RewindJourney
 
@@ -20,9 +22,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         MSFont.registerFonts()
         window = UIWindow(windowScene: windowScene)
-        let viewController = RewindJourneyViewController()
-        viewController.images = [UIImage(systemName: "pencil")!,
-                                  UIImage(systemName: "pencil")!]
+        let repository = SpotRepositoryImplementation()
+        let viewModel = RewindJourneyViewModel(repository: repository)
+        let viewController = RewindJourneyViewController(viewModel: viewModel)
         window?.rootViewController = viewController
         window?.makeKeyAndVisible()
     }
