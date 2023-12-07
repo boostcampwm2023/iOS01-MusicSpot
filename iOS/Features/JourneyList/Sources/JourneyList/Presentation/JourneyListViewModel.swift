@@ -36,24 +36,4 @@ public final class JourneyListViewModel {
         self.repository = repository
     }
     
-    // MARK: - Functions
-    
-    func trigger(_ action: Action) {
-        switch action {
-        case .viewNeedsLoaded:
-            print("ViewNeedsLoaded")
-        case .fetchJourney(at: (let minCoordinate, let maxCoordinate)):
-            Task {
-                let result = await self.repository.fetchJourneyList(minCoordinate: minCoordinate,
-                                                                    maxCoordinate: maxCoordinate)
-                switch result {
-                case .success(let journeys):
-                    print(journeys)
-                case .failure(let error):
-                    print(error)
-                }
-            }
-        }
-    }
-    
 }

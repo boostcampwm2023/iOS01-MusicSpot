@@ -10,13 +10,14 @@ import UIKit
 import JourneyList
 import MSConstants
 import MSDesignSystem
+import MSDomain
 import MSUIKit
 import MSUserDefaults
 import NavigateMap
 
 public typealias HomeBottomSheetViewController = MSBottomSheetViewController<NavigateMapViewController, JourneyListViewController>
 
-public final class HomeViewController: HomeBottomSheetViewController {
+public final class HomeViewController: HomeBottomSheetViewController, HomeViewModelDelegate {
     
     // MARK: - Constants
     
@@ -117,7 +118,11 @@ public final class HomeViewController: HomeBottomSheetViewController {
     // MARK: - Combine Binding
     
     private func bind() {
-        
+        self.viewModel.state.journeys
+            .receive(on: DispatchQueue.main)
+            .sink { journeys in
+//                self.bottomSheetViewController.update(journeys: )
+            }
     }
     
     // MARK: - Functions
@@ -153,11 +158,21 @@ public final class HomeViewController: HomeBottomSheetViewController {
             guard let coordinates = self?.contentViewController.currentCoordinate else {
                 return
             }
-            self?.bottomSheetViewController.fetchJourneys(from: coordinates)
+            self?.viewModel.trigger(.fetchJourney(at: coordinates))
+//            self?.bottomSheetViewController.updateJourneys()
         }
         self.refreshButton.addAction(refreshButtonAction, for: .touchUpInside)
     }
     
+    public func fetchJourneys(from coordinates: (MSDomain.Coordinate, MSDomain.Coordinate)) {
+        self.viewModel.trigger(.fetchJourney(at: coordinates))
+    }
+    
+    @objc
+    func startButtonDidTap() {
+        self.isRecording.toggle()
+        self.updateButtonMode()
+    }
 }
 
 // MARK: - FTUX
@@ -175,7 +190,7 @@ private extension HomeViewController {
 extension HomeViewController: RecordJourneyButtonViewDelegate {
     
     public func backButtonDidTap(_ button: MSRectButton) {
-        print("뒤로가기 버튼 클릭")
+        self.startButtonDidTap()
     }
     
     public func spotButtonDidTap(_ button: MSRectButton) {
@@ -212,26 +227,6 @@ private extension HomeViewController {
             self.recordJourneyButtonView.bottomAnchor.constraint(equalTo: self.bottomSheetViewController.view.topAnchor,
                                                                  constant: -Metric.startButtonBottomInset)
         ])
-<<<<<<< HEAD:iOS/Features/Home/Sources/Home/HomeViewController.swift
-    }
-    
-}
-
-// MARK: - Button View
-
-extension HomeViewController: RecordJourneyButtonViewDelegate {
-    
-    public func backButtonDidTap(_ button: MSRectButton) {
-        startButtonDidTap()
-    }
-    
-    public func spotButtonDidTap(_ button: MSRectButton) {
-        self.navigationDelegate?.navigateToSpot()
-    }
-    
-    public func nextButtonDidTap(_ button: MSRectButton) {
-        self.navigationDelegate?.navigateToSelectSong()
-=======
         
         self.view.insertSubview(self.refreshButton, belowSubview: self.bottomSheetViewController.view)
         self.refreshButton.translatesAutoresizingMaskIntoConstraints = false
@@ -240,7 +235,6 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
                                                     constant: Metric.RefreshButton.topSpacing),
             self.refreshButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
         ])
->>>>>>> release:iOS/Features/Home/Sources/Home/Presentation/HomeViewController.swift
     }
     
 }

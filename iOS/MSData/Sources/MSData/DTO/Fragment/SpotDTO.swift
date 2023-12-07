@@ -11,14 +11,14 @@ public struct SpotDTO {
     
     // MARK: - Properties
     
-    public let journeyID: String?
+    public let journeyID: String
     public let coordinate: CoordinateDTO
     public let timestamp: Date
     public let photoURL: URL
     
     // MARK: - Initializer
     
-    public init(journeyID: String?,
+    public init(journeyID: String,
                 coordinate: CoordinateDTO,
                 timestamp: Date,
                 photoURL: URL) {

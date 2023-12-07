@@ -9,6 +9,7 @@ import Combine
 import UIKit
 
 import MSCacheStorage
+import MSData
 import MSDomain
 import MSUIKit
 
@@ -86,7 +87,12 @@ public final class JourneyListViewController: BaseViewController {
         self.configureLayout()
         self.configureCollectionView()
         self.bind()
-        self.viewModel.trigger(.viewNeedsLoaded)
+    }
+    
+    // MARK: - Functions
+
+    func update(journeys: [Journey]) {
+        
     }
     
     // MARK: - Combine Binding
@@ -101,12 +107,6 @@ public final class JourneyListViewController: BaseViewController {
                 self.dataSource?.apply(snapshot)
             }
             .store(in: &self.cancellables)
-    }
-    
-    // MARK: - Functions
-    
-    public func fetchJourneys(from coordinates: (Coordinate, Coordinate)) {
-        self.viewModel.trigger(.fetchJourney(at: coordinates))
     }
     
     // MARK: - UI Configuration
@@ -225,18 +225,18 @@ extension JourneyListViewController: UICollectionViewDelegate {
     
 }
 
-// MARK: - Preview
-
-#if DEBUG
-import MSData
-import MSDesignSystem
-import MSNetworking
-@available(iOS 17, *)
-#Preview {
-    MSFont.registerFonts()
-    let journeyRepository = JourneyRepositoryImplementation()
-    let testViewModel = JourneyListViewModel(repository: journeyRepository)
-    let testViewController = JourneyListViewController(viewModel: testViewModel)
-    return testViewController
-}
-#endif
+//// MARK: - Preview
+//
+//#if DEBUG
+//import MSData
+//import MSDesignSystem
+//import MSNetworking
+//@available(iOS 17, *)
+//#Preview {
+//    MSFont.registerFonts()
+//    let journeyRepository = JourneyRepositoryImplementation()
+//    let testViewModel = JourneyListViewModel(repository: journeyRepository)
+//    let testViewController = JourneyListViewController(viewModel: testViewModel)
+//    return testViewController
+//}
+//#endif
