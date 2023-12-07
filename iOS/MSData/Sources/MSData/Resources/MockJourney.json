@@ -191,16 +191,16 @@
             {
                 "journeyId": "6d3ee7b2-32af-4d64-8704-a8b0fd2254cb",
                 "coordinate": [
-                    53.33285523016107,
-                    158.99249150635194
+                    37.496598,
+                    126.958120
                 ],
                 "photoUrl": "https://source.unsplash.com/random/200x300"
             }
         ],
         "coordinates": [
             {
-                "latitude": -57.08651016285746,
-                "longitude": 125.44987777466031
+                "latitude": 37.496598,
+                "longitude": 126.958120
             },
             {
                 "latitude": -65.0654246205996,
@@ -225,16 +225,16 @@
             {
                 "journeyId": "1f25a310-5e5d-42c7-918f-a61a0187db68",
                 "coordinate": [
-                    -65.01383977190413,
-                    25.7298686850134
+                    37.495976,
+                    126.956837
                 ],
                 "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
                 "journeyId": "833719bd-7b54-489b-b3e7-9bc6b667dc5e",
                 "coordinate": [
-                    -2.9616202692170788,
-                    -90.07641195961408
+                    36.495973,
+                    125.956837
                 ],
                 "photoUrl": "https://source.unsplash.com/random/200x300"
             }
@@ -271,32 +271,32 @@
             {
                 "journeyId": "24ca84aa-6a80-47c0-8302-6a0924791c80",
                 "coordinate": [
-                    47.16742284659284,
-                    13.225978927134577
+                    37.16742284659284,
+                    126.225978927134577
                 ],
                 "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
                 "journeyId": "2f812435-5d79-4e49-bee1-51a541b7e2bc",
                 "coordinate": [
-                    52.537466139282714,
-                    -91.92574821724574
+                    37.537466139282714,
+                    126.92574821724574
                 ],
                 "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
                 "journeyId": "b52aa54e-8ca2-4581-aa03-b3b50fc9e031",
                 "coordinate": [
-                    -34.68755334180694,
-                    -104.4740708009648
+                    37.68755334180694,
+                    126.4740708009648
                 ],
                 "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
                 "journeyId": "0a416cf3-f957-4372-9cae-5a1997161c3b",
                 "coordinate": [
-                    81.38993174770837,
-                    -119.94575572765291
+                    37.38993174770837,
+                    126.94575572765291
                 ],
                 "photoUrl": "https://source.unsplash.com/random/200x300"
             },
@@ -311,20 +311,20 @@
         ],
         "coordinates": [
             {
-                "latitude": -31.696373986551137,
-                "longitude": -44.326735402336965
+                "latitude": 37.42509,
+                "longitude": 124.9565
             },
             {
-                "latitude": -36.571803691977,
-                "longitude": 79.89271047045634
+                "latitude": 37.39509,
+                "longitude": 125.9565
             },
             {
-                "latitude": -50.98418938820977,
-                "longitude": -37.3881976010955
+                "latitude": 37.49539,
+                "longitude": 126.9565
             },
             {
-                "latitude": 41.7173317046923,
-                "longitude": -165.96283512867097
+                "latitude": 37.49509,
+                "longitude": 127.9565
             }
         ],
         "song": {
