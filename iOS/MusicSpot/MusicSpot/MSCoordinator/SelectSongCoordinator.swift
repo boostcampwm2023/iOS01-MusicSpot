@@ -13,7 +13,7 @@ import MSDomain
 import SaveJourney
 import SelectSong
 
-protocol SelectSongCoordinatorDelegate {
+protocol SelectSongCoordinatorDelegate: AnyObject {
     
     func popToHomeMap(from coordinator: Coordinator)
     func popToSearchMusic(from coordinator: Coordinator)
@@ -62,6 +62,7 @@ extension SelectSongCoordinator: SelectSongNavigationDelegate {
                                lastCoordinate: Coordinate,
                                selectedSong: Song) {
         let saveJourneyCoordinator = SaveJourneyCoordinator(navigationController: self.navigationController)
+        saveJourneyCoordinator.delegate = self
         self.childCoordinators.append(saveJourneyCoordinator)
         saveJourneyCoordinator.start(recordingJourney: recordingJourney,
                                      lastCoordinate: lastCoordinate,

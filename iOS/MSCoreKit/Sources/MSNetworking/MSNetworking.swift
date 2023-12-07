@@ -18,12 +18,6 @@ public struct MSNetworking {
     
     // MARK: - Properties
     
-    private let encoder: JSONEncoder = {
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        return encoder
-    }()
-    
     private let decoder: JSONDecoder = {
         let decoder = JSONDecoder()
         let dateFormatter = ISO8601DateFormatter()

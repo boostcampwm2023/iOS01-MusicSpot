@@ -11,7 +11,11 @@ public struct HTTPBody {
     
     // MARK: - Properties
     
-    private let encoder = JSONEncoder()
+    private let encoder: JSONEncoder = {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        return encoder
+    }()
     var content: Encodable?
     
     // MARK: - Initializer

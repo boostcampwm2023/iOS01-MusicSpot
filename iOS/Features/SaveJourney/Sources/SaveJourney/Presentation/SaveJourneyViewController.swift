@@ -50,6 +50,8 @@ public final class SaveJourneyViewController: UIViewController {
     
     // MARK: - Properties
     
+    public weak var navigationDelegate: SaveJourneyNavigationDelegate?
+    
     private let viewModel: SaveJourneyViewModel
     
     private var dataSource: SaveJourneyDataSource?
@@ -141,13 +143,22 @@ public final class SaveJourneyViewController: UIViewController {
             }
             .store(in: &self.cancellables)
         
-        self.viewModel.state.recordedJourney
+        self.viewModel.state.recordingJourney
             .map { $0.spots }
             .receive(on: DispatchQueue.main)
             .sink { spots in
                 var snapshot = SpotSnapshot()
                 snapshot.append(spots.map { .spot($0) })
                 self.dataSource?.apply(snapshot, to: .spot)
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.endJourneyResponse
+            .compactMap { $0 }
+            .print()
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                self.navigationDelegate?.popToHome()
             }
             .store(in: &self.cancellables)
     }
@@ -355,7 +366,7 @@ extension SaveJourneyViewController: AlertViewControllerDelegate {
     }
     
     func titleDidConfirmed(_ title: String) {
-        print("Title: \(title)")
+        self.viewModel.trigger(.titleDidConfirmed(title))
     }
     
 }

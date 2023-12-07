@@ -12,6 +12,12 @@ import MSData
 import MSDomain
 import SaveJourney
 
+protocol SaveJourneyCoordinatorDelegate: AnyObject {
+    
+    func popToHomeMap(from coordinator: Coordinator)
+    
+}
+
 final class SaveJourneyCoordinator: Coordinator {
     
     // MARK: - Properties
@@ -20,7 +26,7 @@ final class SaveJourneyCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     
-//    var delegate: SearchMusicCoordinatorDelegate?
+    var delegate: SelectSongCoordinatorDelegate?
     
     // MARK: - Initializer
     
@@ -39,6 +45,7 @@ final class SaveJourneyCoordinator: Coordinator {
                                                         selectedSong: selectedSong,
                                                         journeyRepository: journeyRepository)
         let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
+        saveJourneyViewController.navigationDelegate = self
         self.navigationController.pushViewController(saveJourneyViewController, animated: true)
     }
     
@@ -46,14 +53,22 @@ final class SaveJourneyCoordinator: Coordinator {
 
 // MARK: - SaveJourneyViewController
 
-//extension SaveJourneyCoordinator: SaveJourneyViewControllerDelegate {
-//    
-//    func navigateToHomeMap() {
-//        self.delegate?.popToHome(from: self)
-//    }
-//    
-//    func navigateToSearchMusic() {
-//        self.delegate?.popToSearchMusic(from: self)
-//    }
-//    
-//}
+extension SaveJourneyCoordinator: SaveJourneyNavigationDelegate {
+    
+    func popToHome() {
+        self.delegate?.popToHomeMap(from: self)
+    }
+    
+}
+
+// MARK: - SelectSong Coordinator
+
+extension SaveJourneyCoordinator: SaveJourneyCoordinatorDelegate {
+    
+    func popToHomeMap(from coordinator: Coordinator) {
+        self.childCoordinators.removeAll()
+        self.navigationController.popViewController(animated: true)
+        self.delegate?.popToHomeMap(from: self)
+    }
+    
+}
