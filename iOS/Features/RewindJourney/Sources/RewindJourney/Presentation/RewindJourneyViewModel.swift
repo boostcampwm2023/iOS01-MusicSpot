@@ -53,9 +53,8 @@ extension RewindJourneyViewModel {
             Task {
                 let result = await self.repository.fetchRecordingSpots()
                 switch result {
-                case .success(let responseDTOs):
-                    let photoURLs = responseDTOs
-                        .map { Spot(dto: $0).photoURL }
+                case .success(let spots):
+                    let photoURLs = spots.map { $0.photoURL }
                     self.state.stateJourneyPhotoURLs.send(photoURLs)
                 case .failure(let error):
                     #if DEBUG

@@ -32,8 +32,8 @@ public final class SaveJourneyViewModel {
     // MARK: - Initializer
     
     public init(selectedMusic: Music,
-                spotRepository: SpotRepository) {
-        self.spotRepository = spotRepository
+                journeyRepository: JourneyRepository) {
+        self.journeyRepository = journeyRepository
         self.state = State(song: CurrentValueSubject<Music, Never>(selectedMusic))
     }
     
@@ -45,8 +45,8 @@ public final class SaveJourneyViewModel {
             Task {
                 let result = await self.journeyRepository.fetchRecordingJourney()
                 switch result {
-                case .success(let spots):
-                    self.state.spots.send(spots)
+                case .success(let journey):
+                    self.state.spots.send(journey.spots)
                 case .failure(let error):
                     #if DEBUG
                     MSLogger.make(category: .saveJourney).error("\(error)")

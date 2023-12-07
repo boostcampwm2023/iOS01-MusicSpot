@@ -54,14 +54,10 @@ public final class HomeViewModel {
         case .fetchJourney(at: (let minCoordinate, let maxCoordinate)):
             Task {
                 let result = await self.journeyRepository.fetchJourneyList(minCoordinate: minCoordinate,
-                                                                    maxCoordinate: maxCoordinate)
+                                                                           maxCoordinate: maxCoordinate)
                 switch result {
-                case .success(let journeys):
-                    self.state.journeys.send(
-                        journeys.journeys.map { journeyDTO in
-                            return Journey(dto: journeyDTO)
-                        }
-                    )
+                case .success(let journies):
+                    self.state.journeys.send(journies)
                 case .failure(let error):
                     print(error)
                 }
