@@ -179,7 +179,6 @@ extension JourneyListViewController: UICollectionViewDelegate {
     }
     
     private func configureDataSource() -> JourneyListDataSource {
-        // TODO: 최적화 & 캐싱
         let cellRegistration = JourneyCellRegistration { cell, indexPath, itemIdentifier in
             let cellModel = JourneyCellModel(location: itemIdentifier.title,
                                              date: itemIdentifier.date.start,
@@ -194,7 +193,8 @@ extension JourneyListViewController: UICollectionViewDelegate {
         
         let headerRegistration = JourneyListHeaderRegistration(elementKind: UICollectionView.elementKindSectionHeader,
                                                                handler: { header, _, indexPath in
-            
+            guard let numberOfItems = self.currentSnapshot?.numberOfItems else { return }
+            header.update(numberOfJourneys: numberOfItems)
         })
       
         let dataSource = JourneyListDataSource(collectionView: self.collectionView,

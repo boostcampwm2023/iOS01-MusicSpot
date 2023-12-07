@@ -47,4 +47,14 @@ extension EndJourneyRequestDTO: Encodable {
         case song
     }
     
+//    public func encode(to encoder: Encoder) throws {
+//        var container = encoder.container(keyedBy: CodingKeys.self)
+//        try container.encode(self.journeyID, forKey: .journeyID)
+//        try container.encode(self.coordinates, forKey: .coordinates)
+//        try container.encode(self.endTimestamp., forKey: .title)
+//        try container.encode(self.spots, forKey: .spots)
+//        try container.encode(self.coordinates, forKey: .coordinates)
+//        try container.encode(self.coordinates, forKey: .coordinates)
+//    }
+    
 }

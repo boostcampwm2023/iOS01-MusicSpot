@@ -21,6 +21,13 @@ public struct MSNetworking {
     private let encoder: JSONEncoder = {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions.insert(.withFractionalSeconds)
+        encoder.dateEncodingStrategy = .custom { date, encoder in
+            var container = encoder.singleValueContainer()
+            let dateString = dateFormatter.string(from: date)
+            try container.encode(dateString)
+        }
         return encoder
     }()
     
@@ -62,7 +69,7 @@ public struct MSNetworking {
     public func request<T: Decodable>(_ type: T.Type,
                                       router: Router,
                                       timeoutInterval: TimeoutInterval = .seconds(3)) -> AnyPublisher<T, Error> {
-        guard let request = router.request else {
+        guard let request = router.makeRequest(encoder: self.encoder) else {
             return Fail(error: MSNetworkError.invalidRouter).eraseToAnyPublisher()
         }
         
@@ -92,7 +99,7 @@ public struct MSNetworking {
     public func request<T: Decodable>(_ type: T.Type,
                                       router: Router,
                                       timeoutInterval: TimeoutInterval = .seconds(3)) async -> Result<T, Error> {
-        guard let request = router.request else {
+        guard let request = router.makeRequest(encoder: self.encoder) else {
             return .failure(MSNetworkError.invalidRouter)
         }
         

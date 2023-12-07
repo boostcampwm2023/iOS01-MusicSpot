@@ -17,6 +17,7 @@ public protocol JourneyRepository {
     func fetchJourneyList(userID: UUID,
                           minCoordinate: Coordinate,
                           maxCoordinate: Coordinate) async -> Result<[Journey], Error>
+    func endJourney(_ journey: Journey) async -> Result<String, Error>
     
 }
 
@@ -69,6 +70,22 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
             return .failure(error)
         }
 //        #endif
+    }
+    
+    public func endJourney(_ journey: Journey) async -> Result<String, Error> {
+        let requestDTO = EndJourneyRequestDTO(journeyID: journey.id,
+                                              coordinates: journey.coordinates.map { CoordinateDTO($0) },
+                                              endTimestamp: journey.date.end,
+                                              title: journey.title,
+                                              song: SongDTO(journey.music))
+        let router = JourneyRouter.endJourney(dto: requestDTO)
+        let result = await self.networking.request(EndJourneyResponseDTO.self, router: router)
+        switch result {
+        case .success(let responseDTO):
+            return .success(responseDTO.id)
+        case .failure(let error):
+            return .failure(error)
+        }
     }
     
 }

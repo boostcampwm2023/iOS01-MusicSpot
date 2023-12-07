@@ -22,7 +22,7 @@ public struct Journey: Identifiable {
     
     public init(id: String,
                 title: String,
-                date: (Date, Date),
+                date: (start: Date, end: Date),
                 spots: [Spot],
                 coordinates: [Coordinate],
                 music: Music) {

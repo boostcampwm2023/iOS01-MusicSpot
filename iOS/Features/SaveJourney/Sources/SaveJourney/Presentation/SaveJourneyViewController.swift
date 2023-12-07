@@ -8,6 +8,7 @@
 import Combine
 import CoreLocation
 import MapKit
+import MusicKit
 import UIKit
 
 import MSDomain
@@ -50,15 +51,17 @@ public final class SaveJourneyViewController: UIViewController {
     
     // MARK: - Properties
     
+    public weak var navigationDelegate: SaveJourneyNavigationDelegate?
+    
     private let viewModel: SaveJourneyViewModel
     
     private var dataSource: SaveJourneyDataSource?
     
-    private let musicPlayer = MPMusicPlayerApplicationController.applicationMusicPlayer
-    
     private var cancellables: Set<AnyCancellable> = []
     
     // MARK: - UI Components
+    
+    private let musicPlayer = MPMusicPlayerApplicationController.applicationMusicPlayer
     
     private let mapView: MKMapView = {
         let mapView = MKMapView()
@@ -132,22 +135,51 @@ public final class SaveJourneyViewController: UIViewController {
     
     private func bind() {
         self.viewModel.state.selectedSong
-            .map { Music($0) }
+            .combineLatest(self.viewModel.state.mediaItem)
+            .compactMap { (song, mediaQuery) -> (Song, MPMediaQuery)? in
+                guard let mediaQuery = mediaQuery else { return nil }
+                return (song, mediaQuery)
+            }
             .receive(on: DispatchQueue.main)
-            .sink { music in
+            .sink { [weak self] song, mediaQuery in
+                guard let self = self else { return }
                 var snapshot = MusicSnapshot()
-                snapshot.append([.song(music)])
+                snapshot.append([.music(Music(song))])
                 self.dataSource?.apply(snapshot, to: .music)
+                
+                Task {
+                    self.musicPlayer.setQueue(with: mediaQuery)
+                }
             }
             .store(in: &self.cancellables)
         
-        self.viewModel.state.recordedJourney
+        self.viewModel.state.recordingJourney
             .map { $0.spots }
             .receive(on: DispatchQueue.main)
             .sink { spots in
                 var snapshot = SpotSnapshot()
                 snapshot.append(spots.map { .spot($0) })
                 self.dataSource?.apply(snapshot, to: .spot)
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.isMusicPlaying
+            .receive(on: DispatchQueue.main)
+            .sink { isMusicPlaying in
+                self.mediaControlButton.image = isMusicPlaying ? .msIcon(.pause) : .msIcon(.play)
+                if isMusicPlaying {
+                    self.musicPlayer.play()
+                } else {
+                    self.musicPlayer.pause()
+                }
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.endJourneyResponse
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                self.navigationDelegate?.popToHome()
             }
             .store(in: &self.cancellables)
     }
@@ -168,21 +200,6 @@ private extension SaveJourneyViewController {
             self?.presentSaveJourney()
         }
         self.nextButton.addAction(nextButtonAction, for: .touchUpInside)
-    }
-    
-}
-
-// MARK: - Media Player
-
-private extension SaveJourneyViewController {
-    
-    func configureMusicPlayer() {
-        let songTitleFilter = MPMediaPropertyPredicate(value: "ETA",
-                                                       forProperty: MPMediaItemPropertyTitle,
-                                                       comparisonType: .contains)
-        let filterSet = Set([songTitleFilter])
-        let query = MPMediaQuery(filterPredicates: filterSet)
-        self.musicPlayer.setQueue(with: query)
     }
     
 }
@@ -282,8 +299,8 @@ private extension SaveJourneyViewController {
             case .zero:
                 header.update(with: Typo.songSectionTitle)
             case 1:
-                let spots = self.viewModel.state.spots
-                header.update(with: Typo.spotSectionTitle(spots.value.count))
+                let spots = self.viewModel.state.recordingJourney.value.spots
+                header.update(with: Typo.spotSectionTitle(spots.count))
             default:
                 break
             }
@@ -292,7 +309,7 @@ private extension SaveJourneyViewController {
         let dataSource = SaveJourneyDataSource(collectionView: self.collectionView,
                                                cellProvider: { collectionView, indexPath, item in
             switch item {
-            case .song(let song):
+            case .music(let song):
                 return collectionView.dequeueConfiguredReusableCell(using: musicCellRegistration,
                                                                     for: indexPath,
                                                                     item: song)
@@ -330,12 +347,12 @@ extension SaveJourneyViewController: UICollectionViewDelegate {
         let collectionViewHeight = self.collectionView.frame.height
         let collectionViewContentInset = collectionViewHeight - self.view.safeAreaInsets.top
         let assistanceValue = collectionViewHeight - collectionViewContentInset
-        let isContentBelowTopOfScreen = offset.y < 0
+        let isContentBelowTopOfScreen = offset.y < .zero
         
         if isContentBelowTopOfScreen {
             self.mapViewHeightConstraint?.constant = assistanceValue + offset.y.magnitude
         } else if !isContentBelowTopOfScreen {
-            self.mapViewHeightConstraint?.constant = 0
+            self.mapViewHeightConstraint?.constant = .zero
         } else {
             self.mapViewHeightConstraint?.constant = offset.y.magnitude
         }
@@ -355,7 +372,7 @@ extension SaveJourneyViewController: AlertViewControllerDelegate {
     }
     
     func titleDidConfirmed(_ title: String) {
-        print("Title: \(title)")
+        self.viewModel.trigger(.titleDidConfirmed(title))
     }
     
 }
@@ -408,7 +425,6 @@ private extension SaveJourneyViewController {
     func configureComponents() {
         self.configureCollectionView()
         self.configureButtons()
-        self.configureMusicPlayer()
     }
     
 }

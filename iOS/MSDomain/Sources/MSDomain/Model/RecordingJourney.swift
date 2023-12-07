@@ -12,15 +12,18 @@ public struct RecordingJourney: Identifiable {
     // MARK: - Properties
     
     public let id: String
+    public let startTimestamp: Date
     public let spots: [Spot]
     public let coordinates: [Coordinate]
     
     // MARK: - Initializer
     
     public init(id: String,
+                startTimestamp: Date,
                 spots: [Spot],
                 coordinates: [Coordinate]) {
         self.id = id
+        self.startTimestamp = startTimestamp
         self.spots = spots
         self.coordinates = coordinates
     }

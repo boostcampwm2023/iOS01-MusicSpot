@@ -50,7 +50,7 @@ public final class HomeViewModel {
     func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
-            print("ViewNeedsLoaded")
+            self.fetchUser()
         case .fetchJourney(at: (let minCoordinate, let maxCoordinate)):
             
             Task {
@@ -84,19 +84,16 @@ public final class HomeViewModel {
 private extension HomeViewModel {
     
     func fetchUser() {
-        #if DEBUG
         let isFirstLaunch = self.isFirstLaunch ? "앱이 처음 실행되었습니다." : "앱 첫 실행이 아닙니다."
         MSLogger.make(category: .userDefaults).log("\(isFirstLaunch)")
-        #endif
+        
         guard self.isFirstLaunch else { return }
         
         Task {
             let result = await self.userRepository.createUser()
             switch result {
             case .success(let userInfo):
-                #if DEBUG
                 MSLogger.make(category: .home).log("\(userInfo.userID) 유저가 생성되었습니다.")
-                #endif
                 
                 self.isFirstLaunch = false
             case .failure(let error):
