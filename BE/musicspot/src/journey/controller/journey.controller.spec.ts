@@ -1,7 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JourneyController } from './journey.controller';
 
-import { StartJourneyDTO } from '.././dto/journeyStart.dto';
+
+import { StartJourneyDTO } from '../dto/journeyStart/journeyStartReq.dto';
+
 import { JourneyService } from '../service/journey.service';
 import mongoose from 'mongoose';
 import { User, UserSchema } from '../../user/schema/user.schema';
@@ -14,7 +16,9 @@ describe('JourneyController', () => {
   let journeyModel;
 
   beforeAll(async () => {
-    mongoose.connect('mongodb://192.168.174.128:27017/musicspotDB');
+    mongoose.connect(
+      `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
+    );
     userModel = mongoose.model(User.name, UserSchema);
     journeyModel = mongoose.model(Journey.name, JourneySchema);
     const module: TestingModule = await Test.createTestingModule({

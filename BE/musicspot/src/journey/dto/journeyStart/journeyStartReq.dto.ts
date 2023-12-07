@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDateString } from 'class-validator';
-import { IsCoordinate } from '../../common/decorator/coordinate.decorator';
-export class StartJourneyDTO {
+import { IsCoordinate } from '../../../common/decorator/coordinate.decorator';
+import { UUID } from 'crypto';
+export class StartJourneyReqDTO {
   @ApiProperty({
     example: [37.555946, 126.972384],
     description: '위치 좌표',
@@ -18,13 +19,21 @@ export class StartJourneyDTO {
     required: true,
   })
   @IsDateString()
-  readonly timestamp: string;
+  readonly startTimestamp: string;
 
   @ApiProperty({
-    example: 'hello@gmail.com',
-    description: '이메일',
+    example: 'ab4068ef-95ed-40c3-be6d-3db35df866b9',
+    description: '사용자 id',
     required: true,
   })
   @IsString()
-  readonly email: string;
+  readonly userId: UUID;
+
+  // @ApiProperty({
+  //   example: 'hello@gmail.com',
+  //   description: '이메일',
+  //   required: true,
+  // })
+  // @IsString()
+  // readonly email: string;
 }

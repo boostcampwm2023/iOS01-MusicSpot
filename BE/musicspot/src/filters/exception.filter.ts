@@ -1,6 +1,5 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { BaseException } from './base.exception';
-import { UnexpectedException } from './unexpected.exception';
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
@@ -9,19 +8,19 @@ export class AllExceptionFilter implements ExceptionFilter {
     const req = ctx.getRequest();
     const res = ctx.getResponse();
     const err = exception;
-
+    const { status, response } = err;
+    let json = {
+      method: req.method,
+      path: req.url,
+      timestamp: new Date().toISOString(),
+    };
     if (err instanceof BaseException) {
-      err.timestamp = new Date().toISOString();
-      err.path = req.url;
-      res.status(err.statusCode).json({
-        errorCode: err.errorCode,
-        statusCode: err.statusCode,
-        timestamp: err.timestamp,
-        path: err.path,
-        message: err.message,
-      });
+      json['errorCode'] = err.errorCode;
+      json['message'] = err.message;
+      json['statusCode'] = status;
     } else {
-      res.send({ ...err, timestamp: new Date().toISOString() });
+      Object.assign(json, response);
     }
+    res.status(status).json(json);
   }
 }
