@@ -36,9 +36,6 @@ export class CheckJourneyReqDTO {
 }
 
 export class SpotDTO {
-  @ApiProperty({ description: 'spot ID', example: '65649c91380cafcab8869ed2' })
-  readonly _id: string;
-
   @ApiProperty({ description: '여정 ID', example: '65649c91380cafcab8869ed2' })
   readonly journeyId: string;
 
@@ -49,10 +46,11 @@ export class SpotDTO {
   readonly timestamp: string;
 
   @ApiProperty({
-    description: '파일 이름',
-    example: '656f6d266f1175ab5d67e9fd/1701853125890',
+    description: 'presigned url',
+    example:
+      'https://music-spot-storage.kr.object.ncloudstorage.com/path/name?AWSAccessKeyId=key&Expires=sec&Signature=signature',
   })
-  readonly photoKey: string;
+  readonly photoUrl: string;
 }
 
 class journeyMetadataDto {

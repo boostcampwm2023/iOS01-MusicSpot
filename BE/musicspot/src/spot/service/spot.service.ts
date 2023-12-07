@@ -54,20 +54,20 @@ export class SpotService {
       recordSpotDto.journeyId,
       file,
     );
-    // const presignedUrl = makePresignedUrl(photoKey);
+    const presignedUrl = makePresignedUrl(photoKey);
     const createdSpotData = await this.insertToSpot({
       ...recordSpotDto,
       photoKey,
     });
 
-    // const { journeyId, coordinate, timestamp } = createdSpotData;
-    // const returnData: RecordSpotResDTO = {
-    //   journeyId,
-    //   coordinate,
-    //   timestamp,
-    //   photo: presignedUrl,
-    // };
-    // return returnData;
+    const { journeyId, coordinate, timestamp } = createdSpotData;
+    const returnData: RecordSpotResDTO = {
+      journeyId,
+      coordinate,
+      timestamp,
+      photoUrl: presignedUrl,
+    };
+    return returnData;
   }
   async getSpotImage(spotId: string) {
     const spot = await this.spotModel.findById(spotId).lean();

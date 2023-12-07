@@ -12,6 +12,7 @@ import { RecordSpotReqDTO } from '../dto/recordSpot.dto';
 import { SpotService } from '../service/spot.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Spot } from '../schema/spot.schema';
+import { SpotDTO } from 'src/journey/dto/journeyCheck/journeyCheck.dto';
 @Controller('spot')
 @ApiTags('spot 관련 API')
 export class SpotController {
@@ -22,7 +23,8 @@ export class SpotController {
     description: 'spot을 기록합니다.',
   })
   @ApiCreatedResponse({
-    description: 'spot 생성 성공 및 실패 반환',
+    description: 'spot 생성 데이터 반환',
+    type: SpotDTO,
   })
   @UseInterceptors(FileInterceptor('image'))
   @Post('')
@@ -39,7 +41,7 @@ export class SpotController {
   })
   @ApiCreatedResponse({
     description: 'spot 데이터를 반환',
-    type: Spot,
+    type: SpotDTO,
   })
   @Get('find')
   async findSpotImage(@Query('spotId') spotId: string) {
