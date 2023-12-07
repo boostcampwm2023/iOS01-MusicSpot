@@ -18,13 +18,17 @@ public final class SpotSaveViewModel {
     private var repository: SpotRepository
 //    private let msNetworking = MSNetworking(session: URLSession.shared)
     private var subscriber: Set<AnyCancellable> = []
-    internal var journeyID: UUID?
-    internal var coordinate: [Double]?
+    private let journeyID: UUID
+    private let coordinate: [Double]
     
     // MARK: - Initializer
     
-    public init(repository: SpotRepository) {
+    public init(repository: SpotRepository,
+                journeyID: UUID,
+                coordinate: [Double]) {
         self.repository = repository
+        self.journeyID = journeyID
+        self.coordinate = coordinate
     }
     
 }
