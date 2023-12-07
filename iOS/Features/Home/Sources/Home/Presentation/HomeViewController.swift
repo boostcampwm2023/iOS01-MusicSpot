@@ -10,13 +10,14 @@ import UIKit
 import JourneyList
 import MSConstants
 import MSDesignSystem
+import MSDomain
 import MSUIKit
 import MSUserDefaults
 import NavigateMap
 
 public typealias HomeBottomSheetViewController = MSBottomSheetViewController<NavigateMapViewController, JourneyListViewController>
 
-public final class HomeViewController: HomeBottomSheetViewController {
+public final class HomeViewController: HomeBottomSheetViewController, HomeViewModelDelegate {
     
     // MARK: - Constants
     
@@ -117,7 +118,11 @@ public final class HomeViewController: HomeBottomSheetViewController {
     // MARK: - Combine Binding
     
     private func bind() {
-        
+        self.viewModel.state.journeys
+            .receive(on: DispatchQueue.main)
+            .sink { journeys in
+//                self.bottomSheetViewController.update(journeys: )
+            }
     }
     
     // MARK: - Functions
@@ -138,11 +143,21 @@ public final class HomeViewController: HomeBottomSheetViewController {
             guard let coordinates = self?.contentViewController.currentCoordinate else {
                 return
             }
-            self?.bottomSheetViewController.fetchJourneys(from: coordinates)
+            self?.viewModel.trigger(.fetchJourney(at: coordinates))
+//            self?.bottomSheetViewController.updateJourneys()
         }
         self.refreshButton.addAction(refreshButtonAction, for: .touchUpInside)
     }
     
+    public func fetchJourneys(from coordinates: (Coordinate, Coordinate)) {
+        self.viewModel.trigger(.fetchJourney(at: coordinates))
+    }
+    
+    @objc
+    func startButtonDidTap() {
+        self.isRecording.toggle()
+        self.updateButtonMode()
+    }
 }
 
 // MARK: - FTUX
@@ -160,7 +175,7 @@ private extension HomeViewController {
 extension HomeViewController: RecordJourneyButtonViewDelegate {
     
     public func backButtonDidTap(_ button: MSRectButton) {
-        print("뒤로가기 버튼 클릭")
+        startButtonDidTap()
     }
     
     public func spotButtonDidTap(_ button: MSRectButton) {

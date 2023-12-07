@@ -5,10 +5,13 @@
 //  Created by 이창준 on 2023.12.06.
 //
 
+import Combine
 import Foundation
 
 import MSConstants
 import MSData
+import MSDomain
+import MSImageFetcher
 import MSLogger
 import MSUserDefaults
 
@@ -16,9 +19,11 @@ public final class HomeViewModel {
     
     public enum Action {
         case viewNeedsLoaded
+        case fetchJourney(at: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
     }
     
     public struct State {
+        var journeys = CurrentValueSubject<[Journey], Never>([])
         
         public init() { }
     }
@@ -27,15 +32,17 @@ public final class HomeViewModel {
     
     public var state = State()
     
-    private let repository: UserRepository
+    let journeyRepository: JourneyRepository
+    let userRepository: UserRepository
     
     @UserDefaultsWrapped(UserDefaultsKey.isFirstLaucnh, defaultValue: false)
     private var isFirstLaunch: Bool
     
     // MARK: - Initializer
     
-    public init(repository: UserRepository) {
-        self.repository = repository
+    public init(journeyRepository: JourneyRepository, userRepository: UserRepository) {
+        self.journeyRepository = journeyRepository
+        self.userRepository = userRepository
     }
     
     // MARK: - Functions
@@ -43,8 +50,24 @@ public final class HomeViewModel {
     func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
-            self.fetchUser()
+            print("ViewNeedsLoaded")
+        case .fetchJourney(at: (let minCoordinate, let maxCoordinate)):
+            Task {
+                let result = await self.journeyRepository.fetchJourneyList(minCoordinate: minCoordinate,
+                                                                    maxCoordinate: maxCoordinate)
+                switch result {
+                case .success(let journeys):
+                    self.state.journeys.send(
+                        journeys.journeys.map { journeyDTO in
+                            return Journey(dto: journeyDTO)
+                        }
+                    )
+                case .failure(let error):
+                    print(error)
+                }
+            }
         }
+        
     }
     
 }
@@ -61,7 +84,7 @@ private extension HomeViewModel {
         guard self.isFirstLaunch else { return }
         
         Task {
-            let result = await self.repository.createUser()
+            let result = await self.userRepository.createUser()
             switch result {
             case .success(let userInfo):
                 #if DEBUG

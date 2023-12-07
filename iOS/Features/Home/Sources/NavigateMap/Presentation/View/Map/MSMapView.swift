@@ -9,6 +9,7 @@ import UIKit
 import MapKit
 
 import MSDesignSystem
+import MSDomain
 
 final class MSMapView: MKMapView {
     

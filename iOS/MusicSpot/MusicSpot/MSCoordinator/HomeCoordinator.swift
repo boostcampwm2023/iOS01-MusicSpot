@@ -38,20 +38,21 @@ final class HomeCoordinator: Coordinator {
     // MARK: - Functions
     
     func start() {
-        // Navigate Map
-        let navigateMapRepository = NavigateMapRepositoryImplementation()
-        let navigateMapViewModel = NavigateMapViewModel(repository: navigateMapRepository)
-        let navigateMapViewController = NavigateMapViewController(viewModel: navigateMapViewModel)
+        
+        let journeyRepository = JourneyRepositoryImplementation()
+        
+        // NavigateMap
+        let navigateMapViewmodel = NavigateMapViewModel(repository: journeyRepository)
+        let navigateMapViewController = NavigateMapViewController(viewModel: navigateMapViewmodel)
         
         // Journey List
-        let journeyRepository = JourneyRepositoryImplementation()
         let journeyListViewModel = JourneyListViewModel(repository: journeyRepository)
         let journeyListViewController = JourneyListViewController(viewModel: journeyListViewModel)
         journeyListViewController.navigationDelegate = self
         
         // Bottom Sheet
         let userRepository = UserRepositoryImplementation()
-        let homeViewModel = HomeViewModel(repository: userRepository)
+        let homeViewModel = HomeViewModel(journeyRepository: journeyRepository, userRepository: userRepository)
         let homeViewController = HomeViewController(viewModel: homeViewModel,
                                                     contentViewController: navigateMapViewController,
                                                     bottomSheetViewController: journeyListViewController)

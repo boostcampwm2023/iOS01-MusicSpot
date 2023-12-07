@@ -5,17 +5,17 @@
 //  Created by 윤동주 on 11/26/23.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 import MSData
-import MSLogger
+import MSDomain
 
 public final class NavigateMapViewModel {
     
     public enum Action {
         case viewNeedsLoaded
-        case fetchJourneys(at: Coordinate)
+        case fetchJourney(at: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
     }
     
     public struct State {
@@ -26,36 +26,14 @@ public final class NavigateMapViewModel {
     
     // MARK: - Properties
     
-    private let repository: NavigateMapRepository
+    private let repository: JourneyRepository
     
     public var state = State()
     
     // MARK: - Initializer
 
-    public init(repository: NavigateMapRepository) {
+    public init(repository: JourneyRepository) {
         self.repository = repository
-    }
-    
-    // MARK: - Functions
-    
-    func trigger(_ action: Action) {
-        switch action {
-        case .viewNeedsLoaded:
-            Task {
-                let result = await self.repository.fetchJourneyList()
-                
-                switch result {
-                case .success(let journeys):
-                    let journeys = journeys.map { Journey(dto: $0) }
-                    self.state.journeys.send(journeys)
-                case .failure(let error):
-                    MSLogger.make(category: .home).error("\(error)")
-                }
-            }
-        case .fetchJourneys(let coordinate):
-            print(coordinate)
-        }
-        
     }
     
 }

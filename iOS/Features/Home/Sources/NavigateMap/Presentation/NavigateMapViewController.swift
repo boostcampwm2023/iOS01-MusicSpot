@@ -10,11 +10,17 @@ import CoreLocation
 import MapKit
 import UIKit
 
-import MSDomain
-import MSUIKit
-import MSLogger
 import MSData
+import MSDomain
 import MSImageFetcher
+import MSLogger
+import MSNetworking
+import MSUIKit
+
+
+public protocol HomeViewModelDelegate {
+    func fetchJourneys(from coordinates: (Coordinate, Coordinate))
+}
 
 public final class NavigateMapViewController: UIViewController {
     
@@ -30,7 +36,7 @@ public final class NavigateMapViewController: UIViewController {
     
     private enum Metric {
         
-        static let buttonStackTopSpacing: CGFloat = 55.0
+        static let buttonStackTopSpacing: CGFloat = 50.0
         static let buttonStackTrailingSpacing: CGFloat = 16.0
         
     }
@@ -57,15 +63,20 @@ public final class NavigateMapViewController: UIViewController {
         return (minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)
     }
     
-    // 임시 위치 정보
-    private let tempCoordinate = CLLocationCoordinate2D(latitude: 37.495120492289026, longitude: 126.9553042366186)
+    private let locationManager = CLLocationManager()
     
-    private let viewModel: NavigateMapViewModel?
+    private let viewModel: NavigateMapViewModel
     
     private var cancellables: Set<AnyCancellable> = []
     
-//    private var previousCoordinate: CLLocationCoordinate2D?
-//    private var polyline: MKPolyline?
+    private var homeViewModelDelegate: HomeViewModelDelegate?
+    
+    private var msNetworking = MSNetworking(session: URLSession.shared)
+    
+    internal var navigateMapRouter: JourneyRouter?
+    
+    //    private var previousCoordinate: CLLocationCoordinate2D?
+    //    private var polyline: MKPolyline?
     
     // MARK: - Initializer
     
@@ -90,7 +101,6 @@ public final class NavigateMapViewController: UIViewController {
         
         self.configureLayout()
         self.bind()
-        self.viewModel.trigger(.viewNeedsLoaded)
     }
     
     // MARK: - UI Configuration
@@ -126,7 +136,7 @@ public final class NavigateMapViewController: UIViewController {
     
     func addAnnotations(journeys: [Journey]) {
         let datas = journeys.flatMap { journey in
-            journey.spots.map { (location: journey.location, spot: $0) }
+            journey.spots.map { (location: journey.title, spot: $0) }
         }
         
         Task {
@@ -134,7 +144,7 @@ public final class NavigateMapViewController: UIViewController {
                 for (location, spot) in datas {
                     group.addTask {
                         guard let photoData = await MSImageFetcher.shared.fetchImage(from: spot.photoURL,
-                                                                                     forKey: spot.journeyID.uuidString) else {
+                                                                                     forKey: spot.journeyID) else {
                             throw ImageFetchError.imageFetchFailed
                         }
                         
@@ -159,7 +169,7 @@ public final class NavigateMapViewController: UIViewController {
             }
         }
     }
-    
+
     // MARK: - Combine Binding
     
     func bind() {
@@ -229,6 +239,9 @@ extension NavigateMapViewController: ButtonStackViewDelegate {
     /// 현재 지도에서 보이는 범위 내의 모든 Spot들을 보여줌.
     public func mapButtonDidTap() {
         print(#function, "현재 지도에서 보이는 범위 내의 모든 Spot들을 보여줍니다.")
+        Task{
+            await self.loadJourneys()
+        }
     }
     
     /// 현재 내 위치를 중앙에 위치.
