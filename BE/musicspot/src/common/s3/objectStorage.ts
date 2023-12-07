@@ -39,3 +39,24 @@ class NcloudStorageConfig implements INcloudStorageConfig {
 export const S3 = new AWS.S3(new NcloudStorageConfig().getConfig());
 export const bucketName = process.env.BUCKET_NAME;
 export const endpoint = process.env.NCLOUD_ENDPOINT;
+
+export const makePresignedUrl = (key) => {
+  const config = {
+    Bucket: bucketName,
+    Key: key,
+    Expires: 60,
+  };
+
+  return S3.getSignedUrl('getObject', config);
+};
+
+// makePresignedUrl(key) {
+//   const config = {
+//     Bucket: bucketName,
+//     Key: key,
+//     Expires: 60,
+//   };
+
+//   const presignedUrl = S3.getSignedUrl('getObject', config);
+//   return presignedUrl;
+// }

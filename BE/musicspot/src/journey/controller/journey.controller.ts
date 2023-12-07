@@ -6,6 +6,7 @@ import {
   ValidationPipe,
   Get,
   Query,
+  Param,
 } from '@nestjs/common';
 import { JourneyService } from '../service/journey.service';
 
@@ -148,5 +149,10 @@ export class JourneyController {
   @Get('loadLastData')
   async loadLastData(@Query('userId') userId: string) {
     return await this.journeyService.loadLastJourney(userId);
+  }
+
+  @Get(':journeyId')
+  async getJourneyById(@Param('journeyId') journeyId: string) {
+    return await this.journeyService.getJourneyById(journeyId);
   }
 }
