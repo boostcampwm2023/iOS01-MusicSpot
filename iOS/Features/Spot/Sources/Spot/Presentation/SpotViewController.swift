@@ -89,7 +89,7 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     
     // MARK: - Initializer
     
-    init(viewModel: SpotViewModel) {
+    public init(viewModel: SpotViewModel) {
         self.viewModel = viewModel
         super.init()
     }

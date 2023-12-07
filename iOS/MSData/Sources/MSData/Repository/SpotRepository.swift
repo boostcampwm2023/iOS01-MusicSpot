@@ -11,7 +11,7 @@ import MSNetworking
 
 public protocol SpotRepository {
     func fetchRecordingSpots() async -> Result<[SpotDTO], Error>
-    func uploadSpot() async -> Result<SpotDTO, Error>
+//    func uploadSpot() async -> Result<SpotDTO, Error>
 }
 
 public struct SpotRepositoryImplementation: SpotRepository {
@@ -41,8 +41,8 @@ public struct SpotRepositoryImplementation: SpotRepository {
         return .failure(MSNetworkError.unknownResponse)
     }
     
-    public func uploadSpot() async -> Result<SpotDTO, Error> {
-        <#code#>
-    }
+//    public func uploadSpot() async -> Result<SpotDTO, Error> {
+//        
+//    }
     
 }

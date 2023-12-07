@@ -37,4 +37,5 @@ private extension CameraView {
         self.layer.cornerRadius = Metric.cornerRadius
         self.clipsToBounds = true
     }
+    
 }

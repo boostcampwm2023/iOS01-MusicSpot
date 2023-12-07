@@ -15,7 +15,7 @@ protocol ShotDelegate: AnyObject {
     
 }
 
-final class SpotViewModel: NSObject {
+public final class SpotViewModel: NSObject {
     
     // MARK: - Type: SwapMode
     
@@ -143,7 +143,7 @@ private extension SpotViewModel {
 
 extension SpotViewModel: AVCapturePhotoCaptureDelegate {
     
-    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+    public func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let imageData = photo.fileDataRepresentation() else {
             MSLogger.make(category: .camera).debug("image Data가 없습니다.")
             return

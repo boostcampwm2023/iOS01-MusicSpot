@@ -11,7 +11,7 @@ import Combine
 import MSData
 import MSLogger
 
-final class SpotSaveViewModel {
+public final class SpotSaveViewModel {
     
     // MARK: - Properties
     
@@ -23,7 +23,7 @@ final class SpotSaveViewModel {
     
     // MARK: - Initializer
     
-    init(repository: SpotRepository) {
+    public init(repository: SpotRepository) {
         self.repository = repository
     }
     
