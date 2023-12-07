@@ -89,12 +89,6 @@ public final class JourneyListViewController: BaseViewController {
         self.bind()
     }
     
-    // MARK: - Functions
-
-    func update(journeys: [Journey]) {
-        
-    }
-    
     // MARK: - Combine Binding
     
     func bind() {
@@ -224,19 +218,3 @@ extension JourneyListViewController: UICollectionViewDelegate {
     }
     
 }
-
-//// MARK: - Preview
-//
-//#if DEBUG
-//import MSData
-//import MSDesignSystem
-//import MSNetworking
-//@available(iOS 17, *)
-//#Preview {
-//    MSFont.registerFonts()
-//    let journeyRepository = JourneyRepositoryImplementation()
-//    let testViewModel = JourneyListViewModel(repository: journeyRepository)
-//    let testViewController = JourneyListViewController(viewModel: testViewModel)
-//    return testViewController
-//}
-//#endif

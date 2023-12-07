@@ -27,11 +27,10 @@ public struct MSNetworking {
     private let decoder: JSONDecoder = {
         let decoder = JSONDecoder()
         let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions.insert(.withFractionalSeconds)
         decoder.dateDecodingStrategy = .custom({ decoder in
             let container = try decoder.singleValueContainer()
             let dateString = try container.decode(String.self)
-            print(dateString)
-            print(dateFormatter.date(from: dateString))
             if let date = dateFormatter.date(from: dateString) {
                 return date
             }

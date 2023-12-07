@@ -38,4 +38,5 @@ public final class NavigateMapViewModel {
         self.repository = repository
     }
     
+    
 }
