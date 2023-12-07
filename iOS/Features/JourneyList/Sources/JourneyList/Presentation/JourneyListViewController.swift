@@ -89,12 +89,6 @@ public final class JourneyListViewController: BaseViewController {
         self.bind()
     }
     
-    // MARK: - Functions
-
-    func update(journeys: [Journey]) {
-        
-    }
-    
     // MARK: - Combine Binding
     
     func bind() {

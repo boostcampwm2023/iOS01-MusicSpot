@@ -35,7 +35,7 @@ public final class HomeViewModel {
     let journeyRepository: JourneyRepository
     let userRepository: UserRepository
     
-    @UserDefaultsWrapped(UserDefaultsKey.isFirstLaucnh, defaultValue: false)
+    @UserDefaultsWrapped(UserDefaultsKey.isFirstLaunch, defaultValue: false)
     private var isFirstLaunch: Bool
     
     // MARK: - Initializer
@@ -52,21 +52,32 @@ public final class HomeViewModel {
         case .viewNeedsLoaded:
             self.fetchUser()
         case .fetchJourney(at: (let minCoordinate, let maxCoordinate)):
+            
             Task {
-                let result = await self.journeyRepository.fetchJourneyList(minCoordinate: minCoordinate,
-                                                                           maxCoordinate: maxCoordinate)
+                let result = await self.userRepository.createUser()
                 switch result {
-                case .success(let journies):
-                    self.state.journeys.send(journies)
+                case .success(let userInfo):
+                    
+                    self.isFirstLaunch = false
+                    
+                    let result = await self.journeyRepository.fetchJourneyList(userID: userInfo.userID,
+                                                                               minCoordinate: minCoordinate,
+                                                                               maxCoordinate: maxCoordinate)
+                    switch result {
+                    case .success(let journeys):
+                        self.state.journeys.send(journeys)
+                        
+                    case .failure(let error):
+                        print(error)
+                    }
                 case .failure(let error):
-                    print(error)
+                    MSLogger.make(category: .home).error("\(error)")
                 }
             }
         }
-        
     }
-    
 }
+
 
 // MARK: - Privates
 

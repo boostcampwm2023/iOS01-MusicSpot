@@ -9,7 +9,7 @@ import Foundation
 
 public enum UserDefaultsKey {
     
-    public static let isFirstLaucnh = "isFirstLaucnh"
+    public static let isFirstLaunch = "isFirstLaunch"
     public static let isRecording = "isRecording"
     
 }

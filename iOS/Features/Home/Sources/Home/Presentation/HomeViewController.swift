@@ -124,7 +124,7 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
         self.viewModel.state.journeys
             .receive(on: DispatchQueue.main)
             .sink { journeys in
-//                self.bottomSheetViewController.update(journeys: )
+                self.contentViewController.addAnnotations(journeys: journeys)
             }
             .store(in: &self.cancellables)
     }
@@ -163,12 +163,11 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
                 return
             }
             self?.viewModel.trigger(.fetchJourney(at: coordinates))
-//            self?.bottomSheetViewController.updateJourneys()
         }
         self.refreshButton.addAction(refreshButtonAction, for: .touchUpInside)
     }
     
-    public func fetchJourneys(from coordinates: (MSDomain.Coordinate, MSDomain.Coordinate)) {
+    public func fetchJourneys(from coordinates: (Coordinate, Coordinate)) {
         self.viewModel.trigger(.fetchJourney(at: coordinates))
     }
     
@@ -177,6 +176,7 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
         self.isRecording.toggle()
         self.updateButtonMode()
     }
+    
 }
 
 // MARK: - Button View
