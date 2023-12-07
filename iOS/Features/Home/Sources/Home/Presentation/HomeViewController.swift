@@ -206,6 +206,7 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
         
         let lastCoordinate = Coordinate(latitude: userLocation.coordinate.latitude,
                                         longitude: userLocation.coordinate.longitude)
+        // TODO: 기록중인 여정 fetch
         let recordingJourney = RecordingJourney(id: "", spots: [], coordinates: [])
         self.navigationDelegate?.navigateToSelectSong(recordingJourney: recordingJourney,
                                                       lastCoordinate: lastCoordinate)
