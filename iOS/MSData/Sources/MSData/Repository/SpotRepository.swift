@@ -10,7 +10,9 @@ import Foundation
 import MSNetworking
 
 public protocol SpotRepository {
+    
     func fetchRecordingSpots() async -> Result<[SpotDTO], Error>
+    
 }
 
 public struct SpotRepositoryImplementation: SpotRepository {
