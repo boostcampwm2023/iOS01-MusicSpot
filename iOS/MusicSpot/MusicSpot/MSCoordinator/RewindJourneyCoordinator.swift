@@ -32,7 +32,18 @@ final class RewindJourneyCoordinator: Coordinator {
         let repository = SpotRepositoryImplementation()
         let viewModel = RewindJourneyViewModel(repository: repository)
         let rewindJourneyViewController = RewindJourneyViewController(viewModel: viewModel)
+        rewindJourneyViewController.navigationDelegate = self
         self.navigationController.pushViewController(rewindJourneyViewController, animated: true)
+    }
+    
+}
+
+// MARK: - RewindJourney Navigation
+
+extension RewindJourneyCoordinator: RewindJourneyNavigationDelegate {
+    
+    func popToHomeMap() {
+        self.popToHome(from: self)
     }
     
 }

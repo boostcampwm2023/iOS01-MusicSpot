@@ -62,6 +62,10 @@ public final class RewindJourneyViewController: UIViewController {
     
     private var timerSubscriber: Set<AnyCancellable> = []
     
+    // MARK: - Properties: Gesture
+    public weak var navigationDelegate: RewindJourneyNavigationDelegate?
+    var initialTouchPoint = CGPoint(x: 0, y: 0)
+    
     // MARK: - UI Components
     
     private let stackView = UIStackView()
@@ -92,8 +96,8 @@ public final class RewindJourneyViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.imageBinding()
-        self.configure()
         self.timerBinding()
+        self.configure()
         self.viewModel.trigger(.viewNeedsLoaded)
     }
     
@@ -154,6 +158,7 @@ public final class RewindJourneyViewController: UIViewController {
         self.configureAction()
         
         self.musicView.configure()
+        self.configureLeftToRightSwipeGesture()
     }
     
     // MARK: - UI Configuration: Layout
