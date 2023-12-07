@@ -25,7 +25,7 @@ public final class SaveJourneyViewModel {
     
     // MARK: - Properties
     
-    private let spotRepository: SpotRepository
+    private let journeyRepository: JourneyRepository
     
     public var state: State
     
@@ -43,7 +43,7 @@ public final class SaveJourneyViewModel {
         switch action {
         case .viewNeedsLoaded:
             Task {
-                let result = await self.spotRepository.fetchRecordingSpots()
+                let result = await self.journeyRepository.fetchRecordingJourney()
                 switch result {
                 case .success(let spots):
                     self.state.spots.send(spots)

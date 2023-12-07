@@ -11,7 +11,9 @@ import MSDomain
 import MSNetworking
 
 public protocol SpotRepository {
+    
     func fetchRecordingSpots() async -> Result<[Spot], Error>
+    
 }
 
 public struct SpotRepositoryImplementation: SpotRepository {
