@@ -124,7 +124,6 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
         self.viewModel.state.journeys
             .receive(on: DispatchQueue.main)
             .sink { journeys in
-                print(journeys)
                 self.contentViewController.addAnnotations(journeys: journeys)
             }
             .store(in: &self.cancellables)
