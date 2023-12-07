@@ -6,9 +6,11 @@
 //
 
 import UIKit
+import MusicKit
 
 import MSData
 import MSDomain
+import SaveJourney
 import SelectSong
 
 protocol SelectSongCoordinatorDelegate {
@@ -36,9 +38,11 @@ final class SelectSongCoordinator: Coordinator {
     
     // MARK: - Functions
     
-    func start() {
+    func start(recordingJourney: RecordingJourney, lastCoordinate: Coordinate) {
         let songRepository = SongRepositoryImplementation()
-        let selectSongViewModel = SelectSongViewModel(repository: songRepository)
+        let selectSongViewModel = SelectSongViewModel(recordingJourney: recordingJourney,
+                                                      lastCoordinate: lastCoordinate,
+                                                      repository: songRepository)
         let searchMusicViewController = SelectSongViewController(viewModel: selectSongViewModel)
         searchMusicViewController.navigationDelegate = self
         self.navigationController.pushViewController(searchMusicViewController, animated: true)
@@ -54,10 +58,14 @@ extension SelectSongCoordinator: SelectSongNavigationDelegate {
         self.delegate?.popToHome(from: self)
     }
     
-    func navigateToSaveJourney(with music: Music) {
+    func navigateToSaveJourney(recordingJourney: RecordingJourney,
+                               lastCoordinate: Coordinate,
+                               selectedSong: Song) {
         let saveJourneyCoordinator = SaveJourneyCoordinator(navigationController: self.navigationController)
         self.childCoordinators.append(saveJourneyCoordinator)
-        saveJourneyCoordinator.start(with: music)
+        saveJourneyCoordinator.start(recordingJourney: recordingJourney,
+                                     lastCoordinate: lastCoordinate,
+                                     selectedSong: selectedSong)
     }
     
 }

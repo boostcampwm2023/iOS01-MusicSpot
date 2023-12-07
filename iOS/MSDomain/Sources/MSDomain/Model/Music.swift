@@ -11,21 +11,21 @@ public struct Music: Identifiable {
     
     // MARK: - Properties
     
-    public let id: UInt32
+    public let id: String
     public let title: String
     public let artist: String
-    public let artwork: Artwork
+    public let albumCover: AlbumCover?
     
     // MARK: - Initializer
     
-    public init(id: UInt32,
+    public init(id: String,
                 title: String,
                 artist: String,
-                artwork: Artwork) {
+                albumCover: AlbumCover?) {
         self.id = id
         self.title = title
         self.artist = artist
-        self.artwork = artwork
+        self.albumCover = albumCover
     }
     
 }
