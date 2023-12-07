@@ -15,6 +15,8 @@ public final class RewindJourneyViewModel {
     
     public enum Action {
         case viewNeedsLoaded
+        case startAutoPlay
+        case stopAutoPlay
     }
     
     public struct State {
@@ -41,7 +43,7 @@ public final class RewindJourneyViewModel {
     
 }
 
-// MARK: - Interface: Networking
+// MARK: - Interface: Actions
 
 extension RewindJourneyViewModel {
     
@@ -61,14 +63,18 @@ extension RewindJourneyViewModel {
                     #endif
                 }
             }
+        case .startAutoPlay:
+            self.startTimer()
+        case .stopAutoPlay:
+            self.stopTimer()
         }
     }
 
 }
 
-// MARK: - Interface: Timer
+// MARK: - Functions: Timer
 
-internal extension RewindJourneyViewModel {
+private extension RewindJourneyViewModel {
     
     func startTimer() {
         timer = Timer.publish(every: self.timerTimeInterval, on: .main, in: .common)

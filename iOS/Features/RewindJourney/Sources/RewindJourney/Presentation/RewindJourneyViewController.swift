@@ -98,11 +98,11 @@ public final class RewindJourneyViewController: UIViewController {
     }
     
     public override func viewDidAppear(_ animated: Bool) {
-        self.viewModel.startTimer()
+        self.viewModel.trigger(.startAutoPlay)
     }
     
     public override func viewDidDisappear(_ animated: Bool) {
-        self.viewModel.stopTimer()
+        self.viewModel.trigger(.stopAutoPlay)
     }
     
     // MARK: - Combine Binding
@@ -142,8 +142,8 @@ public final class RewindJourneyViewController: UIViewController {
     }
     
     private func timerRestart() {
-        self.viewModel.stopTimer()
-        self.viewModel.startTimer()
+        self.viewModel.trigger(.startAutoPlay)
+        self.viewModel.trigger(.stopAutoPlay)
     }
     
     // MARK: - Configuration
