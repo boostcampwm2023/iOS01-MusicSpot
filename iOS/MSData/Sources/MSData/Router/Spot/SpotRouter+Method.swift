@@ -11,7 +11,7 @@ extension SpotRouter {
     
     public var method: HTTPMethod {
         switch self {
-        case .uploadSpot: return .post
+        case .upload: return .post
         case .downloadSpot: return .get
         }
     }
