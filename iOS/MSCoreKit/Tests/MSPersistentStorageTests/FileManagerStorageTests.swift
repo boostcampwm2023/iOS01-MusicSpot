@@ -27,6 +27,15 @@ final class MSPersistentStorageTests: XCTestCase {
         os_log("\(storageURL)")
     }
     
+    func test_FileURL생성출력_항상성공() {
+        let key = UUID().uuidString
+        guard let fileURL = self.fileStorage.fileURL(forKey: key) else {
+            XCTFail("파일 디렉토리 URL 휙득에 실패했습니다.")
+            return
+        }
+        os_log("\(fileURL)")
+    }
+    
     func test_StorageURL디렉토리_생성_성공() {
         guard let url = self.fileStorage.storageURL() else {
             XCTFail("FileManagerStorage 디렉토리 URL 휙득에 실패했습니다.")
@@ -67,6 +76,28 @@ final class MSPersistentStorageTests: XCTestCase {
         
         let fileExists = self.fileStorage.fileExists(atPath: storageURL, isDirectory: true)
         XCTAssertFalse(fileExists, "storageURL(create: true)는 디렉토리가 존재하지 않을 경우 새로 생성해야 합니다.")
+    }
+    
+    func test_FileManagerStorage에_데이터저장_성공() {
+        let sut = MockCodableData(title: "boostcamp", content: "wm8")
+        let key = "S045"
+        
+        let storedData = self.fileStorage.set(value: sut, forKey: key)
+        XCTAssertNotNil(storedData, "데이터가 저장되지 않았습니다.")
+    }
+    
+    func test_FileManagerStorage에서_데이터로드_성공() {
+        let sut = MockCodableData(title: "boostcamp", content: "wm8")
+        let key = "S045"
+        self.fileStorage.set(value: sut, forKey: key)
+        
+        guard let storedData = self.fileStorage.get(MockCodableData.self, forKey: key) else {
+            XCTFail("데이터 읽기에 실패했습니다.")
+            return
+        }
+        
+        XCTAssertEqual(sut, storedData,
+                       "목표 데이터와 불러온 값이 다릅니다.")
     }
     
 }

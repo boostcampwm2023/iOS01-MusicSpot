@@ -7,7 +7,7 @@
 
 public protocol MSPersistentStorage {
     
-    func get<T: Codable>(_ type: T.Type, key: String) -> T?
-    func set<T: Codable>(value: T, key: String)
+    func get<T: Codable>(_ type: T.Type, forKey key: String) -> T?
+    func set<T: Codable>(value: T, forKey key: String) -> T?
     
 }
