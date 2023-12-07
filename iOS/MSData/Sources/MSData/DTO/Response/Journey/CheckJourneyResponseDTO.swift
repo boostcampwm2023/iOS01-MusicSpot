@@ -7,16 +7,4 @@
 
 import Foundation
 
-public struct CheckJourneyResponseDTO: Decodable {
-    
-    // MARK: - Properties
-    
-    public let journeys: [JourneyDTO]
-    
-    // MARK: - Initializer
-    
-    public init(journeys: [JourneyDTO]) {
-        self.journeys = journeys
-    }
-    
-}
+public typealias CheckJourneyResponseDTO = [JourneyDTO]
