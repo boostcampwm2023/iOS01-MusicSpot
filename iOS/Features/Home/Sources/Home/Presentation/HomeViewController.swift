@@ -170,12 +170,7 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
     public func fetchJourneys(from coordinates: (Coordinate, Coordinate)) {
         self.viewModel.trigger(.fetchJourney(at: coordinates))
     }
-    
-    @objc
-    func startButtonDidTap() {
-        self.isRecording.toggle()
-        self.updateButtonMode()
-    }
+
     
 }
 
@@ -184,7 +179,10 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
 extension HomeViewController: RecordJourneyButtonViewDelegate {
     
     public func backButtonDidTap(_ button: MSRectButton) {
-        self.startButtonDidTap()
+        self.isRecording.toggle()
+        print(self.isRecording)
+        self.updateButtonMode()
+        self.contentViewController.mapView.removeOverlays(self.contentViewController.mapView.overlays)
     }
     
     public func spotButtonDidTap(_ button: MSRectButton) {
