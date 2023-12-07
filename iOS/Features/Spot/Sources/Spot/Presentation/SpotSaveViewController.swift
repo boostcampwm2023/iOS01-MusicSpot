@@ -79,7 +79,7 @@ public final class SpotSaveViewController: UIViewController {
     
     // MARK: - Initializer
     
-    init(viewModel: SpotSaveViewModel) {
+    public init(viewModel: SpotSaveViewModel) {
         self.viewModel = viewModel
         super.init()
     }
