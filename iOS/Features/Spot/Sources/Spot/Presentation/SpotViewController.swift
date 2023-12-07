@@ -95,7 +95,7 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
     
     // MARK: - Configuration
