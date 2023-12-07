@@ -85,9 +85,9 @@ public final class NavigateMapViewController: UIViewController {
     @UserDefaultsWrapped(UserDefaultsKey.isRecording, defaultValue: false)
     private var isRecording: Bool
     
-    private var timeRem: Int {
-        let cal = Calendar.current
-        return cal.component(.second, from: .now)%5
+    private var timeRemaining: Int {
+        let calendar = Calendar.current
+        return calendar.component(.second, from: .now) % 5
     }
     
     // MARK: - Initializer
@@ -293,9 +293,9 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager,
                                 didUpdateLocations locations: [CLLocation]) {
         guard let myLocation = locations.last else { return }
-        if timeRem != 0 || !self.isRecording { return }
+        if self.timeRemaining != 0 || !self.isRecording { return }
         if let previousCoordinate = self.previousCoordinate {
-            if !isDistanceOver5AndUnder50(coordinate1: previousCoordinate, coordinate2: myLocation.coordinate) { return }
+            if !self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate, coordinate2: myLocation.coordinate) { return }
         }
         
         if let coordinate = self.previousCoordinate {
