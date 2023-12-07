@@ -212,13 +212,8 @@ extension SelectSongViewController: UICollectionViewDelegate {
         #if DEBUG
         MSLogger.make(category: .selectSong).log("\(item.title) selected")
         #endif
-        
-        // TODO: 실제 데이터 바인딩
-        let artwork = Artwork(width: 52, height: 52,
-                              url: URL(string: "")!,
-                              backgroundColor: "", textColor1: "", textColor2: "", textColor3: "", textColor4: "")
-        let music = Music(id: 23, title: "Super Shy", artist: "NewJeans", artwork: artwork)
-        self.navigationDelegate?.navigateToSaveJourney(with: music)
+//        self.navigationDelegate?.navigateToSaveJourney(recordedJourney: <#T##Journey#>,
+//                                                       lastCoordiante: <#T##Coordinate#>)
     }
     
 }

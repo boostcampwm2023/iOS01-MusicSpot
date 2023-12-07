@@ -12,7 +12,7 @@ import MSDomain
 
 //extension Music {
 //    
-//    init(_ song: Song) {
+//    init(_ music: Song) {
 //        self.init(id: song.id, title: song.title, artist: song.artistName, artwork: song.artwork)
 //        self.id = song
 //        self.title = song.title

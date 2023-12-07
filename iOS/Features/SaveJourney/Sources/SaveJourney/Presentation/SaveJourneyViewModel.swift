@@ -19,7 +19,7 @@ public final class SaveJourneyViewModel {
     }
     
     public struct State {
-        var song: CurrentValueSubject<Music, Never>
+        var recordedJourney: CurrentValueSubject<Journey, Never>
         var spots = CurrentValueSubject<[Spot], Never>([])
     }
     
@@ -29,12 +29,17 @@ public final class SaveJourneyViewModel {
     
     public var state: State
     
+    /// 완료 버튼을 누른 시점의 마지막 좌표
+    private let lastCoordiante: Coordinate
+    
     // MARK: - Initializer
     
-    public init(selectedMusic: Music,
+    public init(recordedJourney: Journey,
+                lastCoordinate: Coordinate,
                 journeyRepository: JourneyRepository) {
         self.journeyRepository = journeyRepository
-        self.state = State(song: CurrentValueSubject<Music, Never>(selectedMusic))
+        self.state = State(recordedJourney: CurrentValueSubject<Journey, Never>(recordedJourney))
+        self.lastCoordiante = lastCoordinate
     }
     
     // MARK: - Functions
@@ -42,17 +47,9 @@ public final class SaveJourneyViewModel {
     func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
-            Task {
-                let result = await self.journeyRepository.fetchRecordingJourney()
-                switch result {
-                case .success(let journey):
-                    self.state.spots.send(journey.spots)
-                case .failure(let error):
-                    #if DEBUG
-                    MSLogger.make(category: .saveJourney).error("\(error)")
-                    #endif
-                }
-            }
+            #if DEBUG
+            MSLogger.make(category: .saveJourney).log("View Did Load: SaveJourney")
+            #endif
         case .mediaControlButtonDidTap:
             print("Media Control Button Tap.")
         }

@@ -11,6 +11,6 @@ import MSDomain
 
 public protocol SelectSongNavigationDelegate: AnyObject {
     
-    func navigateToSaveJourney(with music: Music)
+    func navigateToSaveJourney(recordedJourney: Journey, lastCoordinate: Coordinate)
     
 }

@@ -131,15 +131,17 @@ public final class SaveJourneyViewController: UIViewController {
     // MARK: - Combine Binding
     
     private func bind() {
-        self.viewModel.state.song
-            .sink { song in
+        self.viewModel.state.recordedJourney
+            .map { $0.music }
+            .sink { music in
                 var snapshot = MusicSnapshot()
-                snapshot.append([.song(song)])
-                self.dataSource?.apply(snapshot, to: .song)
+                snapshot.append([.song(music)])
+                self.dataSource?.apply(snapshot, to: .music)
             }
             .store(in: &self.cancellables)
         
-        self.viewModel.state.spots
+        self.viewModel.state.recordedJourney
+            .map { $0.spots }
             .receive(on: DispatchQueue.main)
             .sink { spots in
                 var snapshot = SpotSnapshot()
@@ -204,8 +206,8 @@ private extension SaveJourneyViewController {
         let item = NSCollectionLayoutItem(layoutSize: section.itemSize)
         
         let group: NSCollectionLayoutGroup
-        let itemCount = section == .song ? 1 : 2
-        let interItemSpacing: CGFloat = section == .song ? .zero : Metric.innerSpacing
+        let itemCount = section == .music ? 1 : 2
+        let interItemSpacing: CGFloat = section == .music ? .zero : Metric.innerSpacing
         if #available(iOS 16.0, *) {
             group = NSCollectionLayoutGroup.horizontal(layoutSize: section.groupSize,
                                                            repeatingSubitem: item,
@@ -306,7 +308,7 @@ private extension SaveJourneyViewController {
         }
         
         var snapshot = SaveJourneySnapshot()
-        snapshot.appendSections([.song, .spot])
+        snapshot.appendSections([.music, .spot])
         dataSource.apply(snapshot)
         
         return dataSource
@@ -409,4 +411,3 @@ private extension SaveJourneyViewController {
     }
     
 }
-
