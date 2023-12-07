@@ -6,12 +6,11 @@ import {
   ValidationPipe,
   Get,
   Query,
-  Res,
-  Req,
+  Param,
 } from '@nestjs/common';
 import { JourneyService } from '../service/journey.service';
 
-import { StartJourneyReqDTO } from '../dto/journeyStart/journeyStartReq.dto';
+import { StartJourneyReqDTO } from '../dto/journeyStart/journeyStart.dto';
 
 import {
   ApiCreatedResponse,
@@ -20,9 +19,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Journey } from '../schema/journey.schema';
-import { CheckJourneyDTO } from '../dto/journeyCheck/journeyCheckReq.dto';
-import { CheckJourneyResponseDTO } from '../dto/journeyCheck/journeyCheckRes.dto';
-import { StartJourneyResDTO } from '../dto/journeyStart/journeyStartRes.dto';
+import {
+  CheckJourneyResDTO,
+  CheckJourneyReqDTO,
+} from '../dto/journeyCheck/journeyCheck.dto';
 import { UUID } from 'crypto';
 import {
   EndJourneyReqDTO,
@@ -32,6 +32,7 @@ import {
   RecordJourneyReqDTO,
   RecordJourneyResDTO,
 } from '../dto/journeyRecord/journeyRecord.dto';
+import { StartJourneyResDTO } from '../dto/journeyStart/journeyStart.dto';
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
@@ -106,7 +107,7 @@ export class JourneyController {
   })
   @ApiCreatedResponse({
     description: '범위에 있는 여정의 기록들을 반환',
-    type: CheckJourneyResponseDTO,
+    type: CheckJourneyResDTO,
   })
   @Get('check')
   @UsePipes(ValidationPipe)
@@ -115,7 +116,7 @@ export class JourneyController {
     @Query('minCoordinate') minCoordinate: number[],
     @Query('maxCoordinate') maxCoordinate: number[],
   ) {
-    const checkJourneyDTO: CheckJourneyDTO = {
+    const checkJourneyDTO = {
       userId,
       minCoordinate,
       maxCoordinate,
@@ -129,11 +130,11 @@ export class JourneyController {
   })
   @ApiCreatedResponse({
     description: '범위에 있는 여정의 기록들을 반환',
-    type: CheckJourneyResponseDTO,
+    type: CheckJourneyResDTO,
   })
   @Post('check')
   @UsePipes(ValidationPipe) //유효성 체크
-  async checkPost(@Body() checkJourneyDTO: CheckJourneyDTO) {
+  async checkPost(@Body() checkJourneyDTO: CheckJourneyReqDTO) {
     return await this.journeyService.checkJourney(checkJourneyDTO);
   }
 
@@ -148,5 +149,10 @@ export class JourneyController {
   @Get('loadLastData')
   async loadLastData(@Query('userId') userId: string) {
     return await this.journeyService.loadLastJourney(userId);
+  }
+
+  @Get(':journeyId')
+  async getJourneyById(@Param('journeyId') journeyId: string) {
+    return await this.journeyService.getJourneyById(journeyId);
   }
 }
