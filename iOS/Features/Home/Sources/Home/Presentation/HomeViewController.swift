@@ -10,13 +10,14 @@ import UIKit
 import JourneyList
 import MSConstants
 import MSDesignSystem
+import MSDomain
 import MSUIKit
 import MSUserDefaults
 import NavigateMap
 
 public typealias HomeBottomSheetViewController = MSBottomSheetViewController<NavigateMapViewController, JourneyListViewController>
 
-public final class HomeViewController: HomeBottomSheetViewController {
+public final class HomeViewController: HomeBottomSheetViewController, HomeViewModelDelegate {
     
     // MARK: - Constants
     
@@ -117,14 +118,33 @@ public final class HomeViewController: HomeBottomSheetViewController {
     // MARK: - Combine Binding
     
     private func bind() {
-        
+        self.viewModel.state.journeys
+            .receive(on: DispatchQueue.main)
+            .sink { journeys in
+//                self.bottomSheetViewController.update(journeys: )
+            }
     }
     
     // MARK: - Functions
     
     private func updateButtonMode() {
-        self.startButton.isHidden = self.isRecording
-        self.recordJourneyButtonView.isHidden = !self.isRecording
+        UIView.transition(with: startButton, duration: 0.5,
+                          options: .transitionCrossDissolve,
+                          animations: {
+            self.startButton.isHidden = self.isRecording
+                      })
+        UIView.transition(with: recordJourneyButtonView, duration: 0.5,
+                          options: .transitionCrossDissolve,
+                          animations: {
+            self.recordJourneyButtonView.isHidden = !self.isRecording
+                      })
+        if self.startButton.isHidden {
+            setUserLocationToCenter()
+        }
+    }
+    
+    private func setUserLocationToCenter() {
+        
     }
     
     private func configureAction() {
@@ -138,11 +158,21 @@ public final class HomeViewController: HomeBottomSheetViewController {
             guard let coordinates = self?.contentViewController.currentCoordinate else {
                 return
             }
-            self?.bottomSheetViewController.fetchJourneys(from: coordinates)
+            self?.viewModel.trigger(.fetchJourney(at: coordinates))
+//            self?.bottomSheetViewController.updateJourneys()
         }
         self.refreshButton.addAction(refreshButtonAction, for: .touchUpInside)
     }
     
+    public func fetchJourneys(from coordinates: (MSDomain.Coordinate, MSDomain.Coordinate)) {
+        self.viewModel.trigger(.fetchJourney(at: coordinates))
+    }
+    
+    @objc
+    func startButtonDidTap() {
+        self.isRecording.toggle()
+        self.updateButtonMode()
+    }
 }
 
 // MARK: - FTUX
@@ -160,7 +190,7 @@ private extension HomeViewController {
 extension HomeViewController: RecordJourneyButtonViewDelegate {
     
     public func backButtonDidTap(_ button: MSRectButton) {
-        print("뒤로가기 버튼 클릭")
+        self.startButtonDidTap()
     }
     
     public func spotButtonDidTap(_ button: MSRectButton) {
