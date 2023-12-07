@@ -22,8 +22,7 @@ export class SpotController {
     description: 'spot을 기록합니다.',
   })
   @ApiCreatedResponse({
-    description: '생성된 spot 데이터를 반환',
-    type: Spot,
+    description: 'spot 생성 성공 및 실패 반환',
   })
   @UseInterceptors(FileInterceptor('image'))
   @Post('')
