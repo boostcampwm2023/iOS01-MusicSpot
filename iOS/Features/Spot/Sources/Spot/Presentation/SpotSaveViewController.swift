@@ -7,11 +7,10 @@
 
 import UIKit
 
+import MSData
 import MSDesignSystem
 import MSLogger
-import MSNetworking
 import MSUIKit
-import MSData
 
 public final class SpotSaveViewController: UIViewController {
     
@@ -56,25 +55,11 @@ public final class SpotSaveViewController: UIViewController {
     // MARK: - Properties
     
     public weak var navigationDelegate: SpotNavigationDelegate?
-    private let spotSaveViewModel = SpotSaveViewModel()
+    private let viewModel: SpotSaveViewModel
     
     public var image: UIImage? {
         didSet {
             self.configureImageViewState()
-        }
-    }
-    
-    // MARK: - Properties: Networking
-    
-    internal var spotRouter: Router?
-    internal var journeyID: UUID? {
-        didSet {
-            self.spotSaveViewModel.journeyID = self.journeyID
-        }
-    }
-    internal var coordinate: [Double]? {
-        didSet {
-            self.spotSaveViewModel.coordinate = self.coordinate
         }
     }
     
@@ -91,6 +76,18 @@ public final class SpotSaveViewController: UIViewController {
     private let subTextLabel = UILabel()
     private let cancelButton = MSRectButton.large(isBrandColored: false)
     private let completeButton = MSRectButton.large()
+    
+    // MARK: - Initializer
+    
+    init(viewModel: SpotSaveViewModel) {
+        self.viewModel = viewModel
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     // MARK: - Life Cycle
 
@@ -257,9 +254,9 @@ public final class SpotSaveViewController: UIViewController {
 }
 
 // MARK: - Preview
-
-@available(iOS 17, *)
-#Preview {
-    let spotView = SpotSaveViewController()
-    return spotView
-}
+//
+//@available(iOS 17, *)
+//#Preview {
+//    let spotView = SpotSaveViewController()
+//    return spotView
+//}

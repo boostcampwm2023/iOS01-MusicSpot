@@ -10,7 +10,6 @@ import UIKit
 import MSData
 import MSDesignSystem
 import MSLogger
-import MSNetworking
 import MSUIKit
 
 public final class SpotViewController: UIViewController, UINavigationControllerDelegate {
@@ -62,26 +61,7 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     // MARK: - Properties
     
     public weak var navigationDelegate: SpotNavigationDelegate?
-    private let spotViewModel = SpotViewModel()
-    private let spotSaveViewController = SpotSaveViewController()
-    
-    // MARK: - Properties: Networking
-    
-    internal var spotRouter: Router? {
-        didSet {
-            self.spotSaveViewController.spotRouter = self.spotRouter
-        }
-    }
-    private var journeyID: UUID? {
-        didSet {
-            self.spotSaveViewController.journeyID = self.journeyID
-        }
-    }
-    private var coordinate: [Double]? {
-        didSet {
-            self.spotSaveViewController.coordinate = self.coordinate
-        }
-    }
+    private let viewModel: SpotViewModel
     
     // MARK: - Properties: Gesture
     
@@ -104,7 +84,18 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.spotViewModel.startCamera()
+        self.viewModel.startCamera()
+    }
+    
+    // MARK: - Initializer
+    
+    init(viewModel: SpotViewModel) {
+        self.viewModel = viewModel
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Configuration
@@ -227,8 +218,6 @@ private extension SpotViewController {
         self.backButton.layer.cornerRadius = Metric.SwapButton.radius
         self.backButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         self.backButton.tintColor = .white
-        
-        self.spotSaveViewController.modalPresentationStyle = .fullScreen
     }
     
 }
@@ -304,7 +293,7 @@ private extension SpotViewController {
     }
     
     func configureCameraSetting() {
-        self.spotViewModel.preset(screen: cameraView)
+        self.viewModel.preset(screen: cameraView)
     }
     
 }
@@ -314,11 +303,11 @@ private extension SpotViewController {
 private extension SpotViewController {
     
     func shotButtonTapped() {
-        self.spotViewModel.shot()
+        self.viewModel.shot()
     }
     
     func swapButtonTapped() {
-        self.spotViewModel.swap()
+        self.viewModel.swap()
     }
     
     func galleryButtonTapped() {
@@ -336,7 +325,7 @@ private extension SpotViewController {
 private extension SpotViewController {
     
     func configureDelegate() {
-        self.spotViewModel.delegate = self
+        self.viewModel.delegate = self
     }
     
 }
@@ -376,7 +365,7 @@ extension SpotViewController: UIImagePickerControllerDelegate {
 private extension SpotViewController {
     
     func presentSpotSaveViewController(with image: UIImage) {
-        self.spotViewModel.stopCamera()
+        self.viewModel.stopCamera()
         self.navigationDelegate?.presentSpotSave(using: image)
     }
     
@@ -384,9 +373,9 @@ private extension SpotViewController {
 
 // MARK: - Preview
 
-@available(iOS 17, *)
-#Preview {
-    MSFont.registerFonts()
-    let viewController = SpotViewController()
-    return viewController
-}
+//@available(iOS 17, *)
+//#Preview {
+//    MSFont.registerFonts()
+//    let viewController = SpotViewController()
+//    return viewController
+//}
