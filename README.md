@@ -21,7 +21,7 @@
 
 <div align="center" style="color: gray;">
   <b>Team.과열</b>은 지도에 관심을 갖고있는 사람들로 이루어져 있습니다.<br/>
-  지도를 활용해서 음악과 함께 여정을 기록하는 앱, <b>MusicSpot</b>를 소개합니다.
+  지도를 활용해서 음악과 함께 여정을 기록하는 앱, <b>MusicSpot</b>를 소개합니다.
 </div>
 
 <br/>
