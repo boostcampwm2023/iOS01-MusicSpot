@@ -417,8 +417,8 @@ import MSData
 @available(iOS 17, *)
 #Preview {
     let song = Song(title: "OMG", artist: "NewJeans", albumArtURL: URL(string: "sdf")!)
-    let spotRepository = SpotRepositoryImplementation()
-    let saveJourneyViewModel = SaveJourneyViewModel(selectedSong: song, spotRepository: spotRepository)
+    let journeyRepository = JourneyRepositoryImplementation()
+    let saveJourneyViewModel = SaveJourneyViewModel(selectedSong: song, journeyRepository: journeyRepository)
     let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
     return saveJourneyViewController
 }

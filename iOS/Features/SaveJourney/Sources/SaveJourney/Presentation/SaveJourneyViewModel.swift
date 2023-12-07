@@ -24,15 +24,15 @@ public final class SaveJourneyViewModel {
     
     // MARK: - Properties
     
-    private let spotRepository: SpotRepository
+    private let journeyRepository: JourneyRepository
     
     public var state: State
     
     // MARK: - Initializer
     
     public init(selectedSong: Song,
-                spotRepository: SpotRepository) {
-        self.spotRepository = spotRepository
+                journeyRepository: JourneyRepository) {
+        self.journeyRepository = journeyRepository
         self.state = State(song: CurrentValueSubject<Song, Never>(selectedSong))
     }
     
@@ -42,11 +42,12 @@ public final class SaveJourneyViewModel {
         switch action {
         case .viewNeedsLoaded:
             Task {
-                let result = await self.spotRepository.fetchRecordingSpots()
+                let result = await self.journeyRepository.fetchRecordingJourney()
                 switch result {
-                case .success(let responseDTOs):
-                    let spots = responseDTOs.map { Spot(dto: $0) }
+                case .success(let journey):
+                    let spots = journey.spots.map { Spot(dto: $0) }
                     self.state.spots.send(spots)
+                    print("sdkfjs")
                 case .failure(let error):
                     #if DEBUG
                     MSLogger.make(category: .saveJourney).error("\(error)")
