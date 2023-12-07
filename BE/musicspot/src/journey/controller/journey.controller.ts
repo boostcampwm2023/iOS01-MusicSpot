@@ -83,9 +83,13 @@ export class JourneyController {
   })
   @Post('record')
   async record(@Body() recordJourneyDTO: RecordJourneyReqDTO) {
-    const returnData =
-      await this.journeyService.pushCoordianteToJourney(recordJourneyDTO);
-    return returnData;
+    try {
+      const returnData =
+        await this.journeyService.pushCoordianteToJourney(recordJourneyDTO);
+      return returnData;
+    } catch (err) {
+      console.log(err);
+    }
   }
   @ApiOperation({
     summary: '여정 조회 API',
