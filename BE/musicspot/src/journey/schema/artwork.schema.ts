@@ -33,36 +33,4 @@ export class Artwork {
   })
   @Prop()
   bgColor: string;
-
-  @ApiProperty({
-    example: 3000,
-    description: '텍스트 컬러1',
-    required: true,
-  })
-  @Prop()
-  textColor1: string;
-
-  @ApiProperty({
-    example: 3000,
-    description: '텍스트 컬러2',
-    required: true,
-  })
-  @Prop()
-  textColor2: string;
-
-  @ApiProperty({
-    example: 3000,
-    description: '텍스트 컬러3',
-    required: true,
-  })
-  @Prop()
-  textColor3: string;
-
-  @ApiProperty({
-    example: 3000,
-    description: '텍스트 컬러4',
-    required: true,
-  })
-  @Prop()
-  textColor4: string;
 }
