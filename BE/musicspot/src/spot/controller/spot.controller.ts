@@ -30,7 +30,7 @@ export class SpotController {
   @Post('')
   async create(
     @UploadedFile() file: Express.Multer.File,
-    @Body() recordSpotDTO: RecordSpotReqDTO,
+    @Body() recordSpotDTO,
   ) {
     try{
       return await this.spotService.create(file, recordSpotDTO);

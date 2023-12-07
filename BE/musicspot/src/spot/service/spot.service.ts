@@ -49,7 +49,7 @@ export class SpotService {
     return createdSpotData.toObject();
   }
 
-  async create(file, recordSpotDto: RecordSpotReqDTO) {
+  async create(file, recordSpotDto) {
     const photoKey = await this.uploadPhotoToStorage(
       recordSpotDto.journeyId,
       file,

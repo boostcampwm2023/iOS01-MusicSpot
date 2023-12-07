@@ -113,8 +113,8 @@ export class JourneyController {
   @UsePipes(ValidationPipe)
   async checkGet(
     @Query('userId') userId: UUID,
-    @Query('minCoordinate') minCoordinate: number[],
-    @Query('maxCoordinate') maxCoordinate: number[],
+    @Query('minCoordinate') minCoordinate,
+    @Query('maxCoordinate') maxCoordinate,
   ) {
     const checkJourneyDTO = {
       userId,
