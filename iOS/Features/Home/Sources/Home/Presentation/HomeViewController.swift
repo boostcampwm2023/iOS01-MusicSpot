@@ -164,7 +164,7 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
         self.refreshButton.addAction(refreshButtonAction, for: .touchUpInside)
     }
     
-    public func fetchJourneys(from coordinates: (Coordinate, Coordinate)) {
+    public func fetchJourneys(from coordinates: (MSDomain.Coordinate, MSDomain.Coordinate)) {
         self.viewModel.trigger(.fetchJourney(at: coordinates))
     }
     
@@ -190,7 +190,7 @@ private extension HomeViewController {
 extension HomeViewController: RecordJourneyButtonViewDelegate {
     
     public func backButtonDidTap(_ button: MSRectButton) {
-        startButtonDidTap()
+        self.startButtonDidTap()
     }
     
     public func spotButtonDidTap(_ button: MSRectButton) {
@@ -227,26 +227,6 @@ private extension HomeViewController {
             self.recordJourneyButtonView.bottomAnchor.constraint(equalTo: self.bottomSheetViewController.view.topAnchor,
                                                                  constant: -Metric.startButtonBottomInset)
         ])
-<<<<<<< HEAD:iOS/Features/Home/Sources/Home/HomeViewController.swift
-    }
-    
-}
-
-// MARK: - Button View
-
-extension HomeViewController: RecordJourneyButtonViewDelegate {
-    
-    public func backButtonDidTap(_ button: MSRectButton) {
-        startButtonDidTap()
-    }
-    
-    public func spotButtonDidTap(_ button: MSRectButton) {
-        self.navigationDelegate?.navigateToSpot()
-    }
-    
-    public func nextButtonDidTap(_ button: MSRectButton) {
-        self.navigationDelegate?.navigateToSelectSong()
-=======
         
         self.view.insertSubview(self.refreshButton, belowSubview: self.bottomSheetViewController.view)
         self.refreshButton.translatesAutoresizingMaskIntoConstraints = false
@@ -255,7 +235,6 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
                                                     constant: Metric.RefreshButton.topSpacing),
             self.refreshButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
         ])
->>>>>>> release:iOS/Features/Home/Sources/Home/Presentation/HomeViewController.swift
     }
     
 }
