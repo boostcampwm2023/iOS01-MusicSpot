@@ -270,17 +270,18 @@ extension NavigateMapViewController {
 //        }
 //        let timestamp = Data().base64EncodedString()
 //        print(timestamp)
-        
+        print(UUID(uuidString: "ab4068ef-95ed-40c3-be6d-3db35df866b9")!)
         let router = JourneyRouter.checkJourney(userID: UUID(uuidString: "ab4068ef-95ed-40c3-be6d-3db35df866b9")!,
                                                 minCoordinate: CoordinateDTO(latitude: 36.5, longitude: 125.5),
                                                 maxCoordinate: CoordinateDTO(latitude: 38.5, longitude: 127.5))
-        let result = await self.msNetworking.request(CheckJourneyResponseDTO.self, router: router)
-        switch result {
-        case .success(let journeys):
-            print(journeys)
-        case .failure(let error):
-            print(error)
-        }
+        let result = await self.msNetworking.request([JourneyDTO].self, router: router)
+        print(result)
+//        switch result {
+//        case .success(let journeys):
+//            print(journeys)
+//        case .failure(let error):
+//            print(error)
+//        }
         
 //        self.msNetworking.request(CheckJourneyResponseDTO.self, router: router)
 //            .sink { response in

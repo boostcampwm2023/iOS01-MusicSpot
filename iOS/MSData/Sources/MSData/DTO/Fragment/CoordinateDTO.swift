@@ -36,14 +36,16 @@ extension CoordinateDTO: Codable {
     }
     
     public init(from decoder: Decoder) throws {
-        var container = try decoder.unkeyedContainer()
+        let container = try decoder.singleValueContainer()
+        print("hi2")
+        print(container)
         let coordinates = try container.decode([Double].self)
         
         guard coordinates.count == 2 else {
             throw DecodingError.dataCorruptedError(in: container,
                                                    debugDescription: "Coordinate 값은 2개 값으로 이루어진 배열이어야 합니다.")
         }
-        
+        print(coordinates)
         self.latitude = coordinates[0]
         self.longitude = coordinates[1]
     }

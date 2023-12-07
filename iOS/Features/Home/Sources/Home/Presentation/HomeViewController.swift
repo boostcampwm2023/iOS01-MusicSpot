@@ -169,7 +169,7 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
     }
     
     public func fetchJourneys(from coordinates: (MSDomain.Coordinate, MSDomain.Coordinate)) {
-        self.viewModel.trigger(.fetchJourney(at: coordinates))
+//        self.viewModel.trigger(.fetchJourney(at: coordinates))
     }
     
     @objc

@@ -56,8 +56,9 @@ public final class HomeViewModel {
                 let result = await self.journeyRepository.fetchJourneyList(minCoordinate: minCoordinate,
                                                                            maxCoordinate: maxCoordinate)
                 switch result {
-                case .success(let journies):
-                    self.state.journeys.send(journies)
+                case .success(let journeys):
+                    print("Hi")
+//                    self.state.journeys.send(journeys)
                 case .failure(let error):
                     print(error)
                 }
