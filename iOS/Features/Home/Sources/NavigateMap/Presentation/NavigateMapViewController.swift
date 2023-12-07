@@ -38,6 +38,7 @@ public final class NavigateMapViewController: UIViewController {
         
         static let buttonStackTopSpacing: CGFloat = 50.0
         static let buttonStackTrailingSpacing: CGFloat = 16.0
+        static let lineWidth: CGFloat = 5.0
         
     }
     
@@ -50,7 +51,7 @@ public final class NavigateMapViewController: UIViewController {
         return stackView
     }()
     
-    private var mapView = MSMapView()
+    private var mapView = MKMapView()
     
     // MARK: - Properties
     
@@ -79,8 +80,7 @@ public final class NavigateMapViewController: UIViewController {
     
     internal var navigateMapRouter: JourneyRouter?
     
-    //    private var previousCoordinate: CLLocationCoordinate2D?
-    //    private var polyline: MKPolyline?
+    private var previousCoordinate: CLLocationCoordinate2D?
     
     // MARK: - Initializer
     
@@ -103,6 +103,15 @@ public final class NavigateMapViewController: UIViewController {
         self.locationManager.delegate = self
         self.locationManager.requestWhenInUseAuthorization()
         
+        self.mapView.setUserTrackingMode(.followWithHeading, animated: true)
+        self.mapView.showsUserLocation = true
+        /// 재사용 가능하도록 CustomAnnotation 등록
+        self.mapView.register(CustomAnnotationView.self,
+                      forAnnotationViewWithReuseIdentifier: CustomAnnotationView.identifier)
+        self.mapView.register(ClusterAnnotationView.self,
+                      forAnnotationViewWithReuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
+        self.mapView.delegate = self
+
         self.configureLayout()
         self.bind()
     }
@@ -138,7 +147,39 @@ public final class NavigateMapViewController: UIViewController {
         }
     }
     
-    func addAnnotations(journeys: [Journey]) {
+    // 식별자를 갖고 Annotation view 생성
+    func setupAnnotationView(for annotation: CustomAnnotation, on mapView: MKMapView) -> MKAnnotationView {
+        // dequeueReusableAnnotationView: 식별자를 확인하여 사용가능한 뷰가 있으면 해당 뷰를 반환
+        return mapView.dequeueReusableAnnotationView(withIdentifier: CustomAnnotationView.identifier,
+                                                     for: annotation)
+    }
+    
+    @MainActor
+    func addAnnotation(title: String, coordinate: CLLocationCoordinate2D, photoData: Data) {
+        let annotation = CustomAnnotation(title: title,
+                                          coordinate: coordinate,
+                                          photoData: photoData)
+        // mapView에 Annotation 추가
+        self.mapView.addAnnotation(annotation)
+    }
+    
+    func createPolyLine(coordinates: [Coordinate]) {
+        let locations = coordinates.map { coordinate in
+            return CLLocation(latitude: coordinate.latitude,
+                              longitude: coordinate.longitude)
+        }
+        
+        self.addPolyLineToMap(locations: locations)
+    }
+    
+    func addPolyLineToMap(locations: [CLLocation?]) {
+        let coordinates = locations.compactMap { $0?.coordinate }
+        let polyline = MKPolyline(coordinates: coordinates,
+                                  count: coordinates.count)
+        self.mapView.addOverlay(polyline)
+    }
+    
+    public func addAnnotations(journeys: [Journey]) {
         let datas = journeys.flatMap { journey in
             journey.spots.map { (location: journey.title, spot: $0) }
         }
@@ -156,7 +197,7 @@ public final class NavigateMapViewController: UIViewController {
                         let coordinate = CLLocationCoordinate2D(latitude: spot.coordinate.latitude,
                                                                 longitude: spot.coordinate.longitude)
                         
-                        await self.mapView.addAnnotation(title: location,
+                        await self.addAnnotation(title: location,
                                                          coordinate: coordinate,
                                                          photoData: photoData)
                         
@@ -170,7 +211,7 @@ public final class NavigateMapViewController: UIViewController {
     func drawPolyLines(journeys: [Journey]) {
         journeys.forEach { journey in
             Task {
-                self.mapView.createPolyLine(coordinates: journey.coordinates)
+                self.createPolyLine(coordinates: journey.coordinates)
             }
         }
     }
@@ -235,6 +276,64 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
         }
     }
     
+    public func locationManager(_ manager: CLLocationManager,
+                         didUpdateLocations locations: [CLLocation]) {
+        guard let myLocation = locations.last else {
+            return
+        }
+        
+        if let coordinate = self.previousCoordinate {
+            var points: [CLLocationCoordinate2D] = []
+            let point1 = CLLocationCoordinate2DMake(coordinate.latitude, coordinate.longitude)
+            let point2: CLLocationCoordinate2D
+            = CLLocationCoordinate2DMake(myLocation.coordinate.latitude, myLocation.coordinate.longitude)
+            points.append(point1)
+            points.append(point2)
+            let lineDraw = MKPolyline(coordinates: points, count:points.count)
+            
+            self.mapView.addOverlay(lineDraw)
+        }
+        
+        self.previousCoordinate = myLocation.coordinate
+        
+    }
+    
+}
+
+// MARK: - MKMapViewDelegate
+
+extension NavigateMapViewController: MKMapViewDelegate {
+    
+    /// 현재까지의 polyline들을 지도 위에 그림
+    public func mapView(_ mapView: MKMapView,
+                        rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        guard let polyLine = overlay as? MKPolyline else {
+            return MKOverlayRenderer()
+        }
+        
+        let renderer = MKPolylineRenderer(polyline: polyLine)
+        renderer.strokeColor = .msColor(.musicSpot)
+        renderer.lineWidth = Metric.lineWidth
+        renderer.alpha = 1.0
+        
+        return renderer
+    }
+    
+    public func mapView(_ mapView: MKMapView,
+                 viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        guard !(annotation is MKUserLocation) else { return nil }
+        
+        if annotation is MKClusterAnnotation {
+            return ClusterAnnotationView(annotation: annotation,
+                                         reuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
+        }
+        
+        let annotationView: MKAnnotationView?
+        annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: CustomAnnotationView.identifier,
+                                                               for: annotation)
+        return annotationView
+    }
+    
 }
 
 // MARK: - ButtonView
@@ -244,9 +343,6 @@ extension NavigateMapViewController: ButtonStackViewDelegate {
     /// 현재 지도에서 보이는 범위 내의 모든 Spot들을 보여줌.
     public func mapButtonDidTap() {
         print(#function, "현재 지도에서 보이는 범위 내의 모든 Spot들을 보여줍니다.")
-        Task{
-            await self.loadJourneys()
-        }
     }
     
     /// 현재 내 위치를 중앙에 위치.
@@ -255,46 +351,3 @@ extension NavigateMapViewController: ButtonStackViewDelegate {
     }
     
 }
-
-
-// MARK: - Networking
-
-extension NavigateMapViewController {
-    
-    // MARK: - Functions
-    
-    func loadJourneys() async {
-//        guard let router else {
-//            MSLogger.make(category: .spot).debug("journeyID와 coordinate ID가 view model에 전달되지 않았습니다.")
-//            return
-//        }
-//        let timestamp = Data().base64EncodedString()
-//        print(timestamp)
-        print(UUID(uuidString: "ab4068ef-95ed-40c3-be6d-3db35df866b9")!)
-        let router = JourneyRouter.checkJourney(userID: UUID(uuidString: "ab4068ef-95ed-40c3-be6d-3db35df866b9")!,
-                                                minCoordinate: CoordinateDTO(latitude: 36.5, longitude: 125.5),
-                                                maxCoordinate: CoordinateDTO(latitude: 38.5, longitude: 127.5))
-        let result = await self.msNetworking.request([JourneyDTO].self, router: router)
-        print(result)
-//        switch result {
-//        case .success(let journeys):
-//            print(journeys)
-//        case .failure(let error):
-//            print(error)
-//        }
-        
-//        self.msNetworking.request(CheckJourneyResponseDTO.self, router: router)
-//            .sink { response in
-//                switch response {
-//                case .failure(let error):
-//                    MSLogger.make(category: .network).debug("\(error): 정상적으로 Journey 목록을 서버에서 가져오지 못하였습니다.")
-//                default:
-//                    return
-//                }
-//            } receiveValue: { journey in
-//                print(journey)
-//            }
-//            .store(in: &cancellables)
-    }
-}
-
