@@ -17,9 +17,9 @@ import MSUIKit
 
 public final class SelectSongViewController: BaseViewController {
     
-    typealias SongListDataSource = UICollectionViewDiffableDataSource<Int, Music>
-    typealias SongListCellRegistration = UICollectionView.CellRegistration<SongListCell, Music>
-    typealias SongListSnapshot = NSDiffableDataSourceSnapshot<Int, Music>
+    typealias SongListDataSource = UICollectionViewDiffableDataSource<Int, Song>
+    typealias SongListCellRegistration = UICollectionView.CellRegistration<SongListCell, Song>
+    typealias SongListSnapshot = NSDiffableDataSourceSnapshot<Int, Song>
     
     // MARK: - Constants
     
@@ -33,6 +33,7 @@ public final class SelectSongViewController: BaseViewController {
     private enum Metric {
         
         static let searchTextFieldBottomSpacing: CGFloat = 16.0
+        static let albumCoverSize: Int = 52
         
     }
     
@@ -182,8 +183,9 @@ private extension SelectSongViewController {
     private func configureDataSource() -> SongListDataSource {
         let cellRegistration = SongListCellRegistration { cell, indexPath, itemIdentifier in
             let cellModel = SongListCellModel(title: itemIdentifier.title,
-                                              artist: itemIdentifier.artist,
-                                              albumArtURL: itemIdentifier.artwork.url)
+                                              artist: itemIdentifier.artistName,
+                                              albumArtURL: itemIdentifier.artwork?.url(width: Metric.albumCoverSize,
+                                                                                       height: Metric.albumCoverSize))
             cell.update(with: cellModel)
         }
         
@@ -205,32 +207,14 @@ extension SelectSongViewController: UICollectionViewDelegate {
     
     public func collectionView(_ collectionView: UICollectionView,
                                didSelectItemAt indexPath: IndexPath) {
-        guard let item = self.dataSource?.itemIdentifier(for: indexPath) else {
-            return
-        }
+        guard let item = self.dataSource?.itemIdentifier(for: indexPath) else { return }
         
         #if DEBUG
         MSLogger.make(category: .selectSong).log("\(item.title) selected")
         #endif
-//        self.navigationDelegate?.navigateToSaveJourney(recordedJourney: <#T##Journey#>,
-//                                                       lastCoordiante: <#T##Coordinate#>)
+        self.navigationDelegate?.navigateToSaveJourney(recordingJourney: self.viewModel.state.recordingJourney,
+                                                       lastCoordinate: self.viewModel.state.lastCoordinate,
+                                                       selectedSong: item)
     }
     
 }
-
-// MARK: - Preview
-
-#if DEBUG
-import MSData
-import MSDesignSystem
-
-@available(iOS 17, *)
-#Preview {
-    MSFont.registerFonts()
-    
-    let songRepository = SongRepositoryImplementation()
-    let selectSongViewModel = SelectSongViewModel(repository: songRepository)
-    let selectSongViewController = SelectSongViewController(viewModel: selectSongViewModel)
-    return selectSongViewController
-}
-#endif

@@ -60,8 +60,8 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                                                 maxCoordinate: CoordinateDTO(maxCoordinate))
         let result = await self.networking.request(CheckJourneyResponseDTO.self, router: router)
         switch result {
-        case .success(let journeys):
-            return .success(journeys)
+        case .success(let response):
+            return .success(response.journeys.map { $0.toDomain() })
         case .failure(let error):
             return .failure(error)
         }

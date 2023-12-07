@@ -131,8 +131,9 @@ public final class SaveJourneyViewController: UIViewController {
     // MARK: - Combine Binding
     
     private func bind() {
-        self.viewModel.state.recordedJourney
-            .map { $0.music }
+        self.viewModel.state.selectedSong
+            .map { Music($0) }
+            .receive(on: DispatchQueue.main)
             .sink { music in
                 var snapshot = MusicSnapshot()
                 snapshot.append([.song(music)])

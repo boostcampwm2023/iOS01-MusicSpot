@@ -63,6 +63,10 @@ public final class NavigateMapViewController: UIViewController {
         return (minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)
     }
     
+    public var userLocation: CLLocation? {
+        return self.locationManager.location
+    }
+    
     private let locationManager = CLLocationManager()
     
     private let viewModel: NavigateMapViewModel

@@ -5,6 +5,7 @@
 //  Created by 이창준 on 2023.12.01.
 //
 
+import Combine
 import UIKit
 
 import JourneyList
@@ -84,6 +85,8 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
     @UserDefaultsWrapped(UserDefaultsKey.isRecording, defaultValue: false)
     private var isRecording: Bool
     
+    private var cancellables: Set<AnyCancellable> = []
+    
     // MARK: - Initializer
     
     public init(viewModel: HomeViewModel,
@@ -123,6 +126,7 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
             .sink { journeys in
 //                self.bottomSheetViewController.update(journeys: )
             }
+            .store(in: &self.cancellables)
     }
     
     // MARK: - Functions
@@ -198,7 +202,13 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
     }
     
     public func nextButtonDidTap(_ button: MSRectButton) {
-        self.navigationDelegate?.navigateToSelectSong()
+        guard let userLocation = self.contentViewController.userLocation else { return }
+        
+        let lastCoordinate = Coordinate(latitude: userLocation.coordinate.latitude,
+                                        longitude: userLocation.coordinate.longitude)
+        let recordingJourney = RecordingJourney(id: "", spots: [], coordinates: [])
+        self.navigationDelegate?.navigateToSelectSong(recordingJourney: recordingJourney,
+                                                      lastCoordinate: lastCoordinate)
     }
     
 }

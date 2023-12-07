@@ -10,6 +10,7 @@ import UIKit
 import Home
 import JourneyList
 import MSData
+import MSDomain
 import MSUIKit
 import NavigateMap
 
@@ -77,11 +78,11 @@ extension HomeCoordinator: HomeNavigationDelegate {
         spotCoordinator.start()
     }
     
-    func navigateToSelectSong() {
+    func navigateToSelectSong(recordingJourney: RecordingJourney, lastCoordinate: Coordinate) {
         let selectSongCoordinator = SelectSongCoordinator(navigationController: self.navigationController)
         selectSongCoordinator.delegate = self
         self.childCoordinators.append(selectSongCoordinator)
-        selectSongCoordinator.start()
+        selectSongCoordinator.start(recordingJourney: recordingJourney, lastCoordinate: lastCoordinate)
     }
     
 }

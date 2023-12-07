@@ -6,6 +6,7 @@
 //
 
 import Combine
+import MusicKit
 
 import MSData
 import MSDomain
@@ -19,7 +20,8 @@ public final class SaveJourneyViewModel {
     }
     
     public struct State {
-        var recordedJourney: CurrentValueSubject<Journey, Never>
+        var recordedJourney: CurrentValueSubject<RecordingJourney, Never>
+        var selectedSong: CurrentValueSubject<Song, Never>
         var spots = CurrentValueSubject<[Spot], Never>([])
     }
     
@@ -34,11 +36,13 @@ public final class SaveJourneyViewModel {
     
     // MARK: - Initializer
     
-    public init(recordedJourney: Journey,
+    public init(recordingJourney: RecordingJourney,
                 lastCoordinate: Coordinate,
+                selectedSong: Song,
                 journeyRepository: JourneyRepository) {
         self.journeyRepository = journeyRepository
-        self.state = State(recordedJourney: CurrentValueSubject<Journey, Never>(recordedJourney))
+        self.state = State(recordedJourney: CurrentValueSubject<RecordingJourney, Never>(recordingJourney),
+                           selectedSong: CurrentValueSubject<Song, Never>(selectedSong))
         self.lastCoordiante = lastCoordinate
     }
     

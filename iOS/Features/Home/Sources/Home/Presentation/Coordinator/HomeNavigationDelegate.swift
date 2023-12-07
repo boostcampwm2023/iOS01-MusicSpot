@@ -7,9 +7,11 @@
 
 import Foundation
 
+import MSDomain
+
 public protocol HomeNavigationDelegate: AnyObject {
     
     func navigateToSpot()
-    func navigateToSelectSong()
+    func navigateToSelectSong(recordingJourney: RecordingJourney, lastCoordinate: Coordinate)
     
 }
