@@ -16,7 +16,7 @@ public struct RequestableSpotDTO {
     private let coordinate: [Double]
     private let imageData: Data
     
-    init(journeyID: UUID, coordinate: [Double], imageData: Data) {
+    public init(journeyID: UUID, coordinate: [Double], imageData: Data) {
         self.journeyID = journeyID
         self.coordinate = coordinate
         self.imageData = imageData

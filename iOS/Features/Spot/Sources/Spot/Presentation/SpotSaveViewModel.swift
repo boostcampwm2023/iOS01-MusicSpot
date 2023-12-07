@@ -34,22 +34,6 @@ public final class SpotSaveViewModel {
         self.coordinate = coordinate
     }
     
-    // 임시 model_ domain 생성 시 삭제
-    
-    struct RequestableSpotDTO {
-        private let journeyID: UUID
-        private let coordinate: [Double]
-        private let imageData: Data
-        
-        init(journeyID: UUID, coordinate: [Double], imageData: Data) {
-            self.journeyID = journeyID
-            self.coordinate = coordinate
-            self.imageData = imageData
-        }
-    }
-    
-    //
-    
 }
 
 // MARK: - Interface: Actions
