@@ -128,8 +128,23 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
     // MARK: - Functions
     
     private func updateButtonMode() {
-        self.startButton.isHidden = self.isRecording
-        self.recordJourneyButtonView.isHidden = !self.isRecording
+        UIView.transition(with: startButton, duration: 0.5,
+                          options: .transitionCrossDissolve,
+                          animations: {
+            self.startButton.isHidden = self.isRecording
+                      })
+        UIView.transition(with: recordJourneyButtonView, duration: 0.5,
+                          options: .transitionCrossDissolve,
+                          animations: {
+            self.recordJourneyButtonView.isHidden = !self.isRecording
+                      })
+        if self.startButton.isHidden {
+            setUserLocationToCenter()
+        }
+    }
+    
+    private func setUserLocationToCenter() {
+        
     }
     
     private func configureAction() {
@@ -212,6 +227,26 @@ private extension HomeViewController {
             self.recordJourneyButtonView.bottomAnchor.constraint(equalTo: self.bottomSheetViewController.view.topAnchor,
                                                                  constant: -Metric.startButtonBottomInset)
         ])
+<<<<<<< HEAD:iOS/Features/Home/Sources/Home/HomeViewController.swift
+    }
+    
+}
+
+// MARK: - Button View
+
+extension HomeViewController: RecordJourneyButtonViewDelegate {
+    
+    public func backButtonDidTap(_ button: MSRectButton) {
+        startButtonDidTap()
+    }
+    
+    public func spotButtonDidTap(_ button: MSRectButton) {
+        self.navigationDelegate?.navigateToSpot()
+    }
+    
+    public func nextButtonDidTap(_ button: MSRectButton) {
+        self.navigationDelegate?.navigateToSelectSong()
+=======
         
         self.view.insertSubview(self.refreshButton, belowSubview: self.bottomSheetViewController.view)
         self.refreshButton.translatesAutoresizingMaskIntoConstraints = false
@@ -220,6 +255,7 @@ private extension HomeViewController {
                                                     constant: Metric.RefreshButton.topSpacing),
             self.refreshButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
         ])
+>>>>>>> release:iOS/Features/Home/Sources/Home/Presentation/HomeViewController.swift
     }
     
 }
