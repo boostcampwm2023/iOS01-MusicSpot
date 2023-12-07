@@ -32,12 +32,7 @@ export class SpotController {
     @UploadedFile() file: Express.Multer.File,
     @Body() recordSpotDTO,
   ) {
-    try {
-      console.log(file);
-      return await this.spotService.create(file, recordSpotDTO);
-    } catch (err) {
-      console.log(err);
-    }
+    return await this.spotService.create(file, recordSpotDTO);
   }
 
   @ApiOperation({
