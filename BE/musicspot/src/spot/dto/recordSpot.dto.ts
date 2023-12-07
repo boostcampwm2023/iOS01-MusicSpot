@@ -71,5 +71,5 @@ export class RecordSpotResDTO {
     required: true,
   })
   @IsUrl()
-  readonly photo: string;
+  readonly photoUrl: string;
 }
