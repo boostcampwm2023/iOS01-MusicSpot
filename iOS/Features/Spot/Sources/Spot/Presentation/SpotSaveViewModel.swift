@@ -22,13 +22,13 @@ public final class SpotSaveViewModel {
     private var repository: SpotRepository
     private var subscriber: Set<AnyCancellable> = []
     private let journeyID: UUID
-    private let coordinate: [Double]
+    private let coordinate: CoordinateDTO
     
     // MARK: - Initializer
     
     public init(repository: SpotRepository,
                 journeyID: UUID,
-                coordinate: [Double]) {
+                coordinate: CoordinateDTO) {
         self.repository = repository
         self.journeyID = journeyID
         self.coordinate = coordinate
@@ -44,9 +44,10 @@ internal extension SpotSaveViewModel {
         switch action {
         case .startUploadSpot:
             Task {
-                let spot = RequestableSpotDTO(journeyID: self.journeyID,
-                                              coordinate: self.coordinate,
-                                              imageData: data)
+                let spot = CreateSpotRequestDTO(journeyID: self.journeyID,
+                                                coordinate: self.coordinate,
+                                                timestamp: Date(),
+                                                photoData: data)
                 let result = await self.repository.upload(spot: spot)
                 switch result {
                 case .success:
