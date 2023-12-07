@@ -9,11 +9,10 @@
 /* Begin PBXBuildFile section */
 		08CBF8782B18468E007D3797 /* SaveJourneyCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8702B18468E007D3797 /* SaveJourneyCoordinator.swift */; };
 		08CBF8792B18468E007D3797 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8712B18468E007D3797 /* AppCoordinator.swift */; };
-		08CBF87A2B18468E007D3797 /* RewindCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8722B18468E007D3797 /* RewindCoordinator.swift */; };
+		08CBF87A2B18468E007D3797 /* RewindJourneyCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8722B18468E007D3797 /* RewindJourneyCoordinator.swift */; };
 		08CBF87B2B18468E007D3797 /* HomeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8732B18468E007D3797 /* HomeCoordinator.swift */; };
-		08CBF87C2B18468E007D3797 /* SettingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8742B18468E007D3797 /* SettingCoordinator.swift */; };
 		08CBF87D2B18468E007D3797 /* SpotCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8752B18468E007D3797 /* SpotCoordinator.swift */; };
-		08CBF87E2B18468E007D3797 /* SearchMusicCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8762B18468E007D3797 /* SearchMusicCoordinator.swift */; };
+		08CBF87E2B18468E007D3797 /* SelectSongCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8762B18468E007D3797 /* SelectSongCoordinator.swift */; };
 		08CBF87F2B18468E007D3797 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8772B18468E007D3797 /* Coordinator.swift */; };
 		DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */; };
 		DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */; };
@@ -31,11 +30,10 @@
 /* Begin PBXFileReference section */
 		08CBF8702B18468E007D3797 /* SaveJourneyCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveJourneyCoordinator.swift; sourceTree = "<group>"; };
 		08CBF8712B18468E007D3797 /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
-		08CBF8722B18468E007D3797 /* RewindCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RewindCoordinator.swift; sourceTree = "<group>"; };
+		08CBF8722B18468E007D3797 /* RewindJourneyCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RewindJourneyCoordinator.swift; sourceTree = "<group>"; };
 		08CBF8732B18468E007D3797 /* HomeCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeCoordinator.swift; sourceTree = "<group>"; };
-		08CBF8742B18468E007D3797 /* SettingCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingCoordinator.swift; sourceTree = "<group>"; };
 		08CBF8752B18468E007D3797 /* SpotCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotCoordinator.swift; sourceTree = "<group>"; };
-		08CBF8762B18468E007D3797 /* SearchMusicCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchMusicCoordinator.swift; sourceTree = "<group>"; };
+		08CBF8762B18468E007D3797 /* SelectSongCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectSongCoordinator.swift; sourceTree = "<group>"; };
 		08CBF8772B18468E007D3797 /* Coordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		DD73F8552B024C4900EE9BF2 /* MusicSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -71,10 +69,9 @@
 				08CBF8712B18468E007D3797 /* AppCoordinator.swift */,
 				08CBF8732B18468E007D3797 /* HomeCoordinator.swift */,
 				08CBF8752B18468E007D3797 /* SpotCoordinator.swift */,
-				08CBF8762B18468E007D3797 /* SearchMusicCoordinator.swift */,
+				08CBF8762B18468E007D3797 /* SelectSongCoordinator.swift */,
 				08CBF8702B18468E007D3797 /* SaveJourneyCoordinator.swift */,
-				08CBF8742B18468E007D3797 /* SettingCoordinator.swift */,
-				08CBF8722B18468E007D3797 /* RewindCoordinator.swift */,
+				08CBF8722B18468E007D3797 /* RewindJourneyCoordinator.swift */,
 			);
 			path = MSCoordinator;
 			sourceTree = "<group>";
@@ -215,9 +212,8 @@
 				08CBF8782B18468E007D3797 /* SaveJourneyCoordinator.swift in Sources */,
 				08CBF87F2B18468E007D3797 /* Coordinator.swift in Sources */,
 				08CBF87D2B18468E007D3797 /* SpotCoordinator.swift in Sources */,
-				08CBF87E2B18468E007D3797 /* SearchMusicCoordinator.swift in Sources */,
-				08CBF87A2B18468E007D3797 /* RewindCoordinator.swift in Sources */,
-				08CBF87C2B18468E007D3797 /* SettingCoordinator.swift in Sources */,
+				08CBF87E2B18468E007D3797 /* SelectSongCoordinator.swift in Sources */,
+				08CBF87A2B18468E007D3797 /* RewindJourneyCoordinator.swift in Sources */,
 				DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */,
 				08CBF87B2B18468E007D3797 /* HomeCoordinator.swift in Sources */,
 				DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */,

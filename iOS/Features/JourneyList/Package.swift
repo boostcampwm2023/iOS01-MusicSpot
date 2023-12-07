@@ -28,6 +28,8 @@ private enum Dependency {
     static let msCoreKit = "MSCoreKit"
     static let msUIKit = "MSUIKit"
     static let msData = "MSData"
+    static let msLogger = "MSLogger"
+    static let msFoundation = "MSFoundation"
     
 }
 
@@ -48,7 +50,9 @@ let package = Package(
         .package(name: Dependency.msCoreKit,
                  path: Dependency.msCoreKit.fromRootPath),
         .package(name: Dependency.msData,
-                 path: Dependency.msData.fromRootPath)
+                 path: Dependency.msData.fromRootPath),
+        .package(name: Dependency.msFoundation,
+                 path: Dependency.msFoundation.fromRootPath)
     ],
     targets: [
         .target(name: Target.journeyList,
@@ -60,7 +64,9 @@ let package = Package(
                     .product(name: Dependency.msUIKit,
                              package: Dependency.msUIKit),
                     .product(name: Dependency.msData,
-                             package: Dependency.msData)
+                             package: Dependency.msData),
+                    .product(name: Dependency.msLogger,
+                             package: Dependency.msFoundation)
                 ])
     ]
 )

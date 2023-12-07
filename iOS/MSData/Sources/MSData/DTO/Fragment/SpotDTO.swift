@@ -1,52 +1,44 @@
 //
 //  SpotDTO.swift
-//  MSCoreKit
+//  MSData
 //
-//  Created by 전민건 on 11/16/23.
+//  Created by 이창준 on 2023.12.06.
 //
 
 import Foundation
 
-public struct RequestableSpotDTO: Encodable, Identifiable {
+public struct SpotDTO {
     
-    public let id: UUID
-    public let coordinate: [Double]
-    public let timestamp: String
-    public let photoData: Data
+    // MARK: - Properties
     
-    public init(id: UUID, timestamp: String, coordinate: [Double], photoData: Data) {
-        self.id = id
-        self.timestamp = timestamp
-        self.coordinate = coordinate
-        self.photoData = photoData
-    }
-    
-}
-
-public struct ResponsibleSpotDTO: Identifiable {
-    
-    public let id: UUID
+    public let journeyID: String?
     public let coordinate: CoordinateDTO
+    public let timestamp: Date
     public let photoURL: URL
     
-}
-
-// MARK: - Decodable
-
-extension ResponsibleSpotDTO: Decodable {
+    // MARK: - Initializer
     
-    enum CodingKeys: String, CodingKey {
-        case id = "journeyId"
-        case coordinate
-        case photoURL = "photoUrl"
+    public init(journeyID: String?,
+                coordinate: CoordinateDTO,
+                timestamp: Date,
+                photoURL: URL) {
+        self.journeyID = journeyID
+        self.coordinate = coordinate
+        self.timestamp = timestamp
+        self.photoURL = photoURL
     }
     
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decode(UUID.self, forKey: .id)
-        let coordinate = try container.decode([Double].self, forKey: .coordinate)
-        self.coordinate = CoordinateDTO(latitude: coordinate[0], longitude: coordinate[1])
-        self.photoURL = try container.decode(URL.self, forKey: .photoURL)
+}
+
+// MARK: - Codable
+
+extension SpotDTO: Codable {
+    
+    enum CodingKeys: String, CodingKey {
+        case journeyID = "journeyId"
+        case coordinate
+        case timestamp
+        case photoURL = "photoUrl"
     }
     
 }

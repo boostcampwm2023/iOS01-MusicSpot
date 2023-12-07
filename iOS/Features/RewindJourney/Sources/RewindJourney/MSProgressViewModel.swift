@@ -13,7 +13,7 @@ final class MSProgressViewModel {
     // MARK: - Constants
     
     private let timerDuration: Double = 4.0
-    private let timerTimeInterval: Double = 0.05
+    private let timerTimeInterval: Double = 0.01
     
     // MARK: - Properties
     
