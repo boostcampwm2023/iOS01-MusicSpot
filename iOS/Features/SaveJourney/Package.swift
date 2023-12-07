@@ -32,6 +32,8 @@ private enum Dependency {
     static let combineCocoa = "CombineCocoa"
     static let msUIKit = "MSUIKit"
     static let msDesignsystem = "MSDesignSystem"
+    static let msImageFetcher = "MSImageFetcher"
+    static let msCoreKit = "MSCoreKit"
     static let msLogger = "MSLogger"
     static let msFoundation = "MSFoundation"
     
@@ -55,6 +57,8 @@ let package = Package(
                  path: Dependency.msUIKit.fromRootPath),
         .package(name: Dependency.msData,
                  path: Dependency.msData.fromRootPath),
+        .package(name: Dependency.msCoreKit,
+                 path: Dependency.msCoreKit.fromRootPath),
         .package(name: Dependency.msFoundation,
                  path: Dependency.msFoundation.fromRootPath)
     ],
@@ -69,6 +73,8 @@ let package = Package(
                              package: Dependency.msUIKit),
                     .product(name: Dependency.combineCocoa,
                              package: Dependency.msUIKit),
+                    .product(name: Dependency.msImageFetcher,
+                             package: Dependency.msCoreKit),
                     .product(name: Dependency.msLogger,
                              package: Dependency.msFoundation)
                 ])

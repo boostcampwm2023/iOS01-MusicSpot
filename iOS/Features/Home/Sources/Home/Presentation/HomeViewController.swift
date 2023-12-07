@@ -179,16 +179,6 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
     }
 }
 
-// MARK: - FTUX
-
-private extension HomeViewController {
-    
-    func checkFirstLaunch() {
-        
-    }
-    
-}
-
 // MARK: - Button View
 
 extension HomeViewController: RecordJourneyButtonViewDelegate {
