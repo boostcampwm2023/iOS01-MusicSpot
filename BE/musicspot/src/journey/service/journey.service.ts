@@ -2,23 +2,21 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 
-import { StartJourneyReqDTO } from '../dto/journeyStart/journeyStartReq.dto';
+import { StartJourneyReqDTO } from '../dto/journeyStart/journeyStart.dto';
 import { Journey } from '../schema/journey.schema';
 
 import { User } from '../../user/schema/user.schema';
-// import { EndJourneyDTO } from '../dto/journeyEnd/journeyEndReq.dto';
-// import { RecordJourneyDTO } from '../dto/journeyRecord/journeyRecordReq.dto';
-import { CheckJourneyDTO } from '../dto/journeyCheck/journeyCheckReq.dto';
 import { JourneyNotFoundException } from '../../filters/journey.exception';
 import { UserNotFoundException } from '../../filters/user.exception';
-import { Song } from '../schema/song.schema';
 import * as turf from '@turf/turf';
 import { LoadJourneyDTO } from '../dto/journeyLoad.dto';
-
 import {
-  EndJourneyReqDTO,
-  EndJourneyResDTO,
-} from '../dto/journeyEnd/journeyEnd.dto';
+  S3,
+  bucketName,
+  makePresignedUrl,
+} from '../../common/s3/objectStorage';
+import { EndJourneyReqDTO } from '../dto/journeyEnd/journeyEnd.dto';
+import { CheckJourneyReqDTO } from '../dto/journeyCheck/journeyCheck.dto';
 import { RecordJourneyReqDTO } from '../dto/journeyRecord/journeyRecord.dto';
 
 @Injectable()
@@ -129,7 +127,7 @@ export class JourneyService {
     // return { coordinate: coordinates[len - 1] };
   }
 
-  async checkJourney(checkJourneyDTO: CheckJourneyDTO) {
+  async checkJourney(checkJourneyDTO: CheckJourneyReqDTO) {
     const { userId, minCoordinate, maxCoordinate } = checkJourneyDTO;
     const user = await this.userModel.findOne({ userId }).lean();
 
@@ -151,7 +149,20 @@ export class JourneyService {
     let journeyList = [];
 
     for (let i = 0; i < journeys.length; i++) {
-      let journey = await this.journeyModel.findById(journeys[i]).lean();
+      let journey = await this.findByIdWithPopulate(
+        journeys[i],
+        'spots',
+        'Spot',
+        {
+          transform: (spot) => {
+            return {
+              coordinate: spot.coordinate,
+              timestamp: spot.timestamp,
+              photoUrl: makePresignedUrl(spot.photoKey),
+            };
+          },
+        },
+      );
       if (!journey) {
         throw new JourneyNotFoundException();
       }
@@ -162,6 +173,7 @@ export class JourneyService {
     }
     return journeyList;
   }
+
   async loadLastJourney(userId) {
     const user = await this.userModel.findById(userId).lean();
 
@@ -187,5 +199,32 @@ export class JourneyService {
       }
     }
     return false;
+  }
+
+  async getJourneyById(journeyId) {
+    try {
+      return await this.findByIdWithPopulate(journeyId, 'spots', 'Spot', {
+        transform: (spot) => {
+          return {
+            coordinate: spot.coordinate,
+            timestamp: spot.timestamp,
+            photoUrl: makePresignedUrl(spot.photoKey),
+          };
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async findByIdWithPopulate(id, path, model, options?) {
+    return await this.journeyModel
+      .findById(id)
+      .populate({
+        path,
+        model,
+        options,
+      })
+      .lean();
   }
 }

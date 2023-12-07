@@ -8,7 +8,7 @@ export class LoggerMiddleware implements NestMiddleware {
     const { ip, method, originalUrl } = req;
     res.on('finish', () => {
       const { statusCode } = res;
-
+      console.log(res);
       if (statusCode >= 400 && statusCode < 500) {
         winstonLogger.warn(
           `[${method}]${originalUrl}(${statusCode}) ${ip}  Reqbody:${JSON.stringify(
@@ -26,7 +26,7 @@ export class LoggerMiddleware implements NestMiddleware {
           )}`,
         );
       } else {
-        winstonLogger.warn(
+        winstonLogger.log(
           `[${method}]${originalUrl}(${statusCode}) ${ip}  Reqbody:${JSON.stringify(
             req.body,
             null,

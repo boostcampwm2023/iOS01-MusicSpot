@@ -1,6 +1,5 @@
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-
 import { InjectModel } from '@nestjs/mongoose';
 import { Spot } from '../schema/spot.schema';
 import { RecordSpotReqDTO, RecordSpotResDTO } from '../dto/recordSpot.dto';
@@ -9,7 +8,12 @@ import {
   SpotNotFoundException,
   SpotRecordFail,
 } from 'src/filters/spot.exception';
-import { S3, endpoint, bucketName } from '../../common/s3/objectStorage';
+import {
+  S3,
+  endpoint,
+  bucketName,
+  makePresignedUrl,
+} from '../../common/s3/objectStorage';
 @Injectable()
 export class SpotService {
   constructor(
@@ -31,17 +35,6 @@ export class SpotService {
     }
   }
 
-  makePresignedUrl(key) {
-    const config = {
-      Bucket: bucketName,
-      Key: key,
-      Expires: 60,
-    };
-
-    const presignedUrl = S3.getSignedUrl('getObject', config);
-
-    return { presignedUrl };
-  }
   async insertToSpot(spotData) {
     const data = { ...spotData, coordinate: JSON.parse(spotData.coordinate) };
     const createdSpotData = await new this.spotModel(data).save();
@@ -61,7 +54,7 @@ export class SpotService {
       recordSpotDto.journeyId,
       file,
     );
-    const { presignedUrl } = this.makePresignedUrl(photoKey);
+    const presignedUrl = makePresignedUrl(photoKey);
     const createdSpotData = await this.insertToSpot({
       ...recordSpotDto,
       photoKey,
@@ -72,7 +65,7 @@ export class SpotService {
       journeyId,
       coordinate,
       timestamp,
-      photo: presignedUrl,
+      photoUrl: presignedUrl,
     };
     return returnData;
   }
