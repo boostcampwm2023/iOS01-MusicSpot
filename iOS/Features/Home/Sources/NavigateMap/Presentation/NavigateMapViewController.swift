@@ -250,3 +250,45 @@ extension NavigateMapViewController: ButtonStackViewDelegate {
     }
     
 }
+
+
+// MARK: - Networking
+
+extension NavigateMapViewController {
+    
+    // MARK: - Functions
+    
+    func loadJourneys() async {
+//        guard let router else {
+//            MSLogger.make(category: .spot).debug("journeyID와 coordinate ID가 view model에 전달되지 않았습니다.")
+//            return
+//        }
+//        let timestamp = Data().base64EncodedString()
+//        print(timestamp)
+        
+        let router = JourneyRouter.checkJourney(userID: UUID(uuidString: "ab4068ef-95ed-40c3-be6d-3db35df866b9")!,
+                                                minCoordinate: CoordinateDTO(latitude: 36.5, longitude: 125.5),
+                                                maxCoordinate: CoordinateDTO(latitude: 38.5, longitude: 127.5))
+        let result = await self.msNetworking.request(CheckJourneyResponseDTO.self, router: router)
+        switch result {
+        case .success(let journeys):
+            print(journeys)
+        case .failure(let error):
+            print(error)
+        }
+        
+//        self.msNetworking.request(CheckJourneyResponseDTO.self, router: router)
+//            .sink { response in
+//                switch response {
+//                case .failure(let error):
+//                    MSLogger.make(category: .network).debug("\(error): 정상적으로 Journey 목록을 서버에서 가져오지 못하였습니다.")
+//                default:
+//                    return
+//                }
+//            } receiveValue: { journey in
+//                print(journey)
+//            }
+//            .store(in: &cancellables)
+    }
+}
+
