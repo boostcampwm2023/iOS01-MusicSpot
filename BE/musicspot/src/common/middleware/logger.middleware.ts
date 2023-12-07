@@ -26,7 +26,7 @@ export class LoggerMiddleware implements NestMiddleware {
           )}`,
         );
       } else {
-        winstonLogger.warn(
+        winstonLogger.log(
           `[${method}]${originalUrl}(${statusCode}) ${ip}  Reqbody:${JSON.stringify(
             req.body,
             null,
