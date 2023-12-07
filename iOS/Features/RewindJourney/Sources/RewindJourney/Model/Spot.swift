@@ -17,7 +17,7 @@ struct Spot {
 
 extension Spot {
     
-    init(dto: ResponsibleSpotDTO) {
+    init(dto: SpotDTO) {
         self.photoURL = dto.photoURL
     }
     
