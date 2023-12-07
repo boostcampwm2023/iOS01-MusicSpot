@@ -13,10 +13,13 @@ import MSLogger
 
 public final class SpotSaveViewModel {
     
+    public enum Action {
+        case startUploadSpot
+    }
+    
     // MARK: - Properties
     
     private var repository: SpotRepository
-//    private let msNetworking = MSNetworking(session: URLSession.shared)
     private var subscriber: Set<AnyCancellable> = []
     private let journeyID: UUID
     private let coordinate: [Double]
@@ -31,11 +34,45 @@ public final class SpotSaveViewModel {
         self.coordinate = coordinate
     }
     
+    // 임시 model_ domain 생성 시 삭제
+    
+    struct RequestableSpotDTO {
+        private let journeyID: UUID
+        private let coordinate: [Double]
+        private let imageData: Data
+        
+        init(journeyID: UUID, coordinate: [Double], imageData: Data) {
+            self.journeyID = journeyID
+            self.coordinate = coordinate
+            self.imageData = imageData
+        }
+    }
+    
+    //
+    
 }
 
-// MARK: - Interface
+// MARK: - Interface: Actions
 
 internal extension SpotSaveViewModel {
+    
+    func trigger(_ action: Action, using data: Data) {
+        switch action {
+        case .startUploadSpot:
+            Task {
+                let spot = RequestableSpotDTO(journeyID: self.journeyID,
+                                              coordinate: self.coordinate,
+                                              imageData: data)
+                let result = await self.repository.upload(spot: spot)
+                switch result {
+                case .success:
+                    MSLogger.make(category: .network).debug("성공적으로 업로드되었습니다.")
+                case .failure:
+                    MSLogger.make(category: .network).debug("업로드에 실패하였습니다.")
+                }
+            }
+        }
+    }
     
 //    func upload(data: Data, using router: Router?) {
 //        guard let router, let journeyID, let coordinate else {

@@ -9,9 +9,27 @@ import Foundation
 
 import MSNetworking
 
+// 임시 model_ domain 생성 시 삭제
+
+public struct RequestableSpotDTO {
+    private let journeyID: UUID
+    private let coordinate: [Double]
+    private let imageData: Data
+    
+    init(journeyID: UUID, coordinate: [Double], imageData: Data) {
+        self.journeyID = journeyID
+        self.coordinate = coordinate
+        self.imageData = imageData
+    }
+}
+
+//
+
 public protocol SpotRepository {
+    
     func fetchRecordingSpots() async -> Result<[SpotDTO], Error>
-//    func uploadSpot() async -> Result<SpotDTO, Error>
+    func upload(spot: RequestableSpotDTO) async -> Result<Void, Error>
+    
 }
 
 public struct SpotRepositoryImplementation: SpotRepository {
@@ -36,13 +54,19 @@ public struct SpotRepositoryImplementation: SpotRepository {
         } catch {
             print(error)
         }
+        #else
+        
         #endif
         
         return .failure(MSNetworkError.unknownResponse)
     }
     
-//    public func uploadSpot() async -> Result<SpotDTO, Error> {
-//        
-//    }
-    
+    public func upload(spot: RequestableSpotDTO) async -> Result<Void, Error> {
+        #if DEBUG
+        return .success(())
+        #else
+        
+        #endif
+    }
+            
 }
