@@ -49,11 +49,7 @@ export class JourneyController {
   })
   @Post('start')
   async create(@Body() startJourneyDTO: StartJourneyReqDTO) {
-    try {
-      return await this.journeyService.create(startJourneyDTO);
-    } catch (err) {
-      console.log(err);
-    }
+    return await this.journeyService.create(startJourneyDTO);
   }
 
   @ApiOperation({
@@ -66,11 +62,7 @@ export class JourneyController {
   })
   @Post('end')
   async end(@Body() endJourneyReqDTO: EndJourneyReqDTO) {
-    try {
-      return await this.journeyService.end(endJourneyReqDTO);
-    } catch (err) {
-      console.log(err);
-    }
+    return await this.journeyService.end(endJourneyReqDTO);
   }
 
   @ApiOperation({
@@ -83,13 +75,9 @@ export class JourneyController {
   })
   @Post('record')
   async record(@Body() recordJourneyDTO: RecordJourneyReqDTO) {
-    try {
-      const returnData =
-        await this.journeyService.pushCoordianteToJourney(recordJourneyDTO);
-      return returnData;
-    } catch (err) {
-      console.log(err);
-    }
+    const returnData =
+      await this.journeyService.pushCoordianteToJourney(recordJourneyDTO);
+    return returnData;
   }
   @ApiOperation({
     summary: '여정 조회 API',
@@ -125,19 +113,15 @@ export class JourneyController {
   @UsePipes(ValidationPipe)
   async checkGet(
     @Query('userId') userId: UUID,
-    @Query('minCoordinate') minCoordinate: number[],
-    @Query('maxCoordinate') maxCoordinate: number[],
+    @Query('minCoordinate') minCoordinate,
+    @Query('maxCoordinate') maxCoordinate,
   ) {
-    try {
-      const checkJourneyDTO = {
-        userId,
-        minCoordinate,
-        maxCoordinate,
-      };
-      return await this.journeyService.checkJourney(checkJourneyDTO);
-    } catch (err) {
-      console.log(err);
-    }
+    const checkJourneyDTO = {
+      userId,
+      minCoordinate,
+      maxCoordinate,
+    };
+    return await this.journeyService.checkJourney(checkJourneyDTO);
   }
 
   @ApiOperation({
@@ -151,11 +135,7 @@ export class JourneyController {
   @Post('check')
   @UsePipes(ValidationPipe) //유효성 체크
   async checkPost(@Body() checkJourneyDTO: CheckJourneyReqDTO) {
-    try {
-      return await this.journeyService.checkJourney(checkJourneyDTO);
-    } catch (err) {
-      console.log(err);
-    }
+    return await this.journeyService.checkJourney(checkJourneyDTO);
   }
 
   @ApiOperation({
@@ -168,19 +148,11 @@ export class JourneyController {
   })
   @Get('loadLastData')
   async loadLastData(@Query('userId') userId: string) {
-    try {
-      return await this.journeyService.loadLastJourney(userId);
-    } catch (err) {
-      console.log(err);
-    }
+    return await this.journeyService.loadLastJourney(userId);
   }
 
   @Get(':journeyId')
   async getJourneyById(@Param('journeyId') journeyId: string) {
-    try {
-      return await this.journeyService.getJourneyById(journeyId);
-    } catch (err) {
-      console.log(err);
-    }
+    return await this.journeyService.getJourneyById(journeyId);
   }
 }

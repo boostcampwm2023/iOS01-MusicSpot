@@ -127,21 +127,20 @@ export class JourneyService {
     // return { coordinate: coordinates[len - 1] };
   }
 
-  async checkJourney(checkJourneyDTO: CheckJourneyReqDTO) {
+  async checkJourney(checkJourneyDTO) {
     const { userId, minCoordinate, maxCoordinate } = checkJourneyDTO;
     const user = await this.userModel.findOne({ userId }).lean();
-
     if (!user) {
       throw new UserNotFoundException();
     }
     const journeys = user.journeys;
     const boundingBox = turf.bboxPolygon([
-      minCoordinate[0],
-      minCoordinate[1],
-      maxCoordinate[0],
-      maxCoordinate[1],
+      parseFloat(minCoordinate[0]),
+      parseFloat(minCoordinate[1]),
+      parseFloat(maxCoordinate[0]),
+      parseFloat(maxCoordinate[1]),
     ]);
-
+    // console.log(boundingBox);
     const journeyList = await this.findMinMaxCoordinates(boundingBox, journeys);
     return journeyList;
   }
@@ -167,7 +166,7 @@ export class JourneyService {
         throw new JourneyNotFoundException();
       }
       let journeyLine = turf.lineString(journey.coordinates);
-      if (turf.booleanWithin(journeyLine, boundingBox)) {
+      if (!turf.booleanDisjoint(journeyLine, boundingBox)) {
         journeyList.push(journey);
       }
     }
@@ -202,19 +201,15 @@ export class JourneyService {
   }
 
   async getJourneyById(journeyId) {
-    try {
-      return await this.findByIdWithPopulate(journeyId, 'spots', 'Spot', {
-        transform: (spot) => {
-          return {
-            coordinate: spot.coordinate,
-            timestamp: spot.timestamp,
-            photoUrl: makePresignedUrl(spot.photoKey),
-          };
-        },
-      });
-    } catch (err) {
-      console.log(err);
-    }
+    return await this.findByIdWithPopulate(journeyId, 'spots', 'Spot', {
+      transform: (spot) => {
+        return {
+          coordinate: spot.coordinate,
+          timestamp: spot.timestamp,
+          photoUrl: makePresignedUrl(spot.photoKey),
+        };
+      },
+    });
   }
 
   async findByIdWithPopulate(id, path, model, options?) {

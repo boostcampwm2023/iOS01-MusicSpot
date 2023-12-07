@@ -45,11 +45,7 @@ export class SpotController {
   })
   @Get('find')
   async findSpotImage(@Query('spotId') spotId: string) {
-    try {
-      return await this.spotService.getSpotImage(spotId);
-    } catch (err) {
-      console.log(err);
-    }
+    return await this.spotService.getSpotImage(spotId);
   }
 
   // @Post()
