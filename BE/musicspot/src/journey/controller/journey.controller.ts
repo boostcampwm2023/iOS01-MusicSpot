@@ -49,7 +49,11 @@ export class JourneyController {
   })
   @Post('start')
   async create(@Body() startJourneyDTO: StartJourneyReqDTO) {
-    return await this.journeyService.create(startJourneyDTO);
+    try {
+      return await this.journeyService.create(startJourneyDTO);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   @ApiOperation({
@@ -62,7 +66,11 @@ export class JourneyController {
   })
   @Post('end')
   async end(@Body() endJourneyReqDTO: EndJourneyReqDTO) {
-    return await this.journeyService.end(endJourneyReqDTO);
+    try {
+      return await this.journeyService.end(endJourneyReqDTO);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   @ApiOperation({
@@ -116,12 +124,16 @@ export class JourneyController {
     @Query('minCoordinate') minCoordinate: number[],
     @Query('maxCoordinate') maxCoordinate: number[],
   ) {
-    const checkJourneyDTO = {
-      userId,
-      minCoordinate,
-      maxCoordinate,
-    };
-    return await this.journeyService.checkJourney(checkJourneyDTO);
+    try {
+      const checkJourneyDTO = {
+        userId,
+        minCoordinate,
+        maxCoordinate,
+      };
+      return await this.journeyService.checkJourney(checkJourneyDTO);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   @ApiOperation({
@@ -135,7 +147,11 @@ export class JourneyController {
   @Post('check')
   @UsePipes(ValidationPipe) //유효성 체크
   async checkPost(@Body() checkJourneyDTO: CheckJourneyReqDTO) {
-    return await this.journeyService.checkJourney(checkJourneyDTO);
+    try {
+      return await this.journeyService.checkJourney(checkJourneyDTO);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   @ApiOperation({
@@ -148,11 +164,19 @@ export class JourneyController {
   })
   @Get('loadLastData')
   async loadLastData(@Query('userId') userId: string) {
-    return await this.journeyService.loadLastJourney(userId);
+    try {
+      return await this.journeyService.loadLastJourney(userId);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   @Get(':journeyId')
   async getJourneyById(@Param('journeyId') journeyId: string) {
-    return await this.journeyService.getJourneyById(journeyId);
+    try {
+      return await this.journeyService.getJourneyById(journeyId);
+    } catch (err) {
+      console.log(err);
+    }
   }
 }
