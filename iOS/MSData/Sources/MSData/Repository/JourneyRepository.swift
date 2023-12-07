@@ -42,34 +42,33 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     public func fetchJourneyList(userID: UUID,
                                  minCoordinate: Coordinate,
                                  maxCoordinate: Coordinate) async -> Result<[Journey], Error> {
-//        #if DEBUG
-//        guard let jsonURL = Bundle.module.url(forResource: "MockJourney", withExtension: "json") else {
-//            return .failure((MSNetworkError.invalidRouter))
-//        }
-//        do {
-//            let jsonData = try Data(contentsOf: jsonURL)
-//            let decoder = JSONDecoder()
-//            let dateFormatter = DateFormatter()
-//            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-//            decoder.dateDecodingStrategy = .formatted(dateFormatter)
-//            let responseDTO = try decoder.decode(CheckJourneyResponseDTO.self, from: jsonData)
-//            return .success(responseDTO.journeys.map { $0.toDomain() })
-//        } catch {
-//            return .failure(error)
-//        }
-//        #else
-        
-        let router = JourneyRouter.checkJourney(userID: UUID(),
+        #if DEBUG
+        guard let jsonURL = Bundle.module.url(forResource: "MockJourney", withExtension: "json") else {
+            return .failure((MSNetworkError.invalidRouter))
+        }
+        do {
+            let jsonData = try Data(contentsOf: jsonURL)
+            let decoder = JSONDecoder()
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            decoder.dateDecodingStrategy = .formatted(dateFormatter)
+            let responseDTO = try decoder.decode(CheckJourneyResponseDTO.self, from: jsonData)
+            return .success(responseDTO.map { $0.toDomain() })
+        } catch {
+            return .failure(error)
+        }
+        #else
+        let router = JourneyRouter.checkJourney(userID: userID,
                                                 minCoordinate: CoordinateDTO(minCoordinate),
                                                 maxCoordinate: CoordinateDTO(maxCoordinate))
         let result = await self.networking.request(CheckJourneyResponseDTO.self, router: router)
         switch result {
         case .success(let response):
-            return .success(response.journeys.map { $0.toDomain() })
+            return .success(response.map { $0.toDomain() })
         case .failure(let error):
             return .failure(error)
         }
-//        #endif
+        #endif
     }
     
     public func endJourney(_ journey: Journey) async -> Result<String, Error> {

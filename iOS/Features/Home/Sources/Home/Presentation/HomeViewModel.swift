@@ -32,15 +32,16 @@ public final class HomeViewModel {
     
     public var state = State()
     
-    let journeyRepository: JourneyRepository
-    let userRepository: UserRepository
+    private let journeyRepository: JourneyRepository
+    private let userRepository: UserRepository
     
     @UserDefaultsWrapped(UserDefaultsKey.isFirstLaunch, defaultValue: false)
     private var isFirstLaunch: Bool
     
     // MARK: - Initializer
     
-    public init(journeyRepository: JourneyRepository, userRepository: UserRepository) {
+    public init(journeyRepository: JourneyRepository,
+                userRepository: UserRepository) {
         self.journeyRepository = journeyRepository
         self.userRepository = userRepository
     }
@@ -50,30 +51,9 @@ public final class HomeViewModel {
     func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
-            self.fetchUser()
+            self.createNewUser()
         case .fetchJourney(at: (let minCoordinate, let maxCoordinate)):
-            
-            Task {
-                let result = await self.userRepository.createUser()
-                switch result {
-                case .success(let userInfo):
-                    
-                    self.isFirstLaunch = false
-                    
-                    let result = await self.journeyRepository.fetchJourneyList(userID: userInfo.userID,
-                                                                               minCoordinate: minCoordinate,
-                                                                               maxCoordinate: maxCoordinate)
-                    switch result {
-                    case .success(let journeys):
-                        self.state.journeys.send(journeys)
-                        
-                    case .failure(let error):
-                        print(error)
-                    }
-                case .failure(let error):
-                    MSLogger.make(category: .home).error("\(error)")
-                }
-            }
+            self.fetchJourneys(minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)
         }
     }
 }
@@ -83,7 +63,23 @@ public final class HomeViewModel {
 
 private extension HomeViewModel {
     
-    func fetchUser() {
+    func fetchJourneys(minCoordinate: Coordinate, maxCoordinate: Coordinate) {
+        guard let userID = try? self.userRepository.fetchUUID() else { return }
+        
+        Task {
+            let result = await self.journeyRepository.fetchJourneyList(userID: userID,
+                                                                       minCoordinate: minCoordinate,
+                                                                       maxCoordinate: maxCoordinate)
+            switch result {
+            case .success(let journeys):
+                self.state.journeys.send(journeys)
+            case .failure(let error):
+                MSLogger.make(category: .home).error("\(error)")
+            }
+        }
+    }
+    
+    func createNewUser() {
         let isFirstLaunch = self.isFirstLaunch ? "앱이 처음 실행되었습니다." : "앱 첫 실행이 아닙니다."
         MSLogger.make(category: .userDefaults).log("\(isFirstLaunch)")
         
