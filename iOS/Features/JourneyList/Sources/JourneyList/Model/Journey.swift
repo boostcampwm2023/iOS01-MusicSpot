@@ -11,17 +11,21 @@ struct Journey: Hashable {
     
     // MARK: - Properties
     
-    let id: UUID
-    let location: String
+    let id: String
+    let title: String
     let date: Date
     let spots: [Spot]
     let song: Song
     
     // MARK: - Initializer
     
-    init(id: UUID = UUID(), location: String, date: Date, spots: [Spot], song: Song) {
+    init(id: String = UUID().uuidString,
+         location: String,
+         date: Date,
+         spots: [Spot],
+         song: Song) {
         self.id = id
-        self.location = location
+        self.title = location
         self.date = date
         self.spots = spots
         self.song = song

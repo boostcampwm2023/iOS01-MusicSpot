@@ -9,12 +9,13 @@ import Combine
 import Foundation
 
 import MSData
+import MSDomain
 
 public final class JourneyListViewModel {
     
     public enum Action {
         case viewNeedsLoaded
-        case fetchJourney(at: Coordinate)
+        case fetchJourney(at: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
     }
     
     public struct State {
@@ -40,19 +41,18 @@ public final class JourneyListViewModel {
     func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
+            print("ViewNeedsLoaded")
+        case .fetchJourney(at: (let minCoordinate, let maxCoordinate)):
             Task {
-                let result = await self.repository.fetchJourneyList()
-                
+                let result = await self.repository.fetchJourneyList(minCoordinate: minCoordinate,
+                                                                    maxCoordinate: maxCoordinate)
                 switch result {
                 case .success(let journeys):
-                    let journeys = journeys.map { Journey(dto: $0) }
-                    self.state.journeys.send(journeys)
+                    print(journeys)
                 case .failure(let error):
                     print(error)
                 }
             }
-        case .fetchJourney(let coordinate):
-            print(coordinate)
         }
     }
     

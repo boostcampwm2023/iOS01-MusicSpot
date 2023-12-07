@@ -13,6 +13,7 @@ public enum MSLogCategory: String {
     case network
     case imageFetcher = "ImageFetcher"
     case userDefaults
+    case keychain = "Keychain"
     
     case home
     case navigateMap
