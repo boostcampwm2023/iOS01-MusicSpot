@@ -2,7 +2,7 @@
 //  Journey.swift
 //  Home
 //
-//  Created by 윤동주 on 12/5/23.
+//  Created by 윤동주 on 12/7/23.
 //
 
 import Foundation

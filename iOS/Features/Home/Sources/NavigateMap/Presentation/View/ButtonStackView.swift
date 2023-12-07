@@ -9,7 +9,7 @@ import UIKit
 
 import MSUIKit
 
-protocol ButtonStackViewDelegate: AnyObject {
+public protocol ButtonStackViewDelegate: AnyObject {
     
     func mapButtonDidTap()
     func userLocationButtonDidTap()
