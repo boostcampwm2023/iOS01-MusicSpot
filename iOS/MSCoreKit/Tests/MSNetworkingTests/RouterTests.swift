@@ -10,6 +10,10 @@ import XCTest
 
 final class RouterTests: XCTestCase {
     
+    // MARK: - Properties
+    
+    private let encoder = JSONEncoder()
+    
     // MARK: - Tests
     
     func test_BaseURL만포함하는_Router_생성_성공() {
@@ -24,7 +28,7 @@ final class RouterTests: XCTestCase {
         
         let sut = SUTRouter()
         
-        guard let request = sut.request else {
+        guard let request = sut.makeRequest(encoder: encoder) else {
             XCTFail("URLRequest를 생성하는데 실패했습니다.")
             return
         }
@@ -48,7 +52,7 @@ final class RouterTests: XCTestCase {
         
         let sut = SUTRouter()
         
-        guard let request = sut.request else {
+        guard let request = sut.makeRequest(encoder: encoder) else {
             XCTFail("URLRequest를 생성하는데 실패했습니다.")
             return
         }
@@ -75,7 +79,7 @@ final class RouterTests: XCTestCase {
         
         let sut = SUTRouter()
         
-        guard let request = sut.request else {
+        guard let request = sut.makeRequest(encoder: encoder) else {
             XCTFail("URLRequest를 생성하는데 실패했습니다.")
             return
         }
@@ -105,7 +109,7 @@ final class RouterTests: XCTestCase {
         
         let sut = SUTRouter()
         
-        guard let request = sut.request else {
+        guard let request = sut.makeRequest(encoder: encoder) else {
             XCTFail("URLRequest를 생성하는데 실패했습니다.")
             return
         }
@@ -134,7 +138,7 @@ final class RouterTests: XCTestCase {
         
         let sut = SUTRouter()
         
-        guard let request = sut.request else {
+        guard let request = sut.makeRequest(encoder: encoder) else {
             XCTFail("URLRequest를 생성하는데 실패했습니다.")
             return
         }

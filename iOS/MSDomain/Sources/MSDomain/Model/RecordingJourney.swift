@@ -1,5 +1,5 @@
 //
-//  Journey.swift
+//  RecordingJourney.swift
 //  MSDomain
 //
 //  Created by 이창준 on 2023.12.07.
@@ -7,40 +7,34 @@
 
 import Foundation
 
-public struct Journey: Identifiable {
+public struct RecordingJourney: Identifiable {
     
     // MARK: - Properties
     
     public let id: String
-    public let title: String
-    public let date: (start: Date, end: Date)
+    public let startTimestamp: Date
     public let spots: [Spot]
     public let coordinates: [Coordinate]
-    public let music: Music
     
     // MARK: - Initializer
     
     public init(id: String,
-                title: String,
-                date: (start: Date, end: Date),
+                startTimestamp: Date,
                 spots: [Spot],
-                coordinates: [Coordinate],
-                music: Music) {
+                coordinates: [Coordinate]) {
         self.id = id
-        self.title = title
-        self.date = date
+        self.startTimestamp = startTimestamp
         self.spots = spots
         self.coordinates = coordinates
-        self.music = music
     }
     
 }
 
 // MARK: - Hashable
 
-extension Journey: Hashable {
+extension RecordingJourney: Hashable {
     
-    public static func == (lhs: Journey, rhs: Journey) -> Bool {
+    public static func == (lhs: RecordingJourney, rhs: RecordingJourney) -> Bool {
         return lhs.id == rhs.id
     }
     

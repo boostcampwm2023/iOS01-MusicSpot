@@ -6,10 +6,17 @@
 //
 
 import UIKit
+import MusicKit
 
 import MSData
 import MSDomain
 import SaveJourney
+
+protocol SaveJourneyCoordinatorDelegate: AnyObject {
+    
+    func popToHomeMap(from coordinator: Coordinator)
+    
+}
 
 final class SaveJourneyCoordinator: Coordinator {
     
@@ -19,7 +26,7 @@ final class SaveJourneyCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     
-//    var delegate: SearchMusicCoordinatorDelegate?
+    var delegate: SelectSongCoordinatorDelegate?
     
     // MARK: - Initializer
     
@@ -29,10 +36,18 @@ final class SaveJourneyCoordinator: Coordinator {
     
     // MARK: - Functions
     
-    func start(with music: Music) {
+    func start(recordingJourney: RecordingJourney,
+               lastCoordinate: Coordinate,
+               selectedSong: Song,
+               selectedIndex: IndexPath) {
         let journeyRepository = JourneyRepositoryImplementation()
-        let saveJourneyViewModel = SaveJourneyViewModel(selectedMusic: music, journeyRepository: journeyRepository)
+        let saveJourneyViewModel = SaveJourneyViewModel(recordingJourney: recordingJourney,
+                                                        lastCoordinate: lastCoordinate,
+                                                        selectedSong: selectedSong,
+                                                        selectedIndex: selectedIndex,
+                                                        journeyRepository: journeyRepository)
         let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
+        saveJourneyViewController.navigationDelegate = self
         self.navigationController.pushViewController(saveJourneyViewController, animated: true)
     }
     
@@ -40,14 +55,22 @@ final class SaveJourneyCoordinator: Coordinator {
 
 // MARK: - SaveJourneyViewController
 
-//extension SaveJourneyCoordinator: SaveJourneyViewControllerDelegate {
-//    
-//    func navigateToHomeMap() {
-//        self.delegate?.popToHome(from: self)
-//    }
-//    
-//    func navigateToSearchMusic() {
-//        self.delegate?.popToSearchMusic(from: self)
-//    }
-//    
-//}
+extension SaveJourneyCoordinator: SaveJourneyNavigationDelegate {
+    
+    func popToHome() {
+        self.delegate?.popToHomeMap(from: self)
+    }
+    
+}
+
+// MARK: - SelectSong Coordinator
+
+extension SaveJourneyCoordinator: SaveJourneyCoordinatorDelegate {
+    
+    func popToHomeMap(from coordinator: Coordinator) {
+        self.childCoordinators.removeAll()
+        self.navigationController.popViewController(animated: true)
+        self.delegate?.popToHomeMap(from: self)
+    }
+    
+}
