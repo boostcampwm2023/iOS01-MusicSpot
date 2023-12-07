@@ -43,7 +43,7 @@ enum SaveJourneySection {
 
 enum SaveJourneyItem: Hashable {
     
-    case song(Music)
+    case music(Music)
     case spot(Spot)
     
 }

@@ -64,7 +64,7 @@ public final class SelectSongViewModel {
                     case .success(let songCollection):
                         self.state.songs.send(songCollection.map { $0 })
                     case .failure(let error):
-                        print(error)
+                        dump(error)
                     }
                 }
             default:

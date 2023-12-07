@@ -18,10 +18,23 @@ public struct MSNetworking {
     
     // MARK: - Properties
     
+    private let encoder: JSONEncoder = {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions.insert(.withFractionalSeconds)
+        encoder.dateEncodingStrategy = .custom { date, encoder in
+            var container = encoder.singleValueContainer()
+            let dateString = dateFormatter.string(from: date)
+            try container.encode(dateString)
+        }
+        return encoder
+    }()
+    
     private let decoder: JSONDecoder = {
         let decoder = JSONDecoder()
         let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withFractionalSeconds, .withTimeZone, .withInternetDateTime]
+        dateFormatter.formatOptions.insert(.withFractionalSeconds)
         decoder.dateDecodingStrategy = .custom({ decoder in
             let container = try decoder.singleValueContainer()
             let dateString = try container.decode(String.self)
@@ -56,7 +69,7 @@ public struct MSNetworking {
     public func request<T: Decodable>(_ type: T.Type,
                                       router: Router,
                                       timeoutInterval: TimeoutInterval = .seconds(3)) -> AnyPublisher<T, Error> {
-        guard let request = router.request else {
+        guard let request = router.makeRequest(encoder: self.encoder) else {
             return Fail(error: MSNetworkError.invalidRouter).eraseToAnyPublisher()
         }
         
@@ -86,7 +99,7 @@ public struct MSNetworking {
     public func request<T: Decodable>(_ type: T.Type,
                                       router: Router,
                                       timeoutInterval: TimeoutInterval = .seconds(3)) async -> Result<T, Error> {
-        guard let request = router.request else {
+        guard let request = router.makeRequest(encoder: self.encoder) else {
             return .failure(MSNetworkError.invalidRouter)
         }
         

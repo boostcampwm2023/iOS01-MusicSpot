@@ -54,6 +54,7 @@ public final class SelectSongViewController: BaseViewController {
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero,
                                               collectionViewLayout: UICollectionViewLayout())
+        collectionView.backgroundColor = .clear
         collectionView.keyboardDismissMode = .onDrag
         collectionView.delegate = self
         return collectionView
@@ -99,12 +100,18 @@ public final class SelectSongViewController: BaseViewController {
         self.navigationController?.isNavigationBarHidden = false
     }
     
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.searchTextField.becomeFirstResponder()
+    }
+    
     // MARK: - Combine Binding
     
     private func bind() {
         self.searchTextField.textPublisher
+            .debounce(for: 0.5, scheduler: DispatchQueue.main)
             .filter { !$0.isEmpty }
-            .print()
             .sink { text in
                 self.viewModel.trigger(.searchTextFieldDidUpdate(text))
             }
@@ -127,7 +134,6 @@ public final class SelectSongViewController: BaseViewController {
         super.configureStyle()
         
         self.title = Typo.title
-        self.searchTextField.becomeFirstResponder()
     }
     
     public override func configureLayout() {
@@ -136,7 +142,6 @@ public final class SelectSongViewController: BaseViewController {
         NSLayoutConstraint.activate([
             self.collectionView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             self.collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
         ])
         
@@ -146,7 +151,9 @@ public final class SelectSongViewController: BaseViewController {
             self.searchTextField.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             self.searchTextField.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor,
                                                          constant: -Metric.searchTextFieldBottomSpacing),
-            self.searchTextField.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
+            self.searchTextField.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            self.collectionView.bottomAnchor.constraint(equalTo: self.searchTextField.topAnchor,
+                                                        constant: -Metric.searchTextFieldBottomSpacing)
         ])
     }
     
@@ -214,7 +221,8 @@ extension SelectSongViewController: UICollectionViewDelegate {
         #endif
         self.navigationDelegate?.navigateToSaveJourney(recordingJourney: self.viewModel.state.recordingJourney,
                                                        lastCoordinate: self.viewModel.state.lastCoordinate,
-                                                       selectedSong: item)
+                                                       selectedSong: item,
+                                                       selectedIndex: indexPath)
     }
     
 }

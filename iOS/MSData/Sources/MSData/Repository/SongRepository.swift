@@ -45,7 +45,7 @@ public struct SongRepositoryImplementation: SongRepository {
         }
         #else
         var searchRequest = MusicCatalogSearchRequest(term: term, types: [Song.self])
-        searchRequest.limit = 15
+        searchRequest.limit = 10
         do {
             let searchResponse = try await searchRequest.response()
             return .success(searchResponse.songs)

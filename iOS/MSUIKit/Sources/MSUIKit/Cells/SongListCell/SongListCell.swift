@@ -97,7 +97,7 @@ public final class SongListCell: UICollectionViewCell {
 private extension SongListCell {
     
     func configureStyles() {
-        
+        self.backgroundColor = .msColor(.primaryBackground)
     }
     
     func configureLayout() {

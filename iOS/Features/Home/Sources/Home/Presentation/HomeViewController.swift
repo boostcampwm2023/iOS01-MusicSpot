@@ -193,6 +193,7 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
     
     public func nextButtonDidTap(_ button: MSRectButton) {
         guard let userLocation = self.contentViewController.userLocation else { return }
+        print(userLocation)
         
         let lastCoordinate = Coordinate(latitude: userLocation.coordinate.latitude,
                                         longitude: userLocation.coordinate.longitude)
