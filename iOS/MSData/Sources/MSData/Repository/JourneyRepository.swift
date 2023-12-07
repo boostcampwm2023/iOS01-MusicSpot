@@ -13,6 +13,7 @@ import MSNetworking
 
 public protocol JourneyRepository {
     
+    func fetchRecordingJourney() async -> Result<JourneyDTO, Error>
     func fetchJourneyList(minCoordinate: Coordinate,
                           maxCoordinate: Coordinate) async -> Result<CheckJourneyResponseDTO, Error>
     
@@ -31,6 +32,10 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     }
     
     // MARK: - Functions
+    
+    public func fetchRecordingJourney() async -> Result<JourneyDTO, Error> {
+        return .failure(MSNetworkError.invalidRouter)
+    }
     
     public func fetchJourneyList(minCoordinate: Coordinate,
                                  maxCoordinate: Coordinate) async -> Result<CheckJourneyResponseDTO, Error> {
