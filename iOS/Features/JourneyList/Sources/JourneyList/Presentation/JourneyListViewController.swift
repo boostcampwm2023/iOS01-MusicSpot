@@ -188,9 +188,9 @@ extension JourneyListViewController: UICollectionViewDelegate {
         // TODO: 최적화 & 캐싱
         let cellRegistration = JourneyCellRegistration { cell, indexPath, itemIdentifier in
             let cellModel = JourneyCellModel(location: itemIdentifier.title,
-                                             date: itemIdentifier.date,
-                                             songTitle: itemIdentifier.song.title,
-                                             songArtist: itemIdentifier.song.artist)
+                                             date: itemIdentifier.date.start,
+                                             songTitle: itemIdentifier.music.title,
+                                             songArtist: itemIdentifier.music.artist)
             cell.update(with: cellModel)
             let photoURLs = itemIdentifier.spots
                 .map { $0.photoURL }

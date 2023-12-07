@@ -42,3 +42,25 @@ extension SongDTO: Codable {
     }
     
 }
+
+// MARK: - Domain Mapping
+
+import MSDomain
+
+extension SongDTO {
+    
+    public init(_ domain: Music) {
+        self.id = domain.id
+        self.title = domain.title
+        self.artist = domain.artist
+        self.artwork = ArtworkDTO(domain.artwork)
+    }
+    
+    public func toDomain() -> Music {
+        return Music(id: self.id,
+                    title: self.title,
+                    artist: self.artist,
+                    artwork: self.artwork.toDomain())
+    }
+    
+}

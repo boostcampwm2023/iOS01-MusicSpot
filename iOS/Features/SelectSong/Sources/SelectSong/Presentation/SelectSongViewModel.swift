@@ -10,6 +10,7 @@ import Foundation
 
 import MediaPlayer
 import MSData
+import MSDomain
 import MusicKit
 
 public final class SelectSongViewModel {
@@ -20,7 +21,7 @@ public final class SelectSongViewModel {
     }
     
     public struct State {
-        var songs = CurrentValueSubject<[Song], Never>([])
+        var songs = CurrentValueSubject<[Music], Never>([])
     }
     
     // MARK: - Properties
@@ -54,8 +55,9 @@ public final class SelectSongViewModel {
                     let result = await self.repository.fetchSongList(with: text)
                     switch result {
                     case .success(let songCollection):
-                        let songs = songCollection.map { Song(dto: $0) }
-                        self.state.songs.send(songs)
+                        print(songCollection)
+//                        let songs = songCollection.map { Music(dto: $0) }
+//                        self.state.songs.send(songs)
                     case .failure(let error):
                         print(error)
                     }

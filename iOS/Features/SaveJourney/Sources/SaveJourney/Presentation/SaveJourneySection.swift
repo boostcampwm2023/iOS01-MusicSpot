@@ -7,6 +7,8 @@
 
 import UIKit
 
+import MSDomain
+
 // MARK: - Section
 
 enum SaveJourneySection {
@@ -40,6 +42,8 @@ enum SaveJourneySection {
 // MARK: - Item
 
 enum SaveJourneyItem: Hashable {
-    case song(Song)
+    
+    case song(Music)
     case spot(Spot)
+    
 }

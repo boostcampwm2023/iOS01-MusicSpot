@@ -8,6 +8,7 @@
 import UIKit
 
 import MSDesignSystem
+import MSDomain
 
 final class SaveJourneyMusicCell: UICollectionViewCell {
     
@@ -81,7 +82,7 @@ final class SaveJourneyMusicCell: UICollectionViewCell {
     
     // MARK: - Functions
     
-    func update(with cellModel: Song) {
+    func update(with cellModel: Music) {
         self.titleLabel.text = cellModel.title
         self.artistLabel.text = cellModel.artist
         

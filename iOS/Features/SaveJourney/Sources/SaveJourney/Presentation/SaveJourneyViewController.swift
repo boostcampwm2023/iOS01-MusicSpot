@@ -10,6 +10,7 @@ import CoreLocation
 import MapKit
 import UIKit
 
+import MSDomain
 import MSUIKit
 import MediaPlayer
 
@@ -17,7 +18,7 @@ public final class SaveJourneyViewController: UIViewController {
     
     typealias SaveJourneyDataSource = UICollectionViewDiffableDataSource<SaveJourneySection, SaveJourneyItem>
     typealias HeaderRegistration = UICollectionView.SupplementaryRegistration<SaveJourneyHeaderView>
-    typealias MusicCellRegistration = UICollectionView.CellRegistration<SaveJourneyMusicCell, Song>
+    typealias MusicCellRegistration = UICollectionView.CellRegistration<SaveJourneyMusicCell, Music>
     typealias SpotCellRegistration = UICollectionView.CellRegistration<SpotCell, Spot>
     typealias SaveJourneySnapshot = NSDiffableDataSourceSnapshot<SaveJourneySection, SaveJourneyItem>
     typealias MusicSnapshot = NSDiffableDataSourceSectionSnapshot<SaveJourneyItem>
@@ -248,8 +249,8 @@ private extension SaveJourneyViewController {
         
         let journeyCellRegistration = SpotCellRegistration { cell, indexPath, itemIdentifier in
             let geocoder = CLGeocoder()
-            let location = CLLocation(latitude: itemIdentifier.location.latitude,
-                                      longitude: itemIdentifier.location.longitude)
+            let location = CLLocation(latitude: itemIdentifier.coordinate.latitude,
+                                      longitude: itemIdentifier.coordinate.longitude)
             Task {
                 guard let placemark = try? await geocoder.reverseGeocodeLocation(location).first else {
                     return
@@ -265,7 +266,7 @@ private extension SaveJourneyViewController {
                 }
                 
                 let cellModel = SpotCellModel(location: location,
-                                              date: itemIdentifier.date,
+                                              date: itemIdentifier.timestamp,
                                               photoURL: itemIdentifier.photoURL)
                 cell.update(with: cellModel)
             }
@@ -408,18 +409,3 @@ private extension SaveJourneyViewController {
     }
     
 }
-
-// MARK: - Preview
-
-#if DEBUG
-import MSData
-
-@available(iOS 17, *)
-#Preview {
-    let song = Song(title: "OMG", artist: "NewJeans", albumArtURL: URL(string: "sdf")!)
-    let spotRepository = SpotRepositoryImplementation()
-    let saveJourneyViewModel = SaveJourneyViewModel(selectedSong: song, spotRepository: spotRepository)
-    let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
-    return saveJourneyViewController
-}
-#endif

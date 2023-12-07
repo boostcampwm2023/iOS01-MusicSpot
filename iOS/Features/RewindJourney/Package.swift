@@ -27,12 +27,13 @@ private enum Target {
 
 private enum Dependency {
     
+    static let msDomain = "MSDomain"
+    static let msData = "MSData"
     static let msUIKit = "MSUIKit"
     static let msFoundation = "MSFoundation"
     static let msDesignsystem = "MSDesignSystem"
     static let msLogger = "MSLogger"
     static let msCoreKit = "MSCoreKit"
-    static let msData = "MSData"
     static let msNetworking = "MSNetworking"
     
 }
@@ -49,6 +50,8 @@ let package = Package(
                  targets: [Target.rewindJourney])
     ],
     dependencies: [
+        .package(name: Dependency.msDomain,
+                 path: Dependency.msDomain.fromRootPath),
         .package(name: Dependency.msUIKit,
                  path: Dependency.msUIKit.fromRootPath),
         .package(name: Dependency.msFoundation,
@@ -61,6 +64,8 @@ let package = Package(
     targets: [
         .target(name: Target.rewindJourney,
                 dependencies: [
+                    .product(name: Dependency.msDomain,
+                             package: Dependency.msDomain),
                     .product(name: Dependency.msUIKit,
                              package: Dependency.msUIKit),
                     .product(name: Dependency.msDesignsystem,

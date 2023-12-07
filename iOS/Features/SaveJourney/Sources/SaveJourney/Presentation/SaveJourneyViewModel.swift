@@ -8,6 +8,7 @@
 import Combine
 
 import MSData
+import MSDomain
 import MSLogger
 
 public final class SaveJourneyViewModel {
@@ -18,7 +19,7 @@ public final class SaveJourneyViewModel {
     }
     
     public struct State {
-        var song: CurrentValueSubject<Song, Never>
+        var song: CurrentValueSubject<Music, Never>
         var spots = CurrentValueSubject<[Spot], Never>([])
     }
     
@@ -30,10 +31,10 @@ public final class SaveJourneyViewModel {
     
     // MARK: - Initializer
     
-    public init(selectedSong: Song,
+    public init(selectedMusic: Music,
                 spotRepository: SpotRepository) {
         self.spotRepository = spotRepository
-        self.state = State(song: CurrentValueSubject<Song, Never>(selectedSong))
+        self.state = State(song: CurrentValueSubject<Music, Never>(selectedMusic))
     }
     
     // MARK: - Functions
@@ -44,8 +45,7 @@ public final class SaveJourneyViewModel {
             Task {
                 let result = await self.spotRepository.fetchRecordingSpots()
                 switch result {
-                case .success(let responseDTOs):
-                    let spots = responseDTOs.map { Spot(dto: $0) }
+                case .success(let spots):
                     self.state.spots.send(spots)
                 case .failure(let error):
                     #if DEBUG

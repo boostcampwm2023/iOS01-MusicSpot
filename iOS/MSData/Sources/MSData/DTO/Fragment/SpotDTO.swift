@@ -11,18 +11,15 @@ public struct SpotDTO {
     
     // MARK: - Properties
     
-    public let journeyID: String?
     public let coordinate: CoordinateDTO
     public let timestamp: Date
     public let photoURL: URL
     
     // MARK: - Initializer
     
-    public init(journeyID: String?,
-                coordinate: CoordinateDTO,
+    public init(coordinate: CoordinateDTO,
                 timestamp: Date,
                 photoURL: URL) {
-        self.journeyID = journeyID
         self.coordinate = coordinate
         self.timestamp = timestamp
         self.photoURL = photoURL
@@ -35,10 +32,29 @@ public struct SpotDTO {
 extension SpotDTO: Codable {
     
     enum CodingKeys: String, CodingKey {
-        case journeyID = "journeyId"
         case coordinate
         case timestamp
         case photoURL = "photoUrl"
+    }
+    
+}
+
+// MARK: - Domain Mapping
+
+import MSDomain
+
+extension SpotDTO {
+    
+    public init(_ domain: Spot) {
+        self.coordinate = CoordinateDTO(domain.coordinate)
+        self.timestamp = domain.timestamp
+        self.photoURL = domain.photoURL
+    }
+    
+    public func toDomain() -> Spot {
+        return Spot(coordinate: self.coordinate.toDomain(),
+                    timestamp: self.timestamp,
+                    photoURL: self.photoURL)
     }
     
 }
