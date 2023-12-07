@@ -7,7 +7,6 @@
 
 import Combine
 import Foundation
-import Combine
 
 import MSData
 import MSDomain
@@ -37,6 +36,5 @@ public final class NavigateMapViewModel {
     public init(repository: JourneyRepository) {
         self.repository = repository
     }
-    
     
 }

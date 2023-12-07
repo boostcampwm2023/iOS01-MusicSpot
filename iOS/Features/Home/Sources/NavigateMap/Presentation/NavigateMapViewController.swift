@@ -19,7 +19,9 @@ import MSUIKit
 
 
 public protocol HomeViewModelDelegate {
+    
     func fetchJourneys(from coordinates: (Coordinate, Coordinate))
+    
 }
 
 public final class NavigateMapViewController: UIViewController {
@@ -75,10 +77,6 @@ public final class NavigateMapViewController: UIViewController {
     private var cancellables: Set<AnyCancellable> = []
     
     private var homeViewModelDelegate: HomeViewModelDelegate?
-    
-    private var msNetworking = MSNetworking(session: URLSession.shared)
-    
-    internal var navigateMapRouter: JourneyRouter?
     
     private var previousCoordinate: CLLocationCoordinate2D?
     
@@ -277,19 +275,18 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
     }
     
     public func locationManager(_ manager: CLLocationManager,
-                         didUpdateLocations locations: [CLLocation]) {
-        guard let myLocation = locations.last else {
-            return
-        }
+                                didUpdateLocations locations: [CLLocation]) {
+        guard let myLocation = locations.last else { return }
         
         if let coordinate = self.previousCoordinate {
             var points: [CLLocationCoordinate2D] = []
-            let point1 = CLLocationCoordinate2DMake(coordinate.latitude, coordinate.longitude)
-            let point2: CLLocationCoordinate2D
-            = CLLocationCoordinate2DMake(myLocation.coordinate.latitude, myLocation.coordinate.longitude)
+            let point1 = CLLocationCoordinate2DMake(coordinate.latitude,
+                                                    coordinate.longitude)
+            let point2 = CLLocationCoordinate2DMake(myLocation.coordinate.latitude,
+                                                    myLocation.coordinate.longitude)
             points.append(point1)
             points.append(point2)
-            let lineDraw = MKPolyline(coordinates: points, count:points.count)
+            let lineDraw = MKPolyline(coordinates: points, count: points.count)
             
             self.mapView.addOverlay(lineDraw)
         }
@@ -320,7 +317,7 @@ extension NavigateMapViewController: MKMapViewDelegate {
     }
     
     public func mapView(_ mapView: MKMapView,
-                 viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+                        viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard !(annotation is MKUserLocation) else { return nil }
         
         if annotation is MKClusterAnnotation {

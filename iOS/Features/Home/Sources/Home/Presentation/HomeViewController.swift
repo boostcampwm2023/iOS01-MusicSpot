@@ -171,15 +171,12 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
         self.viewModel.trigger(.fetchJourney(at: coordinates))
     }
     
-//    public func fetchUserID() {
-//        self.viewModel.
-//    }
-    
     @objc
     func startButtonDidTap() {
         self.isRecording.toggle()
         self.updateButtonMode()
     }
+    
 }
 
 // MARK: - Button View
