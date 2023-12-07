@@ -139,6 +139,36 @@ public final class NavigateMapViewController: UIViewController {
         ])
     }
     
+    // MARK: - Combine Binding
+    
+    func bind() {
+        self.viewModel.state.previousCoordinate
+            .zip(self.viewModel.state.currentCoordinate)
+            .compactMap { previousCoordinate, currentCoordinate -> (CLLocationCoordinate2D, CLLocationCoordinate2D)? in
+                guard let previousCoordinate = previousCoordinate,
+                      let currentCoordinate = currentCoordinate else {
+                    return nil
+                }
+                return (previousCoordinate, currentCoordinate)
+            }
+            .print()
+            .sink { [weak self] previousCoordinate, currentCoordinate in
+                let points = [previousCoordinate, currentCoordinate]
+                let polyline = MKPolyline(coordinates: points, count: points.count)
+                
+                self?.mapView.addOverlay(polyline)
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.visibleJourneys
+            .receive(on: DispatchQueue.main)
+            .sink { journeys in
+                self.addAnnotations(journeys: journeys)
+                self.drawPolyLines(journeys: journeys)
+            }
+            .store(in: &self.cancellables)
+    }
+    
     // MARK: - Functions
 
     /// iOS 버젼에 따른 분기 처리 후 'iOS 위치 서비스 사용 중 여부' 확인
@@ -223,18 +253,6 @@ public final class NavigateMapViewController: UIViewController {
             }
         }
     }
-
-    // MARK: - Combine Binding
-    
-    func bind() {
-        self.viewModel.state.journeys
-            .receive(on: DispatchQueue.main)
-            .sink { journeys in
-                self.addAnnotations(journeys: journeys)
-                self.drawPolyLines(journeys: journeys)
-            }
-            .store(in: &self.cancellables)
-    }
     
 }
 
@@ -298,21 +316,7 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
             if !self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate, coordinate2: myLocation.coordinate) { return }
         }
         
-        if let coordinate = self.previousCoordinate {
-            var points: [CLLocationCoordinate2D] = []
-            let point1 = CLLocationCoordinate2DMake(coordinate.latitude,
-                                                    coordinate.longitude)
-            let point2 = CLLocationCoordinate2DMake(myLocation.coordinate.latitude,
-                                                    myLocation.coordinate.longitude)
-            points.append(point1)
-            points.append(point2)
-            let lineDraw = MKPolyline(coordinates: points, count: points.count)
-            
-            self.mapView.addOverlay(lineDraw)
-        }
-        
-        self.previousCoordinate = myLocation.coordinate
-        
+        self.viewModel.trigger(.locationDidUpdated(newCurrentLocation.coordinate))
     }
     
 }

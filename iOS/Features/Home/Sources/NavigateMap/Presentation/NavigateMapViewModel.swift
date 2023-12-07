@@ -6,6 +6,7 @@
 //
 
 import Combine
+import CoreLocation
 import Foundation
 
 import MSData
@@ -15,12 +16,14 @@ import MSLogger
 public final class NavigateMapViewModel {
     
     public enum Action {
-        case viewNeedsLoaded
-        case fetchJourney(at: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
+        case locationDidUpdated(CLLocationCoordinate2D)
     }
     
     public struct State {
-        var journeys = CurrentValueSubject<[Journey], Never>([])
+        var previousCoordinate = CurrentValueSubject<CLLocationCoordinate2D?, Never>(nil)
+        var currentCoordinate = CurrentValueSubject<CLLocationCoordinate2D?, Never>(nil)
+        
+        var visibleJourneys = CurrentValueSubject<[Journey], Never>([])
         
         public init() { }
     }
@@ -35,6 +38,16 @@ public final class NavigateMapViewModel {
 
     public init(repository: JourneyRepository) {
         self.repository = repository
+    }
+    
+    // MARK: - Functions
+    
+    func trigger(_ action: Action) {
+        switch action {
+        case .locationDidUpdated(let newCurrentCoordinate):
+            self.state.previousCoordinate.send(self.state.currentCoordinate.value)
+            self.state.currentCoordinate.send(newCurrentCoordinate)
+        }
     }
     
 }
