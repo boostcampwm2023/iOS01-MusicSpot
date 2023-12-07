@@ -54,6 +54,21 @@ export class SpotDTO {
   })
   readonly photoKey: string;
 }
+
+class journeyMetadataDto {
+  @ApiProperty({
+    description: '여정 시작 시간',
+    example: '2023-11-22T15:30:00.000+09:00',
+  })
+  readonly startTimestamp: string;
+
+  @ApiProperty({
+    description: '여정 종료 시간',
+    example: '2023-11-22T15:30:00.000+09:00',
+  })
+  readonly endTimestamp: string;
+}
+
 export class JourneyDTO {
   @ApiProperty({ description: '여정 ID', example: '65649c91380cafcab8869ed2' })
   readonly _id: string;
@@ -73,6 +88,9 @@ export class JourneyDTO {
     ],
   })
   readonly coordinates: number[][];
+
+  @ApiProperty({ description: '여정 메타데이터', type: journeyMetadataDto })
+  readonly journeyMetadata: journeyMetadataDto;
 }
 
 export class CheckJourneyResDTO {
