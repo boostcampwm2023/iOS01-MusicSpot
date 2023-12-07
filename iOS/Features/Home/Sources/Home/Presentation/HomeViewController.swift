@@ -124,6 +124,7 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
         self.viewModel.state.journeys
             .receive(on: DispatchQueue.main)
             .sink { journeys in
+                print(journeys)
                 self.contentViewController.addAnnotations(journeys: journeys)
             }
             .store(in: &self.cancellables)
@@ -132,18 +133,19 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
     // MARK: - Functions
     
     private func updateButtonMode() {
+        self.refreshButton.isHidden = self.isRecording
         UIView.transition(with: startButton, duration: 0.5,
                           options: .transitionCrossDissolve,
                           animations: {
             self.startButton.isHidden = self.isRecording
-                      })
+        })
         UIView.transition(with: recordJourneyButtonView, duration: 0.5,
                           options: .transitionCrossDissolve,
                           animations: {
             self.recordJourneyButtonView.isHidden = !self.isRecording
-                      })
+        })
         if self.startButton.isHidden {
-            setUserLocationToCenter()
+            self.setUserLocationToCenter()
         }
     }
     
@@ -159,9 +161,8 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
         self.startButton.addAction(startButtonAction, for: .touchUpInside)
         
         let refreshButtonAction = UIAction { [weak self] _ in
-            guard let coordinates = self?.contentViewController.currentCoordinate else {
-                return
-            }
+            guard let coordinates = self?.contentViewController.currentCoordinate else { return }
+            
             self?.viewModel.trigger(.fetchJourney(at: coordinates))
         }
         self.refreshButton.addAction(refreshButtonAction, for: .touchUpInside)
