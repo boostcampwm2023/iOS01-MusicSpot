@@ -53,11 +53,11 @@ internal extension SpotSaveViewModel {
                 let result = await self.repository.upload(spot: spot)
                 switch result {
                 case .success(let spot):
-                    if spot.journeyID == self.journeyID {
-                        MSLogger.make(category: .network).debug("성공적으로 업로드되었습니다.")
-                    } else {
-                        MSLogger.make(category: .network).debug("journey id가 일치하지 않습니다.")
-                    }
+//                    if spot.journeyID == self.journeyID {
+                    MSLogger.make(category: .network).debug("성공적으로 업로드되었습니다.")
+//                    } else {
+//                        MSLogger.make(category: .network).debug("journey id가 일치하지 않습니다.")
+//                    }
                 case .failure(let error):
                     MSLogger.make(category: .network).debug("\(error): 업로드에 실패하였습니다.")
                 }

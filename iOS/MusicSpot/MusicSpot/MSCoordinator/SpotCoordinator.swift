@@ -56,9 +56,8 @@ extension SpotCoordinator: SpotNavigationDelegate {
     func presentSpotSave(using image: UIImage) {
         let repository = SpotRepositoryImplementation()
         let viewModel = SpotSaveViewModel(repository: repository,
-                                          journeyID: UUID(),
-                                          coordinate: CoordinateDTO(latitude: .zero,
-                                                                    longitude: .zero))
+                                          journeyID: UUID().uuidString,
+                                          coordinate: "[0, 0]")
         let spotSaveViewController = SpotSaveViewController(viewModel: viewModel)
         spotSaveViewController.modalPresentationStyle = .fullScreen
         spotSaveViewController.image = image
