@@ -310,10 +310,10 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
     
     public func locationManager(_ manager: CLLocationManager,
                                 didUpdateLocations locations: [CLLocation]) {
-        guard let myLocation = locations.last else { return }
+        guard let newCurrentLocation = locations.last else { return }
         if self.timeRemaining != 0 || !self.isRecording { return }
         if let previousCoordinate = self.previousCoordinate {
-            if !self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate, coordinate2: myLocation.coordinate) { return }
+            if !self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate, coordinate2: newCurrentLocation.coordinate) { return }
         }
         
         self.viewModel.trigger(.locationDidUpdated(newCurrentLocation.coordinate))
