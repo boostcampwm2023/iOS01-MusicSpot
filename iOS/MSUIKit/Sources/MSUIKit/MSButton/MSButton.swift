@@ -49,6 +49,8 @@ public class MSButton: UIButton {
         didSet { self.configureCornerStyle(self.cornerStyle) }
     }
     
+    var haptic: UIFeedbackGenerator?
+    
     // MARK: - Initializer
     
     private override init(frame: CGRect) {

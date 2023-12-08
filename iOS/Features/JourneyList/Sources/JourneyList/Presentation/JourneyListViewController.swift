@@ -9,6 +9,7 @@ import Combine
 import UIKit
 
 import MSCacheStorage
+import MSData
 import MSDomain
 import MSUIKit
 
@@ -86,7 +87,6 @@ public final class JourneyListViewController: BaseViewController {
         self.configureLayout()
         self.configureCollectionView()
         self.bind()
-        self.viewModel.trigger(.viewNeedsLoaded)
     }
     
     // MARK: - Combine Binding
@@ -101,12 +101,6 @@ public final class JourneyListViewController: BaseViewController {
                 self.dataSource?.apply(snapshot)
             }
             .store(in: &self.cancellables)
-    }
-    
-    // MARK: - Functions
-    
-    public func fetchJourneys(from coordinates: (Coordinate, Coordinate)) {
-        self.viewModel.trigger(.fetchJourney(at: coordinates))
     }
     
     // MARK: - UI Configuration
@@ -185,12 +179,11 @@ extension JourneyListViewController: UICollectionViewDelegate {
     }
     
     private func configureDataSource() -> JourneyListDataSource {
-        // TODO: 최적화 & 캐싱
         let cellRegistration = JourneyCellRegistration { cell, indexPath, itemIdentifier in
             let cellModel = JourneyCellModel(location: itemIdentifier.title,
-                                             date: itemIdentifier.date,
-                                             songTitle: itemIdentifier.song.title,
-                                             songArtist: itemIdentifier.song.artist)
+                                             date: itemIdentifier.date.start,
+                                             songTitle: itemIdentifier.music.title,
+                                             songArtist: itemIdentifier.music.artist)
             cell.update(with: cellModel)
             let photoURLs = itemIdentifier.spots
                 .map { $0.photoURL }
@@ -200,7 +193,8 @@ extension JourneyListViewController: UICollectionViewDelegate {
         
         let headerRegistration = JourneyListHeaderRegistration(elementKind: UICollectionView.elementKindSectionHeader,
                                                                handler: { header, _, indexPath in
-            
+            guard let numberOfItems = self.currentSnapshot?.numberOfItems else { return }
+            header.update(numberOfJourneys: numberOfItems)
         })
       
         let dataSource = JourneyListDataSource(collectionView: self.collectionView,
@@ -224,19 +218,3 @@ extension JourneyListViewController: UICollectionViewDelegate {
     }
     
 }
-
-// MARK: - Preview
-
-#if DEBUG
-import MSData
-import MSDesignSystem
-import MSNetworking
-@available(iOS 17, *)
-#Preview {
-    MSFont.registerFonts()
-    let journeyRepository = JourneyRepositoryImplementation()
-    let testViewModel = JourneyListViewModel(repository: journeyRepository)
-    let testViewController = JourneyListViewController(viewModel: testViewModel)
-    return testViewController
-}
-#endif

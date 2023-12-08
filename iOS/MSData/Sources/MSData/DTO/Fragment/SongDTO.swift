@@ -11,21 +11,21 @@ public struct SongDTO: Identifiable {
     
     // MARK: - Properties
     
-    public let id: UInt32
+    public let id: String
     public let title: String
     public let artist: String
-    public let artwork: ArtworkDTO
+    public let albumCover: AlbumCoverDTO?
     
     // MARK: - Initializer
     
-    public init(id: UInt32,
+    public init(id: String,
                 title: String,
                 artist: String,
-                artwork: ArtworkDTO) {
+                artwork: AlbumCoverDTO?) {
         self.id = id
         self.title = title
         self.artist = artist
-        self.artwork = artwork
+        self.albumCover = artwork
     }
     
 }
@@ -38,7 +38,29 @@ extension SongDTO: Codable {
         case id
         case title = "name"
         case artist = "artistName"
-        case artwork
+        case albumCover = "artwork"
+    }
+    
+}
+
+// MARK: - Domain Mapping
+
+import MSDomain
+
+extension SongDTO {
+    
+    public init(_ domain: Music) {
+        self.id = domain.id
+        self.title = domain.title
+        self.artist = domain.artist
+        self.albumCover = AlbumCoverDTO(domain.albumCover)
+    }
+    
+    public func toDomain() -> Music {
+        return Music(id: self.id,
+                     title: self.title,
+                     artist: self.artist,
+                     albumCover: self.albumCover?.toDomain())
     }
     
 }

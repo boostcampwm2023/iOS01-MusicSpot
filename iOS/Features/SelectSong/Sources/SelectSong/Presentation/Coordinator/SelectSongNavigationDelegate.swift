@@ -6,9 +6,15 @@
 //
 
 import Foundation
+import MusicKit
+
+import MSDomain
 
 public protocol SelectSongNavigationDelegate: AnyObject {
     
-    func navigateToSaveJourney()
+    func navigateToSaveJourney(recordingJourney: RecordingJourney,
+                               lastCoordinate: Coordinate,
+                               selectedSong: Song,
+                               selectedIndex: IndexPath)
     
 }

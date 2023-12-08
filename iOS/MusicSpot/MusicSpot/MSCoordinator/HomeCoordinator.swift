@@ -10,6 +10,7 @@ import UIKit
 import Home
 import JourneyList
 import MSData
+import MSDomain
 import MSUIKit
 import NavigateMap
 
@@ -38,20 +39,21 @@ final class HomeCoordinator: Coordinator {
     // MARK: - Functions
     
     func start() {
-        // Navigate Map
-        let navigateMapRepository = NavigateMapRepositoryImplementation()
-        let navigateMapViewModel = NavigateMapViewModel(repository: navigateMapRepository)
-        let navigateMapViewController = NavigateMapViewController(viewModel: navigateMapViewModel)
+        
+        let journeyRepository = JourneyRepositoryImplementation()
+        
+        // NavigateMap
+        let navigateMapViewmodel = NavigateMapViewModel(repository: journeyRepository)
+        let navigateMapViewController = NavigateMapViewController(viewModel: navigateMapViewmodel)
         
         // Journey List
-        let journeyRepository = JourneyRepositoryImplementation()
         let journeyListViewModel = JourneyListViewModel(repository: journeyRepository)
         let journeyListViewController = JourneyListViewController(viewModel: journeyListViewModel)
         journeyListViewController.navigationDelegate = self
         
         // Bottom Sheet
         let userRepository = UserRepositoryImplementation()
-        let homeViewModel = HomeViewModel(repository: userRepository)
+        let homeViewModel = HomeViewModel(journeyRepository: journeyRepository, userRepository: userRepository)
         let homeViewController = HomeViewController(viewModel: homeViewModel,
                                                     contentViewController: navigateMapViewController,
                                                     bottomSheetViewController: journeyListViewController)
@@ -76,11 +78,11 @@ extension HomeCoordinator: HomeNavigationDelegate {
         spotCoordinator.start()
     }
     
-    func navigateToSelectSong() {
+    func navigateToSelectSong(recordingJourney: RecordingJourney, lastCoordinate: Coordinate) {
         let selectSongCoordinator = SelectSongCoordinator(navigationController: self.navigationController)
         selectSongCoordinator.delegate = self
         self.childCoordinators.append(selectSongCoordinator)
-        selectSongCoordinator.start()
+        selectSongCoordinator.start(recordingJourney: recordingJourney, lastCoordinate: lastCoordinate)
     }
     
 }

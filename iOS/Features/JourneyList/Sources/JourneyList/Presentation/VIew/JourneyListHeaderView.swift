@@ -71,6 +71,12 @@ public final class JourneyListHeaderView: UICollectionReusableView {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
     
+    // MARK: - Functions
+    
+    func update(numberOfJourneys: Int) {
+        self.subtitleLabel.text = Typo.subtitle(numberOfJourneys: numberOfJourneys)
+    }
+    
 }
 
 // MARK: - UI Configuration

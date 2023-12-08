@@ -23,3 +23,7 @@ public struct Coordinate {
     }
     
 }
+
+// MARK: - Hashable
+
+extension Coordinate: Hashable { }

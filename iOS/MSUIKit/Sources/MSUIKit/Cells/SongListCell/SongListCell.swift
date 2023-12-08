@@ -8,9 +8,7 @@
 import UIKit
 
 import MSDesignSystem
-#if canImport(MSImageFetcher)
 import MSImageFetcher
-#endif
 
 public final class SongListCell: UICollectionViewCell {
     
@@ -86,11 +84,10 @@ public final class SongListCell: UICollectionViewCell {
     public func update(with cellModel: SongListCellModel) {
         self.songTitleLabel.text = cellModel.title
         self.artistLabel.text = cellModel.artist
-    }
-    
-    public func updateArtwork(with artWorkURL: URL) {
-        // TODO: MSImageFetcher Merge 후 적용
-//        self.albumArtImageView.ms.setImage(with: artWorkURL, to: IndexPath(item: .zero, section: .zero))
+        
+        guard let albumArtURL = cellModel.albumArtURL else { return }
+        // TODO: 캐시 키 변경
+        self.albumArtImageView.ms.setImage(with: albumArtURL, forKey: albumArtURL.absoluteString)
     }
     
 }
@@ -100,7 +97,7 @@ public final class SongListCell: UICollectionViewCell {
 private extension SongListCell {
     
     func configureStyles() {
-        
+        self.backgroundColor = .msColor(.primaryBackground)
     }
     
     func configureLayout() {

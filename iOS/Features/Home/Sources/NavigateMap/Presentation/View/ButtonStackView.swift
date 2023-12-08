@@ -9,7 +9,7 @@ import UIKit
 
 import MSUIKit
 
-protocol ButtonStackViewDelegate: AnyObject {
+public protocol ButtonStackViewDelegate: AnyObject {
     
     func mapButtonDidTap()
     func userLocationButtonDidTap()
@@ -23,7 +23,7 @@ final class ButtonStackView: UIStackView {
     
     private enum Metric {
         
-        static let spacing: CGFloat = 24.0
+        static let spacing: CGFloat = 4.0
         
     }
     
@@ -63,6 +63,7 @@ final class ButtonStackView: UIStackView {
     private func configureStyles() {
         self.axis = .vertical
         self.distribution = .fillEqually
+        self.spacing = Metric.spacing
     }
     
     private func configureLayout() {

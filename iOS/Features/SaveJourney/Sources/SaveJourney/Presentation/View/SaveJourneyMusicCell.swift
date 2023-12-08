@@ -8,6 +8,8 @@
 import UIKit
 
 import MSDesignSystem
+import MSDomain
+import MSImageFetcher
 
 final class SaveJourneyMusicCell: UICollectionViewCell {
     
@@ -81,11 +83,12 @@ final class SaveJourneyMusicCell: UICollectionViewCell {
     
     // MARK: - Functions
     
-    func update(with cellModel: Song) {
+    func update(with cellModel: Music) {
         self.titleLabel.text = cellModel.title
         self.artistLabel.text = cellModel.artist
         
-        // TODO: ImageFetcher Merge 후 구현
+        guard let albumCoverURL = cellModel.albumCover?.url else { return }
+        self.albumArtImageView.ms.setImage(with: albumCoverURL, forKey: cellModel.title)
     }
     
 }

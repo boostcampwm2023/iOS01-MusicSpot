@@ -33,13 +33,13 @@ public protocol Router {
     var queries: [URLQueryItem]? { get }
     
     /// 최종적으로 사용되는 `URLRequest`
-    var request: URLRequest? { get }
+    func makeRequest(encoder: JSONEncoder) -> URLRequest?
     
 }
 
 extension Router {
     
-    public var request: URLRequest? {
+    public func makeRequest(encoder: JSONEncoder) -> URLRequest? {
         var urlString = self.baseURL
         
         if let path = self.pathURL {

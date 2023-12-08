@@ -7,6 +7,7 @@
 
 import Foundation
 
+import MSDomain
 import MSNetworking
 import MSLogger
 
@@ -40,7 +41,7 @@ public struct SpotRepositoryImplementation: SpotRepository {
             let jsonData = try Data(contentsOf: jsonURL)
             let decoder = JSONDecoder()
             let spots = try decoder.decode([SpotDTO].self, from: jsonData)
-            return .success(spots)
+            return .success(spots.map { $0.toDomain() })
         } catch {
             print(error)
         }

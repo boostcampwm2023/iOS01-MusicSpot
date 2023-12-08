@@ -10,6 +10,7 @@ import Foundation
 
 import MediaPlayer
 import MSData
+import MSDomain
 import MusicKit
 
 public final class SelectSongViewModel {
@@ -21,19 +22,26 @@ public final class SelectSongViewModel {
     
     public struct State {
         var songs = CurrentValueSubject<[Song], Never>([])
+        
+        let recordingJourney: RecordingJourney
+        let lastCoordinate: Coordinate
     }
     
     // MARK: - Properties
     
     private let repository: SongRepository
     
-    public var state = State()
+    public var state: State
     
     private var musicAuthorizationState: MusicAuthorization.Status?
     
     // MARK: - Initializer
     
-    public init(repository: SongRepository) {
+    public init(recordingJourney: RecordingJourney,
+                lastCoordinate: Coordinate,
+                repository: SongRepository) {
+        self.state = State(recordingJourney: recordingJourney,
+                           lastCoordinate: lastCoordinate)
         self.repository = repository
     }
     
@@ -54,10 +62,9 @@ public final class SelectSongViewModel {
                     let result = await self.repository.fetchSongList(with: text)
                     switch result {
                     case .success(let songCollection):
-                        let songs = songCollection.map { Song(dto: $0) }
-                        self.state.songs.send(songs)
+                        self.state.songs.send(songCollection.map { $0 })
                     case .failure(let error):
-                        print(error)
+                        dump(error)
                     }
                 }
             default:

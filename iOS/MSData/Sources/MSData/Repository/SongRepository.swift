@@ -41,7 +41,7 @@ public struct SongRepositoryImplementation: SongRepository {
                 return .success(result.songs)
             }
         } catch {
-            print(error)
+            return .failure(error)
         }
         #else
         var searchRequest = MusicCatalogSearchRequest(term: term, types: [Song.self])
@@ -50,7 +50,7 @@ public struct SongRepositoryImplementation: SongRepository {
             let searchResponse = try await searchRequest.response()
             return .success(searchResponse.songs)
         } catch {
-            print(error)
+            return .failure(error)
         }
         #endif
         

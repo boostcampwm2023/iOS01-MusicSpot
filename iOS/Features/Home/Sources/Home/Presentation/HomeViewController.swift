@@ -5,18 +5,20 @@
 //  Created by 이창준 on 2023.12.01.
 //
 
+import Combine
 import UIKit
 
 import JourneyList
 import MSConstants
 import MSDesignSystem
+import MSDomain
 import MSUIKit
 import MSUserDefaults
 import NavigateMap
 
 public typealias HomeBottomSheetViewController = MSBottomSheetViewController<NavigateMapViewController, JourneyListViewController>
 
-public final class HomeViewController: HomeBottomSheetViewController {
+public final class HomeViewController: HomeBottomSheetViewController, HomeViewModelDelegate {
     
     // MARK: - Constants
     
@@ -83,6 +85,8 @@ public final class HomeViewController: HomeBottomSheetViewController {
     @UserDefaultsWrapped(UserDefaultsKey.isRecording, defaultValue: false)
     private var isRecording: Bool
     
+    private var cancellables: Set<AnyCancellable> = []
+    
     // MARK: - Initializer
     
     public init(viewModel: HomeViewModel,
@@ -117,14 +121,35 @@ public final class HomeViewController: HomeBottomSheetViewController {
     // MARK: - Combine Binding
     
     private func bind() {
-        
+        self.viewModel.state.journeys
+            .receive(on: DispatchQueue.main)
+            .sink { journeys in
+                self.contentViewController.addAnnotations(journeys: journeys)
+            }
+            .store(in: &self.cancellables)
     }
     
     // MARK: - Functions
     
     private func updateButtonMode() {
-        self.startButton.isHidden = self.isRecording
-        self.recordJourneyButtonView.isHidden = !self.isRecording
+        self.refreshButton.isHidden = self.isRecording
+        UIView.transition(with: startButton, duration: 0.5,
+                          options: .transitionCrossDissolve,
+                          animations: {
+            self.startButton.isHidden = self.isRecording
+        })
+        UIView.transition(with: recordJourneyButtonView, duration: 0.5,
+                          options: .transitionCrossDissolve,
+                          animations: {
+            self.recordJourneyButtonView.isHidden = !self.isRecording
+        })
+        if self.startButton.isHidden {
+            self.setUserLocationToCenter()
+        }
+    }
+    
+    private func setUserLocationToCenter() {
+        
     }
     
     private func configureAction() {
@@ -135,22 +160,21 @@ public final class HomeViewController: HomeBottomSheetViewController {
         self.startButton.addAction(startButtonAction, for: .touchUpInside)
         
         let refreshButtonAction = UIAction { [weak self] _ in
-            guard let coordinates = self?.contentViewController.currentCoordinate else {
-                return
-            }
-            self?.bottomSheetViewController.fetchJourneys(from: coordinates)
+            guard let coordinates = self?.contentViewController.currentCoordinate else { return }
+            
+            self?.viewModel.trigger(.fetchJourney(at: coordinates))
         }
         self.refreshButton.addAction(refreshButtonAction, for: .touchUpInside)
     }
     
-}
-
-// MARK: - FTUX
-
-private extension HomeViewController {
+    public func fetchJourneys(from coordinates: (Coordinate, Coordinate)) {
+        self.viewModel.trigger(.fetchJourney(at: coordinates))
+    }
     
-    func checkFirstLaunch() {
-        
+    @objc
+    func startButtonDidTap() {
+        self.isRecording.toggle()
+        self.updateButtonMode()
     }
     
 }
@@ -160,7 +184,7 @@ private extension HomeViewController {
 extension HomeViewController: RecordJourneyButtonViewDelegate {
     
     public func backButtonDidTap(_ button: MSRectButton) {
-        print("뒤로가기 버튼 클릭")
+        self.startButtonDidTap()
     }
     
     public func spotButtonDidTap(_ button: MSRectButton) {
@@ -168,7 +192,18 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
     }
     
     public func nextButtonDidTap(_ button: MSRectButton) {
-        self.navigationDelegate?.navigateToSelectSong()
+        guard let userLocation = self.contentViewController.userLocation else { return }
+        print(userLocation)
+        
+        let lastCoordinate = Coordinate(latitude: userLocation.coordinate.latitude,
+                                        longitude: userLocation.coordinate.longitude)
+        // TODO: 기록중인 여정 fetch
+        let recordingJourney = RecordingJourney(id: "6571bef418be25527c66dc04",
+                                                startTimestamp: .now,
+                                                spots: [],
+                                                coordinates: [])
+        self.navigationDelegate?.navigateToSelectSong(recordingJourney: recordingJourney,
+                                                      lastCoordinate: lastCoordinate)
     }
     
 }
