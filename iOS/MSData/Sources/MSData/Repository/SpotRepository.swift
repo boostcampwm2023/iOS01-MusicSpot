@@ -13,8 +13,8 @@ import MSLogger
 
 public protocol SpotRepository {
     
-    func fetchRecordingSpots() async -> Result<[SpotDTO], Error>
-    func upload(spot: CreateSpotRequestDTO) async -> Result<SpotDTO, Error>
+    func fetchRecordingSpots() async -> Result<[Spot], Error>
+    func upload(spot: CreateSpotRequestDTO) async -> Result<Spot, Error>
     
 }
 
@@ -32,8 +32,8 @@ public struct SpotRepositoryImplementation: SpotRepository {
     
     // MARK: - Functions
     
-    public func fetchRecordingSpots() async -> Result<[SpotDTO], Error> {
-        #if DEBUG
+    public func fetchRecordingSpots() async -> Result<[Spot], Error> {
+        #if MOCK
         guard let jsonURL = Bundle.module.url(forResource: "MockSpot", withExtension: "json") else {
             return .failure((MSNetworkError.invalidRouter))
         }
@@ -52,29 +52,25 @@ public struct SpotRepositoryImplementation: SpotRepository {
         switch result {
         case .success(let spot):
             MSLogger.make(category: .network).debug("성공적으로 다운로드하였습니다.")
-            return .success(spot)
+            return .success(spot.map { $0.toDomain() })
         case .failure(let error):
-            MSLogger.make(category: .network).debug("\(error): 다운로드에 실패하였습니다.")
+            MSLogger.make(category: .network).error("\(error): 다운로드에 실패하였습니다.")
             return .failure(error)
         }
         #endif
     }
     
-    public func upload(spot: CreateSpotRequestDTO) async -> Result<SpotDTO, Error> {
-//        #if DEBUG
-//        return .success()
-//        #else
+    public func upload(spot: CreateSpotRequestDTO) async -> Result<Spot, Error> {
         let router = SpotRouter.upload(spot: spot, id: UUID())
         let result = await self.networking.request(SpotDTO.self, router: router)
         switch result {
         case .success(let spot):
             MSLogger.make(category: .network).debug("성공적으로 업로드하였습니다.")
-            return .success(spot)
+            return .success(spot.toDomain())
         case .failure(let error):
-            MSLogger.make(category: .network).debug("\(error): 업로드에 실패하였습니다.")
+            MSLogger.make(category: .network).error("\(error): 업로드에 실패하였습니다.")
             return .failure(error)
         }
-//        #endif
     }
             
 }
