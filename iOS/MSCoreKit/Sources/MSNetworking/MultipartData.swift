@@ -12,7 +12,7 @@ import MSLogger
 public struct MultipartData {
     
     public enum ContentType {
-        case string
+        case normal
         case image
     }
     
@@ -24,7 +24,7 @@ public struct MultipartData {
     
     // MARK: - Initializer
     
-    public init(type: ContentType = .string, name: String, content: Encodable) {
+    public init(type: ContentType = .normal, name: String, content: Encodable) {
         self.type = type
         self.name = name
         self.content = content
@@ -32,15 +32,14 @@ public struct MultipartData {
     
     // MARK: - Functions
     
-    public func contentInformation() -> [Data] {
+    public func contentInformation(using encoder: JSONEncoder) -> [Data] {
         var dataStorage: [Data] = []
         
         switch self.type {
-        case .string:
+        case .normal:
             let dispositionDescript = "Content-Disposition: form-data; name=\"\(self.name)\"\r\n\r\n"
             if let disposition = dispositionDescript.data(using: .utf8),
-               let content = self.content as? String,
-               let contentData = content.data(using: .utf8) {
+               let contentData = try? encoder.encode(self.content) {
                 dataStorage.append(disposition)
                 dataStorage.append(contentData)
             } else {

@@ -61,7 +61,7 @@ public struct HTTPBody {
             var data = Data()
             self.allOfMultipartData?.forEach { multipartData in
                 data.append(delimiter)
-                multipartData.contentInformation().forEach {
+                multipartData.contentInformation(using: encoder).forEach {
                     data.append($0)
                 }
             }
