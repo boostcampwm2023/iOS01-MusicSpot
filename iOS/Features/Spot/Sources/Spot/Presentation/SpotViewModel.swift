@@ -7,6 +7,7 @@
 
 import AVFoundation
 
+import MSDomain
 import MSLogger
 
 protocol ShotDelegate: AnyObject {
@@ -57,6 +58,17 @@ public final class SpotViewModel: NSObject {
     private let session = AVCaptureSession()
     var input: AVCaptureDeviceInput?
     let output = AVCapturePhotoOutput()
+    
+    private(set) var recordingJourney: RecordingJourney
+    private(set) var coordinate: Coordinate
+    
+    // MARK: - Initializer
+    
+    public init(recordingJourney: RecordingJourney,
+                coordinate: Coordinate) {
+        self.recordingJourney = recordingJourney
+        self.coordinate = coordinate
+    }
     
 }
 

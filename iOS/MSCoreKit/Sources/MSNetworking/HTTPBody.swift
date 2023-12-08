@@ -45,8 +45,10 @@ public struct HTTPBody {
         case .normal:
             guard let content,
             let data = try? encoder.encode(content) else {
+                MSLogger.make(category: .network).error("HTTP Body 데이터 인코딩에 실패했습니다.")
                 return nil
             }
+            MSLogger.make(category: .network).debug("변환된 데이터: \(data)")
             return data
             
         case .multipart:

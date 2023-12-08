@@ -9,6 +9,7 @@ import UIKit
 
 import MSData
 import MSDesignSystem
+import MSDomain
 import MSLogger
 import MSUIKit
 
@@ -360,7 +361,9 @@ extension SpotViewController: ShotDelegate {
         }
         
         self.cameraView.layer.contents = imageData
-        self.presentSpotSaveViewController(with: image)
+        self.presentSpotSaveViewController(with: image,
+                                           recordingJourney: self.viewModel.recordingJourney,
+                                           coordinate: self.viewModel.coordinate)
     }
     
 }
@@ -374,7 +377,9 @@ extension SpotViewController: UIImagePickerControllerDelegate {
         guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else {
             return
         }
-        self.presentSpotSaveViewController(with: image)
+        self.presentSpotSaveViewController(with: image,
+                                           recordingJourney: self.viewModel.recordingJourney,
+                                           coordinate: self.viewModel.coordinate)
     }
     
 }
@@ -383,9 +388,13 @@ extension SpotViewController: UIImagePickerControllerDelegate {
 
 private extension SpotViewController {
     
-    func presentSpotSaveViewController(with image: UIImage) {
+    func presentSpotSaveViewController(with image: UIImage,
+                                       recordingJourney: RecordingJourney,
+                                       coordinate: Coordinate) {
         self.viewModel.stopCamera()
-        self.navigationDelegate?.presentSpotSave(using: image)
+        self.navigationDelegate?.presentSpotSave(using: image,
+                                                 recordingJourney: recordingJourney,
+                                                 coordinate: coordinate)
     }
     
 }
