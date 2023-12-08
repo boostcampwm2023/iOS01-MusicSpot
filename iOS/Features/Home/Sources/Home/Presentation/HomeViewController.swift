@@ -34,11 +34,9 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
         static let startButtonBottomInset: CGFloat = 16.0
         
         enum RefreshButton {
-            
             static let topSpacing: CGFloat = 80.0
             static let horizontalEdgeInsets: CGFloat = 24.0
             static let verticalEdgeInsets: CGFloat = 10.0
-            
         }
         
     }
@@ -165,7 +163,6 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
     
     public func backButtonDidTap(_ button: MSRectButton) {
         self.isRecording.toggle()
-        print(self.isRecording)
         self.updateButtonMode()
         self.contentViewController.mapView.removeOverlays(self.contentViewController.mapView.overlays)
     }
@@ -181,7 +178,6 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
     
     public func nextButtonDidTap(_ button: MSRectButton) {
         guard let userLocation = self.contentViewController.userLocation else { return }
-        print(userLocation)
         
         let lastCoordinate = Coordinate(latitude: userLocation.coordinate.latitude,
                                         longitude: userLocation.coordinate.longitude)
@@ -236,7 +232,7 @@ private extension HomeViewController {
                 return
             }
             
-            self?.isRecording.toggle()
+            self?.isRecording = true
             self?.updateButtonMode()
             
             let coordinate = Coordinate(latitude: userLocation.coordinate.latitude,
