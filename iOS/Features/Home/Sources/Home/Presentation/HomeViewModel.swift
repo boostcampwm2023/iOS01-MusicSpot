@@ -51,17 +51,43 @@ public final class HomeViewModel {
     func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
-            self.createNewUser()
+            #if DEBUG
+            self.isFirstLaunch = true
+            #endif
+            let firstLaunchMessage = self.isFirstLaunch ? "앱이 처음 실행되었습니다." : "앱 첫 실행이 아닙니다."
+            MSLogger.make(category: .userDefaults).log("\(firstLaunchMessage)")
+            
+            if self.isFirstLaunch {
+                self.createNewUser()
+            }
         case .fetchJourney(at: (let minCoordinate, let maxCoordinate)):
             self.fetchJourneys(minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)
         }
     }
+    
 }
 
 
 // MARK: - Privates
 
 private extension HomeViewModel {
+    
+    func createNewUser() {
+        guard self.isFirstLaunch else { return }
+        
+        Task {
+            let result = await self.userRepository.createUser()
+            switch result {
+            case .success(let userID):
+                #if DEBUG
+                MSLogger.make(category: .home).log("\(userID) 유저가 생성되었습니다.")
+                #endif
+                self.isFirstLaunch = false
+            case .failure(let error):
+                MSLogger.make(category: .home).error("\(error)")
+            }
+        }
+    }
     
     func fetchJourneys(minCoordinate: Coordinate, maxCoordinate: Coordinate) {
         guard let userID = try? self.userRepository.fetchUUID() else { return }
@@ -73,25 +99,6 @@ private extension HomeViewModel {
             switch result {
             case .success(let journeys):
                 self.state.journeys.send(journeys)
-            case .failure(let error):
-                MSLogger.make(category: .home).error("\(error)")
-            }
-        }
-    }
-    
-    func createNewUser() {
-        let isFirstLaunch = self.isFirstLaunch ? "앱이 처음 실행되었습니다." : "앱 첫 실행이 아닙니다."
-        MSLogger.make(category: .userDefaults).log("\(isFirstLaunch)")
-        
-        guard self.isFirstLaunch else { return }
-        
-        Task {
-            let result = await self.userRepository.createUser()
-            switch result {
-            case .success(let userInfo):
-                MSLogger.make(category: .home).log("\(userInfo.userID) 유저가 생성되었습니다.")
-                
-                self.isFirstLaunch = false
             case .failure(let error):
                 MSLogger.make(category: .home).error("\(error)")
             }

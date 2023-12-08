@@ -21,7 +21,6 @@ public struct HTTPBody {
     
     // MARK: - Properties
     
-    private let encoder = JSONEncoder()
     public let type: BodyType
     private let boundary: String?
     var content: Encodable?
@@ -41,12 +40,11 @@ public struct HTTPBody {
     
     // MARK: - Functions
     
-    var data: Data? {
-        
+    func data(encoder: JSONEncoder) -> Data? {
         switch self.type {
         case .normal:
             guard let content,
-            let data = try? self.encoder.encode(content) else {
+            let data = try? encoder.encode(content) else {
                 return nil
             }
             return data

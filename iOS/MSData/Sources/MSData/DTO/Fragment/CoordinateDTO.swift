@@ -36,7 +36,7 @@ extension CoordinateDTO: Codable {
     }
     
     public init(from decoder: Decoder) throws {
-        var container = try decoder.singleValueContainer()
+        let container = try decoder.singleValueContainer()
         let coordinates = try container.decode([Double].self)
         
         guard coordinates.count == 2 else {
