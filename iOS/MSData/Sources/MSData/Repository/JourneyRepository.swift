@@ -42,7 +42,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     public func fetchJourneyList(userID: UUID,
                                  minCoordinate: Coordinate,
                                  maxCoordinate: Coordinate) async -> Result<[Journey], Error> {
-        #if DEBUG
+        #if MOCK
         guard let jsonURL = Bundle.module.url(forResource: "MockJourney", withExtension: "json") else {
             return .failure((MSNetworkError.invalidRouter))
         }

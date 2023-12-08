@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 import MSLogger
-import MSDomain
 
 public protocol Router {
     
@@ -64,7 +63,7 @@ extension Router {
             }
         }
         if let body = self.body {
-            request.httpBody = body.data
+            request.httpBody = body.data(encoder: encoder)
         }
         return request
     }

@@ -12,15 +12,15 @@ public struct CreateSpotRequestDTO {
     // MARK: - Properties
     
     public let journeyId: String
-    public let coordinate: String
-    public let timestamp: String
+    public let coordinate: CoordinateDTO
+    public let timestamp: Date
     public let photoData: Data
     
     // MARK: - Initializer
     
     public init(journeyId: String,
-                coordinate: String,
-                timestamp: String,
+                coordinate: CoordinateDTO,
+                timestamp: Date,
                 photoData: Data) {
         self.journeyId = journeyId
         self.coordinate = coordinate

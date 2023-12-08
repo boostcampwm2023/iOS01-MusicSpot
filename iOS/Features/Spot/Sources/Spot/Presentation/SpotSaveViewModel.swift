@@ -9,6 +9,7 @@ import Foundation
 import Combine
 
 import MSData
+import MSDomain
 import MSLogger
 
 public final class SpotSaveViewModel {
@@ -19,16 +20,18 @@ public final class SpotSaveViewModel {
     
     // MARK: - Properties
     
-    private var repository: SpotRepository
-    private var subscriber: Set<AnyCancellable> = []
+    private let repository: SpotRepository
+    
+    private var cancellables: Set<AnyCancellable> = []
+    
     private let journeyID: String
-    private let coordinate: String
+    private let coordinate: Coordinate
     
     // MARK: - Initializer
     
     public init(repository: SpotRepository,
                 journeyID: String,
-                coordinate: String) {
+                coordinate: Coordinate) {
         self.repository = repository
         self.journeyID = journeyID
         self.coordinate = coordinate
@@ -44,11 +47,9 @@ internal extension SpotSaveViewModel {
         switch action {
         case .startUploadSpot:
             Task {
-                let dateFormatter = ISO8601DateFormatter()
-                        dateFormatter.formatOptions.insert(.withFractionalSeconds)
                 let spot = CreateSpotRequestDTO(journeyId: self.journeyID,
-                                                coordinate: self.coordinate,
-                                                timestamp: dateFormatter.string(from: Date()),
+                                                coordinate: CoordinateDTO(self.coordinate),
+                                                timestamp: .now,
                                                 photoData: data)
                 let result = await self.repository.upload(spot: spot)
                 switch result {

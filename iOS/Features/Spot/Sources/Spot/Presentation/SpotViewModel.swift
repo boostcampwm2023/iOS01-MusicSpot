@@ -37,7 +37,7 @@ public final class SpotViewModel: NSObject {
         var input: AVCaptureDeviceInput? {
             guard let device = self.device,
                   let input = try? AVCaptureDeviceInput(device: device) else {
-                MSLogger.make(category: .camera).debug("해당 device로 input을 생성할 수 없습니다.")
+                MSLogger.make(category: .camera).error("해당 device로 input을 생성할 수 없습니다.")
                 return nil
             }
             return input
@@ -54,8 +54,6 @@ public final class SpotViewModel: NSObject {
         }
     }
     
-    private let frontCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
-    private let backCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
     private let session = AVCaptureSession()
     var input: AVCaptureDeviceInput?
     let output = AVCapturePhotoOutput()
@@ -143,7 +141,9 @@ private extension SpotViewModel {
 
 extension SpotViewModel: AVCapturePhotoCaptureDelegate {
     
-    public func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+    public func photoOutput(_ output: AVCapturePhotoOutput,
+                            didFinishProcessingPhoto photo: AVCapturePhoto,
+                            error: Error?) {
         guard let imageData = photo.fileDataRepresentation() else {
             MSLogger.make(category: .camera).debug("image Data가 없습니다.")
             return
