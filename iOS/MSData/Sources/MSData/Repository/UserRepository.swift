@@ -54,10 +54,6 @@ public struct UserRepositoryImplementation: UserRepository {
     /// UUID가 이미 키체인에 등록되어 있다면 가져옵니다.
     /// 그렇지 않다면 새로 생성하고, 키체인에 등록합니다.
     public func fetchUUID() throws -> UUID {
-        #if DEBUG
-        try self.keychain.deleteAll()
-        #endif
-        
         let account = MSKeychainStorage.Accounts.userID.rawValue
         if let userID = try? self.keychain.get(UUID.self, account: account) {
             return userID

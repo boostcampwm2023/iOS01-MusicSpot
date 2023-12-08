@@ -12,6 +12,9 @@ import MSConstants
 import MSData
 import MSDomain
 import MSImageFetcher
+#if DEBUG
+import MSKeychainStorage
+#endif
 import MSLogger
 import MSUserDefaults
 
@@ -35,6 +38,10 @@ public final class HomeViewModel {
     private let journeyRepository: JourneyRepository
     private let userRepository: UserRepository
     
+    #if DEBUG
+    private let keychain = MSKeychainStorage()
+    #endif
+    
     @UserDefaultsWrapped(UserDefaultsKey.isFirstLaunch, defaultValue: false)
     private var isFirstLaunch: Bool
     
@@ -53,6 +60,7 @@ public final class HomeViewModel {
         case .viewNeedsLoaded:
             #if DEBUG
             self.isFirstLaunch = true
+            try? self.keychain.deleteAll()
             #endif
             let firstLaunchMessage = self.isFirstLaunch ? "앱이 처음 실행되었습니다." : "앱 첫 실행이 아닙니다."
             MSLogger.make(category: .userDefaults).log("\(firstLaunchMessage)")

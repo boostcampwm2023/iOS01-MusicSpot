@@ -52,7 +52,7 @@ public struct SpotRepositoryImplementation: SpotRepository {
         switch result {
         case .success(let spot):
             MSLogger.make(category: .network).debug("성공적으로 다운로드하였습니다.")
-            return .success(spot)
+            return .success(spot.map { $0.toDomain() })
         case .failure(let error):
             MSLogger.make(category: .network).debug("\(error): 다운로드에 실패하였습니다.")
             return .failure(error)
