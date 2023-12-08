@@ -50,7 +50,6 @@ public final class SelectSongViewModel {
     func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
-            // TODO: 검색 시 수행하도록 변경
             Task {
                 let status = await MusicAuthorization.request()
                 self.musicAuthorizationState = status
@@ -69,7 +68,7 @@ public final class SelectSongViewModel {
                 }
             default:
                 return
-            }   
+            }
         }
     }
     

@@ -49,7 +49,6 @@ public final class MSImageFetcher {
         }
         // 3. 없다면 네트워크 요청을 합니다.
         // 4. 네트워크에서 받아온 이미지를 반환합니다.
-        // TODO: MSNetworking 사용하는 코드로 수정
         var request = URLRequest(url: photoURL)
         request.httpMethod = "GET"
         if let (data, _) = try? await self.session.data(for: request) {

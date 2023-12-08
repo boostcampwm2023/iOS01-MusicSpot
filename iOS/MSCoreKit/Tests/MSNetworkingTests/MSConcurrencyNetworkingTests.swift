@@ -31,7 +31,7 @@ final class MSConcurrencyNetworkingTests: XCTestCase {
         let router = MockRouter()
         let response = "Success"
         let data = try JSONEncoder().encode(response)
-        MockURLProtocol.requestHandler = { request in
+        MockURLProtocol.requestHandler = { _ in
             let response = HTTPURLResponse(url: URL(string: "https://api.codesquad.kr")!,
                                            statusCode: 200,
                                            httpVersion: nil,
@@ -59,7 +59,7 @@ final class MSConcurrencyNetworkingTests: XCTestCase {
     func test_MSNetworking_응답코드가_200번대가아닐경우_에러() async {
         // Arrange
         let router = MockRouter()
-        MockURLProtocol.requestHandler = { request in
+        MockURLProtocol.requestHandler = { _ in
             let response = HTTPURLResponse(url: URL(string: "https://api.codesquad.kr")!,
                                            statusCode: 404,
                                            httpVersion: nil,

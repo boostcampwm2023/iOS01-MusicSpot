@@ -12,10 +12,8 @@ final class MSCollectionView: UICollectionView {
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         // Cell
         let cells = self.visibleCells
-        for cell in cells {
-            if cell.frame.contains(point) {
-                return super.hitTest(point, with: event)
-            }
+        for cell in cells where cell.frame.contains(point) {
+            return super.hitTest(point, with: event)
         }
         
         return nil

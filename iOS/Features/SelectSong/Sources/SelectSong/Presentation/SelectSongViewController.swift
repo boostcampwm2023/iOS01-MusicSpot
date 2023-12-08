@@ -188,7 +188,7 @@ private extension SelectSongViewController {
     }
     
     private func configureDataSource() -> SongListDataSource {
-        let cellRegistration = SongListCellRegistration { cell, indexPath, itemIdentifier in
+        let cellRegistration = SongListCellRegistration { cell, _, itemIdentifier in
             let cellModel = SongListCellModel(title: itemIdentifier.title,
                                               artist: itemIdentifier.artistName,
                                               albumArtURL: itemIdentifier.artwork?.url(width: Metric.albumCoverSize,

@@ -8,6 +8,8 @@
 import UIKit
 
 import MSDesignSystem
+import MSExtension
+import MSImageFetcher
 
 final class SpotCell: UICollectionViewCell {
     
@@ -69,7 +71,8 @@ final class SpotCell: UICollectionViewCell {
     func update(with cellModel: SpotCellModel) {
         self.locationLabel.text = cellModel.location
         self.dateLabel.text = cellModel.date.formatted(date: .abbreviated, time: .omitted)
-        // TODO: ImageFetcher 적용
+        self.imageView.ms.setImage(with: cellModel.photoURL,
+                                   forKey: cellModel.photoURL.paath())
     }
     
 }

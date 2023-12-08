@@ -18,7 +18,7 @@ private extension String {
 private enum Target {
     
     static let msConstants = "MSConstants"
-    static let foundationExt = "FoundationExt"
+    static let msExtension = "MSExtension"
     static let msLogger = "MSLogger"
     static let msUserDefaults = "MSUserDefaults"
     
@@ -34,8 +34,8 @@ let package = Package(
     products: [
         .library(name: Target.msConstants,
                  targets: [Target.msConstants]),
-        .library(name: Target.foundationExt,
-                 targets: [Target.foundationExt]),
+        .library(name: Target.msExtension,
+                 targets: [Target.msExtension]),
         .library(name: Target.msLogger,
                  targets: [Target.msLogger]),
         .library(name: Target.msUserDefaults,
@@ -44,7 +44,7 @@ let package = Package(
     targets: [
         // Codes
         .target(name: Target.msConstants),
-        .target(name: Target.foundationExt),
+        .target(name: Target.msExtension),
         .target(name: Target.msLogger),
         .target(name: Target.msUserDefaults),
 

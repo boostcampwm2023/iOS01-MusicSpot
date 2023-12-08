@@ -15,7 +15,7 @@ public final class JourneyListViewModel {
     
     public enum Action {
         case viewNeedsLoaded
-        case fetchJourney(at: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
+        case fetchJourney(visibleMapRect: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
     }
     
     public struct State {
