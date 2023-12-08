@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import QuartzCore
 import UIKit
+import QuartzCore
 
 public protocol Positionable: AnyObject {
     
@@ -16,6 +16,4 @@ public protocol Positionable: AnyObject {
     
 }
 
-extension UIView: Positionable {
-    
-}
+extension UIView: Positionable { }

@@ -33,7 +33,7 @@ public struct SpotRepositoryImplementation: SpotRepository {
     // MARK: - Functions
     
     public func fetchRecordingSpots() async -> Result<[Spot], Error> {
-        #if DEBUG
+        #if MOCK
         guard let jsonURL = Bundle.module.url(forResource: "MockSpot", withExtension: "json") else {
             return .failure((MSNetworkError.invalidRouter))
         }
@@ -54,7 +54,7 @@ public struct SpotRepositoryImplementation: SpotRepository {
             MSLogger.make(category: .network).debug("성공적으로 다운로드하였습니다.")
             return .success(spot.map { $0.toDomain() })
         case .failure(let error):
-            MSLogger.make(category: .network).debug("\(error): 다운로드에 실패하였습니다.")
+            MSLogger.make(category: .network).error("\(error): 다운로드에 실패하였습니다.")
             return .failure(error)
         }
         #endif
@@ -68,7 +68,7 @@ public struct SpotRepositoryImplementation: SpotRepository {
             MSLogger.make(category: .network).debug("성공적으로 업로드하였습니다.")
             return .success(spot.toDomain())
         case .failure(let error):
-            MSLogger.make(category: .network).debug("\(error): 업로드에 실패하였습니다.")
+            MSLogger.make(category: .network).error("\(error): 업로드에 실패하였습니다.")
             return .failure(error)
         }
     }
