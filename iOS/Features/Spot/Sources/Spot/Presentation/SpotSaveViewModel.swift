@@ -21,14 +21,14 @@ public final class SpotSaveViewModel {
     
     private var repository: SpotRepository
     private var subscriber: Set<AnyCancellable> = []
-    private let journeyID: UUID
-    private let coordinate: CoordinateDTO
+    private let journeyID: String
+    private let coordinate: String
     
     // MARK: - Initializer
     
     public init(repository: SpotRepository,
-                journeyID: UUID,
-                coordinate: CoordinateDTO) {
+                journeyID: String,
+                coordinate: String) {
         self.repository = repository
         self.journeyID = journeyID
         self.coordinate = coordinate
@@ -44,41 +44,25 @@ internal extension SpotSaveViewModel {
         switch action {
         case .startUploadSpot:
             Task {
-                let spot = CreateSpotRequestDTO(journeyID: self.journeyID,
+                let dateFormatter = ISO8601DateFormatter()
+                        dateFormatter.formatOptions.insert(.withFractionalSeconds)
+                let spot = CreateSpotRequestDTO(journeyId: self.journeyID,
                                                 coordinate: self.coordinate,
-                                                timestamp: Date(),
+                                                timestamp: dateFormatter.string(from: Date()),
                                                 photoData: data)
                 let result = await self.repository.upload(spot: spot)
                 switch result {
-                case .success:
-                    MSLogger.make(category: .network).debug("성공적으로 업로드되었습니다.")
-                case .failure:
-                    MSLogger.make(category: .network).debug("업로드에 실패하였습니다.")
+                case .success(let spot):
+                    if spot.journeyID == self.journeyID {
+                        MSLogger.make(category: .network).debug("성공적으로 업로드되었습니다.")
+                    } else {
+                        MSLogger.make(category: .network).debug("journey id가 일치하지 않습니다.")
+                    }
+                case .failure(let error):
+                    MSLogger.make(category: .network).debug("\(error): 업로드에 실패하였습니다.")
                 }
             }
         }
     }
-    
-//    func upload(data: Data, using router: Router?) {
-//        guard let router, let journeyID, let coordinate else {
-//            MSLogger.make(category: .spot).debug("journeyID와 coordinate ID가 view model에 전달되지 않았습니다.")
-//            return
-//        }
-//        let timestamp = Data().base64EncodedString()
-//        print(timestamp)
-//        
-//        self.msNetworking.request(SpotDTO.self, router: router)
-//            .sink { response in
-//                switch response {
-//                case .failure(let error):
-//                    MSLogger.make(category: .network).debug("\(error): 정상적으로 Spot을 서버에 보내지 못하였습니다.")
-//                default:
-//                    return
-//                }
-//            } receiveValue: { spot in
-//                // 받은 데이터 처리
-//            }
-//            .store(in: &subscriber)
-//    }
     
 }

@@ -89,9 +89,11 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     
     // MARK: - Initializer
     
-    public init(viewModel: SpotViewModel) {
+    public init(viewModel: SpotViewModel,
+                nibName nibNameOrNil: String? = nil,
+                bundle nibBundleOrNil: Bundle? = nil) {
         self.viewModel = viewModel
-        super.init()
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
     required init?(coder: NSCoder) {

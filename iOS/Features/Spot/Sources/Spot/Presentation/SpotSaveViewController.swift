@@ -79,9 +79,11 @@ public final class SpotSaveViewController: UIViewController {
     
     // MARK: - Initializer
     
-    public init(viewModel: SpotSaveViewModel) {
+    public init(viewModel: SpotSaveViewModel,
+                nibName nibNameOrNil: String? = nil,
+                bundle nibBundleOrNil: Bundle? = nil) {
         self.viewModel = viewModel
-        super.init()
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
     required init?(coder: NSCoder) {
