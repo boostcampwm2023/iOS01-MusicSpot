@@ -52,7 +52,11 @@ extension SpotCoordinator: SpotNavigationDelegate {
     }
     
     func presentSpotSave(using image: UIImage) {
-        let spotSaveViewController = SpotSaveViewController()
+        let repository = SpotRepositoryImplementation()
+        let viewModel = SpotSaveViewModel(repository: <#T##SpotRepository#>,
+                                          journeyID: <#T##UUID#>,
+                                          coordinate: <#T##CoordinateDTO#>)
+        let spotSaveViewController = SpotSaveViewController(viewModel: viewModel)
         spotSaveViewController.modalPresentationStyle = .fullScreen
         spotSaveViewController.image = image
         spotSaveViewController.navigationDelegate = self
