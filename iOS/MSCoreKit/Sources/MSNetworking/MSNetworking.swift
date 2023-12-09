@@ -39,7 +39,6 @@ public struct MSNetworking {
             let container = try decoder.singleValueContainer()
             let dateString = try container.decode(String.self)
             if let date = dateFormatter.date(from: dateString) {
-                print(dateString)
                 return date
             }
             throw DecodingError.dataCorruptedError(in: container,

@@ -54,7 +54,6 @@ final class MSCacheStorageTests: XCTestCase {
         let sut = Data(self.mockData.utf8)
         
         let result = self.cacheStorage.cache(sut, forKey: self.key)
-        print(result)
         guard let cachedValue = self.cacheStorage.data(forKey: self.key) else {
             XCTFail("캐싱된 데이터로부터 nil 값이 반환 되었습니다.")
             return
