@@ -8,6 +8,7 @@ export class AllExceptionFilter implements ExceptionFilter {
     const req = ctx.getRequest();
     const res = ctx.getResponse();
     const err = exception;
+    console.log(err);
     const { status, response } = err;
     let json = {
       method: req.method,
