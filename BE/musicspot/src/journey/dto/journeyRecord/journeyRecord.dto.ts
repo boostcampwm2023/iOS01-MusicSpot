@@ -10,9 +10,6 @@ export class RecordJourneyResDTO {
     description: '저장된 위치 좌표',
     required: true,
   })
-  @IsCoordinate({
-    message: '배열의 각 요소는 양수여야 하고 두 개의 요소만 허용됩니다.',
-  })
   readonly coordinates: number[][];
 }
 
@@ -32,9 +29,6 @@ export class RecordJourneyReqDTO {
     ],
     description: '위치 좌표',
     required: true,
-  })
-  @IsCoordinate({
-    message: '배열의 각 요소는 양수여야 하고 두 개의 요소만 허용됩니다.',
   })
   readonly coordinates: number[][];
 }
