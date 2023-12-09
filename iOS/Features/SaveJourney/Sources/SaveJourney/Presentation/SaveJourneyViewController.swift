@@ -21,9 +21,11 @@ public final class SaveJourneyViewController: UIViewController {
     typealias HeaderRegistration = UICollectionView.SupplementaryRegistration<SaveJourneyHeaderView>
     typealias MusicCellRegistration = UICollectionView.CellRegistration<SaveJourneyMusicCell, Music>
     typealias SpotCellRegistration = UICollectionView.CellRegistration<SpotCell, Spot>
+    typealias EmptyCellRegistration = UICollectionView.CellRegistration<EmptyCell, UUID>
     typealias SaveJourneySnapshot = NSDiffableDataSourceSnapshot<SaveJourneySection, SaveJourneyItem>
     typealias MusicSnapshot = NSDiffableDataSourceSectionSnapshot<SaveJourneyItem>
     typealias SpotSnapshot = NSDiffableDataSourceSectionSnapshot<SaveJourneyItem>
+    typealias EmptySnapshot = NSDiffableDataSourceSectionSnapshot<SaveJourneyItem>
     
     // MARK: - Constants
     
@@ -52,12 +54,15 @@ public final class SaveJourneyViewController: UIViewController {
     
     // MARK: - UI Components
     
-    private let musicPlayer = MPMusicPlayerApplicationController.applicationMusicPlayer
+    private let musicPlayer = ApplicationMusicPlayer.shared
     
-    private let mapView: MKMapView = {
+    let mapView: MKMapView = {
         let mapView = MKMapView()
+        mapView.clipsToBounds = true
         return mapView
     }()
+    
+    var mapViewHeightConstraint: NSLayoutConstraint?
     
     private(set) lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero,
@@ -67,11 +72,10 @@ public final class SaveJourneyViewController: UIViewController {
                                                    left: .zero,
                                                    bottom: Metric.collectionViewBottomSpacing,
                                                    right: .zero)
+        collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.delegate = self
         return collectionView
     }()
-    
-    private(set) var mapViewHeightConstraint: NSLayoutConstraint?
     
     private let buttonStack: UIStackView = {
         let stackView = UIStackView()
@@ -135,22 +139,19 @@ public final class SaveJourneyViewController: UIViewController {
             .sink { [weak self] song, mediaQuery in
                 guard let self = self else { return }
                 var snapshot = MusicSnapshot()
-                snapshot.append([.music(Music(song))])
+                let music = Music(song)
+                snapshot.append([.music(music)])
                 self.dataSource?.apply(snapshot, to: .music)
-                
-                Task {
-                    self.musicPlayer.setQueue(with: mediaQuery)
-                }
             }
             .store(in: &self.cancellables)
         
         self.viewModel.state.recordingJourney
             .map { $0.spots }
             .receive(on: DispatchQueue.main)
-            .sink { spots in
-                var snapshot = SpotSnapshot()
-                snapshot.append(spots.map { .spot($0) })
-                self.dataSource?.apply(snapshot, to: .spot)
+            .sink { [weak self] spots in
+                guard let self = self else { return }
+                
+                self.updateSpotSectionSnapshot(with: spots)
             }
             .store(in: &self.cancellables)
         
@@ -159,7 +160,9 @@ public final class SaveJourneyViewController: UIViewController {
             .sink { isMusicPlaying in
                 self.mediaControlButton.image = isMusicPlaying ? .msIcon(.pause) : .msIcon(.play)
                 if isMusicPlaying {
-                    self.musicPlayer.play()
+                    Task {
+                        try await self.musicPlayer.play()
+                    }
                 } else {
                     self.musicPlayer.pause()
                 }
@@ -177,8 +180,20 @@ public final class SaveJourneyViewController: UIViewController {
     
     // MARK: - Functions
     
-    func updateDataSource(_ dataSource: SaveJourneyDataSource) {
+    func setDataSource(_ dataSource: SaveJourneyDataSource) {
         self.dataSource = dataSource
+    }
+    
+    private func updateSpotSectionSnapshot(with spots: [Spot]) {
+        if spots.isEmpty {
+            var emptySnapshot = EmptySnapshot()
+            emptySnapshot.append([.empty])
+            self.dataSource?.apply(emptySnapshot, to: .empty)
+        } else {
+            var spotSnapshot = SpotSnapshot()
+            spotSnapshot.append(spots.map { .spot($0) })
+            self.dataSource?.apply(spotSnapshot, to: .spot)
+        }
     }
     
 }

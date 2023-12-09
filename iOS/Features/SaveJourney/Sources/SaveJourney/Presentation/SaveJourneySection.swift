@@ -11,9 +11,10 @@ import MSDomain
 
 // MARK: - Section
 
-enum SaveJourneySection {
+enum SaveJourneySection: Hashable {
     case music
     case spot
+    case empty
     
     var itemSize: NSCollectionLayoutSize {
         switch self {
@@ -23,6 +24,9 @@ enum SaveJourneySection {
         case .spot:
             return NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5),
                                           heightDimension: .fractionalWidth(0.5))
+        case .empty:
+            return NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                          heightDimension: .fractionalHeight(1.0))
         }
     }
     
@@ -34,6 +38,9 @@ enum SaveJourneySection {
         case .spot:
             return NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                           heightDimension: .fractionalWidth(0.5))
+        case .empty:
+            return NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                          heightDimension: .fractionalWidth(1.0))
         }
     }
     
@@ -45,5 +52,6 @@ enum SaveJourneyItem: Hashable {
     
     case music(Music)
     case spot(Spot)
+    case empty
     
 }
