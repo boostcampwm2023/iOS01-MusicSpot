@@ -20,15 +20,11 @@ export function IsCoordinate(validationOptions?: ValidationOptions) {
               ? JSON.parse(receiveValue)
               : receiveValue;
           if (Array.isArray(value)) {
-            if (value.length === 2 && value.every((element) => element >= 0)) {
+            if (value.length === 2) {
               return true;
             } else {
               for (const arr of value) {
-                if (
-                  !Array.isArray(arr) ||
-                  arr.length !== 2 ||
-                  arr.some((element) => element < 0)
-                ) {
+                if (!Array.isArray(arr) || arr.length !== 2) {
                   return false;
                 }
               }
