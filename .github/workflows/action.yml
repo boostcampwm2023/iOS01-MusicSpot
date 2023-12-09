@@ -25,6 +25,7 @@ jobs:
           key: ${{ secrets.SERVER_VPC_KEY }}
           port: ${{ secrets.SERVER_VPC_PORT }}
           script: |
+            mkdir a
             cd compose
             echo ${{ secrets.SERVER_VPC_PASSWORD }} | sudo -S docker rm -f $(sudo docker ps -qa)
             echo ${{ secrets.SERVER_VPC_PASSWORD }} | sudo -S docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
