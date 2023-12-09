@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct RecordSpotRequestDTO {
+public struct RecordCoordinateRequestDTO {
     
     // MARK: - Properties
     
@@ -28,7 +28,7 @@ public struct RecordSpotRequestDTO {
 
 // MARK: - Encodable
 
-extension RecordSpotRequestDTO: Encodable {
+extension RecordCoordinateRequestDTO: Codable {
     
     enum CodingKeys: String, CodingKey {
         case journeyID = "journeyId"

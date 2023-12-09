@@ -23,7 +23,7 @@ extension JourneyRouter {
         switch self {
         case .startJourney: return "start"
         case .endJourney: return "end"
-        case .recordJourney: return "record"
+        case .recordCoordinate: return "record"
         case .checkJourney: return "check"
         case .loadLastJourney: return "loadLastData"
         }
