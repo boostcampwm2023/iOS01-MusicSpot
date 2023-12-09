@@ -165,14 +165,6 @@ public final class NavigateMapViewController: UIViewController {
                 self?.mapView.addOverlay(polyline)
             }
             .store(in: &self.cancellables)
-        
-        self.viewModel.state.visibleJourneys
-            .receive(on: DispatchQueue.main)
-            .sink { journeys in
-                self.addAnnotations(journeys: journeys)
-                self.drawPolyLines(journeys: journeys)
-            }
-            .store(in: &self.cancellables)
     }
     
     // MARK: - Functions
@@ -189,6 +181,10 @@ public final class NavigateMapViewController: UIViewController {
                 self.checkCurrentLocationAuthorization(authorizationStatus)
             }
         }
+    }
+    
+    func recordCoordinates(journey: RecordingJourney) {
+        self.viewModel.trigger(.recordCoordinate(journey))
     }
     
     // 식별자를 갖고 Annotation view 생성
@@ -327,7 +323,14 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
                                              coordinate2: newCurrentLocation.coordinate) else {
             return
         }
-        
+        print(self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate,
+                                             coordinate2: newCurrentLocation.coordinate))
+        let coordinate = Coordinate(latitude: newCurrentLocation.coordinate.latitude,
+                                     longitude: newCurrentLocation.coordinate.longitude)
+        recordCoordinates(journey: RecordingJourney(id: self.viewModel.state.journeyID.value!,
+                                                    startTimestamp: Date(),
+                                                    spots: [],
+                                                    coordinates: [coordinate]))
         self.viewModel.trigger(.locationDidUpdated(newCurrentLocation.coordinate))
     }
     
