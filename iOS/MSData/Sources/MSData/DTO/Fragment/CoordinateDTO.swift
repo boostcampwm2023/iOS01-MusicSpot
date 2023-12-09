@@ -31,7 +31,7 @@ public struct CoordinateDTO {
 extension CoordinateDTO: Codable {
     
     public func encode(to encoder: Encoder) throws {
-        var container = encoder.unkeyedContainer()
+        var container = encoder.singleValueContainer()
         try container.encode([self.latitude, self.longitude])
     }
     

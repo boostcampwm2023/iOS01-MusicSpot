@@ -22,10 +22,12 @@ public final class HomeViewModel {
     
     public enum Action {
         case viewNeedsLoaded
+        case startButtonDidTap(at: Coordinate)
         case fetchJourney(at: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
     }
     
     public struct State {
+        var recordingJourney = CurrentValueSubject<RecordingJourney?, Never>(nil)
         var journeys = CurrentValueSubject<[Journey], Never>([])
         
         public init() { }
@@ -67,6 +69,17 @@ public final class HomeViewModel {
             
             if self.isFirstLaunch {
                 self.createNewUser()
+            }
+        case .startButtonDidTap(let coordinate):
+            Task {
+                let userID = try self.userRepository.fetchUUID()
+                let result = await self.journeyRepository.startJourney(at: coordinate, userID: userID)
+                switch result {
+                case .success(let recordingJourney):
+                    self.state.recordingJourney.send(recordingJourney)
+                case .failure(let error):
+                    MSLogger.make(category: .home).error("\(error)")
+                }
             }
         case .fetchJourney(at: (let minCoordinate, let maxCoordinate)):
             self.fetchJourneys(minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)

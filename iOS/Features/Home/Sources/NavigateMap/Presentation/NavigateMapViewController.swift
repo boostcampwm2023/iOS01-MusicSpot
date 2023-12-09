@@ -72,6 +72,13 @@ public final class NavigateMapViewController: UIViewController {
         return self.locationManager.location
     }
     
+    public var currentUserCoordinate: Coordinate? {
+        guard let currentUserCoordinate2D = self.userLocation?.coordinate else { return nil }
+        let coordinate = Coordinate(latitude: currentUserCoordinate2D.latitude,
+                                    longitude: currentUserCoordinate2D.longitude)
+        return coordinate
+    }
+    
     private let locationManager = CLLocationManager()
     
     private let viewModel: NavigateMapViewModel

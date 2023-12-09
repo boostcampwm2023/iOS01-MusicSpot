@@ -8,6 +8,7 @@
 import UIKit
 
 import MSData
+import MSDomain
 import Spot
 
 final class SpotCoordinator: Coordinator {
@@ -21,8 +22,9 @@ final class SpotCoordinator: Coordinator {
     
     // MARK: - Functions
     
-    func start() {
-        let viewModel = SpotViewModel()
+    func start(recordingJourney: RecordingJourney,
+               coordinate: Coordinate) {
+        let viewModel = SpotViewModel(recordingJourney: recordingJourney, coordinate: coordinate)
         let spotViewController = SpotViewController(viewModel: viewModel)
         self.navigationController.modalTransitionStyle = .coverVertical
         self.navigationController.pushViewController(spotViewController, animated: true)
@@ -53,11 +55,13 @@ extension SpotCoordinator: SpotNavigationDelegate {
         spotViewController.present(picker, animated: true)
     }
     
-    func presentSpotSave(using image: UIImage) {
+    func presentSpotSave(using image: UIImage,
+                         recordingJourney: RecordingJourney,
+                         coordinate: Coordinate) {
         let repository = SpotRepositoryImplementation()
         let viewModel = SpotSaveViewModel(repository: repository,
-                                          journeyID: UUID().uuidString,
-                                          coordinate: "[0, 0]")
+                                          journeyID: recordingJourney.id,
+                                          coordinate: coordinate)
         let spotSaveViewController = SpotSaveViewController(viewModel: viewModel)
         spotSaveViewController.modalPresentationStyle = .fullScreen
         spotSaveViewController.image = image
