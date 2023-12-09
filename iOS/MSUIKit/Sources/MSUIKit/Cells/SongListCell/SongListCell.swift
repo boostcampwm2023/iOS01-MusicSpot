@@ -80,6 +80,12 @@ public final class SongListCell: UICollectionViewCell {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
     
+    // MARK: - Life Cycle
+    
+    public override func prepareForReuse() {
+        self.albumArtImageView.image = nil
+    }
+    
     // MARK: - Functions
     
     public func update(with cellModel: SongListCellModel) {
