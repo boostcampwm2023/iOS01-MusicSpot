@@ -35,7 +35,7 @@ final class MSCombineNetworkingTests: XCTestCase {
         let router = MockRouter()
         let response = "Success"
         let data = try JSONEncoder().encode(response)
-        MockURLProtocol.requestHandler = { request in
+        MockURLProtocol.requestHandler = { _ in
             let response = HTTPURLResponse(url: URL(string: "https://api.codesquad.kr/api")!,
                                            statusCode: 200,
                                            httpVersion: nil,
@@ -65,7 +65,7 @@ final class MSCombineNetworkingTests: XCTestCase {
     func test_MSNetworking_응답코드가_200번대가아닐경우_에러() {
         // Arrange
         let router = MockRouter()
-        MockURLProtocol.requestHandler = { request in
+        MockURLProtocol.requestHandler = { _ in
             let response = HTTPURLResponse(url: URL(string: "https://api.codesquad.kr/api")!,
                                            statusCode: 404,
                                            httpVersion: nil,
@@ -84,6 +84,7 @@ final class MSCombineNetworkingTests: XCTestCase {
                     XCTAssertEqual(error as! MSNetworkError,
                                    MSNetworkError.invalidStatusCode(statusCode: 404, description: ""),
                                    "404 status code 응답은 invalidStatusCode 에러를 발생시켜야 합니다.")
+                    // swiftlint: enable force_cast
                     expectation.fulfill()
                 }
             } receiveValue: { _ in

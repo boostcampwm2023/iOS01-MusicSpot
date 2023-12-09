@@ -1,6 +1,6 @@
 //
 //  RecordJourneyButtonView.swift
-//
+//  NavigateMap
 //
 //  Created by 윤동주 on 12/2/23.
 //
@@ -10,7 +10,7 @@ import UIKit
 import MSDesignSystem
 import MSUIKit
 
-public protocol RecordJourneyButtonViewDelegate {
+public protocol RecordJourneyButtonViewDelegate: AnyObject {
     
     func backButtonDidTap(_ button: MSRectButton)
     func spotButtonDidTap(_ button: MSRectButton)
@@ -80,12 +80,9 @@ public final class RecordJourneyButtonView: UIView {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
     
-    
     // MARK: - UI Configuration
     
-    private func configureStyle() {
-        
-    }
+    private func configureStyle() { }
     
     private func configureLayout() {
         self.addSubview(self.buttonStackView)
@@ -105,7 +102,6 @@ public final class RecordJourneyButtonView: UIView {
             self.buttonStackView.addArrangedSubview($0)
         }
     }
-    
     
     // MARK: - Action Configuration
     
@@ -151,4 +147,3 @@ public final class RecordJourneyButtonView: UIView {
     }
     
 }
-

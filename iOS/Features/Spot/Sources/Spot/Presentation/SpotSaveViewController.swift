@@ -94,7 +94,6 @@ public final class SpotSaveViewController: UIViewController {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
     
-    
     // MARK: - Life Cycle
 
     public override func viewDidLoad() {
@@ -258,11 +257,3 @@ public final class SpotSaveViewController: UIViewController {
     }
     
 }
-
-// MARK: - Preview
-//
-//@available(iOS 17, *)
-//#Preview {
-//    let spotView = SpotSaveViewController()
-//    return spotView
-//}

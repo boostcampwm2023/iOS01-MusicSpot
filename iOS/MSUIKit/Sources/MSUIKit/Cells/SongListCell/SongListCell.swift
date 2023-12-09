@@ -8,6 +8,7 @@
 import UIKit
 
 import MSDesignSystem
+import MSExtension
 import MSImageFetcher
 
 public final class SongListCell: UICollectionViewCell {
@@ -86,8 +87,7 @@ public final class SongListCell: UICollectionViewCell {
         self.artistLabel.text = cellModel.artist
         
         guard let albumArtURL = cellModel.albumArtURL else { return }
-        // TODO: 캐시 키 변경
-        self.albumArtImageView.ms.setImage(with: albumArtURL, forKey: albumArtURL.absoluteString)
+        self.albumArtImageView.ms.setImage(with: albumArtURL, forKey: albumArtURL.paath())
     }
     
 }
@@ -161,6 +161,4 @@ private extension SongListCell {
     
     return cell
 }
-
-
 #endif

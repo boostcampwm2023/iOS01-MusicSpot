@@ -185,11 +185,9 @@ open class MSAlertViewController: UIViewController {
         let updatedBottomInset = Metric.verticalInset + translation.y
         
         switch sender.state {
-        case .changed:
-            if updatedBottomInset > Metric.verticalInset {
-                self.containerViewBottomInset?.constant = updatedBottomInset - self.keyboardLayoutHeight
-                self.view.layoutIfNeeded()
-            }
+        case .changed where updatedBottomInset > Metric.verticalInset:
+            self.containerViewBottomInset?.constant = updatedBottomInset - self.keyboardLayoutHeight
+            self.view.layoutIfNeeded()
         case .ended:
             if translation.y > Metric.bottomSheetHeight * (1 - Metric.dismissingHeightRatio)
                 || velocity.y > Metric.gestureVelocity {
@@ -206,9 +204,7 @@ open class MSAlertViewController: UIViewController {
     }
     
     private func animatePresentView() {
-        UIView.animate(withDuration: 0.3,
-                       delay: .zero,
-                       options: .curveEaseInOut) {
+        UIView.animate(withDuration: 0.3, delay: .zero, options: .curveEaseInOut) {
             self.containerViewBottomInset?.constant = -Metric.verticalInset / 2
             self.view.layoutIfNeeded()
         }
@@ -242,13 +238,31 @@ open class MSAlertViewController: UIViewController {
     }
     
     open func configureLayout() {
-        [
-            self.dimmedView,
-            self.containerView,
-        ].forEach {
+        self.configureSubviews()
+        self.configureConstraints()
+    }
+    
+    private func configureSubviews() {
+        [self.dimmedView, self.containerView].forEach {
             self.view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
+        
+        [self.resizeIndicator, self.titleStack, self.buttonStack].forEach {
+            self.containerView.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
+        
+        [self.titleLabel, self.subtitleLabel].forEach {
+            self.titleStack.addArrangedSubview($0)
+        }
+        
+        [self.cancelButton, self.doneButton].forEach {
+            self.buttonStack.addArrangedSubview($0)
+        }
+    }
+    
+    private func configureConstraints() {
         let bottomInset = self.containerView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor,
                                                                      constant: Metric.bottomSheetHeight)
         let heightConstraint = self.containerView.heightAnchor.constraint(equalToConstant: Metric.bottomSheetHeight)
@@ -268,14 +282,6 @@ open class MSAlertViewController: UIViewController {
         self.containerViewBottomInset = bottomInset
         self.containerViewHeight = heightConstraint
         
-        [
-            self.resizeIndicator,
-            self.titleStack,
-            self.buttonStack
-        ].forEach {
-            self.containerView.addSubview($0)
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        }
         NSLayoutConstraint.activate([
             self.resizeIndicator.widthAnchor.constraint(equalToConstant: Metric.ResizeIndicator.width),
             self.resizeIndicator.heightAnchor.constraint(equalToConstant: Metric.ResizeIndicator.height),
@@ -297,20 +303,6 @@ open class MSAlertViewController: UIViewController {
             self.buttonStack.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor,
                                                        constant: -Metric.horizontalInset)
         ])
-        
-        [
-            self.titleLabel,
-            self.subtitleLabel
-        ].forEach {
-            self.titleStack.addArrangedSubview($0)
-        }
-        
-        [
-            self.cancelButton,
-            self.doneButton
-        ].forEach {
-            self.buttonStack.addArrangedSubview($0)
-        }
     }
     
     // MARK: - Functions

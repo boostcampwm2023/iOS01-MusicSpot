@@ -16,7 +16,8 @@ import MSUIKit
 import MSUserDefaults
 import NavigateMap
 
-public typealias HomeBottomSheetViewController = MSBottomSheetViewController<NavigateMapViewController, JourneyListViewController>
+public typealias HomeBottomSheetViewController
+= MSBottomSheetViewController<NavigateMapViewController, JourneyListViewController>
 
 public final class HomeViewController: HomeBottomSheetViewController, HomeViewModelDelegate {
     
@@ -151,9 +152,8 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
     }
     
     public func fetchJourneys(from coordinates: (Coordinate, Coordinate)) {
-        self.viewModel.trigger(.fetchJourney(at: coordinates))
+        self.viewModel.trigger(.fetchJourney(visibleMapRect: coordinates))
     }
-
     
 }
 
@@ -237,14 +237,14 @@ private extension HomeViewController {
             
             let coordinate = Coordinate(latitude: userLocation.coordinate.latitude,
                                         longitude: userLocation.coordinate.longitude)
-            self?.viewModel.trigger(.startButtonDidTap(at: coordinate))
+            self?.viewModel.trigger(.startButtonDidTap(coordinate))
         }
         self.startButton.addAction(startButtonAction, for: .touchUpInside)
         
         let refreshButtonAction = UIAction { [weak self] _ in
             guard let coordinates = self?.contentViewController.currentCoordinate else { return }
             
-            self?.viewModel.trigger(.fetchJourney(at: coordinates))
+            self?.viewModel.trigger(.fetchJourney(visibleMapRect: coordinates))
         }
         self.refreshButton.addAction(refreshButtonAction, for: .touchUpInside)
     }

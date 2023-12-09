@@ -181,7 +181,7 @@ extension JourneyListViewController: UICollectionViewDelegate {
         }
         
         let headerRegistration = JourneyListHeaderRegistration(elementKind: UICollectionView.elementKindSectionHeader,
-                                                               handler: { header, _, indexPath in
+                                                               handler: { header, _, _ in
             guard let numberOfItems = self.currentSnapshot?.numberOfItems else { return }
             header.update(numberOfJourneys: numberOfItems)
         })

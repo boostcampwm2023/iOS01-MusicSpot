@@ -27,8 +27,10 @@ public protocol MSImageFetcherCompatible: AnyObject { }
 
 extension MSImageFetcherCompatible {
     
+    // swiftlint: disable identifier_name
     public var ms: MSImageFetcherWrapper<Self> {
         return MSImageFetcherWrapper(base: self)
     }
+    // swiftlint: enable identifier_name
     
 }

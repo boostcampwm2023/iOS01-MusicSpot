@@ -19,8 +19,7 @@ import MSNetworking
 import MSUIKit
 import MSUserDefaults
 
-
-public protocol HomeViewModelDelegate {
+public protocol HomeViewModelDelegate: AnyObject {
     
     func fetchJourneys(from coordinates: (Coordinate, Coordinate))
     
@@ -234,8 +233,9 @@ public final class NavigateMapViewController: UIViewController {
                 for (location, spot) in datas {
                     group.addTask {
                         // TODO: Key 수정
-                        guard let photoData = await MSImageFetcher.shared.fetchImage(from: spot.photoURL,
-                                                                                     forKey: spot.photoURL.absoluteString) else {
+                        let imageFetcher = MSImageFetcher.shared
+                        guard let photoData = await imageFetcher.fetchImage(from: spot.photoURL,
+                                                                            forKey: spot.photoURL.absoluteString) else {
                             throw ImageFetchError.imageFetchFailed
                         }
                         
@@ -309,18 +309,23 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
         }
     }
     
-    private func isDistanceOver5AndUnder50(coordinate1: CLLocationCoordinate2D, coordinate2: CLLocationCoordinate2D) -> Bool {
-        let location1 = CLLocation(latitude: coordinate1.latitude, longitude: coordinate1.longitude)
-        let location2 = CLLocation(latitude: coordinate2.latitude, longitude: coordinate2.longitude)
+    private func isDistanceOver5AndUnder50(coordinate1: CLLocationCoordinate2D,
+                                           coordinate2: CLLocationCoordinate2D) -> Bool {
+        let location1 = CLLocation(latitude: coordinate1.latitude,
+                                   longitude: coordinate1.longitude)
+        let location2 = CLLocation(latitude: coordinate2.latitude,
+                                   longitude: coordinate2.longitude)
         return 5 <= location1.distance(from: location2) && location1.distance(from: location2) <= 50
     }
     
     public func locationManager(_ manager: CLLocationManager,
                                 didUpdateLocations locations: [CLLocation]) {
-        guard let newCurrentLocation = locations.last else { return }
-        if self.timeRemaining != 0 || !self.isRecording { return }
-        if let previousCoordinate = self.previousCoordinate {
-            if !self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate, coordinate2: newCurrentLocation.coordinate) { return }
+        guard let newCurrentLocation = locations.last,
+              self.timeRemaining == 0 && self.isRecording,
+              let previousCoordinate = self.previousCoordinate,
+              self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate,
+                                             coordinate2: newCurrentLocation.coordinate) else {
+            return
         }
         
         self.viewModel.trigger(.locationDidUpdated(newCurrentLocation.coordinate))
