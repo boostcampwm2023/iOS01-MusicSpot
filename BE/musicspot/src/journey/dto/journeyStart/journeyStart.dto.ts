@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsDateString } from 'class-validator';
+import { IsString, IsDateString, IsArray } from 'class-validator';
 import { IsCoordinate } from '../../../common/decorator/coordinate.decorator';
 import { UUID } from 'crypto';
 export class StartJourneyReqDTO {
@@ -8,6 +8,7 @@ export class StartJourneyReqDTO {
     description: '위치 좌표',
     required: true,
   })
+  @IsArray()
   readonly coordinate: number[];
 
   @ApiProperty({

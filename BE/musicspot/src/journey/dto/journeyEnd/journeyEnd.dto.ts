@@ -5,6 +5,7 @@ import {
   ValidateNested,
   IsDefined,
   IsNumber,
+  IsArray,
 } from 'class-validator';
 import { IsCoordinate } from '../../../common/decorator/coordinate.decorator';
 import { Type } from 'class-transformer';
@@ -27,6 +28,7 @@ export class EndJourneyReqDTO {
     description: '위치 좌표',
     required: true,
   })
+  @IsArray()
   readonly coordinates: number[][];
 
   @ApiProperty({
@@ -73,6 +75,7 @@ export class EndJourneyResDTO {
     description: '마지막 위치 기록',
     required: true,
   })
+  @IsArray()
   readonly coordinates: number[][];
 
   @ApiProperty({

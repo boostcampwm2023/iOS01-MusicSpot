@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsArray, IsString } from 'class-validator';
 import { IsCoordinate } from '../../../common/decorator/coordinate.decorator';
 export class RecordJourneyResDTO {
   @ApiProperty({
@@ -10,6 +10,7 @@ export class RecordJourneyResDTO {
     description: '저장된 위치 좌표',
     required: true,
   })
+  @IsArray()
   readonly coordinates: number[][];
 }
 
@@ -30,5 +31,6 @@ export class RecordJourneyReqDTO {
     description: '위치 좌표',
     required: true,
   })
+  @IsArray()
   readonly coordinates: number[][];
 }
