@@ -21,7 +21,7 @@ extension SpotRouter {
     
     public var pathURL: String? {
         switch self {
-        case .upload: return ""
+        case .upload: return nil
         case .downloadSpot: return "/find"
         }
     }
