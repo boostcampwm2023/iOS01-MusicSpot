@@ -94,7 +94,8 @@ public final class JourneyListViewController: BaseViewController {
     func bind() {
         self.viewModel.state.journeys
             .receive(on: DispatchQueue.main)
-            .sink { journeys in
+            .sink { [weak self] journeys in
+                guard let self = self else { return }
                 var snapshot = JourneySnapshot()
                 snapshot.appendSections([.zero])
                 snapshot.appendItems(journeys, toSection: .zero)
@@ -166,18 +167,6 @@ extension JourneyListViewController: UICollectionViewDelegate {
         return section
     }
     
-    private func fetchImage(url: URL) async throws -> Data {
-        let request = URLRequest(url: url)
-        let (data, response) = try await URLSession.shared.data(for: request)
-        
-        guard let statusCode = (response as? HTTPURLResponse)?.statusCode,
-              (200...299).contains(statusCode) else {
-            throw NSError(domain: "fetch error", code: 1004)
-        }
-        
-        return data
-    }
-    
     private func configureDataSource() -> JourneyListDataSource {
         let cellRegistration = JourneyCellRegistration { cell, indexPath, itemIdentifier in
             let cellModel = JourneyCellModel(location: itemIdentifier.title,
@@ -214,6 +203,10 @@ extension JourneyListViewController: UICollectionViewDelegate {
     
     public func collectionView(_ collectionView: UICollectionView,
                                didSelectItemAt indexPath: IndexPath) {
+        guard let journey = self.dataSource?.itemIdentifier(for: indexPath) else { return }
+        let spotPhotoURLs = journey.spots.map { $0.photoURL }
+        
+        // TODO: Spot PhotoURL 주입
         self.navigationDelegate?.navigateToRewindJourney()
     }
     

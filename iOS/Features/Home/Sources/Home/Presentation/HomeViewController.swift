@@ -34,11 +34,9 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
         static let startButtonBottomInset: CGFloat = 16.0
         
         enum RefreshButton {
-            
             static let topSpacing: CGFloat = 80.0
             static let horizontalEdgeInsets: CGFloat = 24.0
             static let verticalEdgeInsets: CGFloat = 10.0
-            
         }
         
     }
@@ -152,21 +150,6 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
         
     }
     
-    private func configureAction() {
-        let startButtonAction = UIAction { [weak self] _ in
-            self?.isRecording.toggle()
-            self?.updateButtonMode()
-        }
-        self.startButton.addAction(startButtonAction, for: .touchUpInside)
-        
-        let refreshButtonAction = UIAction { [weak self] _ in
-            guard let coordinates = self?.contentViewController.currentCoordinate else { return }
-            
-            self?.viewModel.trigger(.fetchJourney(at: coordinates))
-        }
-        self.refreshButton.addAction(refreshButtonAction, for: .touchUpInside)
-    }
-    
     public func fetchJourneys(from coordinates: (Coordinate, Coordinate)) {
         self.viewModel.trigger(.fetchJourney(at: coordinates))
     }
@@ -180,18 +163,21 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
     
     public func backButtonDidTap(_ button: MSRectButton) {
         self.isRecording.toggle()
-        print(self.isRecording)
         self.updateButtonMode()
         self.contentViewController.mapView.removeOverlays(self.contentViewController.mapView.overlays)
     }
     
     public func spotButtonDidTap(_ button: MSRectButton) {
-        self.navigationDelegate?.navigateToSpot()
+        guard let currentUserCoordiante = self.contentViewController.currentUserCoordinate,
+              let recordingJourney = self.viewModel.state.recordingJourney.value else {
+            return
+        }
+        self.navigationDelegate?.navigateToSpot(recordingJourney: recordingJourney,
+                                                coordinate: currentUserCoordiante)
     }
     
     public func nextButtonDidTap(_ button: MSRectButton) {
         guard let userLocation = self.contentViewController.userLocation else { return }
-        print(userLocation)
         
         let lastCoordinate = Coordinate(latitude: userLocation.coordinate.latitude,
                                         longitude: userLocation.coordinate.longitude)
@@ -238,6 +224,29 @@ private extension HomeViewController {
                                                     constant: Metric.RefreshButton.topSpacing),
             self.refreshButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
         ])
+    }
+    
+    func configureAction() {
+        let startButtonAction = UIAction { [weak self] _ in
+            guard let userLocation = self?.contentViewController.userLocation else {
+                return
+            }
+            
+            self?.isRecording = true
+            self?.updateButtonMode()
+            
+            let coordinate = Coordinate(latitude: userLocation.coordinate.latitude,
+                                        longitude: userLocation.coordinate.longitude)
+            self?.viewModel.trigger(.startButtonDidTap(at: coordinate))
+        }
+        self.startButton.addAction(startButtonAction, for: .touchUpInside)
+        
+        let refreshButtonAction = UIAction { [weak self] _ in
+            guard let coordinates = self?.contentViewController.currentCoordinate else { return }
+            
+            self?.viewModel.trigger(.fetchJourney(at: coordinates))
+        }
+        self.refreshButton.addAction(refreshButtonAction, for: .touchUpInside)
     }
     
 }

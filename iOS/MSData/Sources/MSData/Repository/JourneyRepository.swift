@@ -17,6 +17,7 @@ public protocol JourneyRepository {
     func fetchJourneyList(userID: UUID,
                           minCoordinate: Coordinate,
                           maxCoordinate: Coordinate) async -> Result<[Journey], Error>
+    func startJourney(at coordinate: Coordinate, userID: UUID) async -> Result<RecordingJourney, Error>
     func endJourney(_ journey: Journey) async -> Result<String, Error>
     
 }
@@ -42,7 +43,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     public func fetchJourneyList(userID: UUID,
                                  minCoordinate: Coordinate,
                                  maxCoordinate: Coordinate) async -> Result<[Journey], Error> {
-        #if DEBUG
+        #if MOCK
         guard let jsonURL = Bundle.module.url(forResource: "MockJourney", withExtension: "json") else {
             return .failure((MSNetworkError.invalidRouter))
         }
@@ -69,6 +70,24 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
             return .failure(error)
         }
         #endif
+    }
+    
+    public func startJourney(at coordinate: Coordinate, userID: UUID) async -> Result<RecordingJourney, Error> {
+        let requestDTO = StartJourneyRequestDTO(coordinate: CoordinateDTO(coordinate),
+                                                startTimestamp: .now,
+                                                userID: userID)
+        let router = JourneyRouter.startJourney(dto: requestDTO)
+        let result = await self.networking.request(StartJourneyResponseDTO.self, router: router)
+        switch result {
+        case .success(let responseDTO):
+            let recordingJourney = RecordingJourney(id: responseDTO.journeyID,
+                                                    startTimestamp: responseDTO.startTimestamp,
+                                                    spots: [],
+                                                    coordinates: [responseDTO.coordinate.toDomain()])
+            return .success(recordingJourney)
+        case .failure(let error):
+            return .failure(error)
+        }
     }
     
     public func endJourney(_ journey: Journey) async -> Result<String, Error> {

@@ -29,7 +29,7 @@ public struct SongRepositoryImplementation: SongRepository {
     // MARK: - Functions
     
     public func fetchSongList(with term: String) async -> Result<MusicItemCollection<Song>, Error> {
-        #if DEBUG
+        #if MOCK
         guard let jsonURL = Bundle.module.url(forResource: "MockSong", withExtension: "json") else {
             return .failure((MSNetworkError.invalidRouter))
         }
@@ -53,8 +53,6 @@ public struct SongRepositoryImplementation: SongRepository {
             return .failure(error)
         }
         #endif
-        
-        return .failure(MSNetworkError.unknownResponse)
     }
     
 }

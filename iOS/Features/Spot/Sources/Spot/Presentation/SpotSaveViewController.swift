@@ -7,11 +7,10 @@
 
 import UIKit
 
+import MSData
 import MSDesignSystem
 import MSLogger
-import MSNetworking
 import MSUIKit
-import MSData
 
 public final class SpotSaveViewController: UIViewController {
     
@@ -21,9 +20,13 @@ public final class SpotSaveViewController: UIViewController {
         
         // image view
         enum ImageView {
-            static let height: CGFloat = 486.0
             static let inset: CGFloat = 4.0
             static let defaultIndex: Int = 0
+        }
+        
+        // text view
+        enum TextView {
+            static let height: CGFloat = 290.0
         }
         
         // labels
@@ -56,25 +59,11 @@ public final class SpotSaveViewController: UIViewController {
     // MARK: - Properties
     
     public weak var navigationDelegate: SpotNavigationDelegate?
-    private let spotSaveViewModel = SpotSaveViewModel()
+    private let viewModel: SpotSaveViewModel
     
     public var image: UIImage? {
         didSet {
             self.configureImageViewState()
-        }
-    }
-    
-    // MARK: - Properties: Networking
-    
-    internal var spotRouter: Router?
-    internal var journeyID: UUID? {
-        didSet {
-            self.spotSaveViewModel.journeyID = self.journeyID
-        }
-    }
-    internal var coordinate: [Double]? {
-        didSet {
-            self.spotSaveViewModel.coordinate = self.coordinate
         }
     }
     
@@ -91,6 +80,20 @@ public final class SpotSaveViewController: UIViewController {
     private let subTextLabel = UILabel()
     private let cancelButton = MSRectButton.large(isBrandColored: false)
     private let completeButton = MSRectButton.large()
+    
+    // MARK: - Initializer
+    
+    public init(viewModel: SpotSaveViewModel,
+                nibName nibNameOrNil: String? = nil,
+                bundle nibBundleOrNil: Bundle? = nil) {
+        self.viewModel = viewModel
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
+    }
+    
     
     // MARK: - Life Cycle
 
@@ -111,10 +114,21 @@ public final class SpotSaveViewController: UIViewController {
     // MARK: - UI Components: Layout
     
     private func configureLayout() {
-        self.configureImageViewLayout()
         self.configureTextViewLayout()
+        self.configureImageViewLayout()
         self.configureLabelsLayout()
         self.configureButtonsLayout()
+    }
+    
+    private func configureTextViewLayout() {
+        self.view.addSubview(self.textView)
+        self.textView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.textView.heightAnchor.constraint(equalToConstant: Metric.TextView.height),
+            self.textView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            self.textView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            self.textView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
+        ])
     }
     
     private func configureImageViewLayout() {
@@ -122,20 +136,9 @@ public final class SpotSaveViewController: UIViewController {
         self.imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.imageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            self.imageView.heightAnchor.constraint(equalToConstant: Metric.ImageView.height),
+            self.imageView.bottomAnchor.constraint(equalTo: self.textView.topAnchor),
             self.imageView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             self.imageView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
-        ])
-    }
-    
-    private func configureTextViewLayout() {
-        self.view.addSubview(self.textView)
-        self.textView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            self.textView.topAnchor.constraint(equalTo: self.imageView.bottomAnchor),
-            self.textView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-            self.textView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            self.textView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
         ])
     }
     
@@ -145,7 +148,7 @@ public final class SpotSaveViewController: UIViewController {
             self.view.addSubview(label)
             label.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                label.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+                label.centerXAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerXAnchor)
             ])
         }
         NSLayoutConstraint.activate([
@@ -168,14 +171,14 @@ public final class SpotSaveViewController: UIViewController {
             NSLayoutConstraint.activate([
                 button.heightAnchor.constraint(equalToConstant: Metric.Button.height),
                 button.widthAnchor.constraint(equalToConstant: Metric.Button.width),
-                button.bottomAnchor.constraint(equalTo: self.view.bottomAnchor,
+                button.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor,
                                                constant: -Metric.Button.bottomInset)
             ])
         }
         NSLayoutConstraint.activate([
-            self.cancelButton.trailingAnchor.constraint(equalTo: self.view.centerXAnchor,
+            self.cancelButton.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerXAnchor,
                                                         constant: -Metric.Button.insetFromCenterX),
-            self.completeButton.leadingAnchor.constraint(equalTo: self.view.centerXAnchor,
+            self.completeButton.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerXAnchor,
                                                          constant: Metric.Button.insetFromCenterX)
         ])
     }
@@ -250,16 +253,16 @@ public final class SpotSaveViewController: UIViewController {
             MSLogger.make(category: .spot).debug("현재 이미지를 Data로 변환할 수 없습니다.")
             return
         }
-//        self.spotSaveViewModel.upload(data: data, using: self.spotRouter)
+        self.viewModel.trigger(.startUploadSpot, using: data)
         self.navigationDelegate?.popToHome()
     }
     
 }
 
 // MARK: - Preview
-
-@available(iOS 17, *)
-#Preview {
-    let spotView = SpotSaveViewController()
-    return spotView
-}
+//
+//@available(iOS 17, *)
+//#Preview {
+//    let spotView = SpotSaveViewController()
+//    return spotView
+//}

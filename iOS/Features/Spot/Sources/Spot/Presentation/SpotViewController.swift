@@ -9,8 +9,8 @@ import UIKit
 
 import MSData
 import MSDesignSystem
+import MSDomain
 import MSLogger
-import MSNetworking
 import MSUIKit
 
 public final class SpotViewController: UIViewController, UINavigationControllerDelegate {
@@ -19,12 +19,12 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     
     private enum Metric {
         
-        // camera view
+        // Camera View
         enum CameraView {
             static let bottomInset: CGFloat = 50.0
         }
         
-        // shot button
+        // Shot Button
         enum ShotButton {
             static let height: CGFloat = 70.0
             static let width: CGFloat = 70.0
@@ -33,7 +33,7 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
             static let borderWidth: CGFloat = 5.0
         }
         
-        // gallery button
+        // Gallery Button
         enum GalleryButton {
             static let height: CGFloat = 35.0
             static let width: CGFloat = 35.0
@@ -42,16 +42,16 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
             static let radius: CGFloat = 6.0
         }
         
-        // gallery button
+        // Swap Button
         enum SwapButton {
             static let height: CGFloat = 35.0
             static let width: CGFloat = 35.0
             static let bottomInset: CGFloat = .zero
             static let trailingInset: CGFloat = 30.0
-            static let radius: CGFloat = width / 2
+            static let radius: CGFloat = SwapButton.width / 2
         }
         
-        // back button
+        // Back Button
         enum BackButton {
             static let height: CGFloat = 35.0
             static let width: CGFloat = 35.0
@@ -62,26 +62,7 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     // MARK: - Properties
     
     public weak var navigationDelegate: SpotNavigationDelegate?
-    private let spotViewModel = SpotViewModel()
-    private let spotSaveViewController = SpotSaveViewController()
-    
-    // MARK: - Properties: Networking
-    
-    internal var spotRouter: Router? {
-        didSet {
-            self.spotSaveViewController.spotRouter = self.spotRouter
-        }
-    }
-    private var journeyID: UUID? {
-        didSet {
-            self.spotSaveViewController.journeyID = self.journeyID
-        }
-    }
-    private var coordinate: [Double]? {
-        didSet {
-            self.spotSaveViewController.coordinate = self.coordinate
-        }
-    }
+    private let viewModel: SpotViewModel
     
     // MARK: - Properties: Gesture
     
@@ -104,7 +85,20 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.spotViewModel.startCamera()
+        self.viewModel.startCamera()
+    }
+    
+    // MARK: - Initializer
+    
+    public init(viewModel: SpotViewModel,
+                nibName nibNameOrNil: String? = nil,
+                bundle nibBundleOrNil: Bundle? = nil) {
+        self.viewModel = viewModel
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
     
     // MARK: - Configuration
@@ -139,6 +133,18 @@ private extension SpotViewController {
         self.configureShotButtonLayout()
         self.configureGalleryButtonLayout()
         self.configureSwapButtonLayout()
+    }
+    
+    func configureNavigationBarBackgroundViewLayout() {
+        NSLayoutConstraint.activate([
+            self.backButton.heightAnchor.constraint(equalToConstant: Metric.BackButton.height),
+            self.backButton.widthAnchor.constraint(equalToConstant: Metric.BackButton.width),
+            
+            self.backButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor,
+                                                 constant: Metric.BackButton.inset),
+            self.backButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor,
+                                                     constant: Metric.BackButton.inset)
+        ])
     }
     
     func configureCameraViewLayout() {
@@ -186,18 +192,6 @@ private extension SpotViewController {
         ])
     }
     
-    func configureNavigationBarBackgroundViewLayout() {
-        NSLayoutConstraint.activate([
-            self.backButton.heightAnchor.constraint(equalToConstant: Metric.BackButton.height),
-            self.backButton.widthAnchor.constraint(equalToConstant: Metric.BackButton.width),
-            
-            self.backButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor,
-                                                 constant: Metric.BackButton.inset),
-            self.backButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor,
-                                                     constant: Metric.BackButton.inset)
-        ])
-    }
-    
 }
     
     // MARK: UI Configuration: Style
@@ -207,28 +201,38 @@ private extension SpotViewController {
     func configureStyles() {
         self.view.backgroundColor = .black
         
-        self.shotButton.backgroundColor = .white
+        var shotButtonConfiguration = UIButton.Configuration.filled()
+        shotButtonConfiguration.baseBackgroundColor = .msColor(.componentBackground)
+        self.shotButton.configuration = shotButtonConfiguration
         self.shotButton.layer.cornerRadius = Metric.ShotButton.radius
         self.shotButton.layer.borderColor = UIColor.msColor(.musicSpot).cgColor
         self.shotButton.layer.borderWidth = Metric.ShotButton.borderWidth
+        self.shotButton.clipsToBounds = true
         
-        self.galleryButton.backgroundColor = .msColor(.musicSpot)
+        var galleryButtonConfiguration = UIButton.Configuration.filled()
+        galleryButtonConfiguration.baseBackgroundColor = .darkGray
+        galleryButtonConfiguration.baseForegroundColor = .white
+        galleryButtonConfiguration.image = UIImage(systemName: "photo.fill")
+        self.galleryButton.configuration = galleryButtonConfiguration
         self.galleryButton.layer.cornerRadius = Metric.GalleryButton.radius
-        self.galleryButton.setImage(UIImage(systemName: "photo.fill"), for: .normal)
-        self.galleryButton.tintColor = .white
+        self.galleryButton.clipsToBounds = true
         
-        self.swapButton.backgroundColor = .darkGray
+        var swapButtonConfiguration = UIButton.Configuration.filled()
+        swapButtonConfiguration.baseBackgroundColor = .darkGray
+        swapButtonConfiguration.image = UIImage(systemName: "arrow.triangle.2.circlepath")
+        swapButtonConfiguration.baseForegroundColor = .white
+        self.swapButton.configuration = swapButtonConfiguration
         self.swapButton.layer.cornerRadius = Metric.SwapButton.radius
-        self.swapButton.setImage(UIImage(systemName: "arrow.triangle.2.circlepath"), for: .normal)
-        self.swapButton.tintColor = .white
+        self.swapButton.clipsToBounds = true
         
-        self.backButton.backgroundColor = .darkGray
+        var backButtonConfiguration = UIButton.Configuration.filled()
+        backButtonConfiguration.baseBackgroundColor = .darkGray
+        backButtonConfiguration.baseForegroundColor = .white
+        backButtonConfiguration.image = UIImage(systemName: "xmark")
+        self.backButton.configuration = backButtonConfiguration
         self.backButton.alpha = 0.5
         self.backButton.layer.cornerRadius = Metric.SwapButton.radius
-        self.backButton.setImage(UIImage(systemName: "xmark"), for: .normal)
-        self.backButton.tintColor = .white
-        
-        self.spotSaveViewController.modalPresentationStyle = .fullScreen
+        self.backButton.clipsToBounds = true
     }
     
 }
@@ -245,6 +249,10 @@ private extension SpotViewController {
         self.configureGalleryButtonAction()
         
         self.configureUpToDownSwipeGesture()
+    }
+    
+    func configureCameraSetting() {
+        self.viewModel.preset(screen: self.cameraView)
     }
     
     func configureShotButtonAction() {
@@ -276,8 +284,8 @@ private extension SpotViewController {
     }
     
     func configureUpToDownSwipeGesture() {
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panGestureDismiss(_:)))
-            self.view.addGestureRecognizer(panGesture)
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.panGestureDismiss(_:)))
+        self.view.addGestureRecognizer(panGesture)
     }
 
     @objc
@@ -286,25 +294,26 @@ private extension SpotViewController {
         
         switch sender.state {
         case .began:
-            initialTouchPoint = touchPoint
+            self.initialTouchPoint = touchPoint
         case .changed:
-            if touchPoint.y - initialTouchPoint.y > 0 {
-                self.view.frame = CGRect(x: 0, y: touchPoint.y - initialTouchPoint.y, width: self.view.frame.width, height: self.view.frame.height)
+            if touchPoint.y - self.initialTouchPoint.y > .zero {
+                self.view.frame = CGRect(x: .zero,
+                                         y: touchPoint.y - self.initialTouchPoint.y,
+                                         width: self.view.frame.width,
+                                         height: self.view.frame.height)
             }
         case .ended, .cancelled:
-            if touchPoint.y - initialTouchPoint.y > 200 {
-                //                self.dismiss(animated: true, completion: nil)
+            if touchPoint.y - self.initialTouchPoint.y > 200 {
                 self.navigationDelegate?.popToHome()
             }
         default:
             UIView.animate(withDuration: 0.3) {
-                self.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+                self.view.frame = CGRect(x: .zero,
+                                         y: .zero,
+                                         width: self.view.frame.width,
+                                         height: self.view.frame.height)
             }
         }
-    }
-    
-    func configureCameraSetting() {
-        self.spotViewModel.preset(screen: cameraView)
     }
     
 }
@@ -314,11 +323,11 @@ private extension SpotViewController {
 private extension SpotViewController {
     
     func shotButtonTapped() {
-        self.spotViewModel.shot()
+        self.viewModel.shot()
     }
     
     func swapButtonTapped() {
-        self.spotViewModel.swap()
+        self.viewModel.swap()
     }
     
     func galleryButtonTapped() {
@@ -336,7 +345,7 @@ private extension SpotViewController {
 private extension SpotViewController {
     
     func configureDelegate() {
-        self.spotViewModel.delegate = self
+        self.viewModel.delegate = self
     }
     
 }
@@ -347,12 +356,14 @@ extension SpotViewController: ShotDelegate {
     
     func update(imageData: Data?) {
         guard let imageData, let image = UIImage(data: imageData) else {
-            MSLogger.make(category: .camera).debug("촬영된 image가 저장되지 않았습니다.")
+            MSLogger.make(category: .camera).error("촬영된 image가 저장되지 않았습니다.")
             return
         }
         
         self.cameraView.layer.contents = imageData
-        self.presentSpotSaveViewController(with: image)
+        self.presentSpotSaveViewController(with: image,
+                                           recordingJourney: self.viewModel.recordingJourney,
+                                           coordinate: self.viewModel.coordinate)
     }
     
 }
@@ -366,7 +377,9 @@ extension SpotViewController: UIImagePickerControllerDelegate {
         guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else {
             return
         }
-        self.presentSpotSaveViewController(with: image)
+        self.presentSpotSaveViewController(with: image,
+                                           recordingJourney: self.viewModel.recordingJourney,
+                                           coordinate: self.viewModel.coordinate)
     }
     
 }
@@ -375,18 +388,13 @@ extension SpotViewController: UIImagePickerControllerDelegate {
 
 private extension SpotViewController {
     
-    func presentSpotSaveViewController(with image: UIImage) {
-        self.spotViewModel.stopCamera()
-        self.navigationDelegate?.presentSpotSave(using: image)
+    func presentSpotSaveViewController(with image: UIImage,
+                                       recordingJourney: RecordingJourney,
+                                       coordinate: Coordinate) {
+        self.viewModel.stopCamera()
+        self.navigationDelegate?.presentSpotSave(using: image,
+                                                 recordingJourney: recordingJourney,
+                                                 coordinate: coordinate)
     }
     
-}
-
-// MARK: - Preview
-
-@available(iOS 17, *)
-#Preview {
-    MSFont.registerFonts()
-    let viewController = SpotViewController()
-    return viewController
 }

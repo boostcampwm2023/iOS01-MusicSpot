@@ -11,18 +11,21 @@ public struct CreateSpotRequestDTO {
     
     // MARK: - Properties
     
-    public let journeyID: UUID
+    public let journeyId: String
     public let coordinate: CoordinateDTO
     public let timestamp: Date
+    public let photoData: Data
     
     // MARK: - Initializer
     
-    public init(journeyID: UUID,
+    public init(journeyId: String,
                 coordinate: CoordinateDTO,
-                timestamp: Date) {
-        self.journeyID = journeyID
+                timestamp: Date,
+                photoData: Data) {
+        self.journeyId = journeyId
         self.coordinate = coordinate
         self.timestamp = timestamp
+        self.photoData = photoData
     }
     
 }
@@ -32,7 +35,7 @@ public struct CreateSpotRequestDTO {
 extension CreateSpotRequestDTO: Encodable {
     
     enum CodingKeys: String, CodingKey {
-        case journeyID = "journeyId"
+        case journeyId = "journeyId"
         case coordinate
         case timestamp
     }

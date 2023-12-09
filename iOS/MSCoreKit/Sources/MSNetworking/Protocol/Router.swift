@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 import MSLogger
 
@@ -53,19 +54,17 @@ extension Router {
         #if DEBUG
         MSLogger.make(category: .network).log("\(baseURLComponents)")
         #endif
-        
         guard let url = baseURLComponents.url else { return nil }
         var request = URLRequest(url: url)
         request.httpMethod = self.method.rawValue
-        if let body = self.body {
-            request.httpBody = body.makeData(encoder: encoder)
-        }
         if let headers = self.headers {
             headers.forEach { key, value in
                 request.addValue(value, forHTTPHeaderField: key)
             }
         }
-        
+        if let body = self.body {
+            request.httpBody = body.data(encoder: encoder)
+        }
         return request
     }
     
@@ -76,7 +75,6 @@ extension Router {
             return nil
         }
         let urlString = dict["BaseURL"] as? String
-        
         return urlString
     }
     

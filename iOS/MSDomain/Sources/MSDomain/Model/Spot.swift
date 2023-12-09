@@ -30,3 +30,21 @@ public struct Spot {
 // MARK: - Hashable
 
 extension Spot: Hashable { }
+
+// MARK: - String Convertible
+
+extension Spot: CustomStringConvertible {
+    
+    public var description: String {
+        return """
+        Coordinate:
+          - latitude: \(self.coordinate.latitude)
+          - longitude: \(self.coordinate.longitude)
+        PhotoURL
+          - \(self.photoURL.absoluteString)
+        Timestamp
+          - \(self.timestamp)
+        """
+    }
+    
+}

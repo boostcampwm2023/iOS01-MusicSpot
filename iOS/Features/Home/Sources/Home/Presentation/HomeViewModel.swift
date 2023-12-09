@@ -12,6 +12,9 @@ import MSConstants
 import MSData
 import MSDomain
 import MSImageFetcher
+#if DEBUG
+import MSKeychainStorage
+#endif
 import MSLogger
 import MSUserDefaults
 
@@ -19,10 +22,12 @@ public final class HomeViewModel {
     
     public enum Action {
         case viewNeedsLoaded
+        case startButtonDidTap(at: Coordinate)
         case fetchJourney(at: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
     }
     
     public struct State {
+        var recordingJourney = CurrentValueSubject<RecordingJourney?, Never>(nil)
         var journeys = CurrentValueSubject<[Journey], Never>([])
         
         public init() { }
@@ -34,6 +39,10 @@ public final class HomeViewModel {
     
     private let journeyRepository: JourneyRepository
     private let userRepository: UserRepository
+    
+    #if DEBUG
+    private let keychain = MSKeychainStorage()
+    #endif
     
     @UserDefaultsWrapped(UserDefaultsKey.isFirstLaunch, defaultValue: false)
     private var isFirstLaunch: Bool
@@ -51,17 +60,55 @@ public final class HomeViewModel {
     func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
-            self.createNewUser()
+            #if DEBUG
+            self.isFirstLaunch = true
+            try? self.keychain.deleteAll()
+            #endif
+            let firstLaunchMessage = self.isFirstLaunch ? "앱이 처음 실행되었습니다." : "앱 첫 실행이 아닙니다."
+            MSLogger.make(category: .userDefaults).log("\(firstLaunchMessage)")
+            
+            if self.isFirstLaunch {
+                self.createNewUser()
+            }
+        case .startButtonDidTap(let coordinate):
+            Task {
+                let userID = try self.userRepository.fetchUUID()
+                let result = await self.journeyRepository.startJourney(at: coordinate, userID: userID)
+                switch result {
+                case .success(let recordingJourney):
+                    self.state.recordingJourney.send(recordingJourney)
+                case .failure(let error):
+                    MSLogger.make(category: .home).error("\(error)")
+                }
+            }
         case .fetchJourney(at: (let minCoordinate, let maxCoordinate)):
             self.fetchJourneys(minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)
         }
     }
+    
 }
 
 
 // MARK: - Privates
 
 private extension HomeViewModel {
+    
+    func createNewUser() {
+        guard self.isFirstLaunch else { return }
+        
+        Task {
+            let result = await self.userRepository.createUser()
+            switch result {
+            case .success(let userID):
+                #if DEBUG
+                MSLogger.make(category: .home).log("\(userID) 유저가 생성되었습니다.")
+                #endif
+                self.isFirstLaunch = false
+            case .failure(let error):
+                MSLogger.make(category: .home).error("\(error)")
+            }
+        }
+    }
     
     func fetchJourneys(minCoordinate: Coordinate, maxCoordinate: Coordinate) {
         guard let userID = try? self.userRepository.fetchUUID() else { return }
@@ -73,25 +120,6 @@ private extension HomeViewModel {
             switch result {
             case .success(let journeys):
                 self.state.journeys.send(journeys)
-            case .failure(let error):
-                MSLogger.make(category: .home).error("\(error)")
-            }
-        }
-    }
-    
-    func createNewUser() {
-        let isFirstLaunch = self.isFirstLaunch ? "앱이 처음 실행되었습니다." : "앱 첫 실행이 아닙니다."
-        MSLogger.make(category: .userDefaults).log("\(isFirstLaunch)")
-        
-        guard self.isFirstLaunch else { return }
-        
-        Task {
-            let result = await self.userRepository.createUser()
-            switch result {
-            case .success(let userInfo):
-                MSLogger.make(category: .home).log("\(userInfo.userID) 유저가 생성되었습니다.")
-                
-                self.isFirstLaunch = false
             case .failure(let error):
                 MSLogger.make(category: .home).error("\(error)")
             }

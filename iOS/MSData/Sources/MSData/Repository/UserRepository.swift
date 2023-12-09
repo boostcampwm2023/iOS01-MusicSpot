@@ -12,7 +12,7 @@ import MSNetworking
 
 public protocol UserRepository {
     
-    func createUser() async -> Result<UserResponseDTO, Error>
+    func createUser() async -> Result<UUID, Error>
     func fetchUUID() throws -> UUID
     
 }
@@ -34,7 +34,7 @@ public struct UserRepositoryImplementation: UserRepository {
     
     // MARK: - Functions
     
-    public func createUser() async -> Result<UserResponseDTO, Error> {
+    public func createUser() async -> Result<UUID, Error> {
         guard let userID = try? self.fetchUUID() else {
             return .failure(MSKeychainStorage.KeychainError.transactionError)
         }
@@ -45,7 +45,7 @@ public struct UserRepositoryImplementation: UserRepository {
         let result = await self.networking.request(UserResponseDTO.self, router: router)
         switch result {
         case .success(let userResponse):
-            return .success(userResponse)
+            return .success(userResponse.userID)
         case .failure(let error):
             return .failure(error)
         }

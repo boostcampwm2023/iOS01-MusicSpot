@@ -71,11 +71,12 @@ final class HomeCoordinator: Coordinator {
 
 extension HomeCoordinator: HomeNavigationDelegate {
     
-    func navigateToSpot() {
+    func navigateToSpot(recordingJourney: RecordingJourney,
+                        coordinate: Coordinate) {
         let spotCoordinator = SpotCoordinator(navigationController: self.navigationController)
         spotCoordinator.delegate = self
         self.childCoordinators.append(spotCoordinator)
-        spotCoordinator.start()
+        spotCoordinator.start(recordingJourney: recordingJourney, coordinate: coordinate)
     }
     
     func navigateToSelectSong(recordingJourney: RecordingJourney, lastCoordinate: Coordinate) {

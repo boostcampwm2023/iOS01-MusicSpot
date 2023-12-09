@@ -7,6 +7,7 @@
 
 import AVFoundation
 
+import MSDomain
 import MSLogger
 
 protocol ShotDelegate: AnyObject {
@@ -15,7 +16,7 @@ protocol ShotDelegate: AnyObject {
     
 }
 
-final class SpotViewModel: NSObject {
+public final class SpotViewModel: NSObject {
     
     // MARK: - Type: SwapMode
     
@@ -37,7 +38,7 @@ final class SpotViewModel: NSObject {
         var input: AVCaptureDeviceInput? {
             guard let device = self.device,
                   let input = try? AVCaptureDeviceInput(device: device) else {
-                MSLogger.make(category: .camera).debug("해당 device로 input을 생성할 수 없습니다.")
+                MSLogger.make(category: .camera).error("해당 device로 input을 생성할 수 없습니다.")
                 return nil
             }
             return input
@@ -54,11 +55,20 @@ final class SpotViewModel: NSObject {
         }
     }
     
-    private let frontCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
-    private let backCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
     private let session = AVCaptureSession()
     var input: AVCaptureDeviceInput?
     let output = AVCapturePhotoOutput()
+    
+    private(set) var recordingJourney: RecordingJourney
+    private(set) var coordinate: Coordinate
+    
+    // MARK: - Initializer
+    
+    public init(recordingJourney: RecordingJourney,
+                coordinate: Coordinate) {
+        self.recordingJourney = recordingJourney
+        self.coordinate = coordinate
+    }
     
 }
 
@@ -143,7 +153,9 @@ private extension SpotViewModel {
 
 extension SpotViewModel: AVCapturePhotoCaptureDelegate {
     
-    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+    public func photoOutput(_ output: AVCapturePhotoOutput,
+                            didFinishProcessingPhoto photo: AVCapturePhoto,
+                            error: Error?) {
         guard let imageData = photo.fileDataRepresentation() else {
             MSLogger.make(category: .camera).debug("image Data가 없습니다.")
             return
