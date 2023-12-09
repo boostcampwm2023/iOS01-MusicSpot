@@ -22,9 +22,6 @@ public final class NavigateMapViewModel {
     }
     
     public struct State {
-        public var isRecording = CurrentValueSubject<Bool, Never>(false)
-        public var previousCoordinate = CurrentValueSubject<CLLocationCoordinate2D?, Never>(nil)
-        public var currentCoordinate = CurrentValueSubject<CLLocationCoordinate2D?, Never>(nil)
         
         public var visibleJourneys = CurrentValueSubject<[Journey], Never>([])
         

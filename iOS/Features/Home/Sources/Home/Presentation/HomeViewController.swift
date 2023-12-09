@@ -120,6 +120,12 @@ public final class HomeViewController: HomeBottomSheetViewController {
     // MARK: - Combine Binding
     
     private func bind() {
+        self.viewModel.state.recordingJourney
+            .sink { recordingJourney in
+                print("sdf")
+            }
+            .store(in: &self.cancellables)
+        
         self.viewModel.state.journeys
             .receive(on: DispatchQueue.main)
             .sink { journeys in
