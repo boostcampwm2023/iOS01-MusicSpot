@@ -60,19 +60,14 @@ public final class SpotSaveViewController: UIViewController {
     
     public weak var navigationDelegate: SpotNavigationDelegate?
     private let viewModel: SpotSaveViewModel
-    
-    public var image: UIImage? {
-        didSet {
-            self.configureImageViewState()
-        }
-    }
+    private let image: UIImage
     
     // MARK: - UI Components
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.backgroundColor = .msColor(.musicSpot)
+        imageView.clipsToBounds = true
         return imageView
     }()
     private let textView = UIView()
@@ -83,9 +78,11 @@ public final class SpotSaveViewController: UIViewController {
     
     // MARK: - Initializer
     
-    public init(viewModel: SpotSaveViewModel,
+    public init(image: UIImage,
+                viewModel: SpotSaveViewModel,
                 nibName nibNameOrNil: String? = nil,
                 bundle nibBundleOrNil: Bundle? = nil) {
+        self.image = image
         self.viewModel = viewModel
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -248,11 +245,11 @@ public final class SpotSaveViewController: UIViewController {
     }
     
     private func completeButtonDidTap() {
-//        guard let data = self.image?.pngData() else {
-//            MSLogger.make(category: .spot).debug("현재 이미지를 Data로 변환할 수 없습니다.")
-//            return
-//        }
-        self.viewModel.trigger(.startUploadSpot, using: UIImage(systemName: "pencil")!.pngData()!)
+        guard let pngData = self.image.pngData() else {
+            MSLogger.make(category: .spot).debug("현재 이미지를 Data로 변환할 수 없습니다.")
+            return
+        }
+        self.viewModel.trigger(.startUploadSpot, using: pngData)
         self.navigationDelegate?.popToHome()
     }
     

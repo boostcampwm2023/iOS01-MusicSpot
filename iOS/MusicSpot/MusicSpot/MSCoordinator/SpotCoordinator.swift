@@ -62,9 +62,9 @@ extension SpotCoordinator: SpotNavigationDelegate {
         let viewModel = SpotSaveViewModel(repository: repository,
                                           journeyID: recordingJourney.id,
                                           coordinate: coordinate)
-        let spotSaveViewController = SpotSaveViewController(viewModel: viewModel)
+        let spotSaveViewController = SpotSaveViewController(image: image,
+                                                            viewModel: viewModel)
         spotSaveViewController.modalPresentationStyle = .fullScreen
-        spotSaveViewController.image = image
         spotSaveViewController.navigationDelegate = self
         self.navigationController.presentedViewController?.dismiss(animated: true)
         self.navigationController.present(spotSaveViewController, animated: true)
