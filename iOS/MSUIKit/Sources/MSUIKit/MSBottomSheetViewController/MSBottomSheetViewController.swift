@@ -77,7 +77,7 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
     // MARK: - Functions
     
     open func stateDidChanged(_ state: State) {
-        MSLogger.make(category: .ui).log("Bottom Sheet 상태가 \(state.rawValue)로 업데이트 되었습니다.")
+        MSLogger.make(category: .uiKit).log("Bottom Sheet 상태가 \(state.rawValue)로 업데이트 되었습니다.")
         
         if case .full = state {
             self.resizeIndicator.isHidden = true

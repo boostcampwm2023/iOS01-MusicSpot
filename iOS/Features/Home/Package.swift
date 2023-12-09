@@ -93,7 +93,7 @@ let package = Package(
                     .product(name: Dependency.msUIKit,
                              package: Dependency.msUIKit),
                     .product(name: Dependency.msUserDefaults,
-                             package: Dependency.msFoundation),
-                ]),
+                             package: Dependency.msFoundation)
+                ])
     ]
 )

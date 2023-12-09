@@ -8,12 +8,16 @@
 import Foundation
 import UIKit
 
-fileprivate enum Constants {
+// MARK: - Constants
+
+private enum Metric {
     
     static let movedXPositionToBackScene: CGFloat = 50.0
     static let animationDuration: Double = 0.3
     
 }
+
+// MARK: - Gesture
 
 internal extension RewindJourneyViewController {
     
@@ -38,7 +42,7 @@ internal extension RewindJourneyViewController {
                                          height: height)
             }
         case .ended, .cancelled:
-            if touchPoint.x - self.initialTouchPoint.x > Constants.movedXPositionToBackScene {
+            if touchPoint.x - self.initialTouchPoint.x > Metric.movedXPositionToBackScene {
                 self.navigationDelegate?.popToHomeMap()
             } else {
                 self.view.frame = CGRect(x: .zero,
@@ -47,7 +51,7 @@ internal extension RewindJourneyViewController {
                                          height: height)
             }
         default:
-            UIView.animate(withDuration: Constants.animationDuration) {
+            UIView.animate(withDuration: Metric.animationDuration) {
                 self.view.frame = CGRect(x: .zero,
                                          y: .zero,
                                          width: width,

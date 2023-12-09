@@ -22,8 +22,8 @@ public final class HomeViewModel {
     
     public enum Action {
         case viewNeedsLoaded
-        case startButtonDidTap(at: Coordinate)
-        case fetchJourney(at: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
+        case startButtonDidTap(Coordinate)
+        case fetchJourney(visibleMapRect: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
     }
     
     public struct State {
@@ -81,13 +81,12 @@ public final class HomeViewModel {
                     MSLogger.make(category: .home).error("\(error)")
                 }
             }
-        case .fetchJourney(at: (let minCoordinate, let maxCoordinate)):
+        case .fetchJourney(visibleMapRect: (let minCoordinate, let maxCoordinate)):
             self.fetchJourneys(minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)
         }
     }
     
 }
-
 
 // MARK: - Privates
 

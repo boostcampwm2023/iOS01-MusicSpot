@@ -9,7 +9,7 @@ import Foundation
 
 public enum MSLogCategory: String {
     
-    case ui = "UI"
+    case uiKit = "UI"
     case network
     case imageFetcher = "ImageFetcher"
     case userDefaults
