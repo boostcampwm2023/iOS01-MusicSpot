@@ -157,7 +157,6 @@ public final class NavigateMapViewController: UIViewController {
                 }
                 return (previousCoordinate, currentCoordinate)
             }
-            .print()
             .sink { [weak self] previousCoordinate, currentCoordinate in
                 let points = [previousCoordinate, currentCoordinate]
                 let polyline = MKPolyline(coordinates: points, count: points.count)
@@ -375,7 +374,7 @@ extension NavigateMapViewController: ButtonStackViewDelegate {
     
     /// 현재 지도에서 보이는 범위 내의 모든 Spot들을 보여줌.
     public func mapButtonDidTap() {
-        print(#function, "현재 지도에서 보이는 범위 내의 모든 Spot들을 보여줍니다.")
+        MSLogger.make(category: .navigateMap).debug("/(error)")(#function, "현재 지도에서 보이는 범위 내의 모든 Spot들을 보여줍니다.")
     }
     
     /// 현재 내 위치를 중앙에 위치.

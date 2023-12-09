@@ -13,7 +13,7 @@ extension SpotRouter {
     public var body: HTTPBody? {
         switch self {
         case let .upload(dto, id):
-            let multipartData = 
+            let multipartData =
             [MultipartData(type: .image, name: "image", content: dto.photoData),
              MultipartData(name: "journeyId", content: dto.journeyID ),
              MultipartData(name: "timestamp", content: dto.timestamp),

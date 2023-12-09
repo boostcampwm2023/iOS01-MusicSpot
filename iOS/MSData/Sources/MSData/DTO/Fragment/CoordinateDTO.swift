@@ -43,7 +43,6 @@ extension CoordinateDTO: Codable {
             throw DecodingError.dataCorruptedError(in: container,
                                                    debugDescription: "Coordinate 값은 2개 값으로 이루어진 배열이어야 합니다.")
         }
-        print(coordinates)
         self.latitude = coordinates[0]
         self.longitude = coordinates[1]
     }
