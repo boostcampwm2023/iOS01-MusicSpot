@@ -21,6 +21,7 @@ public struct MultipartData {
     private let type: ContentType
     public let name: String
     public let content: Encodable
+    private let imageType: String = "jpeg"
     
     // MARK: - Initializer
     
@@ -49,7 +50,7 @@ public struct MultipartData {
             
         case .image:
             let dispositionDescript = "Content-Disposition: form-data; name=\"image\"; filename=\"test.png\"\r\n"
-            let typeDescript = "Content-Type: image/png\r\n\r\n"
+            let typeDescript = "Content-Type: image/\(self.imageType)\r\n\r\n"
             if let disposition = dispositionDescript.data(using: .utf8),
                let type = typeDescript.data(using: .utf8),
                let contentData = self.content as? Data {
