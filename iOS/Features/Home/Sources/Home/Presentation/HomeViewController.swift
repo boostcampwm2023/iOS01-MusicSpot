@@ -19,7 +19,7 @@ import NavigateMap
 public typealias HomeBottomSheetViewController
 = MSBottomSheetViewController<NavigateMapViewController, JourneyListViewController>
 
-public final class HomeViewController: HomeBottomSheetViewController, HomeViewModelDelegate {
+public final class HomeViewController: HomeBottomSheetViewController {
     
     // MARK: - Constants
     
@@ -68,8 +68,8 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
         return button
     }()
     
-    private lazy var recordJourneyButtonView: RecordJourneyButtonView = {
-        let buttonView = RecordJourneyButtonView()
+    private lazy var recordJourneyButtonStackView: RecordJourneyButtonStackView = {
+        let buttonView = RecordJourneyButtonStackView()
         buttonView.delegate = self
         buttonView.isHidden = true
         return buttonView
@@ -123,7 +123,7 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
         self.viewModel.state.journeys
             .receive(on: DispatchQueue.main)
             .sink { journeys in
-                self.contentViewController.addAnnotations(journeys: journeys)
+                self.contentViewController.addAnnotations(with: journeys)
             }
             .store(in: &self.cancellables)
     }
@@ -137,10 +137,10 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
                           animations: {
             self.startButton.isHidden = self.isRecording
         })
-        UIView.transition(with: recordJourneyButtonView, duration: 0.5,
+        UIView.transition(with: recordJourneyButtonStackView, duration: 0.5,
                           options: .transitionCrossDissolve,
                           animations: {
-            self.recordJourneyButtonView.isHidden = !self.isRecording
+            self.recordJourneyButtonStackView.isHidden = !self.isRecording
         })
         if self.startButton.isHidden {
             self.setUserLocationToCenter()
@@ -162,9 +162,9 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
 extension HomeViewController: RecordJourneyButtonViewDelegate {
     
     public func backButtonDidTap(_ button: MSRectButton) {
-        self.isRecording.toggle()
+        self.isRecording = false
         self.updateButtonMode()
-        self.contentViewController.mapView.removeOverlays(self.contentViewController.mapView.overlays)
+        self.contentViewController.clearOverlays()
     }
     
     public func spotButtonDidTap(_ button: MSRectButton) {
@@ -201,20 +201,22 @@ private extension HomeViewController {
     }
     
     func configureLayout() {
+        let bottomSheetTopAnchor = self.bottomSheetViewController.view.topAnchor
+        
         self.view.addSubview(self.startButton)
         self.startButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.startButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.startButton.bottomAnchor.constraint(equalTo: self.bottomSheetViewController.view.topAnchor,
+            self.startButton.bottomAnchor.constraint(equalTo: bottomSheetTopAnchor,
                                                      constant: -Metric.startButtonBottomInset)
         ])
         
-        self.view.addSubview(self.recordJourneyButtonView)
-        self.recordJourneyButtonView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(self.recordJourneyButtonStackView)
+        self.recordJourneyButtonStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.recordJourneyButtonView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.recordJourneyButtonView.bottomAnchor.constraint(equalTo: self.bottomSheetViewController.view.topAnchor,
-                                                                 constant: -Metric.startButtonBottomInset)
+            self.recordJourneyButtonStackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.recordJourneyButtonStackView.bottomAnchor.constraint(equalTo: bottomSheetTopAnchor,
+                                                                      constant: -Metric.startButtonBottomInset)
         ])
         
         self.view.insertSubview(self.refreshButton, belowSubview: self.bottomSheetViewController.view)
@@ -228,9 +230,7 @@ private extension HomeViewController {
     
     func configureAction() {
         let startButtonAction = UIAction { [weak self] _ in
-            guard let userLocation = self?.contentViewController.userLocation else {
-                return
-            }
+            guard let userLocation = self?.contentViewController.userLocation else { return }
             
             self?.isRecording = true
             self?.updateButtonMode()
