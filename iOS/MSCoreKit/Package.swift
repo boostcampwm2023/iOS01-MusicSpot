@@ -27,6 +27,7 @@ private enum Target {
     static let msFetcher = "MSFetcher"
     static let msCacheStorage = "MSCacheStorage"
     static let msKeychainStorage = "MSKeychainStorage"
+    static let msMapKit = "MSMapKit"
     
 }
 

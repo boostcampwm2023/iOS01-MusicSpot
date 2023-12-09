@@ -98,7 +98,7 @@ private extension SaveJourneyViewModel {
                 #endif
                 self.trigger(.endJourneyDidSucceed(journey))
             case .failure(let error):
-                print(error)
+                MSLogger.make(category: .network).error("/(error)")
                 #if DEBUG
                 MSLogger.make(category: .saveJourney).error("\(error)")
                 #endif

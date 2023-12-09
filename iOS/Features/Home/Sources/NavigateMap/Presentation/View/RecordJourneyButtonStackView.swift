@@ -18,7 +18,7 @@ public protocol RecordJourneyButtonViewDelegate: AnyObject {
     
 }
 
-public final class RecordJourneyButtonView: UIView {
+public final class RecordJourneyButtonStackView: UIView {
     
     // MARK: - Constants
     

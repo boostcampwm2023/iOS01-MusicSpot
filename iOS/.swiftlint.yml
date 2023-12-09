@@ -32,3 +32,12 @@ nesting:
   type_level:
     warning: 3
     error: 4
+
+# 개발 중에 적었던 print문 경고표시
+custom_rules:
+  disable_print:
+    included: ".*\\.swift"
+    name: "print usage"
+    regex: "((\\bprint)|(Swift\\.print))\\s*\\("
+    message: "Prefer os_log over print"
+    severity: warning

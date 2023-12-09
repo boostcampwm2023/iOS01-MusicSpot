@@ -43,7 +43,7 @@ public struct SpotRepositoryImplementation: SpotRepository {
             let spots = try decoder.decode([SpotDTO].self, from: jsonData)
             return .success(spots.map { $0.toDomain() })
         } catch {
-            print(error)
+            MSLogger.make(category: .network).error("/(error)")
         }
         return .failure(MSNetworkError.unknownResponse)
         #else

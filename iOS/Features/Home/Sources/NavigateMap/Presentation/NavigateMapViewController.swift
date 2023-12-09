@@ -10,20 +10,12 @@ import CoreLocation
 import MapKit
 import UIKit
 
-import MSConstants
 import MSData
 import MSDomain
 import MSImageFetcher
 import MSLogger
 import MSNetworking
 import MSUIKit
-import MSUserDefaults
-
-public protocol HomeViewModelDelegate: AnyObject {
-    
-    func fetchJourneys(from coordinates: (Coordinate, Coordinate))
-    
-}
 
 public final class NavigateMapViewController: UIViewController {
     
@@ -33,7 +25,8 @@ public final class NavigateMapViewController: UIViewController {
         
         static let locationAlertTitle = "위치 권한"
         static let locationAlertMessage = "위치 권한을 허용하시지 않아서 위치 접근이 불가능합니다."
-        static let locationAlertConfirm = "확인"
+        static let locationAlertCancel = "취소"
+        static let locationAlertSettings = "설정"
         
     }
     
@@ -47,16 +40,39 @@ public final class NavigateMapViewController: UIViewController {
     
     // MARK: - UI Components
     
-    /// HomeMap 내 우상단 3버튼 View
+    private lazy var mapView: MKMapView = {
+        let mapView = MKMapView()
+        mapView.delegate = self
+        mapView.showsUserLocation = true
+        mapView.userTrackingMode = .follow
+        mapView.showsCompass = false
+        
+        mapView.register(CustomAnnotationView.self,
+                         forAnnotationViewWithReuseIdentifier: CustomAnnotationView.identifier)
+        mapView.register(ClusterAnnotationView.self,
+                         forAnnotationViewWithReuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
+        
+        return mapView
+    }()
+    
+    /// HomeMap 내 우상단 버튼 View
     private lazy var buttonStackView: ButtonStackView = {
         let stackView = ButtonStackView()
         stackView.delegate = self
         return stackView
     }()
     
-    public var mapView = MKMapView()
-    
     // MARK: - Properties
+    
+    private let viewModel: NavigateMapViewModel
+    private let locationManager = CLLocationManager()
+    
+    private var cancellables: Set<AnyCancellable> = []
+    
+    private var timeRemaining: Int {
+        let calendar = Calendar.current
+        return calendar.component(.second, from: .now) % 5
+    }
     
     public var currentCoordinate: (minCoordinate: Coordinate, maxCoordinate: Coordinate) {
         let region = self.mapView.region
@@ -78,24 +94,6 @@ public final class NavigateMapViewController: UIViewController {
         return coordinate
     }
     
-    private let locationManager = CLLocationManager()
-    
-    private let viewModel: NavigateMapViewModel
-    
-    private var cancellables: Set<AnyCancellable> = []
-    
-    private var homeViewModelDelegate: HomeViewModelDelegate?
-    
-    private var previousCoordinate: CLLocationCoordinate2D?
-    
-    @UserDefaultsWrapped(UserDefaultsKey.isRecording, defaultValue: false)
-    private var isRecording: Bool
-    
-    private var timeRemaining: Int {
-        let calendar = Calendar.current
-        return calendar.component(.second, from: .now) % 5
-    }
-    
     // MARK: - Initializer
     
     public init(viewModel: NavigateMapViewModel,
@@ -114,25 +112,129 @@ public final class NavigateMapViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.locationManager.delegate = self
-        self.locationManager.requestWhenInUseAuthorization()
-        
-        self.mapView.setUserTrackingMode(.followWithHeading, animated: true)
-        self.mapView.showsUserLocation = true
-        /// 재사용 가능하도록 CustomAnnotation 등록
-        self.mapView.register(CustomAnnotationView.self,
-                      forAnnotationViewWithReuseIdentifier: CustomAnnotationView.identifier)
-        self.mapView.register(ClusterAnnotationView.self,
-                      forAnnotationViewWithReuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
-        self.mapView.delegate = self
-
         self.configureLayout()
+        self.configureCoreLocation()
         self.bind()
+        self.viewModel.trigger(.viewNeedsLoaded)
     }
     
-    // MARK: - UI Configuration
+    // MARK: - Combine Binding
     
-    private func configureLayout() {
+    private func bind() {
+        self.viewModel.state.locationShouldAuthorized
+            .sink { [weak self] _ in
+                self?.locationManager.requestWhenInUseAuthorization()
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.previousCoordinate
+            .zip(self.viewModel.state.currentCoordinate)
+            .compactMap { previousCoordinate, currentCoordinate -> (CLLocationCoordinate2D, CLLocationCoordinate2D)? in
+                guard let previousCoordinate = previousCoordinate,
+                      let currentCoordinate = currentCoordinate else {
+                    return nil
+                }
+                return (previousCoordinate, currentCoordinate)
+            }
+            .sink { [weak self] previousCoordinate, currentCoordinate in
+                let points = [previousCoordinate, currentCoordinate]
+                self?.drawPolylineToMap(using: points)
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.visibleJourneys
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] journeys in
+                self?.addAnnotations(with: journeys)
+                self?.drawPolyLinesToMap(with: journeys)
+            }
+            .store(in: &self.cancellables)
+    }
+    
+    // MARK: - Functions: Annotation
+    
+    // 식별자를 갖고 Annotation view 생성
+    func addAnnotationView(using annotation: CustomAnnotation,
+                           on mapView: MKMapView) -> MKAnnotationView {
+        // dequeueReusableAnnotationView: 식별자를 확인하여 사용가능한 뷰가 있으면 해당 뷰를 반환
+        return mapView.dequeueReusableAnnotationView(withIdentifier: CustomAnnotationView.identifier,
+                                                     for: annotation)
+    }
+    
+    public func addAnnotations(with journeys: [Journey]) {
+        let datas = journeys.flatMap { journey in
+            journey.spots.map { (location: journey.title, spot: $0) }
+        }
+        
+        Task {
+            await withThrowingTaskGroup(of: Void.self) { group in
+                for (location, spot) in datas {
+                    group.addTask {
+                        let imageFetcher = MSImageFetcher.shared
+                        guard let photoData = await imageFetcher.fetchImage(from: spot.photoURL,
+                                                                            forKey: spot.photoURL.paath()) else {
+                            throw ImageFetchError.imageFetchFailed
+                        }
+                        
+                        let coordinate = CLLocationCoordinate2D(latitude: spot.coordinate.latitude,
+                                                                longitude: spot.coordinate.longitude)
+                        
+                        await self.addAnnotation(title: location,
+                                                 coordinate: coordinate,
+                                                 photoData: photoData)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func addAnnotation(title: String,
+                               coordinate: CLLocationCoordinate2D,
+                               photoData: Data) {
+        let annotation = CustomAnnotation(title: title,
+                                          coordinate: coordinate,
+                                          photoData: photoData)
+        self.mapView.addAnnotation(annotation)
+    }
+    
+    // MARK: - Functions: Polyline
+    
+    private func drawPolyLinesToMap(with journeys: [Journey]) {
+        Task {
+            await withTaskGroup(of: Void.self) { group in
+                for journey in journeys {
+                    group.addTask {
+                        let coordinates = journey.coordinates.map {
+                            CLLocationCoordinate2D(latitude: $0.latitude,
+                                                   longitude: $0.longitude)
+                        }
+                        await self.drawPolylineToMap(using: coordinates)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func drawPolylineToMap(using coordinates: [CLLocationCoordinate2D]) {
+        let polyline = MKPolyline(coordinates: coordinates,
+                                  count: coordinates.count)
+        self.mapView.addOverlay(polyline)
+    }
+    
+    // MARK: - Functions
+    
+    public func clearOverlays() {
+        let overlays = self.mapView.overlays
+        self.mapView.removeOverlays(overlays)
+    }
+    
+}
+
+// MARK: - UI Configuration
+
+private extension NavigateMapViewController {
+    
+    func configureLayout() {
         self.view = self.mapView
         
         self.view.addSubview(self.buttonStackView)
@@ -145,116 +247,8 @@ public final class NavigateMapViewController: UIViewController {
         ])
     }
     
-    // MARK: - Combine Binding
-    
-    func bind() {
-        self.viewModel.state.previousCoordinate
-            .zip(self.viewModel.state.currentCoordinate)
-            .compactMap { previousCoordinate, currentCoordinate -> (CLLocationCoordinate2D, CLLocationCoordinate2D)? in
-                guard let previousCoordinate = previousCoordinate,
-                      let currentCoordinate = currentCoordinate else {
-                    return nil
-                }
-                return (previousCoordinate, currentCoordinate)
-            }
-            .print()
-            .sink { [weak self] previousCoordinate, currentCoordinate in
-                let points = [previousCoordinate, currentCoordinate]
-                let polyline = MKPolyline(coordinates: points, count: points.count)
-                
-                self?.mapView.addOverlay(polyline)
-            }
-            .store(in: &self.cancellables)
-    }
-    
-    // MARK: - Functions
-
-    /// iOS 버젼에 따른 분기 처리 후 'iOS 위치 서비스 사용 중 여부' 확인
-    func checkUserLocationServicesAuthorization() {
-        let authorizationStatus = self.locationManager.authorizationStatus
-        
-        // 'iOS 위치 서비스 사용 중 여부' 확인
-        DispatchQueue.global().async {
-            // 위치 서비스 사용 중이라면
-            if CLLocationManager.locationServicesEnabled() {
-                // 위치 권한 확인 및 권한 요청
-                self.checkCurrentLocationAuthorization(authorizationStatus)
-            }
-        }
-    }
-    
-    func recordCoordinates(journey: RecordingJourney) {
-        self.viewModel.trigger(.recordCoordinate(journey))
-    }
-    
-    // 식별자를 갖고 Annotation view 생성
-    func setupAnnotationView(for annotation: CustomAnnotation, on mapView: MKMapView) -> MKAnnotationView {
-        // dequeueReusableAnnotationView: 식별자를 확인하여 사용가능한 뷰가 있으면 해당 뷰를 반환
-        return mapView.dequeueReusableAnnotationView(withIdentifier: CustomAnnotationView.identifier,
-                                                     for: annotation)
-    }
-    
-    @MainActor
-    func addAnnotation(title: String, coordinate: CLLocationCoordinate2D, photoData: Data) {
-        let annotation = CustomAnnotation(title: title,
-                                          coordinate: coordinate,
-                                          photoData: photoData)
-        // mapView에 Annotation 추가
-        self.mapView.addAnnotation(annotation)
-    }
-    
-    func createPolyLine(coordinates: [Coordinate]) {
-        let locations = coordinates.map { coordinate in
-            return CLLocation(latitude: coordinate.latitude,
-                              longitude: coordinate.longitude)
-        }
-        
-        self.addPolyLineToMap(locations: locations)
-    }
-    
-    func addPolyLineToMap(locations: [CLLocation?]) {
-        let coordinates = locations.compactMap { $0?.coordinate }
-        let polyline = MKPolyline(coordinates: coordinates,
-                                  count: coordinates.count)
-        self.mapView.addOverlay(polyline)
-    }
-    
-    public func addAnnotations(journeys: [Journey]) {
-        let datas = journeys.flatMap { journey in
-            journey.spots.map { (location: journey.title, spot: $0) }
-        }
-        
-        Task {
-            await withThrowingTaskGroup(of: Bool.self) { group in
-                for (location, spot) in datas {
-                    group.addTask {
-                        // TODO: Key 수정
-                        let imageFetcher = MSImageFetcher.shared
-                        guard let photoData = await imageFetcher.fetchImage(from: spot.photoURL,
-                                                                            forKey: spot.photoURL.absoluteString) else {
-                            throw ImageFetchError.imageFetchFailed
-                        }
-                        
-                        let coordinate = CLLocationCoordinate2D(latitude: spot.coordinate.latitude,
-                                                                longitude: spot.coordinate.longitude)
-                        
-                        await self.addAnnotation(title: location,
-                                                         coordinate: coordinate,
-                                                         photoData: photoData)
-                        
-                        return true
-                    }
-                }
-            }
-        }
-    }
-    
-    func drawPolyLines(journeys: [Journey]) {
-        journeys.forEach { journey in
-            Task {
-                self.createPolyLine(coordinates: journey.coordinates)
-            }
-        }
+    func configureCoreLocation() {
+        self.locationManager.delegate = self
     }
     
 }
@@ -263,39 +257,56 @@ public final class NavigateMapViewController: UIViewController {
 
 extension NavigateMapViewController: CLLocationManagerDelegate {
     
-    /// 앱에 대한 권한 설정이 변경되면 호출
     public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        self.checkUserLocationServicesAuthorization()
+        Task.detached {
+            await self.handleAuthorizationChange(manager)
+        }
     }
     
-    /// 위치 정보 권한 상태에 따른 동작
-    func checkCurrentLocationAuthorization(_ authorizationStatus: CLAuthorizationStatus) {
-        switch authorizationStatus {
+    public func locationManager(_ manager: CLLocationManager,
+                                didUpdateLocations locations: [CLLocation]) {
+        guard let newCurrentLocation = locations.last,
+              self.timeRemaining == .zero && self.viewModel.state.isRecording.value
+//              let previousCoordinate = self.viewModel.state.previousCoordinate.value
+//              self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate,
+//                                             coordinate2: newCurrentLocation.coordinate) else {
+        else {
+            return
+        }
+        
+        self.viewModel.trigger(.locationDidUpdated(newCurrentLocation.coordinate))
+    }
+    
+    /// iOS 버젼에 따른 분기 처리 후 'iOS 위치 서비스 사용 중 여부' 확인
+    private func handleAuthorizationChange(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
         case .notDetermined:
-            // 앱 사용 중 위치 권한 요청
-            self.locationManager.requestWhenInUseAuthorization()
-            
-            // 위치 접근 시작
-            self.locationManager.startUpdatingLocation()
+            manager.requestWhenInUseAuthorization()
         case .restricted, .denied:
             let sheet = UIAlertController(title: Typo.locationAlertTitle,
                                           message: Typo.locationAlertMessage,
                                           preferredStyle: .alert)
-            sheet.addAction(UIAlertAction(title: Typo.locationAlertConfirm, style: .default))
-            self.present(sheet, animated: true)
-        case .authorizedAlways:
-            // 위치 접근 시작
-            self.locationManager.startUpdatingLocation()
-        case .authorizedWhenInUse:
-            // 위치 접근 시작
-            self.locationManager.startUpdatingLocation()
+            let cancelAction = UIAlertAction(title: Typo.locationAlertCancel, style: .cancel)
+            let settingsAction = UIAlertAction(title: Typo.locationAlertSettings, style: .default) { _ in
+                guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+                UIApplication.shared.open(url)
+            }
+            sheet.addAction(cancelAction)
+            sheet.addAction(settingsAction)
+            DispatchQueue.main.async {
+                self.present(sheet, animated: true)
+            }
+        case .authorizedAlways, .authorizedWhenInUse:
+            manager.startUpdatingLocation()
+            self.checkAccuracyAuthorizationStatus(manager)
         @unknown default:
             MSLogger.make(category: .home).error("잘못된 위치 권한입니다.")
         }
-        
-        // 정확도에 대한 정보 확인
-        let accuracyState = self.locationManager.accuracyAuthorization
-        switch accuracyState {
+    }
+    
+    /// 제공되는 위치 정보의 정확도에 따른 동작을 수행합니다.
+    private func checkAccuracyAuthorizationStatus(_ manager: CLLocationManager) {
+        switch manager.accuracyAuthorization {
         case .fullAccuracy:
             MSLogger.make(category: .home).log("위치 정보 정확도가 높습니다.")
         case .reducedAccuracy:
@@ -314,29 +325,9 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
         return 5 <= location1.distance(from: location2) && location1.distance(from: location2) <= 50
     }
     
-    public func locationManager(_ manager: CLLocationManager,
-                                didUpdateLocations locations: [CLLocation]) {
-        guard let newCurrentLocation = locations.last,
-              self.timeRemaining == 0 && self.isRecording,
-              let previousCoordinate = self.previousCoordinate,
-              self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate,
-                                             coordinate2: newCurrentLocation.coordinate) else {
-            return
-        }
-        print(self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate,
-                                             coordinate2: newCurrentLocation.coordinate))
-        let coordinate = Coordinate(latitude: newCurrentLocation.coordinate.latitude,
-                                     longitude: newCurrentLocation.coordinate.longitude)
-        recordCoordinates(journey: RecordingJourney(id: self.viewModel.state.journeyID.value!,
-                                                    startTimestamp: Date(),
-                                                    spots: [],
-                                                    coordinates: [coordinate]))
-        self.viewModel.trigger(.locationDidUpdated(newCurrentLocation.coordinate))
-    }
-    
 }
 
-// MARK: - MKMapViewDelegate
+// MARK: - MKMapView
 
 extension NavigateMapViewController: MKMapViewDelegate {
     
@@ -378,12 +369,19 @@ extension NavigateMapViewController: ButtonStackViewDelegate {
     
     /// 현재 지도에서 보이는 범위 내의 모든 Spot들을 보여줌.
     public func mapButtonDidTap() {
-        print(#function, "현재 지도에서 보이는 범위 내의 모든 Spot들을 보여줍니다.")
+        MSLogger.make(category: .navigateMap).debug("현재 지도에서 보이는 범위 내의 모든 Spot들을 보여줍니다.")
     }
     
     /// 현재 내 위치를 중앙에 위치.
     public func userLocationButtonDidTap() {
-        mapView.setUserTrackingMode(.followWithHeading, animated: false)
+        switch self.mapView.userTrackingMode {
+        case .none, .followWithHeading:
+            self.mapView.setUserTrackingMode(.follow, animated: true)
+        case .follow:
+            self.mapView.setUserTrackingMode(.followWithHeading, animated: true)
+        @unknown default:
+            break
+        }
     }
     
 }

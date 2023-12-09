@@ -50,7 +50,6 @@ extension Router {
         if let queries = self.queries, !queries.isEmpty {
             baseURLComponents.queryItems = self.queries
         }
-        
         #if DEBUG
         MSLogger.make(category: .network).log("\(baseURLComponents)")
         #endif

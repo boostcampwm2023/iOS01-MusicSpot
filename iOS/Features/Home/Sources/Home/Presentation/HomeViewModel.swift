@@ -27,10 +27,10 @@ public final class HomeViewModel {
     }
     
     public struct State {
-        var recordingJourney = CurrentValueSubject<RecordingJourney?, Never>(nil)
-        var journeys = CurrentValueSubject<[Journey], Never>([])
+        public var isRecording = CurrentValueSubject<Bool, Never>(false)
+        public var recordingJourney = PassthroughSubject<RecordingJourney, Never>()
         
-        public init() { }
+        public var journeys = CurrentValueSubject<[Journey], Never>([])
     }
     
     // MARK: - Properties
