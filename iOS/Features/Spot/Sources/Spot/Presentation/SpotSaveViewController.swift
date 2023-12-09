@@ -245,11 +245,11 @@ public final class SpotSaveViewController: UIViewController {
     }
     
     private func completeButtonDidTap() {
-        guard let data = self.image?.pngData() else {
-            MSLogger.make(category: .spot).debug("현재 이미지를 Data로 변환할 수 없습니다.")
-            return
-        }
-        self.viewModel.trigger(.startUploadSpot, using: data)
+//        guard let data = self.image?.pngData() else {
+//            MSLogger.make(category: .spot).debug("현재 이미지를 Data로 변환할 수 없습니다.")
+//            return
+//        }
+        self.viewModel.trigger(.startUploadSpot, using: UIImage(systemName: "pencil")!.pngData()!)
         self.navigationDelegate?.popToHome()
     }
     

@@ -66,6 +66,7 @@ extension SpotCoordinator: SpotNavigationDelegate {
         spotSaveViewController.modalPresentationStyle = .fullScreen
         spotSaveViewController.image = image
         spotSaveViewController.navigationDelegate = self
+        self.navigationController.presentedViewController?.dismiss(animated: true)
         self.navigationController.present(spotSaveViewController, animated: true)
     }
     
