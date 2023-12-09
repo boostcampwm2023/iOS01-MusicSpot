@@ -23,14 +23,15 @@ public final class HomeViewModel {
     public enum Action {
         case viewNeedsLoaded
         case startButtonDidTap(Coordinate)
-        case fetchJourney(visibleMapRect: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
+//        case fetchJourney(visibleMapRect: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
     }
     
     public struct State {
-        public var isRecording = CurrentValueSubject<Bool, Never>(false)
-        public var recordingJourney = PassthroughSubject<RecordingJourney, Never>()
+        // Passthrough
+        public var startedJourney = PassthroughSubject<RecordingJourney, Never>()
         
-        public var journeys = CurrentValueSubject<[Journey], Never>([])
+        // CurrentValue
+        public var isRecording = CurrentValueSubject<Bool, Never>(false)
     }
     
     // MARK: - Properties
@@ -76,13 +77,14 @@ public final class HomeViewModel {
                 let result = await self.journeyRepository.startJourney(at: coordinate, userID: userID)
                 switch result {
                 case .success(let recordingJourney):
-                    self.state.recordingJourney.send(recordingJourney)
+                    self.state.startedJourney.send(recordingJourney)
+                    self.state.isRecording.send(true)
                 case .failure(let error):
                     MSLogger.make(category: .home).error("\(error)")
                 }
             }
-        case .fetchJourney(visibleMapRect: (let minCoordinate, let maxCoordinate)):
-            self.fetchJourneys(minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)
+//        case .fetchJourney(visibleMapRect: (let minCoordinate, let maxCoordinate)):
+//            self.fetchJourneys(minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)
         }
     }
     
@@ -109,20 +111,20 @@ private extension HomeViewModel {
         }
     }
     
-    func fetchJourneys(minCoordinate: Coordinate, maxCoordinate: Coordinate) {
-        guard let userID = try? self.userRepository.fetchUUID() else { return }
-        
-        Task {
-            let result = await self.journeyRepository.fetchJourneyList(userID: userID,
-                                                                       minCoordinate: minCoordinate,
-                                                                       maxCoordinate: maxCoordinate)
-            switch result {
-            case .success(let journeys):
-                self.state.journeys.send(journeys)
-            case .failure(let error):
-                MSLogger.make(category: .home).error("\(error)")
-            }
-        }
-    }
+//    func fetchJourneys(minCoordinate: Coordinate, maxCoordinate: Coordinate) {
+//        guard let userID = try? self.userRepository.fetchUUID() else { return }
+//        
+//        Task {
+//            let result = await self.journeyRepository.fetchJourneyList(userID: userID,
+//                                                                       minCoordinate: minCoordinate,
+//                                                                       maxCoordinate: maxCoordinate)
+//            switch result {
+//            case .success(let journeys):
+//                self.state.journeys.send(journeys)
+//            case .failure(let error):
+//                MSLogger.make(category: .home).error("\(error)")
+//            }
+//        }
+//    }
     
 }

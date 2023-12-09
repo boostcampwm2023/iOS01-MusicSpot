@@ -1,5 +1,5 @@
 //
-//  NavigateMapViewController.swift
+//  MapViewController.swift
 //  Home
 //
 //  Created by 윤동주 on 11/21/23.
@@ -17,7 +17,7 @@ import MSLogger
 import MSNetworking
 import MSUIKit
 
-public final class NavigateMapViewController: UIViewController {
+public final class MapViewController: UIViewController {
     
     // MARK: - Constants
     
@@ -64,7 +64,13 @@ public final class NavigateMapViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let viewModel: NavigateMapViewModel
+    var viewModel: (any MapViewModel)? {
+        willSet {
+            guard let viewModel = newValue else { return }
+            self.swapViewModel(to: viewModel)
+        }
+    }
+    
     private let locationManager = CLLocationManager()
     
     private var cancellables: Set<AnyCancellable> = []
@@ -96,7 +102,7 @@ public final class NavigateMapViewController: UIViewController {
     
     // MARK: - Initializer
     
-    public init(viewModel: NavigateMapViewModel,
+    public init(viewModel: any MapViewModel,
                 nibName nibNameOrNil: String? = nil,
                 bundle nibBundleOrNil: Bundle? = nil) {
         self.viewModel = viewModel
@@ -114,41 +120,61 @@ public final class NavigateMapViewController: UIViewController {
         
         self.configureLayout()
         self.configureCoreLocation()
-        self.bind()
-        self.viewModel.trigger(.viewNeedsLoaded)
     }
     
     // MARK: - Combine Binding
     
-    private func bind() {
-        self.viewModel.state.locationShouldAuthorized
-            .sink { [weak self] _ in
-                self?.locationManager.requestWhenInUseAuthorization()
-            }
-            .store(in: &self.cancellables)
+    private func swapViewModel(to viewModel: any MapViewModel) {
+        self.viewModel = nil
+        self.cancellables = []
         
-        self.viewModel.state.previousCoordinate
-            .zip(self.viewModel.state.currentCoordinate)
-            .compactMap { previousCoordinate, currentCoordinate -> (CLLocationCoordinate2D, CLLocationCoordinate2D)? in
-                guard let previousCoordinate = previousCoordinate,
-                      let currentCoordinate = currentCoordinate else {
-                    return nil
-                }
-                return (previousCoordinate, currentCoordinate)
-            }
-            .sink { [weak self] previousCoordinate, currentCoordinate in
-                let points = [previousCoordinate, currentCoordinate]
-                self?.drawPolylineToMap(using: points)
-            }
-            .store(in: &self.cancellables)
+        self.viewModel = viewModel
+        self.bind(viewModel)
+    }
+    
+    private func bind(_ viewModel: any MapViewModel) {
+        if let navigateMapViewModel = viewModel as? NavigateMapViewModel {
+            self.bind(navigateMapViewModel)
+        }
         
-        self.viewModel.state.visibleJourneys
+        if let recordJourneyViewModel = viewModel as? RecordJourneyViewModel {
+            self.bind(recordJourneyViewModel)
+        }
+        
+//        self.viewModel.state.locationShouldAuthorized
+//            .sink { [weak self] _ in
+//                self?.locationManager.requestWhenInUseAuthorization()
+//            }
+//            .store(in: &self.cancellables)
+//        
+//        self.viewModel.state.previousCoordinate
+//            .zip(self.viewModel.state.currentCoordinate)
+//            .compactMap { previousCoordinate, currentCoordinate -> (CLLocationCoordinate2D, CLLocationCoordinate2D)? in
+//                guard let previousCoordinate = previousCoordinate,
+//                      let currentCoordinate = currentCoordinate else {
+//                    return nil
+//                }
+//                return (previousCoordinate, currentCoordinate)
+//            }
+//            .sink { [weak self] previousCoordinate, currentCoordinate in
+//                let points = [previousCoordinate, currentCoordinate]
+//                self?.drawPolylineToMap(using: points)
+//            }
+//            .store(in: &self.cancellables)
+    }
+    
+    private func bind(_ viewModel: NavigateMapViewModel) {
+        viewModel.state.visibleJourneys
             .receive(on: DispatchQueue.main)
             .sink { [weak self] journeys in
                 self?.addAnnotations(with: journeys)
                 self?.drawPolyLinesToMap(with: journeys)
             }
             .store(in: &self.cancellables)
+    }
+    
+    private func bind(_ viewModel: RecordJourneyViewModel) {
+        
     }
     
     // MARK: - Functions: Annotation
@@ -232,7 +258,7 @@ public final class NavigateMapViewController: UIViewController {
 
 // MARK: - UI Configuration
 
-private extension NavigateMapViewController {
+private extension MapViewController {
     
     func configureLayout() {
         self.view = self.mapView
@@ -255,7 +281,7 @@ private extension NavigateMapViewController {
 
 // MARK: - CLLocationManager
 
-extension NavigateMapViewController: CLLocationManagerDelegate {
+extension MapViewController: CLLocationManagerDelegate {
     
     public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         Task.detached {
@@ -265,16 +291,16 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
     
     public func locationManager(_ manager: CLLocationManager,
                                 didUpdateLocations locations: [CLLocation]) {
-        guard let newCurrentLocation = locations.last,
-              self.timeRemaining == .zero && self.viewModel.state.isRecording.value
+//        guard let newCurrentLocation = locations.last,
+//              self.timeRemaining == .zero && self.viewModel.state.isRecording.value
 //              let previousCoordinate = self.viewModel.state.previousCoordinate.value
 //              self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate,
 //                                             coordinate2: newCurrentLocation.coordinate) else {
-        else {
-            return
-        }
+//        else {
+//            return
+//        }
         
-        self.viewModel.trigger(.locationDidUpdated(newCurrentLocation.coordinate))
+//        self.viewModel.trigger(.locationDidUpdated(newCurrentLocation.coordinate))
     }
     
     /// iOS 버젼에 따른 분기 처리 후 'iOS 위치 서비스 사용 중 여부' 확인
@@ -329,7 +355,7 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
 
 // MARK: - MKMapView
 
-extension NavigateMapViewController: MKMapViewDelegate {
+extension MapViewController: MKMapViewDelegate {
     
     /// 현재까지의 polyline들을 지도 위에 그림
     public func mapView(_ mapView: MKMapView,
@@ -365,7 +391,7 @@ extension NavigateMapViewController: MKMapViewDelegate {
 
 // MARK: - ButtonView
 
-extension NavigateMapViewController: ButtonStackViewDelegate {
+extension MapViewController: ButtonStackViewDelegate {
     
     /// 현재 지도에서 보이는 범위 내의 모든 Spot들을 보여줌.
     public func mapButtonDidTap() {

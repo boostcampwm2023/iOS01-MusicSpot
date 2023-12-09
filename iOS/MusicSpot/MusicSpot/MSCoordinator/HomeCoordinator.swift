@@ -44,7 +44,7 @@ final class HomeCoordinator: Coordinator {
         
         // NavigateMap
         let navigateMapViewmodel = NavigateMapViewModel(repository: journeyRepository)
-        let navigateMapViewController = NavigateMapViewController(viewModel: navigateMapViewmodel)
+        let navigateMapViewController = MapViewController(viewModel: navigateMapViewmodel)
         
         // Journey List
         let journeyListViewModel = JourneyListViewModel(repository: journeyRepository)
