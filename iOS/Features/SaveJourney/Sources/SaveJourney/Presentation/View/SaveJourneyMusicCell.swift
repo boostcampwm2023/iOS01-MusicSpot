@@ -88,7 +88,7 @@ final class SaveJourneyMusicCell: UICollectionViewCell {
         self.artistLabel.text = cellModel.artist
         
         guard let albumCoverURL = cellModel.albumCover?.url else { return }
-        self.albumArtImageView.ms.setImage(with: albumCoverURL, forKey: cellModel.title)
+        self.albumArtImageView.ms.setImage(with: albumCoverURL, forKey: cellModel.id)
     }
     
 }

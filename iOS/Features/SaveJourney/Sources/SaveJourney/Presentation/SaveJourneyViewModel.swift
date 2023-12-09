@@ -6,7 +6,7 @@
 //
 
 import Combine
-import MediaPlayer
+import Foundation
 import MusicKit
 
 import MSData
@@ -17,16 +17,18 @@ public final class SaveJourneyViewModel {
     
     public enum Action {
         case viewNeedsLoaded
-        case mediaControlButtonDidTap
+        case musicControlButtonDidTap
         case titleDidConfirmed(String)
         case endJourneyDidSucceed(String)
     }
     
     public struct State {
+        /// Apple Music 권한 상태
+        var musicAuthorizatonStatus = CurrentValueSubject<MusicAuthorization.Status, Never>(.notDetermined)
+        var buttonStateFactors = CurrentValueSubject<ButtonStateFactor, Never>(ButtonStateFactor())
+        
         var recordingJourney: CurrentValueSubject<RecordingJourney, Never>
         var selectedSong: CurrentValueSubject<Song, Never>
-        var isMusicPlaying = CurrentValueSubject<Bool, Never>(false)
-        var mediaItem = PassthroughSubject<MPMediaQuery?, Never>()
         
         var endJourneyResponse = CurrentValueSubject<String?, Never>(nil)
     }
@@ -39,21 +41,17 @@ public final class SaveJourneyViewModel {
     
     /// 완료 버튼을 누른 시점의 마지막 좌표
     private let lastCoordiante: Coordinate
-    /// 음악 검색 시 선택한 음악의 IndexPath
-    private let selectedIndex: IndexPath
     
     // MARK: - Initializer
     
     public init(recordingJourney: RecordingJourney,
                 lastCoordinate: Coordinate,
                 selectedSong: Song,
-                selectedIndex: IndexPath,
                 journeyRepository: JourneyRepository) {
         self.journeyRepository = journeyRepository
         self.state = State(recordingJourney: CurrentValueSubject<RecordingJourney, Never>(recordingJourney),
                            selectedSong: CurrentValueSubject<Song, Never>(selectedSong))
         self.lastCoordiante = lastCoordinate
-        self.selectedIndex = selectedIndex
     }
     
     // MARK: - Functions
@@ -61,11 +59,27 @@ public final class SaveJourneyViewModel {
     func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
-            let mediaItem = self.querySong(self.state.selectedSong.value,
-                                           at: self.selectedIndex.item)
-            self.state.mediaItem.send(mediaItem)
-        case .mediaControlButtonDidTap:
-            self.state.isMusicPlaying.send(!self.state.isMusicPlaying.value)
+            Task {
+                let status = await MusicAuthorization.request()
+                #if DEBUG
+                MSLogger.make(category: .saveJourney).info("음악 권한 상태: \(status)")
+                #endif
+                self.state.musicAuthorizatonStatus.send(status)
+            }
+             
+            Task {
+                let subscription = try await MusicSubscription.current
+                #if DEBUG
+                MSLogger.make(category: .saveJourney).debug("\(subscription)")
+                #endif
+                let stateFactors = self.state.buttonStateFactors.value
+                stateFactors.canBecomeSubscriber = subscription.canBecomeSubscriber
+                self.state.buttonStateFactors.send(stateFactors)
+            }
+        case .musicControlButtonDidTap:
+            let stateFactors = self.state.buttonStateFactors.value
+            stateFactors.isMusicPlaying.toggle()
+            self.state.buttonStateFactors.send(stateFactors)
         case .titleDidConfirmed(let title):
             self.endJourney(named: title)
         case .endJourneyDidSucceed(let journeyID):
@@ -98,23 +112,11 @@ private extension SaveJourneyViewModel {
                 #endif
                 self.trigger(.endJourneyDidSucceed(journey))
             case .failure(let error):
-                print(error)
                 #if DEBUG
                 MSLogger.make(category: .saveJourney).error("\(error)")
                 #endif
             }
         }
-    }
-    
-    func querySong(_ song: Song, at index: Int) -> MPMediaQuery {
-        let mediaQuery = MPMediaQuery.songs()
-        
-        let titlePredicate = MPMediaPropertyPredicate(value: song.title,
-                                                      forProperty: MPMediaItemPropertyTitle)
-        
-        mediaQuery.addFilterPredicate(titlePredicate)
-        
-        return mediaQuery
     }
     
 }

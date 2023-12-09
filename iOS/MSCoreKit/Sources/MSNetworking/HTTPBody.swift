@@ -48,7 +48,6 @@ public struct HTTPBody {
                 MSLogger.make(category: .network).error("HTTP Body 데이터 인코딩에 실패했습니다.")
                 return nil
             }
-            MSLogger.make(category: .network).debug("변환된 데이터: \(data)")
             return data
             
         case .multipart:
@@ -61,7 +60,7 @@ public struct HTTPBody {
             var data = Data()
             self.allOfMultipartData?.forEach { multipartData in
                 data.append(delimiter)
-                multipartData.contentInformation().forEach {
+                multipartData.contentInformation(using: encoder).forEach {
                     data.append($0)
                 }
             }

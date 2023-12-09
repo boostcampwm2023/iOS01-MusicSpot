@@ -41,8 +41,6 @@ public final class SelectSongViewController: BaseViewController {
     
     public weak var navigationDelegate: SelectSongNavigationDelegate?
     
-    private let musicPlayer = ApplicationMusicPlayer.shared
-    
     private let viewModel: SelectSongViewModel
     
     private var dataSource: SongListDataSource?
@@ -70,6 +68,12 @@ public final class SelectSongViewController: BaseViewController {
         let attributedString = AttributedString(Typo.searchTextFieldPlaceholder, attributes: container)
         textField.attributedPlaceholder = NSAttributedString(attributedString)
         return textField
+    }()
+    
+    private let loadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.hidesWhenStopped = true
+        return indicator
     }()
     
     // MARK: - Initializer
@@ -111,15 +115,23 @@ public final class SelectSongViewController: BaseViewController {
     private func bind() {
         self.searchTextField.textPublisher
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
-            .filter { !$0.isEmpty }
-            .sink { text in
-                self.viewModel.trigger(.searchTextFieldDidUpdate(text))
+            .sink { [weak viewModel = self.viewModel] text in
+                viewModel?.trigger(.searchTextFieldDidUpdate(text))
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak loadingIndicator = self.loadingIndicator] isLoading in
+                isLoading ? loadingIndicator?.startAnimating() : loadingIndicator?.stopAnimating()
             }
             .store(in: &self.cancellables)
         
         self.viewModel.state.songs
             .receive(on: DispatchQueue.main)
-            .sink { songs in
+            .sink { [weak self] songs in
+                guard let self = self else { return }
+                
                 var snapshot = SongListSnapshot()
                 snapshot.appendSections([.zero])
                 snapshot.appendItems(songs, toSection: .zero)
@@ -155,6 +167,13 @@ public final class SelectSongViewController: BaseViewController {
             self.collectionView.bottomAnchor.constraint(equalTo: self.searchTextField.topAnchor,
                                                         constant: -Metric.searchTextFieldBottomSpacing)
         ])
+        
+        self.view.addSubview(self.loadingIndicator)
+        self.loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.loadingIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.loadingIndicator.centerYAnchor.constraint(equalTo: self.collectionView.centerYAnchor)
+        ])
     }
     
 }
@@ -189,7 +208,8 @@ private extension SelectSongViewController {
     
     private func configureDataSource() -> SongListDataSource {
         let cellRegistration = SongListCellRegistration { cell, _, itemIdentifier in
-            let cellModel = SongListCellModel(title: itemIdentifier.title,
+            let cellModel = SongListCellModel(id: itemIdentifier.id.rawValue,
+                                              title: itemIdentifier.title,
                                               artist: itemIdentifier.artistName,
                                               albumArtURL: itemIdentifier.artwork?.url(width: Metric.albumCoverSize,
                                                                                        height: Metric.albumCoverSize))
@@ -219,10 +239,9 @@ extension SelectSongViewController: UICollectionViewDelegate {
         #if DEBUG
         MSLogger.make(category: .selectSong).log("\(item.title) selected")
         #endif
-        self.navigationDelegate?.navigateToSaveJourney(recordingJourney: self.viewModel.state.recordingJourney,
-                                                       lastCoordinate: self.viewModel.state.lastCoordinate,
-                                                       selectedSong: item,
-                                                       selectedIndex: indexPath)
+        self.navigationDelegate?.navigateToSaveJourney(recordingJourney: self.viewModel.recordingJourney,
+                                                       lastCoordinate: self.viewModel.lastCoordinate,
+                                                       selectedSong: item)
     }
     
 }
