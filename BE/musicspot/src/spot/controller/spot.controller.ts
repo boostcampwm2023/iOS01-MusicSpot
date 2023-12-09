@@ -32,12 +32,7 @@ export class SpotController {
     @UploadedFile() file: Express.Multer.File,
     @Body() recordSpotDTO,
   ) {
-    try{
-      return await this.spotService.create(file, recordSpotDTO);
-    }catch(err){
-      console.log(err)
-    }
-   
+    return await this.spotService.create(file, recordSpotDTO);
   }
 
   @ApiOperation({
@@ -50,7 +45,11 @@ export class SpotController {
   })
   @Get('find')
   async findSpotImage(@Query('spotId') spotId: string) {
-    return await this.spotService.getSpotImage(spotId);
+    try {
+      return await this.spotService.getSpotImage(spotId);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   // @Post()
