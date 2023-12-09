@@ -8,7 +8,8 @@ import { UserModule } from './user/module/user.module';
 
 import { ReleaseController } from './releasePage/release.controller';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
-
+import * as dotenv from 'dotenv';
+dotenv.config();
 @Module({
   imports: [
     MongooseModule.forRoot(
