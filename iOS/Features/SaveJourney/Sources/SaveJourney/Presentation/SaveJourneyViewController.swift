@@ -8,8 +8,9 @@
 import Combine
 import CoreLocation
 import MapKit
-import MediaPlayer
 import MusicKit
+import StoreKit
+import SwiftUI
 import UIKit
 
 import MSDomain
@@ -91,6 +92,12 @@ public final class SaveJourneyViewController: UIViewController {
         return button
     }()
     
+    private lazy var musicControlButton: UIHostingController = {
+        let stateFactor = self.viewModel.state.buttonStateFactors.value
+        let button = UIHostingController(rootView: MusicControlButton(stateFactor: stateFactor))
+        return button
+    }()
+    
     private lazy var nextButton: MSButton = {
         let button = MSButton.primary()
         button.title = Typo.nextButtonTitle
@@ -130,18 +137,36 @@ public final class SaveJourneyViewController: UIViewController {
     
     private func bind() {
         self.viewModel.state.selectedSong
-            .combineLatest(self.viewModel.state.mediaItem)
-            .compactMap { (song, mediaQuery) -> (Song, MPMediaQuery)? in
-                guard let mediaQuery = mediaQuery else { return nil }
-                return (song, mediaQuery)
-            }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] song, mediaQuery in
+            .sink { [weak self] song in
                 guard let self = self else { return }
+                
+                self.musicControlButton.rootView.song = song
+                Task {
+                    self.musicPlayer.queue = ApplicationMusicPlayer.Queue(for: [song])
+                    try await self.musicPlayer.prepareToPlay()
+                }
+                
                 var snapshot = MusicSnapshot()
                 let music = Music(song)
                 snapshot.append([.music(music)])
                 self.dataSource?.apply(snapshot, to: .music)
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.buttonStateFactors
+            .map { $0.isMusicPlaying }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isMusicPlaying in
+                guard let self = self else { return }
+                
+                if isMusicPlaying, self.musicPlayer.isPreparedToPlay {
+                    Task {
+                        try await self.musicPlayer.play()
+                    }
+                } else {
+                    self.musicPlayer.pause()
+                }
             }
             .store(in: &self.cancellables)
         
@@ -155,25 +180,11 @@ public final class SaveJourneyViewController: UIViewController {
             }
             .store(in: &self.cancellables)
         
-        self.viewModel.state.isMusicPlaying
-            .receive(on: DispatchQueue.main)
-            .sink { isMusicPlaying in
-                self.mediaControlButton.image = isMusicPlaying ? .msIcon(.pause) : .msIcon(.play)
-                if isMusicPlaying {
-                    Task {
-                        try await self.musicPlayer.play()
-                    }
-                } else {
-                    self.musicPlayer.pause()
-                }
-            }
-            .store(in: &self.cancellables)
-        
         self.viewModel.state.endJourneyResponse
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
-            .sink { _ in
-                self.navigationDelegate?.popToHome()
+            .sink { [weak self] _ in
+                self?.navigationDelegate?.popToHome()
             }
             .store(in: &self.cancellables)
     }
@@ -203,10 +214,9 @@ public final class SaveJourneyViewController: UIViewController {
 private extension SaveJourneyViewController {
     
     func configureButtons() {
-        let mediaControlAction = UIAction { [weak self] _ in
-            self?.viewModel.trigger(.mediaControlButtonDidTap)
+        self.musicControlButton.rootView.musicControlAction = { [weak self] in
+            self?.viewModel.trigger(.musicControlButtonDidTap)
         }
-        self.mediaControlButton.addAction(mediaControlAction, for: .touchUpInside)
         
         let nextButtonAction = UIAction { [weak self] _ in
             self?.presentSaveJourney()
@@ -270,12 +280,20 @@ private extension SaveJourneyViewController {
                                                      constant: -Metric.buttonBottomInset)
         ])
         
+        guard let musicControlButton = self.musicControlButton.view else { return }
+        self.addChild(self.musicControlButton)
+        self.view.addSubview(musicControlButton)
         [
-            self.mediaControlButton,
+            musicControlButton,
             self.nextButton
         ].forEach {
             self.buttonStack.addArrangedSubview($0)
         }
+        self.musicControlButton.didMove(toParent: self)
+        NSLayoutConstraint.activate([
+            self.musicControlButton.view.widthAnchor.constraint(equalToConstant: 52.0),
+            self.musicControlButton.view.heightAnchor.constraint(equalTo: self.nextButton.heightAnchor)
+        ])
     }
     
     func configureComponents() {

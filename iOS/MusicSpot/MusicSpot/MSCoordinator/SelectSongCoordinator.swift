@@ -67,8 +67,7 @@ extension SelectSongCoordinator: SelectSongNavigationDelegate {
         self.childCoordinators.append(saveJourneyCoordinator)
         saveJourneyCoordinator.start(recordingJourney: recordingJourney,
                                      lastCoordinate: lastCoordinate,
-                                     selectedSong: selectedSong,
-                                     selectedIndex: selectedIndex)
+                                     selectedSong: selectedSong)
     }
     
 }

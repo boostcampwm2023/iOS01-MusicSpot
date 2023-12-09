@@ -33,7 +33,6 @@ public final class SelectSongViewModel {
     
     public var state: State
     
-    private var musicAuthorizationState: MusicAuthorization.Status?
     let recordingJourney: RecordingJourney
     let lastCoordinate: Coordinate
     
@@ -54,12 +53,6 @@ public final class SelectSongViewModel {
         switch action {
         case .viewNeedsLoaded:
             Task {
-                let status = await MusicAuthorization.request()
-                #if DEBUG
-                MSLogger.make(category: .selectSong).debug("음악 권한 상태: \(status)")
-                #endif
-                self.musicAuthorizationState = status
-                
                 if #available(iOS 16.0, *) {
                     Task {
                         let songs = await self.fetchSongByRank()
@@ -68,8 +61,6 @@ public final class SelectSongViewModel {
                 }
             }
         case .searchTextFieldDidUpdate(let text):
-            guard case .authorized = self.musicAuthorizationState else { return }
-            
             if #available(iOS 16.0, *), text.isEmpty {
                 Task {
                     let songs = await self.fetchSongByRank()
