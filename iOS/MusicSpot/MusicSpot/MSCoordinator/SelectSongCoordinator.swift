@@ -60,15 +60,13 @@ extension SelectSongCoordinator: SelectSongNavigationDelegate {
     
     func navigateToSaveJourney(recordingJourney: RecordingJourney,
                                lastCoordinate: Coordinate,
-                               selectedSong: Song,
-                               selectedIndex: IndexPath) {
+                               selectedSong: Song) {
         let saveJourneyCoordinator = SaveJourneyCoordinator(navigationController: self.navigationController)
         saveJourneyCoordinator.delegate = self
         self.childCoordinators.append(saveJourneyCoordinator)
         saveJourneyCoordinator.start(recordingJourney: recordingJourney,
                                      lastCoordinate: lastCoordinate,
-                                     selectedSong: selectedSong,
-                                     selectedIndex: selectedIndex)
+                                     selectedSong: selectedSong)
     }
     
 }

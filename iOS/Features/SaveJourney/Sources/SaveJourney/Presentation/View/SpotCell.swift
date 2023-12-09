@@ -68,6 +68,7 @@ final class SpotCell: UICollectionViewCell {
     
     // MARK: - Functions
     
+    @MainActor
     func update(with cellModel: SpotCellModel) {
         self.locationLabel.text = cellModel.location
         self.dateLabel.text = cellModel.date.formatted(date: .abbreviated, time: .omitted)
