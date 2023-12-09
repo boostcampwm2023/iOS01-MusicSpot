@@ -116,12 +116,16 @@ export class JourneyController {
     @Query('minCoordinate') minCoordinate,
     @Query('maxCoordinate') maxCoordinate,
   ) {
-    const checkJourneyDTO = {
-      userId,
-      minCoordinate,
-      maxCoordinate,
-    };
-    return await this.journeyService.checkJourney(checkJourneyDTO);
+    try {
+      const checkJourneyDTO = {
+        userId,
+        minCoordinate,
+        maxCoordinate,
+      };
+      return await this.journeyService.checkJourney(checkJourneyDTO);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   @ApiOperation({
