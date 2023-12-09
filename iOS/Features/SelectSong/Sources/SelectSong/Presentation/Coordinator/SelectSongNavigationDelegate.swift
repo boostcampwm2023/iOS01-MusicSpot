@@ -14,7 +14,6 @@ public protocol SelectSongNavigationDelegate: AnyObject {
     
     func navigateToSaveJourney(recordingJourney: RecordingJourney,
                                lastCoordinate: Coordinate,
-                               selectedSong: Song,
-                               selectedIndex: IndexPath)
+                               selectedSong: Song)
     
 }

@@ -133,6 +133,11 @@ public final class SaveJourneyViewController: UIViewController {
         self.navigationController?.isNavigationBarHidden = false
     }
     
+    public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.musicPlayer.pause()
+    }
+    
     // MARK: - Combine Binding
     
     private func bind() {

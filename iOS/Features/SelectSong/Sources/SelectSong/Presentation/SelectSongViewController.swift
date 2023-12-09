@@ -208,7 +208,8 @@ private extension SelectSongViewController {
     
     private func configureDataSource() -> SongListDataSource {
         let cellRegistration = SongListCellRegistration { cell, _, itemIdentifier in
-            let cellModel = SongListCellModel(title: itemIdentifier.title,
+            let cellModel = SongListCellModel(id: itemIdentifier.id.rawValue,
+                                              title: itemIdentifier.title,
                                               artist: itemIdentifier.artistName,
                                               albumArtURL: itemIdentifier.artwork?.url(width: Metric.albumCoverSize,
                                                                                        height: Metric.albumCoverSize))
@@ -240,8 +241,7 @@ extension SelectSongViewController: UICollectionViewDelegate {
         #endif
         self.navigationDelegate?.navigateToSaveJourney(recordingJourney: self.viewModel.recordingJourney,
                                                        lastCoordinate: self.viewModel.lastCoordinate,
-                                                       selectedSong: item,
-                                                       selectedIndex: indexPath)
+                                                       selectedSong: item)
     }
     
 }
