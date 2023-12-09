@@ -12,7 +12,7 @@ import MSLogger
 public struct MultipartData {
     
     public enum ContentType {
-        case normal
+        case string
         case image
     }
     
@@ -24,7 +24,7 @@ public struct MultipartData {
     
     // MARK: - Initializer
     
-    public init(type: ContentType = .normal, name: String, content: Encodable) {
+    public init(type: ContentType = .string, name: String, content: Encodable) {
         self.type = type
         self.name = name
         self.content = content
@@ -34,14 +34,15 @@ public struct MultipartData {
     
     public func contentInformation(using encoder: JSONEncoder) -> [Data] {
         var dataStorage: [Data] = []
-        
         switch self.type {
-        case .normal:
+        case .string:
             let dispositionDescript = "Content-Disposition: form-data; name=\"\(self.name)\"\r\n\r\n"
             if let disposition = dispositionDescript.data(using: .utf8),
-               let contentData = try? encoder.encode(self.content) {
+               let contentString = self.convertToString(from: self.content),
+               let contentData = contentString.data(using: .utf8) {
                 dataStorage.append(disposition)
                 dataStorage.append(contentData)
+                MSLogger.make(category: .network).debug("\(contentData): multipart로 보낼 항목들이 성공적으로 변환되었습니다.")
             } else {
                 MSLogger.make(category: .network).debug("multipart로 보낼 항목들의 data 반환에 실패하였습니다.")
             }
@@ -55,11 +56,31 @@ public struct MultipartData {
                 dataStorage.append(disposition)
                 dataStorage.append(type)
                 dataStorage.append(contentData)
+                MSLogger.make(category: .network).debug("\(contentData): multipart로 보낼 이미지가 성공적으로 변환되었습니다.")
             } else {
                 MSLogger.make(category: .network).debug("multipart로 보낼 항목들의 data 반환에 실패하였습니다.")
             }
         }
         return dataStorage
+    }
+    
+    // MARK: - Data Convert
+    
+    private func convertToString(from content: Encodable) -> String? {
+        switch content {
+        case is String:
+            return content as? String
+        case is Date:
+            guard let contentDate = content as? Date else { return nil }
+            let dateFormatter = ISO8601DateFormatter()
+            dateFormatter.formatOptions.insert(.withFractionalSeconds)
+            let dateString = dateFormatter.string(from: contentDate)
+            return dateString
+        default:
+            guard let contentData = try? JSONEncoder().encode(content),
+                  let contentString = String(data: contentData, encoding: .utf8) else { return nil }
+            return contentString
+        }
     }
     
 }
