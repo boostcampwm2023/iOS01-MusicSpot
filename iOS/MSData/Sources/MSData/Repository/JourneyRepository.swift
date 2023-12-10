@@ -24,6 +24,7 @@ public protocol JourneyRepository {
     mutating func startJourney(at coordinate: Coordinate, userID: UUID) async -> Result<RecordingJourney, Error>
     mutating func endJourney(_ journey: Journey) async -> Result<String, Error>
     func recordJourney(journeyID: String, at coordinates: [Coordinate]) async -> Result<RecordingJourney, Error>
+    mutating func deleteJourney(_ journey: RecordingJourney, userID: UUID) async -> Result<Journey, Error>
     
 }
 
@@ -148,6 +149,20 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         case .success(let responseDTO):
             self.recordingJourneyID = nil
             return .success(responseDTO.id)
+        case .failure(let error):
+            return .failure(error)
+        }
+    }
+    
+    public mutating func deleteJourney(_ recordingJourney: RecordingJourney,
+                                       userID: UUID) async -> Result<Journey, Error> {
+        let requestDTO = DeleteJourneyRequestDTO(userID: userID, journeyID: recordingJourney.id)
+        let router = JourneyRouter.deleteJourney(dto: requestDTO)
+        let result = await self.networking.request(JourneyDTO.self, router: router)
+        switch result {
+        case .success(let responseDTO):
+            self.recordingJourneyID = nil
+            return .success(responseDTO.toDomain())
         case .failure(let error):
             return .failure(error)
         }
