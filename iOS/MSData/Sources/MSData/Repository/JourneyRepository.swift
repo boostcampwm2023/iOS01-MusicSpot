@@ -10,6 +10,7 @@ import Foundation
 
 import MSConstants
 import MSDomain
+import MSLogger
 import MSNetworking
 import MSPersistentStorage
 import MSUserDefaults
@@ -49,7 +50,11 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     // MARK: - Functions
     
     public func fetchRecordingJourneyID() -> String? {
-        return self.recordingJourneyID
+        guard let recordingJourneyID = self.recordingJourneyID else {
+            MSLogger.make(category: .userDefaults).error("기록 중인 여정 정보를 가져오는데 실패했습니다.")
+            return nil
+        }
+        return recordingJourneyID
     }
     
     public func fetchRecordingJourney(forID id: String) -> RecordingJourney? {
@@ -111,6 +116,13 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                                                     spots: [],
                                                     coordinates: [responseDTO.coordinate.toDomain()])
             self.recordingJourneyID = recordingJourney.id
+            #if DEBUG
+            if let recordingJourneyID = self.recordingJourneyID {
+                MSLogger.make(category: .userDefaults).debug("기록중인 여정 정보가 저장되었습니다: \(recordingJourneyID)")
+            } else {
+                MSLogger.make(category: .userDefaults).error("기록중인 여정 정보 저장에 실패했습니다.")
+            }
+            #endif
             return .success(recordingJourney)
         case .failure(let error):
             return .failure(error)

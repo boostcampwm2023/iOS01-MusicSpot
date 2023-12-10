@@ -15,7 +15,7 @@ import MSLogger
 public final class SpotSaveViewModel {
     
     public enum Action {
-        case startUploadSpot
+        case startUploadSpot(Data)
     }
     
     // MARK: - Properties
@@ -43,11 +43,14 @@ public final class SpotSaveViewModel {
 
 internal extension SpotSaveViewModel {
     
-    func trigger(_ action: Action, using data: Data) {
+    func trigger(_ action: Action) {
         switch action {
-        case .startUploadSpot:
+        case .startUploadSpot(let data):
             Task {
                 guard let recordingJourneyID = self.journeyRepository.fetchRecordingJourneyID() else {
+                    #if DEBUG
+                    MSLogger.make(category: .network).error("현재 여정 정보를 가져오는데 실패했습니다.")
+                    #endif
                     return
                 }
                 
