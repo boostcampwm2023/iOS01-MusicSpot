@@ -66,7 +66,11 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     
     // MARK: - Properties: Gesture
     
-    var initialTouchPoint = CGPoint(x: .zero, y: .zero)
+    var initialTouchPoint = CGPoint(x: 0, y: 0)
+    
+    // MARK: - Properties: Haptic
+    
+    private let haptic = UIImpactFeedbackGenerator(style: .medium)
     
     // MARK: - UI Components
     
@@ -81,6 +85,7 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.configure()
+        self.haptic.prepare()
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -291,6 +296,7 @@ private extension SpotViewController {
     
     func shotButtonTapped() {
         self.viewModel.shot()
+        self.haptic.impactOccurred()
     }
     
     func swapButtonTapped() {
