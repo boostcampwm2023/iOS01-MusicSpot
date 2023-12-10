@@ -82,6 +82,7 @@ public final class HomeViewModel {
             MSLogger.make(category: .home).debug("Start 버튼 탭: \(coordinate)")
             #endif
             self.startJourney(at: coordinate)
+            self.state.isRefreshButtonHidden.send(true)
         case .refreshButtonDidTap(visibleCoordinates: (let minCoordinate, let maxCoordinate)):
             self.state.isRefreshButtonHidden.send(true)
             self.fetchJourneys(minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)
