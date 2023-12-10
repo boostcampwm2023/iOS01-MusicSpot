@@ -19,6 +19,7 @@ public final class RecordJourneyViewModel: MapViewModel {
         case viewNeedsLoaded
         case locationDidUpdated(CLLocationCoordinate2D)
         case locationsShouldRecorded([CLLocationCoordinate2D])
+        case recordingDidCancelled
     }
     
     public struct State {
@@ -30,14 +31,17 @@ public final class RecordJourneyViewModel: MapViewModel {
     
     // MARK: - Properties
     
-    private let journeyRepository: JourneyRepository
+    private let userRepository: UserRepository
+    private var journeyRepository: JourneyRepository
     
     public var state: State
     
     // MARK: - Initializer
     
     public init(startedJourney: RecordingJourney,
+                userRepository: UserRepository,
                 journeyRepository: JourneyRepository) {
+        self.userRepository = userRepository
         self.journeyRepository = journeyRepository
         self.state = State(recordingJourney: CurrentValueSubject<RecordingJourney, Never>(startedJourney))
     }
@@ -63,6 +67,20 @@ public final class RecordJourneyViewModel: MapViewModel {
                 switch result {
                 case .success(let recordingJourney):
                     self.state.recordingJourney.send(recordingJourney)
+                case .failure(let error):
+                    MSLogger.make(category: .home).error("\(error)")
+                }
+            }
+        case .recordingDidCancelled:
+            Task {
+                let userID = try self.userRepository.fetchUUID()
+                let recordingJourney = self.state.recordingJourney.value
+                let result = await self.journeyRepository.deleteJourney(recordingJourney, userID: userID)
+                switch result {
+                case .success(let cancelledJourney):
+                    #if DEBUG
+                    MSLogger.make(category: .home).debug("여정이 취소 되었습니다: \(cancelledJourney)")
+                    #endif
                 case .failure(let error):
                     MSLogger.make(category: .home).error("\(error)")
                 }

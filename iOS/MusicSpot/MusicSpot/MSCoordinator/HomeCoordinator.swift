@@ -62,6 +62,7 @@ final class HomeCoordinator: Coordinator {
                                                              minimizedDimension: .absolute(100.0))
         homeViewController.configuration = configuration
         homeViewController.navigationDelegate = self
+        navigateMapViewController.delegate = homeViewController
         self.navigationController.pushViewController(homeViewController, animated: true)
     }
     

@@ -101,21 +101,54 @@ final class MSPersistentStorageTests: XCTestCase {
     }
     
     func test_FileManagerStorage에서_모든데이터저장불러오기_성공() {
-        let sut = MockCodableData(title: "boostcamp", content: "wm8")
-        let key = "S045"
-        self.fileStorage.set(value: sut, forKey: key)
-        self.fileStorage.set(value: sut, forKey: key)
-        self.fileStorage.set(value: sut, forKey: key)
+        let sut1 = MockCodableData(title: "boostcamp", content: "wm8")
+        let sut2 = MockCodableData(title: "boostcamp", content: "wm8")
+        let key1 = "S045"
+        let key2 = "S034"
+        
+        self.fileStorage.set(value: sut1, forKey: key1)
+        self.fileStorage.set(value: sut2, forKey: key2)
         
         guard let allStoredData = self.fileStorage.getAllOf(MockCodableData.self) else {
             XCTFail("데이터 읽기에 실패했습니다.")
             return
         }
+
+        XCTAssertEqual(allStoredData.count, 2, "데이터 저장에 실패하였습니다.")
+        XCTAssertTrue(allStoredData.allSatisfy { $0 == sut1 || $0 == sut2 })
+    }
+    
+    func test_FileManagerStorage에서_모든데이터저장불러올때_폴더하위항목까지_읽을수있는지_실패() {
+        let sut1 = MockCodableData(title: "boostcamp", content: "wm8")
+        let sut2 = MockCodableData(title: "boostcamp", content: "wm8")
+        let key1 = "S045"
+        let key2 = "/handsome/jeonmingun/S034"
         
-        allStoredData.forEach { storedData in
-            XCTAssertEqual(sut, storedData,
-                           "목표 데이터와 불러온 값이 다릅니다.")
+        self.fileStorage.set(value: sut1, forKey: key1)
+        self.fileStorage.set(value: sut2, forKey: key2)
+        
+        guard let allStoredData = self.fileStorage.getAllOf(MockCodableData.self) else {
+            XCTFail("데이터 읽기에 실패했습니다.")
+            return
         }
+
+        XCTAssertEqual(allStoredData.count, 2, "데이터 저장에 실패하였습니다.")
+        XCTAssertFalse(allStoredData.allSatisfy { $0 == sut1 || $0 == sut2 })
+    }
+    
+    func test_Date형식_저장할_수_있는지_성공() {
+        let sut = Date.now
+        let key = "S034"
+        
+        self.fileStorage.set(value: sut, forKey: key)
+        
+        guard let storedData = self.fileStorage.get(Date.self, forKey: key) else {
+            XCTFail("데이터 읽기에 실패했습니다.")
+            return
+        }
+        
+        XCTAssertEqual(sut.description, storedData.description,
+                       "목표 데이터와 불러온 값이 다릅니다.")
     }
     
 }
