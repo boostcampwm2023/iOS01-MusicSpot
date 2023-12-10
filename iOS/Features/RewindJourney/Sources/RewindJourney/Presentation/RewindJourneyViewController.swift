@@ -50,7 +50,6 @@ public final class RewindJourneyViewController: UIViewController {
     private var cancellables: Set<AnyCancellable> = []
     private var presentingImageIndex: Int? {
         didSet {
-            print("\(self.presentingImageIndex)번이 선택됨")
             self.changeProgressViews()
         }
     }
@@ -119,7 +118,7 @@ public final class RewindJourneyViewController: UIViewController {
     private func timerBinding() {
         self.viewModel.state.timerPublisher
             .sink { [weak self] _ in
-                self?.rightTouchViewDidTap()
+                DispatchQueue.main.async { self?.rightTouchViewDidTap() }
             }
             .store(in: &self.timerSubscriber)
     }

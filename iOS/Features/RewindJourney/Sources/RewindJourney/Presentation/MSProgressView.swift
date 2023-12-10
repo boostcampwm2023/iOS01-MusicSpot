@@ -67,7 +67,6 @@ public final class MSProgressView: UIProgressView {
         self.progressViewModel.timerPublisher
             .sink { [weak self] currentPercentage in
                 self?.percentage = currentPercentage
-                print(currentPercentage)
             }
             .store(in: &timerSubscriber)
     }
