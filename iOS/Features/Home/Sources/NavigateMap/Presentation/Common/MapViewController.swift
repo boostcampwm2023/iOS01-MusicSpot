@@ -179,7 +179,7 @@ public final class MapViewController: UIViewController {
                                                      for: annotation)
     }
     
-    public func addAnnotations(with journeys: [Journey]) {
+    private func addAnnotations(with journeys: [Journey]) {
         let datas = journeys.flatMap { journey in
             journey.spots.map { (location: journey.title, spot: $0) }
         }
@@ -213,6 +213,24 @@ public final class MapViewController: UIViewController {
                                           coordinate: coordinate,
                                           photoData: photoData)
         self.mapView.addAnnotation(annotation)
+    }
+    
+    public func addSpotInRecording(spot: Spot) {
+        Task {
+            
+            let imageFetcher = MSImageFetcher.shared
+            guard let photoData = await imageFetcher.fetchImage(from: spot.photoURL,
+                                                                forKey: spot.photoURL.paath()) else {
+                throw ImageFetchError.imageFetchFailed
+            }
+            
+            let coordinate = CLLocationCoordinate2D(latitude: spot.coordinate.latitude,
+                                                    longitude: spot.coordinate.longitude)
+            
+            self.addAnnotation(title: "",
+                               coordinate: coordinate,
+                               photoData: photoData)
+        }
     }
     
     // MARK: - Functions: Polyline

@@ -5,8 +5,8 @@
 //  Created by 전민건 on 11/29/23.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 import MSData
 import MSDomain
@@ -18,6 +18,10 @@ public final class SpotSaveViewModel {
         case startUploadSpot
     }
     
+    public struct State {
+        public var spot = PassthroughSubject<Spot?, Never>()
+    }
+    
     // MARK: - Properties
     
     private let journeyRepository: JourneyRepository
@@ -26,6 +30,8 @@ public final class SpotSaveViewModel {
     private var cancellables: Set<AnyCancellable> = []
     
     private let coordinate: Coordinate
+    
+    public var state = State()
     
     // MARK: - Initializer
     
@@ -58,6 +64,7 @@ internal extension SpotSaveViewModel {
                 let result = await self.spotRepository.upload(spot: spot)
                 switch result {
                 case .success(let spot):
+                    self.state.spot.send(spot)
                     MSLogger.make(category: .network).debug("성공적으로 업로드되었습니다: \(spot)")
                 case .failure(let error):
                     MSLogger.make(category: .network).error("\(error): 업로드에 실패하였습니다.")

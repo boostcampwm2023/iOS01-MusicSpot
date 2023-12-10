@@ -8,6 +8,7 @@
 import UIKit
 
 import MSData
+import MSDomain
 import RewindJourney
 
 final class RewindJourneyCoordinator: Coordinator {
@@ -51,6 +52,10 @@ extension RewindJourneyCoordinator: RewindJourneyNavigationDelegate {
 // MARK: - HomeMap Coordinator
 
 extension RewindJourneyCoordinator: HomeCoordinatorDelegate {
+    func popToHomeWithSpot(from coordinator: Coordinator, spot: Spot) {
+        // 미사용 함수
+    }
+    
     
     func popToHome(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()
