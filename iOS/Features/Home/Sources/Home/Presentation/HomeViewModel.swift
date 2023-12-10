@@ -24,6 +24,7 @@ public final class HomeViewModel {
         case viewNeedsLoaded
         case startButtonDidTap(Coordinate)
         case refreshButtonDidTap(visibleCoordinates: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
+        case backButtonDidTap
     }
     
     public struct State {
@@ -80,6 +81,8 @@ public final class HomeViewModel {
             self.startJourney(at: coordinate)
         case .refreshButtonDidTap(visibleCoordinates: (let minCoordinate, let maxCoordinate)):
             self.fetchJourneys(minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)
+        case .backButtonDidTap:
+            self.state.isRecording.send(false)
         }
     }
     

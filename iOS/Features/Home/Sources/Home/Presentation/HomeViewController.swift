@@ -136,6 +136,11 @@ public final class HomeViewController: HomeBottomSheetViewController {
         self.viewModel.state.isRecording
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isRecording in
+                if isRecording {
+                    self?.hideBottomSheet()
+                } else {
+                    self?.showBottomSheet()
+                }
                 self?.updateButtonMode(isRecording: isRecording)
             }
             .store(in: &self.cancellables)
@@ -201,7 +206,7 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
         guard self.viewModel.state.isRecording.value == true else { return }
         
         self.contentViewController.clearOverlays()
-        self.updateButtonMode(isRecording: false)
+        self.viewModel.trigger(.backButtonDidTap)
         self.contentViewController.journeyDidCancelled()
         // TODO: 여정 취소
     }
@@ -245,9 +250,10 @@ private extension HomeViewController {
         
         self.view.addSubview(self.recordJourneyButtonStackView)
         self.recordJourneyButtonStackView.translatesAutoresizingMaskIntoConstraints = false
+        let safeAreaBottomAnchor = self.view.safeAreaLayoutGuide.bottomAnchor
         NSLayoutConstraint.activate([
             self.recordJourneyButtonStackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.recordJourneyButtonStackView.bottomAnchor.constraint(equalTo: bottomSheetTopAnchor,
+            self.recordJourneyButtonStackView.bottomAnchor.constraint(equalTo: safeAreaBottomAnchor,
                                                                       constant: -Metric.startButtonBottomInset)
         ])
         
