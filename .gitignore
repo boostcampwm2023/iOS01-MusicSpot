@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/macos,windows,xcode,swift,swiftpackagemanager
-# Edit at https://www.toptal.com/developers/gitignore?templates=macos,windows,xcode,swift,swiftpackagemanager
+# Created by https://www.toptal.com/developers/gitignore/api/macos
+# Edit at https://www.toptal.com/developers/gitignore?templates=macos
 
 ### macOS ###
 # General
@@ -165,3 +165,4 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,xcode,swift,swiftpackagemanager
 node_modules
+# End of https://www.toptal.com/developers/gitignore/api/macos
