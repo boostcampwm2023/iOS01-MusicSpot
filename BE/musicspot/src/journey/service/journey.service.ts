@@ -6,7 +6,10 @@ import { StartJourneyReqDTO } from '../dto/journeyStart/journeyStart.dto';
 import { Journey } from '../schema/journey.schema';
 
 import { User } from '../../user/schema/user.schema';
-import { JourneyNotFoundException } from '../../filters/journey.exception';
+import {
+  JourneyNotFoundException,
+  coordinateNotCorrectException,
+} from '../../filters/journey.exception';
 import { UserNotFoundException } from '../../filters/user.exception';
 import * as turf from '@turf/turf';
 import { LoadJourneyDTO } from '../dto/journeyLoad.dto';
@@ -18,6 +21,7 @@ import {
 import { EndJourneyReqDTO } from '../dto/journeyEnd/journeyEnd.dto';
 import { CheckJourneyReqDTO } from '../dto/journeyCheck/journeyCheck.dto';
 import { RecordJourneyReqDTO } from '../dto/journeyRecord/journeyRecord.dto';
+import { is1DArray } from 'src/common/util/coordinate.util';
 
 @Injectable()
 export class JourneyService {
@@ -128,17 +132,26 @@ export class JourneyService {
   }
 
   async checkJourney(checkJourneyDTO) {
-    const { userId, minCoordinate, maxCoordinate } = checkJourneyDTO;
+    let { userId, minCoordinate, maxCoordinate } = checkJourneyDTO;
+    if (!(Array.isArray(minCoordinate) && Array.isArray(maxCoordinate))) {
+      throw new coordinateNotCorrectException();
+    }
+    minCoordinate = minCoordinate.map((item) => Number(item));
+    maxCoordinate = maxCoordinate.map((item) => Number(item));
+
+    if (!(is1DArray(minCoordinate) && is1DArray(maxCoordinate))) {
+      throw new coordinateNotCorrectException();
+    }
     const user = await this.userModel.findOne({ userId }).lean();
     if (!user) {
       throw new UserNotFoundException();
     }
     const journeys = user.journeys;
     const boundingBox = turf.bboxPolygon([
-      parseFloat(minCoordinate[0]),
-      parseFloat(minCoordinate[1]),
-      parseFloat(maxCoordinate[0]),
-      parseFloat(maxCoordinate[1]),
+      minCoordinate[0],
+      minCoordinate[1],
+      maxCoordinate[0],
+      maxCoordinate[1],
     ]);
     // console.log(boundingBox);
     const journeyList = await this.findMinMaxCoordinates(boundingBox, journeys);
