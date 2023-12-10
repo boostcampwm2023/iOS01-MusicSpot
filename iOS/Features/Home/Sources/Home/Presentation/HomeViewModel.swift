@@ -76,7 +76,6 @@ public final class HomeViewModel {
                 let result = await self.journeyRepository.startJourney(at: coordinate, userID: userID)
                 switch result {
                 case .success(let recordingJourney):
-                    print(recordingJourney)
                     self.state.recordingJourney.send(recordingJourney)
                 case .failure(let error):
                     MSLogger.make(category: .home).error("\(error)")

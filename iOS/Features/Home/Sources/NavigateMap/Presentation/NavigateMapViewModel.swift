@@ -11,6 +11,7 @@ import Foundation
 
 import MSData
 import MSDomain
+import MSLogger
 
 public final class NavigateMapViewModel {
     

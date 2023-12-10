@@ -193,15 +193,6 @@ public final class NavigateMapViewController: UIViewController {
                                                      for: annotation)
     }
     
-    @MainActor
-    func addAnnotation(title: String, coordinate: CLLocationCoordinate2D, photoData: Data) {
-        let annotation = CustomAnnotation(title: title,
-                                          coordinate: coordinate,
-                                          photoData: photoData)
-        // mapView에 Annotation 추가
-        self.mapView.addAnnotation(annotation)
-    }
-    
     func createPolyLine(coordinates: [Coordinate]) {
         let locations = coordinates.map { coordinate in
             return CLLocation(latitude: coordinate.latitude,
@@ -218,7 +209,17 @@ public final class NavigateMapViewController: UIViewController {
         self.mapView.addOverlay(polyline)
     }
     
+    @MainActor
+    func addAnnotation(title: String, coordinate: CLLocationCoordinate2D, photoData: Data) {
+        let annotation = CustomAnnotation(title: title,
+                                          coordinate: coordinate,
+                                          photoData: photoData)
+        // mapView에 Annotation 추가
+        self.mapView.addAnnotation(annotation)
+    }
+    
     public func addAnnotations(journeys: [Journey]) {
+        self.mapView.removeAnnotations(self.mapView.annotations)
         let datas = journeys.flatMap { journey in
             journey.spots.map { (location: journey.title, spot: $0) }
         }
@@ -236,10 +237,9 @@ public final class NavigateMapViewController: UIViewController {
                         
                         let coordinate = CLLocationCoordinate2D(latitude: spot.coordinate.latitude,
                                                                 longitude: spot.coordinate.longitude)
-                        
                         await self.addAnnotation(title: location,
-                                                         coordinate: coordinate,
-                                                         photoData: photoData)
+                                                 coordinate: coordinate,
+                                                 photoData: photoData)
                         
                         return true
                     }
@@ -248,7 +248,7 @@ public final class NavigateMapViewController: UIViewController {
         }
     }
     
-    func drawPolyLines(journeys: [Journey]) {
+    public func drawPolyLines(journeys: [Journey]) {
         journeys.forEach { journey in
             Task {
                 self.createPolyLine(coordinates: journey.coordinates)
@@ -315,15 +315,16 @@ extension NavigateMapViewController: CLLocationManagerDelegate {
     
     public func locationManager(_ manager: CLLocationManager,
                                 didUpdateLocations locations: [CLLocation]) {
+        
         guard let newCurrentLocation = locations.last,
               self.timeRemaining == 0 && self.isRecording,
               let previousCoordinate = self.previousCoordinate,
               self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate,
                                              coordinate2: newCurrentLocation.coordinate) else {
+            
             return
         }
-        print(self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate,
-                                             coordinate2: newCurrentLocation.coordinate))
+        
         let coordinate = Coordinate(latitude: newCurrentLocation.coordinate.latitude,
                                      longitude: newCurrentLocation.coordinate.longitude)
         recordCoordinates(journey: RecordingJourney(id: self.viewModel.state.journeyID.value!,
@@ -368,7 +369,6 @@ extension NavigateMapViewController: MKMapViewDelegate {
                                                                for: annotation)
         return annotationView
     }
-    
 }
 
 // MARK: - ButtonView
