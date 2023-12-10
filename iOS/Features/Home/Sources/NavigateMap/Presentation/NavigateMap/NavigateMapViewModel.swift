@@ -51,22 +51,6 @@ public final class NavigateMapViewModel: MapViewModel {
             self.state.locationShouldAuthorized.send(true)
         case .visibleJourneysDidUpdated(let visibleJourneys):
             self.state.visibleJourneys.send(visibleJourneys)
-            //        case .locationDidUpdated(let newCurrentCoordinate):
-            //            self.state.previousCoordinate.send(self.state.currentCoordinate.value)
-            //            self.state.currentCoordinate.send(newCurrentCoordinate)
-            //        case .recordCoordinate(let recordJourney):
-            //            Task {
-            //                let result = await self.journeyRepository.recordJourney(journeyID: recordJourney.id,
-            //                                                                        at: recordJourney.coordinates)
-            //                switch result {
-            //                case .success(let journey):
-            //                    self.state.journeyID.send(journey.id)
-            //                    self.state.recordingCoordinates.send(journey.coordinates)
-            //                case .failure(let error):
-            //                    MSLogger.make(category: .home).error("\(error)")
-            //                }
-            //            }
-            //        }
         }
     }
     

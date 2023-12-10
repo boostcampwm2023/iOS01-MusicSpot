@@ -142,27 +142,6 @@ public final class MapViewController: UIViewController {
         if let recordJourneyViewModel = viewModel as? RecordJourneyViewModel {
             self.bind(recordJourneyViewModel)
         }
-        
-//        self.viewModel.state.locationShouldAuthorized
-//            .sink { [weak self] _ in
-//                self?.locationManager.requestWhenInUseAuthorization()
-//            }
-//            .store(in: &self.cancellables)
-//        
-//        self.viewModel.state.previousCoordinate
-//            .zip(self.viewModel.state.currentCoordinate)
-//            .compactMap { previousCoordinate, currentCoordinate -> (CLLocationCoordinate2D, CLLocationCoordinate2D)? in
-//                guard let previousCoordinate = previousCoordinate,
-//                      let currentCoordinate = currentCoordinate else {
-//                    return nil
-//                }
-//                return (previousCoordinate, currentCoordinate)
-//            }
-//            .sink { [weak self] previousCoordinate, currentCoordinate in
-//                let points = [previousCoordinate, currentCoordinate]
-//                self?.drawPolylineToMap(using: points)
-//            }
-//            .store(in: &self.cancellables)
     }
     
     private func bind(_ viewModel: NavigateMapViewModel) {
@@ -176,7 +155,21 @@ public final class MapViewController: UIViewController {
     }
     
     private func bind(_ viewModel: RecordJourneyViewModel) {
-        
+        viewModel.state.previousCoordinate
+            .zip(viewModel.state.currentCoordinate)
+            .print()
+            .compactMap { previousCoordinate, currentCoordinate -> (CLLocationCoordinate2D, CLLocationCoordinate2D)? in
+                guard let previousCoordinate = previousCoordinate,
+                      let currentCoordinate = currentCoordinate else {
+                    return nil
+                }
+                return (previousCoordinate, currentCoordinate)
+            }
+            .sink { [weak self] previousCoordinate, currentCoordinate in
+                let points = [previousCoordinate, currentCoordinate]
+                self?.drawPolylineToMap(using: points)
+            }
+            .store(in: &self.cancellables)
     }
     
     // MARK: - Functions: Annotation
@@ -294,16 +287,20 @@ extension MapViewController: CLLocationManagerDelegate {
     
     public func locationManager(_ manager: CLLocationManager,
                                 didUpdateLocations locations: [CLLocation]) {
-//        guard let newCurrentLocation = locations.last,
-//              self.timeRemaining == .zero && self.viewModel.state.isRecording.value
-//              let previousCoordinate = self.viewModel.state.previousCoordinate.value
+        guard let newCurrentLocation = locations.last,
+              let recordJourneyViewModel = self.viewModel as? RecordJourneyViewModel else {
+            return
+        }
+//              self.timeRemaining == .zero
 //              self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate,
 //                                             coordinate2: newCurrentLocation.coordinate) else {
 //        else {
 //            return
 //        }
         
-//        self.viewModel.trigger(.locationDidUpdated(newCurrentLocation.coordinate))
+        let coordinate2D = CLLocationCoordinate2D(latitude: newCurrentLocation.coordinate.latitude,
+                                                  longitude: newCurrentLocation.coordinate.longitude)
+        recordJourneyViewModel.trigger(.locationDidUpdated(coordinate2D))
     }
     
     /// iOS 버젼에 따른 분기 처리 후 'iOS 위치 서비스 사용 중 여부' 확인

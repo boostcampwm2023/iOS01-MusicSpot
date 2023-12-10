@@ -119,21 +119,18 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     
     public func recordJourney(journeyID: String,
                               at coordinates: [Coordinate]) async -> Result<RecordingJourney, Error> {
-        let coordinatesDTO = coordinates.map { coordinate in
-            CoordinateDTO(coordinate)
-        }
+        let coordinatesDTO = coordinates.map { CoordinateDTO($0) }
         let requestDTO = RecordCoordinateRequestDTO(journeyID: journeyID, coordinates: coordinatesDTO)
         let router = JourneyRouter.recordCoordinate(dto: requestDTO)
         let result = await self.networking.request(RecordCoordinateRequestDTO.self, router: router)
         switch result {
         case .success(let responseDTO):
-            let coordinates = RecordingJourney(id: responseDTO.journeyID,
+            let coordinates = responseDTO.coordinates.map { $0.toDomain() }
+            let recordingJourney = RecordingJourney(id: responseDTO.journeyID,
                                                startTimestamp: Date(),
                                                spots: [],
-                                               coordinates: responseDTO.coordinates.map({ coordinate in
-                coordinate.toDomain()
-            }))
-            return .success(coordinates)
+                                               coordinates: coordinates)
+            return .success(recordingJourney)
         case .failure(let error):
             return .failure(error)
         }

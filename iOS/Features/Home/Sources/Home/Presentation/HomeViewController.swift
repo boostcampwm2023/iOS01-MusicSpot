@@ -200,8 +200,9 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
     public func backButtonDidTap(_ button: MSRectButton) {
         guard self.viewModel.state.isRecording.value == true else { return }
         
-        self.updateButtonMode(isRecording: true)
         self.contentViewController.clearOverlays()
+        self.updateButtonMode(isRecording: false)
+        self.contentViewController.journeyDidCancelled()
         // TODO: 여정 취소
     }
     

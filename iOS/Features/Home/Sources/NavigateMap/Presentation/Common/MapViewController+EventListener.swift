@@ -7,6 +7,7 @@
 
 import Foundation
 
+import MSData
 import MSDomain
 
 // MARK: - NavigateMap
@@ -26,8 +27,13 @@ extension MapViewController {
 extension MapViewController {
     
     public func journeyDidStarted(_ startedJourney: RecordingJourney) {
-        let viewModel = RecordJourneyViewModel(startedJourney: startedJourney)
+        let journeyRepository = JourneyRepositoryImplementation()
+        let viewModel = RecordJourneyViewModel(startedJourney: startedJourney, journeyRepository: journeyRepository)
         self.swapViewModel(to: viewModel)
+    }
+    
+    public func journeyDidCancelled() {
+        
     }
     
 }
