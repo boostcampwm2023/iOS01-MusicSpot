@@ -36,7 +36,6 @@ private enum Dependency {
     static let msLogger = "MSLogger"
     static let msUserDefaults = "MSUserDefaults"
     static let msFoundation = "MSFoundation"
-    static let msPersistentStorage = "MSPersistentStorage"
     
 }
 
