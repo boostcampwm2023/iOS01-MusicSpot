@@ -1,0 +1,35 @@
+name: Music Spot Project
+
+
+on:
+  push:
+    branches: ["BE/release"]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the Docker image
+        run: |
+          cd BE/musicspot
+          docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_TOKEN}}
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{github.sha}} ./
+          docker images
+          docker push ${{secrets.DOCKER_USERNAME}}/${{secrets.DOCKER_REPO}}:${{github.sha}}
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_VPC_HOST }}
+          username: ${{ secrets.SERVER_VPC_USERNAME }}
+          key: ${{ secrets.SERVER_VPC_KEY }}
+          port: ${{ secrets.SERVER_VPC_PORT }}
+          script: |
+            mkdir a
+            cd compose
+            echo ${{ secrets.SERVER_VPC_PASSWORD }} | sudo -S docker rm -f $(sudo docker ps -qa)
+            echo ${{ secrets.SERVER_VPC_PASSWORD }} | sudo -S docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
+            echo ${{ secrets.SERVER_VPC_PASSWORD }} | sudo -S docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{github.sha}}
+            echo ${{ secrets.SERVER_VPC_PASSWORD }} | sudo -S docker tag ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:${{github.sha}} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO}}:latest
+            echo ${{ secrets.SERVER_VPC_PASSWORD }} | sudo -S docker compose up -d
+            echo ${{ secrets.SERVER_VPC_PASSWORD }} | sudo -S docker image prune -af
