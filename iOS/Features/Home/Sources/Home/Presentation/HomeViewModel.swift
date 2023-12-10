@@ -60,10 +60,10 @@ public final class HomeViewModel {
     func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
-            #if DEBUG
-            self.isFirstLaunch = true
-            try? self.keychain.deleteAll()
-            #endif
+//            #if DEBUG
+//            self.isFirstLaunch = true
+//            try? self.keychain.deleteAll()
+//            #endif
             let firstLaunchMessage = self.isFirstLaunch ? "앱이 처음 실행되었습니다." : "앱 첫 실행이 아닙니다."
             MSLogger.make(category: .userDefaults).log("\(firstLaunchMessage)")
             
@@ -76,6 +76,7 @@ public final class HomeViewModel {
                 let result = await self.journeyRepository.startJourney(at: coordinate, userID: userID)
                 switch result {
                 case .success(let recordingJourney):
+                    print(recordingJourney)
                     self.state.recordingJourney.send(recordingJourney)
                 case .failure(let error):
                     MSLogger.make(category: .home).error("\(error)")
