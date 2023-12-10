@@ -10,6 +10,7 @@ import Foundation
 
 import MSData
 import MSDomain
+import MSLogger
 
 public final class JourneyListViewModel {
     
@@ -40,7 +41,9 @@ public final class JourneyListViewModel {
     public func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
-            print("ViewNeedsLoaded")
+            #if DEBUG
+            MSLogger.make(category: .journeyList).debug("View Did Load.")
+            #endif
         case .visibleJourneysDidUpdated(let visibleJourneys):
             self.state.journeys.send(visibleJourneys)
         }

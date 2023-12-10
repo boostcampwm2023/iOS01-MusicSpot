@@ -10,11 +10,9 @@ import CoreLocation
 import MapKit
 import UIKit
 
-import MSData
 import MSDomain
 import MSImageFetcher
 import MSLogger
-import MSNetworking
 import MSUIKit
 
 public final class MapViewController: UIViewController {
@@ -157,7 +155,6 @@ public final class MapViewController: UIViewController {
     private func bind(_ viewModel: RecordJourneyViewModel) {
         viewModel.state.previousCoordinate
             .zip(viewModel.state.currentCoordinate)
-            .print()
             .compactMap { previousCoordinate, currentCoordinate -> (CLLocationCoordinate2D, CLLocationCoordinate2D)? in
                 guard let previousCoordinate = previousCoordinate,
                       let currentCoordinate = currentCoordinate else {
@@ -291,12 +288,6 @@ extension MapViewController: CLLocationManagerDelegate {
               let recordJourneyViewModel = self.viewModel as? RecordJourneyViewModel else {
             return
         }
-//              self.timeRemaining == .zero
-//              self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate,
-//                                             coordinate2: newCurrentLocation.coordinate) else {
-//        else {
-//            return
-//        }
         
         let coordinate2D = CLLocationCoordinate2D(latitude: newCurrentLocation.coordinate.latitude,
                                                   longitude: newCurrentLocation.coordinate.longitude)
@@ -344,10 +335,8 @@ extension MapViewController: CLLocationManagerDelegate {
     
     private func isDistanceOver5AndUnder50(coordinate1: CLLocationCoordinate2D,
                                            coordinate2: CLLocationCoordinate2D) -> Bool {
-        let location1 = CLLocation(latitude: coordinate1.latitude,
-                                   longitude: coordinate1.longitude)
-        let location2 = CLLocation(latitude: coordinate2.latitude,
-                                   longitude: coordinate2.longitude)
+        let location1 = CLLocation(latitude: coordinate1.latitude, longitude: coordinate1.longitude)
+        let location2 = CLLocation(latitude: coordinate2.latitude, longitude: coordinate2.longitude)
         return 5 <= location1.distance(from: location2) && location1.distance(from: location2) <= 50
     }
     
@@ -360,9 +349,7 @@ extension MapViewController: MKMapViewDelegate {
     /// 현재까지의 polyline들을 지도 위에 그림
     public func mapView(_ mapView: MKMapView,
                         rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        guard let polyLine = overlay as? MKPolyline else {
-            return MKOverlayRenderer()
-        }
+        guard let polyLine = overlay as? MKPolyline else { return MKOverlayRenderer() }
         
         let renderer = MKPolylineRenderer(polyline: polyLine)
         renderer.strokeColor = .msColor(.musicSpot)
@@ -381,9 +368,8 @@ extension MapViewController: MKMapViewDelegate {
                                          reuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
         }
         
-        let annotationView: MKAnnotationView?
-        annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: CustomAnnotationView.identifier,
-                                                               for: annotation)
+        let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: CustomAnnotationView.identifier,
+                                                                   for: annotation)
         return annotationView
     }
     

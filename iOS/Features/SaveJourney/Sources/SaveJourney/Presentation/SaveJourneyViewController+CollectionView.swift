@@ -172,11 +172,6 @@ extension SaveJourneyViewController: UICollectionViewDelegate {
             self.mapViewHeightConstraint?.constant += stretchingSize
         }
         
-        #if DEBUG
-        let constraint = self.mapViewHeightConstraint?.constant
-        print(self.mapView.frame.height)
-        MSLogger.make(category: .uiKit).debug("\(constraint!)")
-        #endif
         self.view.layoutIfNeeded()
     }
     
