@@ -64,7 +64,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     public func fetchJourneyList(userID: UUID,
                                  minCoordinate: Coordinate,
                                  maxCoordinate: Coordinate) async -> Result<[Journey], Error> {
-#if MOCK
+        #if MOCK
         guard let jsonURL = Bundle.module.url(forResource: "MockJourney", withExtension: "json") else {
             return .failure((MSNetworkError.invalidRouter))
         }
@@ -79,7 +79,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         } catch {
             return .failure(error)
         }
-#else
+        #else
         let router = JourneyRouter.checkJourney(userID: userID,
                                                 minCoordinate: CoordinateDTO(minCoordinate),
                                                 maxCoordinate: CoordinateDTO(maxCoordinate))
@@ -90,12 +90,12 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         case .failure(let error):
             return .failure(error)
         }
-#endif
+        #endif
     }
     
     public mutating func startJourney(at coordinate: Coordinate,
                                       userID: UUID) async -> Result<RecordingJourney, Error> {
-#if MOCK
+        #if MOCK
         let recordingJourneyID = "657537c178b6463b9f810371"
         let recordingJourney = RecordingJourney(id: recordingJourneyID,
                                                 startTimestamp: .now,
@@ -103,7 +103,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                                                 coordinates: [])
         self.recordingJourneyID = recordingJourneyID
         return .success(recordingJourney)
-#else
+        #else
         let requestDTO = StartJourneyRequestDTO(coordinate: CoordinateDTO(coordinate),
                                                 startTimestamp: .now,
                                                 userID: userID)
@@ -120,19 +120,19 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
             self.saveToLocal(value: recordingJourney.startTimestamp)
             
             self.recordingJourneyID = recordingJourney.id
-#if DEBUG
+            #if DEBUG
             if let recordingJourneyID = self.recordingJourneyID {
                 MSLogger.make(category: .userDefaults).debug("기록중인 여정 정보가 저장되었습니다: \(recordingJourneyID)")
             } else {
                 MSLogger.make(category: .userDefaults).error("기록중인 여정 정보 저장에 실패했습니다.")
             }
-#endif
+            #endif
             
             return .success(recordingJourney)
         case .failure(let error):
             return .failure(error)
         }
-#endif
+        #endif
     }
     
     public func recordJourney(journeyID: String,
@@ -186,14 +186,6 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         case .failure(let error):
             return .failure(error)
         }
-    }
-    
-    public func saveToLocal(value: Codable) {
-        
-    }
-    
-    public func loadJourneyFromLocal() -> RecordingJourney? {
-        return nil
     }
     
 }

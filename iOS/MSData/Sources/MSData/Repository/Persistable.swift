@@ -15,7 +15,8 @@ public protocol Persistable {
     
     var storage: MSPersistentStorage { get }
     
-    func saveToLocal(value: Codable)
+    @discardableResult
+    func saveToLocal(value: Codable) -> Bool
     func loadJourneyFromLocal() -> RecordingJourney?
     
 }
