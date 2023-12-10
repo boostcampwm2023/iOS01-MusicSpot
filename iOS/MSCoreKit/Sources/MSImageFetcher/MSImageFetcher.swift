@@ -36,6 +36,7 @@ public final class MSImageFetcher {
     /// - Parameters:
     ///   - photoURL: 가져올 사진의 URL
     ///   - key: 사진의 캐싱을 처리하기 위한 key 값
+    @discardableResult
     public func fetchImage(from photoURL: URL,
                            forKey key: String) async -> Data? {
         // 1. 캐싱된 값이 있는 지 확인합니다.

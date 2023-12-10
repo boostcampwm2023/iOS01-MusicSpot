@@ -62,6 +62,7 @@ public final class MapViewController: UIViewController {
     
     // MARK: - Properties
     
+    public weak var delegate: MapViewControllerDelegate?
     var viewModel: (any MapViewModel)?
     
     private let locationManager = CLLocationManager()
@@ -115,7 +116,6 @@ public final class MapViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        guard let viewModel = self.viewModel else { return }
         self.configureLayout()
         self.configureCoreLocation()
         self.bind(viewModel)
@@ -130,7 +130,7 @@ public final class MapViewController: UIViewController {
         self.bind(viewModel)
     }
     
-    private func bind(_ viewModel: any MapViewModel) {
+    private func bind(_ viewModel: (any MapViewModel)?) {
         self.viewModel = viewModel
         
         if let navigateMapViewModel = viewModel as? NavigateMapViewModel {
@@ -171,10 +171,9 @@ public final class MapViewController: UIViewController {
     
     // MARK: - Functions: Annotation
     
-    // 식별자를 갖고 Annotation view 생성
+    /// 식별자를 갖고 Annotation view 생성
     func addAnnotationView(using annotation: CustomAnnotation,
                            on mapView: MKMapView) -> MKAnnotationView {
-        // dequeueReusableAnnotationView: 식별자를 확인하여 사용가능한 뷰가 있으면 해당 뷰를 반환
         return mapView.dequeueReusableAnnotationView(withIdentifier: CustomAnnotationView.identifier,
                                                      for: annotation)
     }
@@ -317,7 +316,6 @@ extension MapViewController: CLLocationManagerDelegate {
         recordJourneyViewModel.trigger(.locationDidUpdated(coordinate2D))
     }
     
-    /// iOS 버젼에 따른 분기 처리 후 'iOS 위치 서비스 사용 중 여부' 확인
     private func handleAuthorizationChange(_ manager: CLLocationManager) {
         switch manager.authorizationStatus {
         case .notDetermined:
@@ -396,26 +394,27 @@ extension MapViewController: MKMapViewDelegate {
         return annotationView
     }
     
+    public func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
+        self.delegate?.mapViewControllerDidChangeVisibleRegion(self)
+    }
+    
 }
 
 // MARK: - ButtonView
 
 extension MapViewController: ButtonStackViewDelegate {
     
-    /// 현재 지도에서 보이는 범위 내의 모든 Spot들을 보여줌.
     public func mapButtonDidTap() {
         MSLogger.make(category: .navigateMap).debug("현재 지도에서 보이는 범위 내의 모든 Spot들을 보여줍니다.")
     }
     
-    /// 현재 내 위치를 중앙에 위치.
     public func userLocationButtonDidTap() {
         switch self.mapView.userTrackingMode {
         case .none, .followWithHeading:
             self.mapView.setUserTrackingMode(.follow, animated: true)
         case .follow:
             self.mapView.setUserTrackingMode(.followWithHeading, animated: true)
-        @unknown default:
-            break
+        @unknown default: break
         }
     }
     

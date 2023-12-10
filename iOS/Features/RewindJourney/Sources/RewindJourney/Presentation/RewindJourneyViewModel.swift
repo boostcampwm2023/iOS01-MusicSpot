@@ -9,6 +9,8 @@ import Foundation
 import Combine
 
 import MSData
+import MSExtension
+import MSImageFetcher
 import MSLogger
 
 public final class RewindJourneyViewModel {
@@ -20,25 +22,31 @@ public final class RewindJourneyViewModel {
     }
     
     public struct State {
-        var stateJourneyPhotoURLs = CurrentValueSubject<[URL], Never>([])
+        // Passthrough
+        let timerPublisher = PassthroughSubject<Void, Never>()
+        
+        // CurrentValue
+        public let photoURLs: CurrentValueSubject<[URL], Never>
     }
     
     // MARK: - Properties
     
-    private var subscriber: Set<AnyCancellable> = []
     private let repository: SpotRepository
-    public var state = State()
+    
+    public var state: State
+    
+    private var subscriber: Set<AnyCancellable> = []
     
     // MARK: - Properties: Timer
     
     private let timerTimeInterval: Double = 4.0
-    internal let timerPublisher = PassthroughSubject<Void, Never>()
     private var timer: AnyCancellable?
     
     // MARK: - Initializer
     
-    public init(repository: SpotRepository) {
+    public init(photoURLs: [URL], repository: SpotRepository) {
         self.repository = repository
+        self.state = State(photoURLs: CurrentValueSubject<[URL], Never>(photoURLs))
     }
     
 }
@@ -51,15 +59,14 @@ extension RewindJourneyViewModel {
         switch action {
         case .viewNeedsLoaded:
             Task {
-                let result = await self.repository.fetchRecordingSpots()
-                switch result {
-                case .success(let spots):
-                    let photoURLs = spots.map { $0.photoURL }
-                    self.state.stateJourneyPhotoURLs.send(photoURLs)
-                case .failure(let error):
-                    #if DEBUG
-                    MSLogger.make(category: .saveJourney).error("\(error)")
-                    #endif
+                let photoURLs = self.state.photoURLs.value
+                
+                for photoURL in photoURLs {
+                    await withTaskGroup(of: Void.self) { group in
+                        group.addTask {
+                            await MSImageFetcher.shared.fetchImage(from: photoURL, forKey: photoURL.paath())
+                        }
+                    }
                 }
             }
         case .startAutoPlay:
@@ -76,10 +83,10 @@ extension RewindJourneyViewModel {
 private extension RewindJourneyViewModel {
     
     func startTimer() {
-        timer = Timer.publish(every: self.timerTimeInterval, on: .main, in: .common)
+        self.timer = Timer.publish(every: self.timerTimeInterval, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
-                self?.timerPublisher.send()
+                self?.state.timerPublisher.send()
             }
     }
 

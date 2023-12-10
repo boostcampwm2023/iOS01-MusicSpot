@@ -15,8 +15,8 @@ import SelectSong
 
 protocol SelectSongCoordinatorDelegate: AnyObject {
     
-    func popToHomeMap(from coordinator: Coordinator)
-    func popToSearchMusic(from coordinator: Coordinator)
+    func popToHome(from coordinator: Coordinator, with endedJourney: Journey)
+    func popToSelectSong(from coordinator: Coordinator)
     
 }
 
@@ -70,13 +70,12 @@ extension SelectSongCoordinator: SelectSongNavigationDelegate {
 
 extension SelectSongCoordinator: SelectSongCoordinatorDelegate {
     
-    func popToHomeMap(from coordinator: Coordinator) {
+    func popToHome(from coordinator: Coordinator, with endedJourney: Journey) {
         self.childCoordinators.removeAll()
-        self.navigationController.popViewController(animated: true)
-        self.delegate?.popToHome(from: self)
+        self.delegate?.popToHome(from: coordinator)
     }
     
-    func popToSearchMusic(from coordinator: Coordinator) {
+    func popToSelectSong(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()
     }
     

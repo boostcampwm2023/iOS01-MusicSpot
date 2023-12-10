@@ -18,6 +18,7 @@ protocol HomeCoordinatorDelegate: AnyObject {
     
     func popToHome(from coordinator: Coordinator)
     func popToHomeWithSpot(from coordinator: Coordinator, spot: Spot)
+    func popToHome(from coordinator: Coordinator, with endedJourney: Journey)
     
 }
 
@@ -63,6 +64,7 @@ final class HomeCoordinator: Coordinator {
                                                              minimizedDimension: .absolute(100.0))
         homeViewController.configuration = configuration
         homeViewController.navigationDelegate = self
+        navigateMapViewController.delegate = homeViewController
         self.navigationController.pushViewController(homeViewController, animated: true)
     }
     
@@ -92,11 +94,11 @@ extension HomeCoordinator: HomeNavigationDelegate {
 
 extension HomeCoordinator: JourneyListNavigationDelegate {
     
-    func navigateToRewindJourney() {
+    func navigateToRewindJourney(with urls: [URL]) {
         let rewindJourneyCoordinator = RewindJourneyCoordinator(navigationController: self.navigationController)
         rewindJourneyCoordinator.delegate = self
         self.childCoordinators.append(rewindJourneyCoordinator)
-        rewindJourneyCoordinator.start()
+        rewindJourneyCoordinator.start(with: urls)
     }
     
 }
@@ -128,6 +130,16 @@ extension HomeCoordinator: HomeCoordinatorDelegate {
             self?.navigationController.popToViewController(homeViewController, animated: true)
             self?.childCoordinators.removeAll()
         }
+    }
+      
+    func popToHome(from coordinator: Coordinator, with endedJourney: Journey) {
+        guard let viewController = self.navigationController.viewControllers.first(where: {
+            $0 is HomeViewController
+        }) else {
+            return
+        }
+        
+        self.navigationController.popToViewController(viewController, animated: true)
     }
     
 }

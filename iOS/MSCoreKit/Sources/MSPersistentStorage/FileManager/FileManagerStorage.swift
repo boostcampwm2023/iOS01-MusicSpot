@@ -23,7 +23,8 @@ public final class FileManagerStorage: NSObject, MSPersistentStorage {
         dateFormatter.formatOptions = [.withFractionalSeconds, .withTimeZone, .withInternetDateTime]
         encoder.dateEncodingStrategy = .custom({ date, encoder in
             var container = encoder.singleValueContainer()
-            try container.encode(date)
+            let dateString = dateFormatter.string(from: date)
+            try container.encode(dateString)
         })
         return encoder
     }()
@@ -31,7 +32,7 @@ public final class FileManagerStorage: NSObject, MSPersistentStorage {
     private let decoder: JSONDecoder = {
         let decoder = JSONDecoder()
         let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withFractionalSeconds, .withTimeZone, .withInternetDateTime]
+        dateFormatter.formatOptions.insert(.withFractionalSeconds)
         decoder.dateDecodingStrategy = .custom({ decoder in
             let container = try decoder.singleValueContainer()
             let dateString = try container.decode(String.self)
@@ -41,6 +42,7 @@ public final class FileManagerStorage: NSObject, MSPersistentStorage {
             throw DecodingError.dataCorruptedError(in: container,
                                                    debugDescription: "Date 디코딩 실패: \(dateString)")
         })
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
         return decoder
     }()
     
@@ -74,9 +76,19 @@ public final class FileManagerStorage: NSObject, MSPersistentStorage {
         if let path = self.storageURL()?.path,
            let contents = try? self.fileManager.contentsOfDirectory(atPath: path) {
             let allDecodedData: [T] = contents.compactMap { content in
-                guard let dataPath = URL(string: (path as NSString).appendingPathComponent(content)),
-                      let data = try? Data(contentsOf: dataPath),
-                      let decodedData = try? self.decoder.decode(T.self, from: data) else { return nil }
+                let key = String(content.dropLast(".json".count))
+                guard let dataPath =
+                        fileURL(forKey: key) else {
+                    MSLogger.make(category: .fileManager).error("경로의 Data를 가져오지 못하였습니다.")
+                    return nil
+                }
+                MSLogger.make(category: .fileManager).error("경로의 Data를 성공적으로 가져왔습니다.")
+                
+                guard let data = try? Data(contentsOf: dataPath),
+                      let decodedData = try? self.decoder.decode(T.self, from: data) else {
+                    MSLogger.make(category: .fileManager).error("decode에 실패하였습니다.")
+                    return nil
+                }
                 return decodedData
             }
             return allDecodedData

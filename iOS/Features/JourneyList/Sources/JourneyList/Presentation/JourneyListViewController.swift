@@ -204,10 +204,9 @@ extension JourneyListViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView,
                                didSelectItemAt indexPath: IndexPath) {
         guard let journey = self.dataSource?.itemIdentifier(for: indexPath) else { return }
-        let spotPhotoURLs = journey.spots.map { $0.photoURL }
         
-        // TODO: Spot PhotoURL 주입
-        self.navigationDelegate?.navigateToRewindJourney()
+        let spotPhotoURLs = journey.spots.map { $0.photoURL }
+        self.navigationDelegate?.navigateToRewindJourney(with: spotPhotoURLs)
     }
     
 }

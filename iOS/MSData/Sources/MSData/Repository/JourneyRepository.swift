@@ -10,11 +10,12 @@ import Foundation
 
 import MSConstants
 import MSDomain
+import MSLogger
 import MSNetworking
 import MSPersistentStorage
 import MSUserDefaults
 
-public protocol JourneyRepository {
+public protocol JourneyRepository: Persistable {
     
     func fetchRecordingJourneyID() -> String?
     func fetchRecordingJourney(forID id: String) -> RecordingJourney?
@@ -24,6 +25,7 @@ public protocol JourneyRepository {
     mutating func startJourney(at coordinate: Coordinate, userID: UUID) async -> Result<RecordingJourney, Error>
     mutating func endJourney(_ journey: Journey) async -> Result<String, Error>
     func recordJourney(journeyID: String, at coordinates: [Coordinate]) async -> Result<RecordingJourney, Error>
+    mutating func deleteJourney(_ journey: RecordingJourney, userID: UUID) async -> Result<String, Error>
     
 }
 
@@ -32,7 +34,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     // MARK: - Properties
     
     private let networking: MSNetworking
-    private let persistent: MSPersistentStorage
+    public let storage: MSPersistentStorage
     
     @UserDefaultsWrapped(UserDefaultsKey.recordingJourneyID, defaultValue: nil)
     private var recordingJourneyID: String?
@@ -40,19 +42,23 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     // MARK: - Initializer
     
     public init(session: URLSession = URLSession(configuration: .default),
-                fileManager: FileManager = FileManager()) {
+                persistentStorage: MSPersistentStorage = FileManagerStorage()) {
         self.networking = MSNetworking(session: session)
-        self.persistent = FileManagerStorage(fileManager: fileManager)
+        self.storage = persistentStorage
     }
     
     // MARK: - Functions
     
     public func fetchRecordingJourneyID() -> String? {
-        return self.recordingJourneyID
+        guard let recordingJourneyID = self.recordingJourneyID else {
+            MSLogger.make(category: .userDefaults).error("기록 중인 여정 정보를 가져오는데 실패했습니다.")
+            return nil
+        }
+        return recordingJourneyID
     }
     
     public func fetchRecordingJourney(forID id: String) -> RecordingJourney? {
-        return self.persistent.get(RecordingJourneyDTO.self, forKey: id)?.toDomain()
+        return self.storage.get(RecordingJourneyDTO.self, forKey: id)?.toDomain()
     }
     
     public func fetchJourneyList(userID: UUID,
@@ -109,7 +115,19 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                                                     startTimestamp: responseDTO.startTimestamp,
                                                     spots: [],
                                                     coordinates: [responseDTO.coordinate.toDomain()])
+            
+            self.saveToLocal(value: recordingJourney.id)
+            self.saveToLocal(value: recordingJourney.startTimestamp)
+            
             self.recordingJourneyID = recordingJourney.id
+            #if DEBUG
+            if let recordingJourneyID = self.recordingJourneyID {
+                MSLogger.make(category: .userDefaults).debug("기록중인 여정 정보가 저장되었습니다: \(recordingJourneyID)")
+            } else {
+                MSLogger.make(category: .userDefaults).error("기록중인 여정 정보 저장에 실패했습니다.")
+            }
+            #endif
+            
             return .success(recordingJourney)
         case .failure(let error):
             return .failure(error)
@@ -127,9 +145,12 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         case .success(let responseDTO):
             let coordinates = responseDTO.coordinates.map { $0.toDomain() }
             let recordingJourney = RecordingJourney(id: responseDTO.journeyID,
-                                               startTimestamp: Date(),
-                                               spots: [],
-                                               coordinates: coordinates)
+                                                    startTimestamp: Date(),
+                                                    spots: [],
+                                                    coordinates: coordinates)
+            
+            responseDTO.coordinates.forEach { self.saveToLocal(value: $0) }
+            
             return .success(recordingJourney)
         case .failure(let error):
             return .failure(error)
@@ -144,6 +165,20 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                                               song: SongDTO(journey.music))
         let router = JourneyRouter.endJourney(dto: requestDTO)
         let result = await self.networking.request(EndJourneyResponseDTO.self, router: router)
+        switch result {
+        case .success(let responseDTO):
+            self.recordingJourneyID = nil
+            return .success(responseDTO.id)
+        case .failure(let error):
+            return .failure(error)
+        }
+    }
+    
+    public mutating func deleteJourney(_ recordingJourney: RecordingJourney,
+                                       userID: UUID) async -> Result<String, Error> {
+        let requestDTO = DeleteJourneyRequestDTO(userID: userID, journeyID: recordingJourney.id)
+        let router = JourneyRouter.deleteJourney(dto: requestDTO)
+        let result = await self.networking.request(DeleteJourneyResponseDTO.self, router: router)
         switch result {
         case .success(let responseDTO):
             self.recordingJourneyID = nil
