@@ -8,11 +8,14 @@
 import Foundation
 import MusicKit
 
+import MSLogger
 import MSNetworking
 
 public protocol SongRepository {
     
     func fetchSongList(with term: String) async -> Result<MusicItemCollection<Song>, Error>
+    @available(iOS 16.0, *)
+    func fetchSongListByRank() async -> Result<MusicItemCollection<Song>, Error>
     
 }
 
@@ -29,9 +32,9 @@ public struct SongRepositoryImplementation: SongRepository {
     // MARK: - Functions
     
     public func fetchSongList(with term: String) async -> Result<MusicItemCollection<Song>, Error> {
-        #if DEBUG
+        #if MOCK
         guard let jsonURL = Bundle.module.url(forResource: "MockSong", withExtension: "json") else {
-            return .failure((MSNetworkError.invalidRouter))
+            return .failure(MSNetworkError.invalidRouter)
         }
         
         do {
@@ -41,20 +44,32 @@ public struct SongRepositoryImplementation: SongRepository {
                 return .success(result.songs)
             }
         } catch {
-            print(error)
+            return .failure(error)
         }
         #else
         var searchRequest = MusicCatalogSearchRequest(term: term, types: [Song.self])
         searchRequest.limit = 10
+        if #available(iOS 16.0, *) {
+            searchRequest.includeTopResults = true
+        }
         do {
             let searchResponse = try await searchRequest.response()
             return .success(searchResponse.songs)
         } catch {
-            print(error)
+            return .failure(error)
         }
         #endif
-        
-        return .failure(MSNetworkError.unknownResponse)
+    }
+    
+    @available(iOS 16.0, *)
+    public func fetchSongListByRank() async -> Result<MusicItemCollection<Song>, Error> {
+        let request = MusicCatalogChartsRequest(kinds: [.cityTop], types: [Song.self])
+        do {
+            let searchResponse = try await request.response()
+            return .success(searchResponse.songCharts.first!.items)
+        } catch {
+            return .failure(error)
+        }
     }
     
 }

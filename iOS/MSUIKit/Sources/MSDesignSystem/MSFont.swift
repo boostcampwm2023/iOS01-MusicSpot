@@ -41,7 +41,6 @@ public enum MSFont {
         guard let fontURL = bundle.url(forResource: fontName, withExtension: fontExtension),
               let fontDataProvider = CGDataProvider(url: fontURL as CFURL),
               let font = CGFont(fontDataProvider) else {
-            print("Couldn't find font \(fontName)")
             return
         }
         
@@ -67,7 +66,6 @@ public extension UIFont {
         if let font = font.font() {
             return font
         } else {
-            print("can't find msFont. use default font")
             return nil
         }
     }

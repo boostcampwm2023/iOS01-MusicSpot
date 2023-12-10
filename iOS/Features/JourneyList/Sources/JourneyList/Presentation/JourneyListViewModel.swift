@@ -9,18 +9,19 @@ import Combine
 import Foundation
 
 import MSData
+import MSDomain
+import MSLogger
 
 public final class JourneyListViewModel {
     
     public enum Action {
         case viewNeedsLoaded
-        case fetchJourney(at: Coordinate)
+        case visibleJourneysDidUpdated([Journey])
     }
     
     public struct State {
-        var journeys = CurrentValueSubject<[Journey], Never>([])
-        
-        public init() { }
+        // CurrentValue
+        public var journeys = CurrentValueSubject<[Journey], Never>([])
     }
     
     // MARK: - Properties
@@ -37,22 +38,14 @@ public final class JourneyListViewModel {
     
     // MARK: - Functions
     
-    func trigger(_ action: Action) {
+    public func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
-            Task {
-                let result = await self.repository.fetchJourneyList()
-                
-                switch result {
-                case .success(let journeys):
-                    let journeys = journeys.map { Journey(dto: $0) }
-                    self.state.journeys.send(journeys)
-                case .failure(let error):
-                    print(error)
-                }
-            }
-        case .fetchJourney(let coordinate):
-            print(coordinate)
+            #if DEBUG
+            MSLogger.make(category: .journeyList).debug("View Did Load.")
+            #endif
+        case .visibleJourneysDidUpdated(let visibleJourneys):
+            self.state.journeys.send(visibleJourneys)
         }
     }
     

@@ -10,14 +10,13 @@ import UIKit
 final class MSCollectionView: UICollectionView {
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        let supplementaryViews = self.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader)
-        for supplementaryView in supplementaryViews {
-            if supplementaryView.frame.contains(point) {
-                return nil
-            }
+        // Cell
+        let cells = self.visibleCells
+        for cell in cells where cell.frame.contains(point) {
+            return super.hitTest(point, with: event)
         }
         
-        return super.hitTest(point, with: event)
+        return nil
     }
     
 }
