@@ -69,8 +69,6 @@ let package = Package(
                              package: Dependency.msCoreKit),
                     .product(name: Dependency.msPersistentStorage,
                              package: Dependency.msCoreKit),
-                    .product(name: Dependency.msPersistentStorage,
-                             package: Dependency.msCoreKit),
                     .product(name: Dependency.msLogger,
                              package: Dependency.msFoundation),
                     .product(name: Dependency.msUserDefaults,

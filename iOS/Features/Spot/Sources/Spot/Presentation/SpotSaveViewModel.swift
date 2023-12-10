@@ -15,7 +15,7 @@ import MSLogger
 public final class SpotSaveViewModel {
     
     public enum Action {
-        case startUploadSpot
+        case startUploadSpot(Data)
     }
     
     // MARK: - Properties
@@ -43,9 +43,9 @@ public final class SpotSaveViewModel {
 
 internal extension SpotSaveViewModel {
     
-    func trigger(_ action: Action, using data: Data) {
+    func trigger(_ action: Action) {
         switch action {
-        case .startUploadSpot:
+        case .startUploadSpot(let data):
             Task {
                 guard let recordingJourneyID = self.journeyRepository.fetchRecordingJourneyID() else {
                     MSLogger.make(category: .spot).error("recoding 중인 journeyID를 찾지 못하였습니다.")

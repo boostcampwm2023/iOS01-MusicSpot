@@ -25,15 +25,18 @@ public final class HomeViewModel {
         case startButtonDidTap(Coordinate)
         case refreshButtonDidTap(visibleCoordinates: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
         case backButtonDidTap
+        case mapViewDidChange
     }
     
     public struct State {
         // Passthrough
         public var startedJourney = PassthroughSubject<RecordingJourney, Never>()
         public var visibleJourneys = PassthroughSubject<[Journey], Never>()
+        public var overlaysShouldBeCleared = PassthroughSubject<Bool, Never>()
         
         // CurrentValue
         public var isRecording = CurrentValueSubject<Bool, Never>(false)
+        public var isRefreshButtonHidden = CurrentValueSubject<Bool, Never>(false)
         public var isStartButtonLoading = CurrentValueSubject<Bool, Never>(false)
     }
     
@@ -80,9 +83,13 @@ public final class HomeViewModel {
             #endif
             self.startJourney(at: coordinate)
         case .refreshButtonDidTap(visibleCoordinates: (let minCoordinate, let maxCoordinate)):
+            self.state.isRefreshButtonHidden.send(true)
             self.fetchJourneys(minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)
         case .backButtonDidTap:
             self.state.isRecording.send(false)
+            self.state.overlaysShouldBeCleared.send(true)
+        case .mapViewDidChange:
+            self.state.isRefreshButtonHidden.send(false)
         }
     }
     
@@ -122,6 +129,7 @@ private extension HomeViewModel {
             switch result {
             case .success(let recordingJourney):
                 self.state.startedJourney.send(recordingJourney)
+                self.journeyRepository
                 self.state.isRecording.send(true)
             case .failure(let error):
                 MSLogger.make(category: .home).error("\(error)")

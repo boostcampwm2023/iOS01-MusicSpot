@@ -249,7 +249,7 @@ public final class SpotSaveViewController: UIViewController {
             MSLogger.make(category: .spot).debug("현재 이미지를 Data로 변환할 수 없습니다.")
             return
         }
-        self.viewModel.trigger(.startUploadSpot, using: jpegData)
+        self.viewModel.trigger(.startUploadSpot(jpegData))
         self.navigationDelegate?.popToHome()
     }
     
