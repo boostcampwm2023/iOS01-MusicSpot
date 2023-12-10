@@ -28,9 +28,9 @@ final class RewindJourneyCoordinator: Coordinator {
     
     // MARK: - Functions
     
-    func start() {
+    func start(with urls: [URL]) {
         let repository = SpotRepositoryImplementation()
-        let viewModel = RewindJourneyViewModel(repository: repository)
+        let viewModel = RewindJourneyViewModel(photoURLs: urls, repository: repository)
         let rewindJourneyViewController = RewindJourneyViewController(viewModel: viewModel)
         rewindJourneyViewController.navigationDelegate = self
         self.navigationController.pushViewController(rewindJourneyViewController, animated: true)

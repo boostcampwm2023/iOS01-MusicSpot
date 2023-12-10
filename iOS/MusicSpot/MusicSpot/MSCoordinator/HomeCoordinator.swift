@@ -91,11 +91,11 @@ extension HomeCoordinator: HomeNavigationDelegate {
 
 extension HomeCoordinator: JourneyListNavigationDelegate {
     
-    func navigateToRewindJourney() {
+    func navigateToRewindJourney(with urls: [URL]) {
         let rewindJourneyCoordinator = RewindJourneyCoordinator(navigationController: self.navigationController)
         rewindJourneyCoordinator.delegate = self
         self.childCoordinators.append(rewindJourneyCoordinator)
-        rewindJourneyCoordinator.start()
+        rewindJourneyCoordinator.start(with: urls)
     }
     
 }
