@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsString } from 'class-validator';
-import { IsCoordinate } from '../../../common/decorator/coordinate.decorator';
+import {
+  IsCoordinate,
+  IsCoordinates,
+} from '../../../common/decorator/coordinate.decorator';
 export class RecordJourneyResDTO {
   @ApiProperty({
     example: [
@@ -10,7 +13,7 @@ export class RecordJourneyResDTO {
     description: '저장된 위치 좌표',
     required: true,
   })
-  @IsArray()
+  @IsCoordinates()
   readonly coordinates: number[][];
 }
 
@@ -31,6 +34,9 @@ export class RecordJourneyReqDTO {
     description: '위치 좌표',
     required: true,
   })
-  @IsArray()
+  @IsCoordinates({
+    message:
+      '위치 좌표 배열은 2차원 배열이고 각각의 배열은 숫자 2개와 범위를 만족해야합니다.(-90~90, -180~180)',
+  })
   readonly coordinates: number[][];
 }
