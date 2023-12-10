@@ -20,7 +20,6 @@ public final class NavigateMapViewModel: MapViewModel {
     public enum Action {
         case viewNeedsLoaded
         case visibleJourneysDidUpdated(_ visibleJourneys: [Journey])
-//        case locationDidUpdated(CLLocationCoordinate2D)
     }
     
     public struct State {

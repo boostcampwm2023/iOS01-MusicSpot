@@ -19,18 +19,19 @@ public final class SaveJourneyViewModel {
         case viewNeedsLoaded
         case musicControlButtonDidTap
         case titleDidConfirmed(String)
-        case endJourneyDidSucceed(String)
     }
     
     public struct State {
+        // Passthrough
+        var endJourneySucceed = PassthroughSubject<String, Never>()
+        
+        // CurrentValue
         /// Apple Music 권한 상태
         var musicAuthorizatonStatus = CurrentValueSubject<MusicAuthorization.Status, Never>(.notDetermined)
         var buttonStateFactors = CurrentValueSubject<ButtonStateFactor, Never>(ButtonStateFactor())
         
         var recordingJourney = CurrentValueSubject<RecordingJourney?, Never>(nil)
         var selectedSong: CurrentValueSubject<Song, Never>
-        
-        var endJourneyResponse = CurrentValueSubject<String?, Never>(nil)
     }
     
     // MARK: - Properties
@@ -86,8 +87,6 @@ public final class SaveJourneyViewModel {
             self.state.buttonStateFactors.send(stateFactors)
         case .titleDidConfirmed(let title):
             self.endJourney(named: title)
-        case .endJourneyDidSucceed(let journeyID):
-            self.state.endJourneyResponse.send(journeyID)
         }
     }
     
@@ -111,11 +110,11 @@ private extension SaveJourneyViewModel {
         Task {
             let result = await self.journeyRepository.endJourney(journey)
             switch result {
-            case .success(let journey):
+            case .success(let journeyID):
                 #if DEBUG
-                MSLogger.make(category: .saveJourney).log("\(journey)가 저장되었습니다.")
+                MSLogger.make(category: .saveJourney).log("\(journeyID)가 저장되었습니다.")
                 #endif
-                self.trigger(.endJourneyDidSucceed(journey))
+                self.state.endJourneySucceed.send(journeyID)
             case .failure(let error):
                 #if DEBUG
                 MSLogger.make(category: .saveJourney).error("\(error)")
