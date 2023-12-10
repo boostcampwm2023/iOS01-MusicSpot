@@ -66,7 +66,7 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     
     // MARK: - Properties: Gesture
     
-    var initialTouchPoint = CGPoint(x: 0, y: 0)
+    var initialTouchPoint = CGPoint(x: .zero, y: .zero)
     
     // MARK: - UI Components
     
