@@ -49,7 +49,10 @@ public final class RewindJourneyViewController: UIViewController {
     
     private var cancellables: Set<AnyCancellable> = []
     private var presentingImageIndex: Int? {
-        didSet { self.changeProgressViews() }
+        didSet {
+            print("\(self.presentingImageIndex)번이 선택됨")
+            self.changeProgressViews()
+        }
     }
     
     // MARK: - Properties: Timer
@@ -183,6 +186,7 @@ public final class RewindJourneyViewController: UIViewController {
         urls.forEach { _ in
             let progressView = MSProgressView()
             self.progressStackView.addArrangedSubview(progressView)
+            if self.progressViews == nil { self.progressViews = [] }
             self.progressViews?.append(progressView)
         }
     }
