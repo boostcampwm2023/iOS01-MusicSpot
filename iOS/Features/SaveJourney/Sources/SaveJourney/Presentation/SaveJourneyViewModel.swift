@@ -27,7 +27,7 @@ public final class SaveJourneyViewModel {
         var musicAuthorizatonStatus = CurrentValueSubject<MusicAuthorization.Status, Never>(.notDetermined)
         var buttonStateFactors = CurrentValueSubject<ButtonStateFactor, Never>(ButtonStateFactor())
         
-        var recordingJourney: CurrentValueSubject<RecordingJourney, Never>
+        var recordingJourney = CurrentValueSubject<RecordingJourney?, Never>(nil)
         var selectedSong: CurrentValueSubject<Song, Never>
         
         var endJourneyResponse = CurrentValueSubject<String?, Never>(nil)
@@ -74,6 +74,12 @@ public final class SaveJourneyViewModel {
                 stateFactors.canBecomeSubscriber = subscription.canBecomeSubscriber
                 self.state.buttonStateFactors.send(stateFactors)
             }
+            
+            guard let recordingJourneyID = self.journeyRepository.fetchRecordingJourneyID(),
+                  let recordingJourney = self.journeyRepository.fetchRecordingJourney(forID: recordingJourneyID) else {
+                return
+            }
+            self.state.recordingJourney.send(recordingJourney)
         case .musicControlButtonDidTap:
             let stateFactors = self.state.buttonStateFactors.value
             stateFactors.isMusicPlaying.toggle()
@@ -93,7 +99,7 @@ private extension SaveJourneyViewModel {
     
     func endJourney(named title: String) {
         guard let recordingJourney = self.state.recordingJourney.value else { return }
-        
+                
         let selectedSong = self.state.selectedSong.value
         let coordinates = recordingJourney.coordinates + [self.lastCoordiante]
         let journey = Journey(id: recordingJourney.id,

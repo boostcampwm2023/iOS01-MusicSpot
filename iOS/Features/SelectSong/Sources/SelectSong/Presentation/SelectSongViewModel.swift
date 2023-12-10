@@ -34,17 +34,14 @@ public final class SelectSongViewModel {
     
     public var state: State
     
-    let recordingJourney: RecordingJourney
     let lastCoordinate: Coordinate
     
     // MARK: - Initializer
     
     public init(lastCoordinate: Coordinate,
                 repository: SongRepository) {
-        self.state = State(lastCoordinate: lastCoordinate)
         self.repository = repository
-        self.state = State()
-        self.recordingJourney = recordingJourney
+        self.state = State(lastCoordinate: lastCoordinate)
         self.lastCoordinate = lastCoordinate
     }
     

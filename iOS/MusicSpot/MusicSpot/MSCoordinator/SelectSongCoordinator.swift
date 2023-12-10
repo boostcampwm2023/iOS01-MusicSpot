@@ -57,14 +57,11 @@ extension SelectSongCoordinator: SelectSongNavigationDelegate {
         self.delegate?.popToHome(from: self)
     }
     
-    func navigateToSaveJourney(lastCoordinate: Coordinate,
-                               selectedSong: Song,
-                               selectedIndex: IndexPath) {
+    func navigateToSaveJourney(lastCoordinate: Coordinate, selectedSong: Song) {
         let saveJourneyCoordinator = SaveJourneyCoordinator(navigationController: self.navigationController)
         saveJourneyCoordinator.delegate = self
         self.childCoordinators.append(saveJourneyCoordinator)
-        saveJourneyCoordinator.start(lastCoordinate: lastCoordinate,
-                                     selectedSong: selectedSong)
+        saveJourneyCoordinator.start(lastCoordinate: lastCoordinate, selectedSong: selectedSong)
     }
     
 }
