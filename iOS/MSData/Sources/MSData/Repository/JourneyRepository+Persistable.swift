@@ -12,9 +12,8 @@ import MSPersistentStorage
 
 public protocol LocalRepository {
 
-    var key: String { get }
-    func save(coordinateDTO: CoordinateDTO)
-    func loadCoordinates() -> [Coordinate]?
+    func save(value: Codable)
+    func loadJourney() -> RecordingJourney?
 
 }
 
@@ -36,6 +35,10 @@ public struct LocalRepositoryImplementation: LocalRepository {
     
     public func save(coordinateDTO: CoordinateDTO) {
         self.storage.set(value: coordinateDTO, forKey: self.key)
+    }
+    
+    public func save() {
+        
     }
     
     public func loadCoordinates() -> [Coordinate]? {
