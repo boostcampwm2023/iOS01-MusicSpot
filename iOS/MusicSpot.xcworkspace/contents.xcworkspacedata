@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:MusicSpot/MusicSpot.xcodeproj">
+   </FileRef>
+   <Group
+      location = "container:"
+      name = "Features">
+      <FileRef
+         location = "group:Features/Home">
+      </FileRef>
+      <FileRef
+         location = "group:Features/Spot">
+      </FileRef>
+      <FileRef
+         location = "group:Features/SelectSong">
+      </FileRef>
+      <FileRef
+         location = "group:Features/SaveJourney">
+      </FileRef>
+      <FileRef
+         location = "group:Features/JourneyList">
+      </FileRef>
+      <FileRef
+         location = "group:Features/RewindJourney">
+      </FileRef>
+   </Group>
+   <FileRef
+      location = "group:MSDomain">
+   </FileRef>
+   <FileRef
+      location = "group:MSData">
+   </FileRef>
+   <FileRef
+      location = "group:MSUIKit">
+   </FileRef>
+   <FileRef
+      location = "group:MSCoreKit">
+   </FileRef>
+   <FileRef
+      location = "group:MSFoundation">
+   </FileRef>
+</Workspace>
