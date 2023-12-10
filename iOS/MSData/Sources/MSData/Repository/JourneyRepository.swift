@@ -115,6 +115,10 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                                                     startTimestamp: responseDTO.startTimestamp,
                                                     spots: [],
                                                     coordinates: [responseDTO.coordinate.toDomain()])
+            
+            self.saveToLocal(value: recordingJourney.id)
+            self.saveToLocal(value: recordingJourney.startTimestamp)
+            
             self.recordingJourneyID = recordingJourney.id
             #if DEBUG
             if let recordingJourneyID = self.recordingJourneyID {
@@ -123,6 +127,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                 MSLogger.make(category: .userDefaults).error("기록중인 여정 정보 저장에 실패했습니다.")
             }
             #endif
+            
             return .success(recordingJourney)
         case .failure(let error):
             return .failure(error)
@@ -143,6 +148,9 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                                                startTimestamp: Date(),
                                                spots: [],
                                                coordinates: coordinates)
+            
+            responseDTO.coordinates.forEach { self.saveToLocal(value: $0) }
+            
             return .success(recordingJourney)
         case .failure(let error):
             return .failure(error)

@@ -129,7 +129,6 @@ private extension HomeViewModel {
             switch result {
             case .success(let recordingJourney):
                 self.state.startedJourney.send(recordingJourney)
-                self.journeyRepository
                 self.state.isRecording.send(true)
             case .failure(let error):
                 MSLogger.make(category: .home).error("\(error)")

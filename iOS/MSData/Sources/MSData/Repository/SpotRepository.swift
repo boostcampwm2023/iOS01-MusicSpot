@@ -11,7 +11,7 @@ import MSDomain
 import MSNetworking
 import MSLogger
 
-public protocol SpotRepository {
+public protocol SpotRepository: Persistable {
     
     func fetchRecordingSpots() async -> Result<[Spot], Error>
     func upload(spot: CreateSpotRequestDTO) async -> Result<Spot, Error>
@@ -66,11 +66,22 @@ public struct SpotRepositoryImplementation: SpotRepository {
         switch result {
         case .success(let spot):
             MSLogger.make(category: .network).debug("성공적으로 업로드하였습니다.")
+            self.saveToLocal(value: spot)
             return .success(spot.toDomain())
         case .failure(let error):
             MSLogger.make(category: .network).error("\(error): 업로드에 실패하였습니다.")
             return .failure(error)
         }
+    }
+    
+    // MARK: - Persistable
+    
+    public func saveToLocal(value: Codable) {
+        
+    }
+    
+    public func loadJourneyFromLocal() -> RecordingJourney? {
+        return nil
     }
             
 }
