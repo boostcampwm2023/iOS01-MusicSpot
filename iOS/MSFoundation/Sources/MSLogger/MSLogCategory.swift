@@ -22,6 +22,7 @@ public enum MSLogCategory: String {
     case spot
     case selectSong = "SelectSong"
     case saveJourney
+    case journeyList
     case rewindJourney
     
 }

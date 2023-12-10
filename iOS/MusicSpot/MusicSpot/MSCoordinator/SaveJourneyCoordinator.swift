@@ -36,12 +36,10 @@ final class SaveJourneyCoordinator: Coordinator {
     
     // MARK: - Functions
     
-    func start(recordingJourney: RecordingJourney,
-               lastCoordinate: Coordinate,
+    func start(lastCoordinate: Coordinate,
                selectedSong: Song) {
         let journeyRepository = JourneyRepositoryImplementation()
-        let saveJourneyViewModel = SaveJourneyViewModel(recordingJourney: recordingJourney,
-                                                        lastCoordinate: lastCoordinate,
+        let saveJourneyViewModel = SaveJourneyViewModel(lastCoordinate: lastCoordinate,
                                                         selectedSong: selectedSong,
                                                         journeyRepository: journeyRepository)
         let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)

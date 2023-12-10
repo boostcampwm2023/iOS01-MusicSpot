@@ -25,6 +25,7 @@ public final class SelectSongViewModel {
         var songs = CurrentValueSubject<[Song], Never>([])
         var isLoading = CurrentValueSubject<Bool, Never>(false)
         
+        let lastCoordinate: Coordinate
     }
     
     // MARK: - Properties
@@ -33,17 +34,14 @@ public final class SelectSongViewModel {
     
     public var state: State
     
-    let recordingJourney: RecordingJourney
     let lastCoordinate: Coordinate
     
     // MARK: - Initializer
     
-    public init(recordingJourney: RecordingJourney,
-                lastCoordinate: Coordinate,
+    public init(lastCoordinate: Coordinate,
                 repository: SongRepository) {
         self.repository = repository
-        self.state = State()
-        self.recordingJourney = recordingJourney
+        self.state = State(lastCoordinate: lastCoordinate)
         self.lastCoordinate = lastCoordinate
     }
     
@@ -53,8 +51,16 @@ public final class SelectSongViewModel {
         switch action {
         case .viewNeedsLoaded:
             Task {
+                let status = await MusicAuthorization.request()
+                #if DEBUG
+                MSLogger.make(category: .saveJourney).info("음악 권한 상태: \(status)")
+                #endif
+                
                 if #available(iOS 16.0, *) {
                     Task {
+                        self.state.isLoading.send(true)
+                        defer { self.state.isLoading.send(false) }
+                        
                         let songs = await self.fetchSongByRank()
                         self.state.songs.send(songs)
                     }

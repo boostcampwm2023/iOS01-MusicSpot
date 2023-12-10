@@ -140,6 +140,41 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
         }
     }
     
+    public func hideBottomSheet(animated: Bool = true) {
+        self.topConstraints?.constant = .zero
+        
+        if animated {
+            UIView.animate(withDuration: 0.5,
+                           delay: .zero,
+                           usingSpringWithDamping: 0.8,
+                           initialSpringVelocity: 0.5,
+                           options: [.curveEaseInOut]) {
+                self.view.layoutIfNeeded()
+            }
+        } else {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    public func showBottomSheet(animated: Bool = true) {
+        guard let configuration = self.configuration else { return }
+        self.topConstraints?.constant = -configuration.minimizedHeight
+        
+        if animated {
+            UIView.animate(withDuration: 0.5,
+                           delay: .zero,
+                           usingSpringWithDamping: 0.8,
+                           initialSpringVelocity: 0.5,
+                           options: [.curveEaseInOut]) {
+                self.view.layoutIfNeeded()
+                self.state = .minimized
+            }
+        } else {
+            self.view.layoutIfNeeded()
+            self.state = .minimized
+        }
+    }
+    
     // MARK: - Pan Gesture
     
     @objc

@@ -8,17 +8,21 @@
 import Combine
 import Foundation
 
+import MSConstants
 import MSDomain
 import MSNetworking
+import MSPersistentStorage
+import MSUserDefaults
 
 public protocol JourneyRepository {
     
-    func fetchRecordingJourney() async -> Result<Journey, Error>
+    func fetchRecordingJourneyID() -> String?
+    func fetchRecordingJourney(forID id: String) -> RecordingJourney?
     func fetchJourneyList(userID: UUID,
                           minCoordinate: Coordinate,
                           maxCoordinate: Coordinate) async -> Result<[Journey], Error>
-    func startJourney(at coordinate: Coordinate, userID: UUID) async -> Result<RecordingJourney, Error>
-    func endJourney(_ journey: Journey) async -> Result<String, Error>
+    mutating func startJourney(at coordinate: Coordinate, userID: UUID) async -> Result<RecordingJourney, Error>
+    mutating func endJourney(_ journey: Journey) async -> Result<String, Error>
     func recordJourney(journeyID: String, at coordinates: [Coordinate]) async -> Result<RecordingJourney, Error>
     
 }
@@ -28,17 +32,27 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     // MARK: - Properties
     
     private let networking: MSNetworking
+    private let persistent: MSPersistentStorage
+    
+    @UserDefaultsWrapped(UserDefaultsKey.recordingJourneyID, defaultValue: nil)
+    private var recordingJourneyID: String?
     
     // MARK: - Initializer
     
-    public init(session: URLSession = URLSession(configuration: .default)) {
+    public init(session: URLSession = URLSession(configuration: .default),
+                fileManager: FileManager = FileManager()) {
         self.networking = MSNetworking(session: session)
+        self.persistent = FileManagerStorage(fileManager: fileManager)
     }
     
     // MARK: - Functions
     
-    public func fetchRecordingJourney() async -> Result<Journey, Error> {
-        return .failure(MSNetworkError.invalidRouter)
+    public func fetchRecordingJourneyID() -> String? {
+        return self.recordingJourneyID
+    }
+    
+    public func fetchRecordingJourney(forID id: String) -> RecordingJourney? {
+        return self.persistent.get(RecordingJourneyDTO.self, forKey: id)?.toDomain()
     }
     
     public func fetchJourneyList(userID: UUID,
@@ -73,7 +87,17 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         #endif
     }
     
-    public func startJourney(at coordinate: Coordinate, userID: UUID) async -> Result<RecordingJourney, Error> {
+    public mutating func startJourney(at coordinate: Coordinate,
+                                      userID: UUID) async -> Result<RecordingJourney, Error> {
+        #if MOCK
+        let recordingJourneyID = "657537c178b6463b9f810371"
+        let recordingJourney = RecordingJourney(id: recordingJourneyID,
+                                                startTimestamp: .now,
+                                                spots: [],
+                                                coordinates: [])
+        self.recordingJourneyID = recordingJourneyID
+        return .success(recordingJourney)
+        #else
         let requestDTO = StartJourneyRequestDTO(coordinate: CoordinateDTO(coordinate),
                                                 startTimestamp: .now,
                                                 userID: userID)
@@ -85,35 +109,34 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                                                     startTimestamp: responseDTO.startTimestamp,
                                                     spots: [],
                                                     coordinates: [responseDTO.coordinate.toDomain()])
+            self.recordingJourneyID = recordingJourney.id
+            return .success(recordingJourney)
+        case .failure(let error):
+            return .failure(error)
+        }
+        #endif
+    }
+    
+    public func recordJourney(journeyID: String,
+                              at coordinates: [Coordinate]) async -> Result<RecordingJourney, Error> {
+        let coordinatesDTO = coordinates.map { CoordinateDTO($0) }
+        let requestDTO = RecordCoordinateRequestDTO(journeyID: journeyID, coordinates: coordinatesDTO)
+        let router = JourneyRouter.recordCoordinate(dto: requestDTO)
+        let result = await self.networking.request(RecordCoordinateRequestDTO.self, router: router)
+        switch result {
+        case .success(let responseDTO):
+            let coordinates = responseDTO.coordinates.map { $0.toDomain() }
+            let recordingJourney = RecordingJourney(id: responseDTO.journeyID,
+                                               startTimestamp: Date(),
+                                               spots: [],
+                                               coordinates: coordinates)
             return .success(recordingJourney)
         case .failure(let error):
             return .failure(error)
         }
     }
     
-    public func recordJourney(journeyID: String,
-                              at coordinates: [Coordinate]) async -> Result<RecordingJourney, Error> {
-        let coordinatesDTO = coordinates.map { coordinate in
-            CoordinateDTO(coordinate)
-        }
-        let requestDTO = RecordCoordinateRequestDTO(journeyID: journeyID, coordinates: coordinatesDTO)
-        let router = JourneyRouter.recordCoordinate(dto: requestDTO)
-        let result = await self.networking.request(RecordCoordinateRequestDTO.self, router: router)
-        switch result {
-        case .success(let responseDTO):
-            let coordinates = RecordingJourney(id: responseDTO.journeyID,
-                                               startTimestamp: Date(),
-                                               spots: [],
-                                               coordinates: responseDTO.coordinates.map({ coordinate in
-                coordinate.toDomain()
-            }))
-            return .success(coordinates)
-        case .failure(let error):
-            return .failure(error)
-        }
-    }
-    
-    public func endJourney(_ journey: Journey) async -> Result<String, Error> {
+    public mutating func endJourney(_ journey: Journey) async -> Result<String, Error> {
         let requestDTO = EndJourneyRequestDTO(journeyID: journey.id,
                                               coordinates: journey.coordinates.map { CoordinateDTO($0) },
                                               endTimestamp: journey.date.end,
@@ -123,6 +146,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         let result = await self.networking.request(EndJourneyResponseDTO.self, router: router)
         switch result {
         case .success(let responseDTO):
+            self.recordingJourneyID = nil
             return .success(responseDTO.id)
         case .failure(let error):
             return .failure(error)

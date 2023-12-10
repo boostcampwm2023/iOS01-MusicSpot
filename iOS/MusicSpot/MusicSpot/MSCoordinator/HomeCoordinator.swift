@@ -44,7 +44,7 @@ final class HomeCoordinator: Coordinator {
         
         // NavigateMap
         let navigateMapViewmodel = NavigateMapViewModel(repository: journeyRepository)
-        let navigateMapViewController = NavigateMapViewController(viewModel: navigateMapViewmodel)
+        let navigateMapViewController = MapViewController(viewModel: navigateMapViewmodel)
         
         // Journey List
         let journeyListViewModel = JourneyListViewModel(repository: journeyRepository)
@@ -71,19 +71,18 @@ final class HomeCoordinator: Coordinator {
 
 extension HomeCoordinator: HomeNavigationDelegate {
     
-    func navigateToSpot(recordingJourney: RecordingJourney,
-                        coordinate: Coordinate) {
+    func navigateToSpot(spotCoordinate coordinate: Coordinate) {
         let spotCoordinator = SpotCoordinator(navigationController: self.navigationController)
         spotCoordinator.delegate = self
         self.childCoordinators.append(spotCoordinator)
-        spotCoordinator.start(recordingJourney: recordingJourney, coordinate: coordinate)
+        spotCoordinator.start(spotCoordinate: coordinate)
     }
     
-    func navigateToSelectSong(recordingJourney: RecordingJourney, lastCoordinate: Coordinate) {
+    func navigateToSelectSong(lastCoordinate: Coordinate) {
         let selectSongCoordinator = SelectSongCoordinator(navigationController: self.navigationController)
         selectSongCoordinator.delegate = self
         self.childCoordinators.append(selectSongCoordinator)
-        selectSongCoordinator.start(recordingJourney: recordingJourney, lastCoordinate: lastCoordinate)
+        selectSongCoordinator.start(lastCoordinate: lastCoordinate)
     }
     
 }

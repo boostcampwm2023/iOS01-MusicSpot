@@ -20,20 +20,20 @@ public final class SpotSaveViewModel {
     
     // MARK: - Properties
     
-    private let repository: SpotRepository
+    private let journeyRepository: JourneyRepository
+    private let spotRepository: SpotRepository
     
     private var cancellables: Set<AnyCancellable> = []
     
-    private let journeyID: String
     private let coordinate: Coordinate
     
     // MARK: - Initializer
     
-    public init(repository: SpotRepository,
-                journeyID: String,
+    public init(journeyRepository: JourneyRepository,
+                spotRepository: SpotRepository,
                 coordinate: Coordinate) {
-        self.repository = repository
-        self.journeyID = journeyID
+        self.journeyRepository = journeyRepository
+        self.spotRepository = spotRepository
         self.coordinate = coordinate
     }
     
@@ -47,11 +47,15 @@ internal extension SpotSaveViewModel {
         switch action {
         case .startUploadSpot:
             Task {
-                let spot = CreateSpotRequestDTO(journeyId: self.journeyID,
+                guard let recordingJourneyID = self.journeyRepository.fetchRecordingJourneyID() else {
+                    return
+                }
+                
+                let spot = CreateSpotRequestDTO(journeyId: recordingJourneyID,
                                                 coordinate: CoordinateDTO(self.coordinate),
                                                 timestamp: .now,
                                                 photoData: data)
-                let result = await self.repository.upload(spot: spot)
+                let result = await self.spotRepository.upload(spot: spot)
                 switch result {
                 case .success(let spot):
                     MSLogger.make(category: .network).debug("성공적으로 업로드되었습니다: \(spot)")

@@ -59,14 +59,11 @@ public final class SpotViewModel: NSObject {
     var input: AVCaptureDeviceInput?
     let output = AVCapturePhotoOutput()
     
-    private(set) var recordingJourney: RecordingJourney
     private(set) var coordinate: Coordinate
     
     // MARK: - Initializer
     
-    public init(recordingJourney: RecordingJourney,
-                coordinate: Coordinate) {
-        self.recordingJourney = recordingJourney
+    public init(coordinate: Coordinate) {
         self.coordinate = coordinate
     }
     

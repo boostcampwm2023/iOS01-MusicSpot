@@ -176,17 +176,22 @@ public final class SaveJourneyViewController: UIViewController {
             .store(in: &self.cancellables)
         
         self.viewModel.state.recordingJourney
-            .map { $0.spots }
+            .compactMap { $0?.spots }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] spots in
                 guard let self = self else { return }
                 
                 self.updateSpotSectionSnapshot(with: spots)
+//                let context = UICollectionViewLayoutInvalidationContext()
+//                let headerIndexPaths = self.collectionView.indexPathsForVisibleSupplementaryElements(
+//                    ofKind: SaveJourneyHeaderView.elementKind)
+//                context.invalidateSupplementaryElements(ofKind: SaveJourneyHeaderView.elementKind,
+//                                                        at: headerIndexPaths)
+//                self.collectionView.collectionViewLayout.invalidateLayout(with: context)
             }
             .store(in: &self.cancellables)
         
-        self.viewModel.state.endJourneyResponse
-            .compactMap { $0 }
+        self.viewModel.state.endJourneySucceed
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.navigationDelegate?.popToHome()

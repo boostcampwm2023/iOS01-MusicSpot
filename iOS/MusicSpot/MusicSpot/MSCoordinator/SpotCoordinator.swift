@@ -22,9 +22,8 @@ final class SpotCoordinator: Coordinator {
     
     // MARK: - Functions
     
-    func start(recordingJourney: RecordingJourney,
-               coordinate: Coordinate) {
-        let viewModel = SpotViewModel(recordingJourney: recordingJourney, coordinate: coordinate)
+    func start(spotCoordinate coordinate: Coordinate) {
+        let viewModel = SpotViewModel(coordinate: coordinate)
         let spotViewController = SpotViewController(viewModel: viewModel)
         self.navigationController.modalTransitionStyle = .coverVertical
         self.navigationController.pushViewController(spotViewController, animated: true)
@@ -55,15 +54,13 @@ extension SpotCoordinator: SpotNavigationDelegate {
         spotViewController.present(picker, animated: true)
     }
     
-    func presentSpotSave(using image: UIImage,
-                         recordingJourney: RecordingJourney,
-                         coordinate: Coordinate) {
-        let repository = SpotRepositoryImplementation()
-        let viewModel = SpotSaveViewModel(repository: repository,
-                                          journeyID: recordingJourney.id,
+    func presentSpotSave(using image: UIImage, coordinate: Coordinate) {
+        let journeyRepository = JourneyRepositoryImplementation()
+        let spotRepository = SpotRepositoryImplementation()
+        let viewModel = SpotSaveViewModel(journeyRepository: journeyRepository,
+                                          spotRepository: spotRepository,
                                           coordinate: coordinate)
-        let spotSaveViewController = SpotSaveViewController(image: image,
-                                                            viewModel: viewModel)
+        let spotSaveViewController = SpotSaveViewController(image: image, viewModel: viewModel)
         spotSaveViewController.modalPresentationStyle = .fullScreen
         spotSaveViewController.navigationDelegate = self
         self.navigationController.presentedViewController?.dismiss(animated: true)
