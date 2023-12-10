@@ -26,6 +26,7 @@ extension JourneyRouter {
         case .recordCoordinate: return "record"
         case .checkJourney: return "check"
         case .loadLastJourney: return "loadLastData"
+        case .deleteJourney: return nil
         }
     }
     

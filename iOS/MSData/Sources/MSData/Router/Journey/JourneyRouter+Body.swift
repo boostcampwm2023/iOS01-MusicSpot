@@ -17,6 +17,8 @@ extension JourneyRouter {
             return HTTPBody(content: dto)
         case let .recordCoordinate(dto):
             return HTTPBody(content: dto)
+        case let .deleteJourney(dto):
+            return HTTPBody(content: dto)
         default: return nil
         }
     }
