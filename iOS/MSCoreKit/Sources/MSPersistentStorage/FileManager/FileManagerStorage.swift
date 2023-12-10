@@ -84,7 +84,6 @@ public final class FileManagerStorage: NSObject, MSPersistentStorage {
                 }
                 MSLogger.make(category: .fileManager).error("경로의 Data를 성공적으로 가져왔습니다.")
                 
-                print(dataPath.description)
                 guard let data = try? Data(contentsOf: dataPath),
                       let decodedData = try? self.decoder.decode(T.self, from: data) else {
                     MSLogger.make(category: .fileManager).error("decode에 실패하였습니다.")

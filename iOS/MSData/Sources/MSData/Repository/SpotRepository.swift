@@ -10,6 +10,7 @@ import Foundation
 import MSDomain
 import MSNetworking
 import MSLogger
+import MSPersistentStorage
 
 public protocol SpotRepository: Persistable {
     
@@ -23,11 +24,14 @@ public struct SpotRepositoryImplementation: SpotRepository {
     // MARK: - Properties
     
     private let networking: MSNetworking
+    public let storage: MSPersistentStorage
     
     // MARK: - Initializer
     
-    public init(session: URLSession = URLSession(configuration: .default)) {
+    public init(session: URLSession = URLSession(configuration: .default),
+                persistentStorage: MSPersistentStorage = FileManagerStorage()) {
         self.networking = MSNetworking(session: session)
+        self.storage = persistentStorage
     }
     
     // MARK: - Functions
