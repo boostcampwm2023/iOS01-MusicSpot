@@ -19,6 +19,7 @@ public protocol JourneyRepository {
                           maxCoordinate: Coordinate) async -> Result<[Journey], Error>
     func startJourney(at coordinate: Coordinate, userID: UUID) async -> Result<RecordingJourney, Error>
     func endJourney(_ journey: Journey) async -> Result<String, Error>
+    func recordJourney(journeyID: String, at coordinates: [Coordinate]) async -> Result<RecordingJourney, Error>
     
 }
 
@@ -85,6 +86,28 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                                                     spots: [],
                                                     coordinates: [responseDTO.coordinate.toDomain()])
             return .success(recordingJourney)
+        case .failure(let error):
+            return .failure(error)
+        }
+    }
+    
+    public func recordJourney(journeyID: String,
+                              at coordinates: [Coordinate]) async -> Result<RecordingJourney, Error> {
+        let coordinatesDTO = coordinates.map { coordinate in
+            CoordinateDTO(coordinate)
+        }
+        let requestDTO = RecordCoordinateRequestDTO(journeyID: journeyID, coordinates: coordinatesDTO)
+        let router = JourneyRouter.recordCoordinate(dto: requestDTO)
+        let result = await self.networking.request(RecordCoordinateRequestDTO.self, router: router)
+        switch result {
+        case .success(let responseDTO):
+            let coordinates = RecordingJourney(id: responseDTO.journeyID,
+                                               startTimestamp: Date(),
+                                               spots: [],
+                                               coordinates: responseDTO.coordinates.map({ coordinate in
+                coordinate.toDomain()
+            }))
+            return .success(coordinates)
         case .failure(let error):
             return .failure(error)
         }

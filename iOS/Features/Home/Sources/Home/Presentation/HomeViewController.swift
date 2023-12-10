@@ -123,6 +123,7 @@ public final class HomeViewController: HomeBottomSheetViewController, HomeViewMo
         self.viewModel.state.journeys
             .receive(on: DispatchQueue.main)
             .sink { journeys in
+                self.contentViewController.drawPolyLines(journeys: journeys)
                 self.contentViewController.addAnnotations(journeys: journeys)
             }
             .store(in: &self.cancellables)
@@ -182,7 +183,8 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
         let lastCoordinate = Coordinate(latitude: userLocation.coordinate.latitude,
                                         longitude: userLocation.coordinate.longitude)
         // TODO: 기록중인 여정 fetch
-        let recordingJourney = RecordingJourney(id: "6571bef418be25527c66dc04",
+        guard let journeyID = self.viewModel.state.recordingJourney.value?.id else { return }
+        let recordingJourney = RecordingJourney(id: journeyID,
                                                 startTimestamp: .now,
                                                 spots: [],
                                                 coordinates: [])
