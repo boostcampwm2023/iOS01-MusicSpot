@@ -116,31 +116,28 @@ export class JourneyController {
     @Query('minCoordinate') minCoordinate,
     @Query('maxCoordinate') maxCoordinate,
   ) {
-    try {
-      const checkJourneyDTO = {
-        userId,
-        minCoordinate,
-        maxCoordinate,
-      };
-      return await this.journeyService.checkJourney(checkJourneyDTO);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  @ApiOperation({
-    summary: '여정 조회 API',
-    description: '해당 범위 내의 여정들을 반환합니다.',
-  })
-  @ApiCreatedResponse({
-    description: '범위에 있는 여정의 기록들을 반환',
-    type: CheckJourneyResDTO,
-  })
-  @Post('check')
-  @UsePipes(ValidationPipe) //유효성 체크
-  async checkPost(@Body() checkJourneyDTO: CheckJourneyReqDTO) {
+    console.log('min:', minCoordinate, 'max:', maxCoordinate);
+    const checkJourneyDTO = {
+      userId,
+      minCoordinate,
+      maxCoordinate,
+    };
     return await this.journeyService.checkJourney(checkJourneyDTO);
   }
+
+  // @ApiOperation({
+  //   summary: '여정 조회 API',
+  //   description: '해당 범위 내의 여정들을 반환합니다.',
+  // })
+  // @ApiCreatedResponse({
+  //   description: '범위에 있는 여정의 기록들을 반환',
+  //   type: CheckJourneyResDTO,
+  // })
+  // @Post('check')
+  // @UsePipes(ValidationPipe) //유효성 체크
+  // async checkPost(@Body() checkJourneyDTO: CheckJourneyReqDTO) {
+  //   return await this.journeyService.checkJourney(checkJourneyDTO);
+  // }
 
   @ApiOperation({
     summary: '최근 여정 조회 API',
