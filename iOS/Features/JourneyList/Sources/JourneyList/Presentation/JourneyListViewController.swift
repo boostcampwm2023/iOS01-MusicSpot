@@ -44,7 +44,7 @@ public final class JourneyListViewController: BaseViewController {
     
     private let cache: MSCacheStorage
     
-    private var viewModel: JourneyListViewModel
+    private(set) var viewModel: JourneyListViewModel
     
     private var dataSource: JourneyListDataSource?
     

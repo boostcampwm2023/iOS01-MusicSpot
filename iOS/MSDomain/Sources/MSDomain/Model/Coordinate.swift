@@ -27,3 +27,17 @@ public struct Coordinate {
 // MARK: - Hashable
 
 extension Coordinate: Hashable { }
+
+// MARK: - String Convertible
+
+extension Coordinate: CustomStringConvertible {
+    
+    public var description: String {
+        return """
+        Coordinate
+        - latitude: \(self.latitude)
+        - longitude: \(self.longitude)
+        """
+    }
+    
+}

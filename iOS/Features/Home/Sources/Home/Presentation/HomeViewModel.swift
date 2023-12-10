@@ -23,22 +23,24 @@ public final class HomeViewModel {
     public enum Action {
         case viewNeedsLoaded
         case startButtonDidTap(Coordinate)
-//        case fetchJourney(visibleMapRect: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
+        case refreshButtonDidTap(visibleCoordinates: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
     }
     
     public struct State {
         // Passthrough
         public var startedJourney = PassthroughSubject<RecordingJourney, Never>()
+        public var visibleJourneys = PassthroughSubject<[Journey], Never>()
         
         // CurrentValue
         public var isRecording = CurrentValueSubject<Bool, Never>(false)
+        public var isStartButtonLoading = CurrentValueSubject<Bool, Never>(false)
     }
     
     // MARK: - Properties
     
     public var state = State()
     
-    private let journeyRepository: JourneyRepository
+    private var journeyRepository: JourneyRepository
     private let userRepository: UserRepository
     
     #if DEBUG
@@ -72,19 +74,12 @@ public final class HomeViewModel {
                 self.createNewUser()
             }
         case .startButtonDidTap(let coordinate):
-            Task {
-                let userID = try self.userRepository.fetchUUID()
-                let result = await self.journeyRepository.startJourney(at: coordinate, userID: userID)
-                switch result {
-                case .success(let recordingJourney):
-                    self.state.startedJourney.send(recordingJourney)
-                    self.state.isRecording.send(true)
-                case .failure(let error):
-                    MSLogger.make(category: .home).error("\(error)")
-                }
-            }
-//        case .fetchJourney(visibleMapRect: (let minCoordinate, let maxCoordinate)):
-//            self.fetchJourneys(minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)
+            #if DEBUG
+            MSLogger.make(category: .home).debug("Start 버튼 탭: \(coordinate)")
+            #endif
+            self.startJourney(at: coordinate)
+        case .refreshButtonDidTap(visibleCoordinates: (let minCoordinate, let maxCoordinate)):
+            self.fetchJourneys(minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)
         }
     }
     
@@ -111,20 +106,40 @@ private extension HomeViewModel {
         }
     }
     
-//    func fetchJourneys(minCoordinate: Coordinate, maxCoordinate: Coordinate) {
-//        guard let userID = try? self.userRepository.fetchUUID() else { return }
-//        
-//        Task {
-//            let result = await self.journeyRepository.fetchJourneyList(userID: userID,
-//                                                                       minCoordinate: minCoordinate,
-//                                                                       maxCoordinate: maxCoordinate)
-//            switch result {
-//            case .success(let journeys):
-//                self.state.journeys.send(journeys)
-//            case .failure(let error):
-//                MSLogger.make(category: .home).error("\(error)")
-//            }
-//        }
-//    }
+    func startJourney(at coordinate: Coordinate) {
+        Task {
+            self.state.isStartButtonLoading.send(true)
+            defer { self.state.isStartButtonLoading.send(false) }
+            
+            let userID = try self.userRepository.fetchUUID()
+            #if DEBUG
+            MSLogger.make(category: .home).debug("유저 ID 조회 성공: \(userID)")
+            #endif
+            let result = await self.journeyRepository.startJourney(at: coordinate, userID: userID)
+            switch result {
+            case .success(let recordingJourney):
+                self.state.startedJourney.send(recordingJourney)
+                self.state.isRecording.send(true)
+            case .failure(let error):
+                MSLogger.make(category: .home).error("\(error)")
+            }
+        }
+    }
+    
+    func fetchJourneys(minCoordinate: Coordinate, maxCoordinate: Coordinate) {
+        guard let userID = try? self.userRepository.fetchUUID() else { return }
+        
+        Task {
+            let result = await self.journeyRepository.fetchJourneyList(userID: userID,
+                                                                       minCoordinate: minCoordinate,
+                                                                       maxCoordinate: maxCoordinate)
+            switch result {
+            case .success(let journeys):
+                self.state.visibleJourneys.send(journeys)
+            case .failure(let error):
+                MSLogger.make(category: .home).error("\(error)")
+            }
+        }
+    }
     
 }

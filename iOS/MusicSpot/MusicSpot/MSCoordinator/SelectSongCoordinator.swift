@@ -38,10 +38,9 @@ final class SelectSongCoordinator: Coordinator {
     
     // MARK: - Functions
     
-    func start(recordingJourney: RecordingJourney, lastCoordinate: Coordinate) {
+    func start(lastCoordinate: Coordinate) {
         let songRepository = SongRepositoryImplementation()
-        let selectSongViewModel = SelectSongViewModel(recordingJourney: recordingJourney,
-                                                      lastCoordinate: lastCoordinate,
+        let selectSongViewModel = SelectSongViewModel(lastCoordinate: lastCoordinate,
                                                       repository: songRepository)
         let searchMusicViewController = SelectSongViewController(viewModel: selectSongViewModel)
         searchMusicViewController.navigationDelegate = self
@@ -58,15 +57,13 @@ extension SelectSongCoordinator: SelectSongNavigationDelegate {
         self.delegate?.popToHome(from: self)
     }
     
-    func navigateToSaveJourney(recordingJourney: RecordingJourney,
-                               lastCoordinate: Coordinate,
+    func navigateToSaveJourney(lastCoordinate: Coordinate,
                                selectedSong: Song,
                                selectedIndex: IndexPath) {
         let saveJourneyCoordinator = SaveJourneyCoordinator(navigationController: self.navigationController)
         saveJourneyCoordinator.delegate = self
         self.childCoordinators.append(saveJourneyCoordinator)
-        saveJourneyCoordinator.start(recordingJourney: recordingJourney,
-                                     lastCoordinate: lastCoordinate,
+        saveJourneyCoordinator.start(lastCoordinate: lastCoordinate,
                                      selectedSong: selectedSong,
                                      selectedIndex: selectedIndex)
     }

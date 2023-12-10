@@ -101,11 +101,13 @@ public final class HomeViewController: HomeBottomSheetViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        self.configureStyle()
+        
         self.configureLayout()
         self.configureAction()
         self.bind()
         self.viewModel.trigger(.viewNeedsLoaded)
+        // 화면 시작 시 새로고침 버튼 기능 한번 실행
+        self.refreshButton.sendActions(for: .touchUpInside)
     }
     
     public override func viewIsAppearing(_ animated: Bool) {
@@ -118,16 +120,37 @@ public final class HomeViewController: HomeBottomSheetViewController {
     
     private func bind() {
         self.viewModel.state.startedJourney
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] startedJourney in
                 self?.contentViewController.journeyDidStarted(startedJourney)
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.visibleJourneys
+            .sink { [weak self] visibleJourneys in
+                self?.contentViewController.visibleJourneysDidUpdated(visibleJourneys)
+                self?.bottomSheetViewController.visibleJourneysDidUpdated(visibleJourneys)
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.isRecording
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isRecording in
+                self?.updateButtonMode(isRecording: isRecording)
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.isStartButtonLoading
+            .receive(on: DispatchQueue.main)
+            .sink { isStartButtonLoading in
+                self.startButton.configuration?.showsActivityIndicator = isStartButtonLoading
             }
             .store(in: &self.cancellables)
     }
     
     // MARK: - Functions
     
-    private func updateButtonMode() {
-        let isRecording = self.viewModel.state.isRecording.value
+    private func updateButtonMode(isRecording: Bool) {
         self.refreshButton.isHidden = isRecording
         UIView.transition(with: startButton, duration: 0.5,
                           options: .transitionCrossDissolve,
@@ -139,17 +162,14 @@ public final class HomeViewController: HomeBottomSheetViewController {
                           animations: {
             self.recordJourneyButtonStackView.isHidden = !isRecording
         })
-        if self.startButton.isHidden {
+        
+        if isRecording {
             self.setUserLocationToCenter()
         }
     }
     
     private func setUserLocationToCenter() {
         
-    }
-    
-    public func fetchJourneys(from coordinates: (Coordinate, Coordinate)) {
-//        self.viewModel.trigger(.fetchJourney(visibleMapRect: coordinates))
     }
     
 }
@@ -161,7 +181,6 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
     private func configureAction() {
         let startButtonAction = UIAction { [weak self] _ in
             guard let userLocation = self?.contentViewController.userLocation else { return }
-            self?.updateButtonMode()
             
             let coordinate = Coordinate(latitude: userLocation.coordinate.latitude,
                                         longitude: userLocation.coordinate.longitude)
@@ -170,9 +189,10 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
         self.startButton.addAction(startButtonAction, for: .touchUpInside)
         
         let refreshButtonAction = UIAction { [weak self] _ in
-            guard let coordinates = self?.contentViewController.currentCoordinate else { return }
+            guard let coordinates = self?.contentViewController.visibleCoordinates else { return }
             
-            //            self?.viewModel.trigger(.fetchJourney(visibleMapRect: coordinates))
+            self?.viewModel.trigger(.refreshButtonDidTap(visibleCoordinates: coordinates))
+            self?.refreshButton.isHidden = true
         }
         self.refreshButton.addAction(refreshButtonAction, for: .touchUpInside)
     }
@@ -180,35 +200,29 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
     public func backButtonDidTap(_ button: MSRectButton) {
         guard self.viewModel.state.isRecording.value == true else { return }
         
-        self.updateButtonMode()
+        self.updateButtonMode(isRecording: true)
         self.contentViewController.clearOverlays()
+        // TODO: 여정 취소
     }
     
     public func spotButtonDidTap(_ button: MSRectButton) {
         guard self.viewModel.state.isRecording.value == true else { return }
         
-//        guard let currentUserCoordiante = self.contentViewController.currentUserCoordinate,
-//              let recordingJourney = self.viewModel.state.recordingJourney.value else {
-//            return
-//        }
-//        self.navigationDelegate?.navigateToSpot(recordingJourney: recordingJourney,
-//                                                coordinate: currentUserCoordiante)
+        guard let currentUserCoordiante = self.contentViewController.currentUserCoordinate else {
+            return
+        }
+        
+        self.navigationDelegate?.navigateToSpot(spotCoordinate: currentUserCoordiante)
     }
     
     public func nextButtonDidTap(_ button: MSRectButton) {
         guard self.viewModel.state.isRecording.value == true else { return }
         
-        guard let userLocation = self.contentViewController.userLocation else { return }
+        guard let currentUserCoordiante = self.contentViewController.currentUserCoordinate else {
+            return
+        }
         
-        let lastCoordinate = Coordinate(latitude: userLocation.coordinate.latitude,
-                                        longitude: userLocation.coordinate.longitude)
-        // TODO: 기록중인 여정 fetch
-        let recordingJourney = RecordingJourney(id: "6571bef418be25527c66dc04",
-                                                startTimestamp: .now,
-                                                spots: [],
-                                                coordinates: [])
-        self.navigationDelegate?.navigateToSelectSong(recordingJourney: recordingJourney,
-                                                      lastCoordinate: lastCoordinate)
+        self.navigationDelegate?.navigateToSelectSong(lastCoordinate: currentUserCoordiante)
     }
     
 }
@@ -216,10 +230,6 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
 // MARK: - UI Configuration
 
 private extension HomeViewController {
-    
-    func configureStyle() {
-        
-    }
     
     func configureLayout() {
         let bottomSheetTopAnchor = self.bottomSheetViewController.view.topAnchor

@@ -15,13 +15,12 @@ public final class JourneyListViewModel {
     
     public enum Action {
         case viewNeedsLoaded
-        case fetchJourney(visibleMapRect: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
+        case visibleJourneysDidUpdated([Journey])
     }
     
     public struct State {
-        var journeys = CurrentValueSubject<[Journey], Never>([])
-        
-        public init() { }
+        // CurrentValue
+        public var journeys = CurrentValueSubject<[Journey], Never>([])
     }
     
     // MARK: - Properties
@@ -34,6 +33,17 @@ public final class JourneyListViewModel {
     
     public init(repository: JourneyRepository) {
         self.repository = repository
+    }
+    
+    // MARK: - Functions
+    
+    public func trigger(_ action: Action) {
+        switch action {
+        case .viewNeedsLoaded:
+            print("ViewNeedsLoaded")
+        case .visibleJourneysDidUpdated(let visibleJourneys):
+            self.state.journeys.send(visibleJourneys)
+        }
     }
     
 }

@@ -132,7 +132,6 @@ public struct MSNetworking {
                 }
                 
                 group.addTask {
-                    print(timeoutInterval.magnitude)
                     try await Task.sleep(nanoseconds: UInt64(timeoutInterval.magnitude))
                     try Task.checkCancellation()
                     #if DEBUG

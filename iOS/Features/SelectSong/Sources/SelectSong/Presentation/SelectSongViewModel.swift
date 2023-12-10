@@ -23,7 +23,6 @@ public final class SelectSongViewModel {
     public struct State {
         var songs = CurrentValueSubject<[Song], Never>([])
         
-        let recordingJourney: RecordingJourney
         let lastCoordinate: Coordinate
     }
     
@@ -37,11 +36,9 @@ public final class SelectSongViewModel {
     
     // MARK: - Initializer
     
-    public init(recordingJourney: RecordingJourney,
-                lastCoordinate: Coordinate,
+    public init(lastCoordinate: Coordinate,
                 repository: SongRepository) {
-        self.state = State(recordingJourney: recordingJourney,
-                           lastCoordinate: lastCoordinate)
+        self.state = State(lastCoordinate: lastCoordinate)
         self.repository = repository
     }
     

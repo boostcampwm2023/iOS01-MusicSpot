@@ -23,7 +23,7 @@ public final class SaveJourneyViewModel {
     }
     
     public struct State {
-        var recordingJourney: CurrentValueSubject<RecordingJourney, Never>
+        public var recordingJourney = CurrentValueSubject<RecordingJourney?, Never>(nil)
         var selectedSong: CurrentValueSubject<Song, Never>
         var isMusicPlaying = CurrentValueSubject<Bool, Never>(false)
         var mediaItem = PassthroughSubject<MPMediaQuery?, Never>()
@@ -33,7 +33,7 @@ public final class SaveJourneyViewModel {
     
     // MARK: - Properties
     
-    private let journeyRepository: JourneyRepository
+    private var journeyRepository: JourneyRepository
     
     public var state: State
     
@@ -44,14 +44,12 @@ public final class SaveJourneyViewModel {
     
     // MARK: - Initializer
     
-    public init(recordingJourney: RecordingJourney,
-                lastCoordinate: Coordinate,
+    public init(lastCoordinate: Coordinate,
                 selectedSong: Song,
                 selectedIndex: IndexPath,
                 journeyRepository: JourneyRepository) {
         self.journeyRepository = journeyRepository
-        self.state = State(recordingJourney: CurrentValueSubject<RecordingJourney, Never>(recordingJourney),
-                           selectedSong: CurrentValueSubject<Song, Never>(selectedSong))
+        self.state = State(selectedSong: CurrentValueSubject<Song, Never>(selectedSong))
         self.lastCoordiante = lastCoordinate
         self.selectedIndex = selectedIndex
     }
@@ -64,6 +62,12 @@ public final class SaveJourneyViewModel {
             let mediaItem = self.querySong(self.state.selectedSong.value,
                                            at: self.selectedIndex.item)
             self.state.mediaItem.send(mediaItem)
+            
+            guard let recordingJourneyID = self.journeyRepository.fetchRecordingJourneyID(),
+                  let recordingJourney = self.journeyRepository.fetchRecordingJourney(forID: recordingJourneyID) else {
+                return
+            }
+            self.state.recordingJourney.send(recordingJourney)
         case .mediaControlButtonDidTap:
             self.state.isMusicPlaying.send(!self.state.isMusicPlaying.value)
         case .titleDidConfirmed(let title):
@@ -80,8 +84,9 @@ public final class SaveJourneyViewModel {
 private extension SaveJourneyViewModel {
     
     func endJourney(named title: String) {
+        guard let recordingJourney = self.state.recordingJourney.value else { return }
+        
         let selectedSong = self.state.selectedSong.value
-        let recordingJourney = self.state.recordingJourney.value
         let coordinates = recordingJourney.coordinates + [self.lastCoordiante]
         let journey = Journey(id: recordingJourney.id,
                               title: title,
@@ -98,7 +103,6 @@ private extension SaveJourneyViewModel {
                 #endif
                 self.trigger(.endJourneyDidSucceed(journey))
             case .failure(let error):
-                MSLogger.make(category: .network).error("/(error)")
                 #if DEBUG
                 MSLogger.make(category: .saveJourney).error("\(error)")
                 #endif

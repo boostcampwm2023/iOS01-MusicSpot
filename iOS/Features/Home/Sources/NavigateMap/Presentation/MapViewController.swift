@@ -64,12 +64,7 @@ public final class MapViewController: UIViewController {
     
     // MARK: - Properties
     
-    var viewModel: (any MapViewModel)? {
-        willSet {
-            guard let viewModel = newValue else { return }
-            self.swapViewModel(to: viewModel)
-        }
-    }
+    var viewModel: (any MapViewModel)?
     
     private let locationManager = CLLocationManager()
     
@@ -80,7 +75,11 @@ public final class MapViewController: UIViewController {
         return calendar.component(.second, from: .now) % 5
     }
     
-    public var currentCoordinate: (minCoordinate: Coordinate, maxCoordinate: Coordinate) {
+    /// 지도 상에 보이는 좌표 범위
+    /// - Parameters:
+    ///   - minCoordinate: 우측 하단 좌표
+    ///   - maxCoordinate: 좌측 상단 좌표
+    public var visibleCoordinates: (minCoordinate: Coordinate, maxCoordinate: Coordinate) {
         let region = self.mapView.region
         let minCoordinate = Coordinate(latitude: region.center.latitude + region.span.latitudeDelta / 2,
                                        longitude: region.center.longitude - region.span.longitudeDelta / 2)
@@ -118,21 +117,24 @@ public final class MapViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        guard let viewModel = self.viewModel else { return }
         self.configureLayout()
         self.configureCoreLocation()
+        self.bind(viewModel)
     }
     
     // MARK: - Combine Binding
     
-    private func swapViewModel(to viewModel: any MapViewModel) {
+    func swapViewModel(to viewModel: any MapViewModel) {
         self.viewModel = nil
-        self.cancellables = []
+        self.cancellables.forEach { $0.cancel() }
         
-        self.viewModel = viewModel
         self.bind(viewModel)
     }
     
     private func bind(_ viewModel: any MapViewModel) {
+        self.viewModel = viewModel
+        
         if let navigateMapViewModel = viewModel as? NavigateMapViewModel {
             self.bind(navigateMapViewModel)
         }
@@ -275,6 +277,7 @@ private extension MapViewController {
     
     func configureCoreLocation() {
         self.locationManager.delegate = self
+        self.locationManager.requestWhenInUseAuthorization()
     }
     
 }

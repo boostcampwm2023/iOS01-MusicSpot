@@ -12,7 +12,7 @@ import MSDomain
 public protocol SpotNavigationDelegate: AnyObject {
     
     func presentPhotos(from viewController: UIViewController)
-    func presentSpotSave(using image: UIImage, recordingJourney: RecordingJourney, coordinate: Coordinate)
+    func presentSpotSave(using image: UIImage, coordinate: Coordinate)
     func dismissToSpot()
     func popToHome()
     

@@ -145,7 +145,7 @@ public final class SaveJourneyViewController: UIViewController {
             .store(in: &self.cancellables)
         
         self.viewModel.state.recordingJourney
-            .map { $0.spots }
+            .compactMap { $0?.spots }
             .receive(on: DispatchQueue.main)
             .sink { spots in
                 var snapshot = SpotSnapshot()

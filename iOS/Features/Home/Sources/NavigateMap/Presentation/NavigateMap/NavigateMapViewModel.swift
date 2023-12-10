@@ -19,6 +19,7 @@ public final class NavigateMapViewModel: MapViewModel {
     
     public enum Action {
         case viewNeedsLoaded
+        case visibleJourneysDidUpdated(_ visibleJourneys: [Journey])
 //        case locationDidUpdated(CLLocationCoordinate2D)
     }
     
@@ -48,6 +49,8 @@ public final class NavigateMapViewModel: MapViewModel {
         switch action {
         case .viewNeedsLoaded:
             self.state.locationShouldAuthorized.send(true)
+        case .visibleJourneysDidUpdated(let visibleJourneys):
+            self.state.visibleJourneys.send(visibleJourneys)
             //        case .locationDidUpdated(let newCurrentCoordinate):
             //            self.state.previousCoordinate.send(self.state.currentCoordinate.value)
             //            self.state.currentCoordinate.send(newCurrentCoordinate)

@@ -219,8 +219,7 @@ extension SelectSongViewController: UICollectionViewDelegate {
         #if DEBUG
         MSLogger.make(category: .selectSong).log("\(item.title) selected")
         #endif
-        self.navigationDelegate?.navigateToSaveJourney(recordingJourney: self.viewModel.state.recordingJourney,
-                                                       lastCoordinate: self.viewModel.state.lastCoordinate,
+        self.navigationDelegate?.navigateToSaveJourney(lastCoordinate: self.viewModel.state.lastCoordinate,
                                                        selectedSong: item,
                                                        selectedIndex: indexPath)
     }

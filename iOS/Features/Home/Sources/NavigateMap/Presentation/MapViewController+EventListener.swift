@@ -9,10 +9,25 @@ import Foundation
 
 import MSDomain
 
+// MARK: - NavigateMap
+
+extension MapViewController {
+    
+    public func visibleJourneysDidUpdated(_ visibleJourneys: [Journey]) {
+        guard let viewModel = self.viewModel as? NavigateMapViewModel else { return }
+        
+        viewModel.trigger(.visibleJourneysDidUpdated(visibleJourneys))
+    }
+    
+}
+
+// MARK: - RecordJourney
+
 extension MapViewController {
     
     public func journeyDidStarted(_ startedJourney: RecordingJourney) {
-        self.viewModel = RecordJourneyViewModel(startedJourney: startedJourney)
+        let viewModel = RecordJourneyViewModel(startedJourney: startedJourney)
+        self.swapViewModel(to: viewModel)
     }
     
 }

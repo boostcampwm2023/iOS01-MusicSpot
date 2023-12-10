@@ -99,7 +99,7 @@ extension SaveJourneyViewController {
             case .zero:
                 header.update(with: Typo.songSectionTitle)
             case 1:
-                let spots = self.viewModel.state.recordingJourney.value.spots
+                guard let spots = self.viewModel.state.recordingJourney.value?.spots else { return }
                 header.update(with: Typo.spotSectionTitle(spots.count))
             default:
                 break
