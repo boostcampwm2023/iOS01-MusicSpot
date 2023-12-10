@@ -90,6 +90,9 @@ public final class HomeViewModel {
             self.state.isRecording.send(false)
             self.state.overlaysShouldBeCleared.send(true)
         case .mapViewDidChange:
+            if self.state.isRecording.value == false {
+                self.state.isRefreshButtonHidden.send(false)
+            }
             self.state.isRefreshButtonHidden.send(false)
         }
     }
