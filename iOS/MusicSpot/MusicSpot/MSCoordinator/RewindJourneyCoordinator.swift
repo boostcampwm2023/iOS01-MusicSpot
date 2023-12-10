@@ -56,7 +56,6 @@ extension RewindJourneyCoordinator: HomeCoordinatorDelegate {
         // 미사용 함수
     }
     
-    
     func popToHome(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()
         self.navigationController.popViewController(animated: true)

@@ -105,7 +105,6 @@ extension HomeCoordinator: JourneyListNavigationDelegate {
 
 extension HomeCoordinator: HomeCoordinatorDelegate {
     
-    
     func popToHome(from coordinator: Coordinator) {
         guard let homeViewController = self.navigationController.viewControllers.first(where: { viewController in
             viewController is HomeViewController
