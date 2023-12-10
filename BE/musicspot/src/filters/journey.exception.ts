@@ -11,3 +11,13 @@ export class JourneyNotFoundException extends BaseException {
     this.message = JourneyExceptionMessageEnum.JourneyNotFound;
   }
 }
+
+export class coordinateNotCorrectException extends BaseException {
+  constructor() {
+    super(
+      JourneyExceptionCodeEnum.CoordinateNotCorrect,
+      HttpStatus.BAD_REQUEST,
+    );
+    this.message = JourneyExceptionMessageEnum.CoordinateNotCorrect;
+  }
+}
