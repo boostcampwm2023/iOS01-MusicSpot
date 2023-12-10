@@ -51,6 +51,11 @@ public final class SelectSongViewModel {
         switch action {
         case .viewNeedsLoaded:
             Task {
+                let status = await MusicAuthorization.request()
+                #if DEBUG
+                MSLogger.make(category: .saveJourney).info("음악 권한 상태: \(status)")
+                #endif
+                
                 if #available(iOS 16.0, *) {
                     Task {
                         let songs = await self.fetchSongByRank()
