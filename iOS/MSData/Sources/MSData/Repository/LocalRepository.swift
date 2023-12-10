@@ -34,16 +34,20 @@ public struct LocalRepositoryImplementation: LocalRepository {
     
     // MARK: - Functions
     
-    public func save(coordinate: Coordinate) {
-        
+    public func save(coordinateDTO: CoordinateDTO) {
+        self.storage.set(value: coordinateDTO, forKey: self.key)
     }
     
     public func loadCoordinates(using key: String) -> [Coordinate]? {
         if self.key.isEmpty {
              return nil
         } else {
-            return nil
+            return self.storage.getAllOf(CoordinateDTO)
         }
+    }
+    
+    public func deleteAll() {
+        try? self.storage.deleteAll()
     }
     
 }
