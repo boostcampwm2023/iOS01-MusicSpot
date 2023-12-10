@@ -15,7 +15,7 @@ import MSNetworking
 import MSPersistentStorage
 import MSUserDefaults
 
-public protocol JourneyRepository {
+public protocol JourneyRepository: Persistable {
     
     func fetchRecordingJourneyID() -> String?
     func fetchRecordingJourney(forID id: String) -> RecordingJourney?
@@ -178,6 +178,14 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         case .failure(let error):
             return .failure(error)
         }
+    }
+    
+    public func saveToLocal(value: Codable) {
+        
+    }
+    
+    public func loadJourneyFromLocal() -> RecordingJourney? {
+        return nil
     }
     
 }
