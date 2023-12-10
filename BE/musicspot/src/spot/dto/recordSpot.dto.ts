@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsDateString, IsString, IsUrl } from 'class-validator';
 import { IsCoordinate } from '../../common/decorator/coordinate.decorator';
+import { IsObjectId } from 'src/common/decorator/objectId.decorator';
 
 export class RecordSpotReqDTO {
   @ApiProperty({
@@ -8,7 +9,7 @@ export class RecordSpotReqDTO {
     description: '여정 id',
     required: true,
   })
-  @IsString()
+  @IsObjectId({ message: 'ObjectId 형식만 유효합니다.' })
   readonly journeyId: string;
 
   @ApiProperty({

@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { IsArray, IsNotEmpty, IsUUID } from 'class-validator';
 import { UUID } from 'crypto';
 import { IsCoordinate } from 'src/common/decorator/coordinate.decorator';
 
 export class CheckJourneyReqDTO {
   @IsNotEmpty()
   @ApiProperty({
-    example: '655efda2fdc81cae36d20650',
+    example: 'ACB46D2C-44D7-444F-84C5-4EF7E81E12E',
     description: '유저 id',
     required: true,
   })
@@ -22,7 +22,10 @@ export class CheckJourneyReqDTO {
     required: true,
   })
   @IsNotEmpty()
-  @IsArray()
+  @IsCoordinate({
+    message:
+      '위치 좌표는 2개의 숫자와 각각의 범위를 만족해야합니다.(-90~90 , -180~180)',
+  })
   readonly minCoordinate: number[];
 
   @ApiProperty({

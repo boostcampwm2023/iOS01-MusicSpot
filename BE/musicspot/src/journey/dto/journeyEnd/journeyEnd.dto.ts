@@ -13,6 +13,7 @@ import {
 } from '../../../common/decorator/coordinate.decorator';
 import { Type } from 'class-transformer';
 import { SongDTO } from '../song/song.dto';
+import { IsObjectId } from 'src/common/decorator/objectId.decorator';
 
 export class EndJourneyReqDTO {
   @ApiProperty({
@@ -20,7 +21,7 @@ export class EndJourneyReqDTO {
     description: '여정 id',
     required: true,
   })
-  @IsString()
+  @IsObjectId({ message: 'ObjectId 형식만 유효합니다.' })
   readonly journeyId: string;
 
   @ApiProperty({
@@ -31,12 +32,15 @@ export class EndJourneyReqDTO {
     description: '위치 좌표',
     required: true,
   })
-  @IsCoordinates()
+  @IsCoordinates({
+    message:
+      '위치 좌표 배열은 2차원 배열이고 각각의 배열은 숫자 2개와 범위를 만족해야합니다.(-90~90, -180~180)',
+  })
   readonly coordinates: number[][];
 
   @ApiProperty({
     example: '2023-11-22T12:00:00Z',
-    description: 'timestamp',
+    description: '종료 timestamp',
     required: true,
   })
   @IsDateString()

@@ -3,6 +3,7 @@ import { HydratedDocument } from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { Song } from './song.schema';
 import { JourneyMetadata } from './journeyMetadata.schema';
+import { IsDefined, ValidateNested } from 'class-validator';
 
 export type JourneyDocument = HydratedDocument<Journey>;
 
@@ -39,9 +40,11 @@ export class Journey {
   @Prop({ type: [[Number]] })
   coordinates?: number[][];
 
+  @ApiProperty({ description: '메타데이터', type: JourneyMetadata })
   @Prop({ type: JourneyMetadata })
   journeyMetadata?: JourneyMetadata;
 
+  @ApiProperty({ description: '음악 정보', type: Song })
   @Prop({ type: Song })
   song?: Song;
 }
