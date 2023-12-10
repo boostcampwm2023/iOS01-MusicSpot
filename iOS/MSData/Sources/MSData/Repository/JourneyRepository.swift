@@ -39,6 +39,10 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     @UserDefaultsWrapped(UserDefaultsKey.recordingJourneyID, defaultValue: nil)
     private var recordingJourneyID: String?
     
+    // MARK: - Properties: Persistable
+    
+    internal var storage = FileManagerStorage()
+    
     // MARK: - Initializer
     
     public init(session: URLSession = URLSession(configuration: .default),

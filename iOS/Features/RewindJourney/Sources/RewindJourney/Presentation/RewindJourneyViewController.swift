@@ -48,6 +48,7 @@ public final class RewindJourneyViewController: UIViewController {
     
     // MARK: - Properties
     
+    public weak var navigationDelegate: RewindJourneyNavigationDelegate?
     private let viewModel: RewindJourneyViewModel
     public var images: [UIImage] = []
     private let cache: MSCacheStorage
@@ -63,7 +64,7 @@ public final class RewindJourneyViewController: UIViewController {
     private var timerSubscriber: Set<AnyCancellable> = []
     
     // MARK: - Properties: Gesture
-    public weak var navigationDelegate: RewindJourneyNavigationDelegate?
+    
     var initialTouchPoint = CGPoint(x: 0, y: 0)
     
     // MARK: - UI Components
