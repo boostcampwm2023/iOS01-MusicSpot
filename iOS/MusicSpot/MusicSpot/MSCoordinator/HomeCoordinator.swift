@@ -17,6 +17,7 @@ import NavigateMap
 protocol HomeCoordinatorDelegate: AnyObject {
     
     func popToHome(from coordinator: Coordinator)
+    func popToHome(from coordinator: Coordinator, with endedJourney: Journey)
     
 }
 
@@ -115,6 +116,16 @@ extension HomeCoordinator: HomeCoordinatorDelegate {
             self?.navigationController.popToViewController(homeViewController, animated: true)
             self?.childCoordinators.removeAll()
         }
+    }
+    
+    func popToHome(from coordinator: Coordinator, with endedJourney: Journey) {
+        guard let viewController = self.navigationController.viewControllers.first(where: {
+            $0 is HomeViewController
+        }) else {
+            return
+        }
+        
+        self.navigationController.popToViewController(viewController, animated: true)
     }
     
 }
