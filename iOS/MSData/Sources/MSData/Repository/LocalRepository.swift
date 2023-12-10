@@ -13,8 +13,8 @@ import MSPersistentStorage
 public protocol LocalRepository {
 
     var key: String { get }
-    func save(coordinate: Coordinate)
-    func loadCoordinates(using key: String) -> [Coordinate]?
+    func save(coordinateDTO: CoordinateDTO)
+    func loadCoordinates() -> [Coordinate]?
 
 }
 
@@ -38,12 +38,9 @@ public struct LocalRepositoryImplementation: LocalRepository {
         self.storage.set(value: coordinateDTO, forKey: self.key)
     }
     
-    public func loadCoordinates(using key: String) -> [Coordinate]? {
-        if self.key.isEmpty {
-             return nil
-        } else {
-            return self.storage.getAllOf(CoordinateDTO)
-        }
+    public func loadCoordinates() -> [Coordinate]? {
+        let coordinates = self.storage.getAllOf(CoordinateDTO.self)
+        return coordinates?.compactMap { $0.toDomain() }
     }
     
     public func deleteAll() {

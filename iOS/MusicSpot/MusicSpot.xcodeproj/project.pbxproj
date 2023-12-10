@@ -181,6 +181,7 @@
 				DD197B352B1E497C001D4290 /* XCLocalSwiftPackageReference "../Features/SaveJourney" */,
 				DD197B382B1E4986001D4290 /* XCLocalSwiftPackageReference "../Features/SelectSong" */,
 				DD197B3B2B1E498E001D4290 /* XCLocalSwiftPackageReference "../Features/Spot" */,
+				210C43222B25AFCF00B467CD /* XCLocalSwiftPackageReference "../MSCoreKit" */,
 			);
 			productRefGroup = DD73F8562B024C4900EE9BF2 /* Products */;
 			projectDirPath = "";
@@ -560,6 +561,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
+		210C43222B25AFCF00B467CD /* XCLocalSwiftPackageReference "../MSCoreKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MSCoreKit;
+		};
 		DD197B2A2B1E4963001D4290 /* XCLocalSwiftPackageReference "../Features/Home" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Features/Home;
