@@ -16,7 +16,10 @@ export class RecordSpotReqDTO {
     description: '위치 좌표',
     required: true,
   })
-  @IsArray()
+  @IsCoordinate({
+    message:
+      '위치 좌표는 2개의 숫자와 각각의 범위를 만족해야합니다.(-90~90 , -180~180)',
+  })
   readonly coordinate: number[];
 
   @ApiProperty({

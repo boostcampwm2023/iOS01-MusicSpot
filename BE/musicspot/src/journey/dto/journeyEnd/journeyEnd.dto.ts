@@ -7,7 +7,10 @@ import {
   IsNumber,
   IsArray,
 } from 'class-validator';
-import { IsCoordinate } from '../../../common/decorator/coordinate.decorator';
+import {
+  IsCoordinate,
+  IsCoordinates,
+} from '../../../common/decorator/coordinate.decorator';
 import { Type } from 'class-transformer';
 import { SongDTO } from '../song/song.dto';
 
@@ -28,7 +31,7 @@ export class EndJourneyReqDTO {
     description: '위치 좌표',
     required: true,
   })
-  @IsArray()
+  @IsCoordinates()
   readonly coordinates: number[][];
 
   @ApiProperty({
