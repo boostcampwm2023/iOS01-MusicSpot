@@ -8,6 +8,7 @@
 import UIKit
 
 import MSData
+import MSDomain
 import RewindJourney
 
 final class RewindJourneyCoordinator: Coordinator {
@@ -18,7 +19,7 @@ final class RewindJourneyCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     
-    var delegate: HomeCoordinatorDelegate?
+    weak var delegate: HomeCoordinatorDelegate?
     
     // MARK: - Initializer
     
@@ -38,16 +39,6 @@ final class RewindJourneyCoordinator: Coordinator {
     
 }
 
-// MARK: - RewindJourney Navigation
-
-extension RewindJourneyCoordinator: RewindJourneyNavigationDelegate {
-    
-    func popToHomeMap() {
-        self.popToHome(from: self)
-    }
-    
-}
-
 // MARK: - HomeMap Coordinator
 
 extension RewindJourneyCoordinator: HomeCoordinatorDelegate {
@@ -56,6 +47,20 @@ extension RewindJourneyCoordinator: HomeCoordinatorDelegate {
         self.childCoordinators.removeAll()
         self.navigationController.popViewController(animated: true)
         self.delegate?.popToHome(from: self)
+    }
+    
+    func popToHome(from coordinator: Coordinator, with endedJourney: Journey) {
+        
+    }
+    
+}
+
+// MARK: - RewindJourney Navigation
+
+extension RewindJourneyCoordinator: RewindJourneyNavigationDelegate {
+    
+    func popToHomeMap() {
+        self.popToHome(from: self)
     }
     
 }

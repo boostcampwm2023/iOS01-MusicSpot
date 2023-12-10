@@ -12,12 +12,6 @@ import MSData
 import MSDomain
 import SaveJourney
 
-protocol SaveJourneyCoordinatorDelegate: AnyObject {
-    
-    func popToHomeMap(from coordinator: Coordinator)
-    
-}
-
 final class SaveJourneyCoordinator: Coordinator {
     
     // MARK: - Properties
@@ -26,7 +20,7 @@ final class SaveJourneyCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     
-    var delegate: SelectSongCoordinatorDelegate?
+    weak var delegate: SelectSongCoordinatorDelegate?
     
     // MARK: - Initializer
     
@@ -49,24 +43,12 @@ final class SaveJourneyCoordinator: Coordinator {
     
 }
 
-// MARK: - SaveJourneyViewController
+// MARK: - SaveJourney Navigation
 
 extension SaveJourneyCoordinator: SaveJourneyNavigationDelegate {
     
-    func popToHome() {
-        self.delegate?.popToHomeMap(from: self)
-    }
-    
-}
-
-// MARK: - SelectSong Coordinator
-
-extension SaveJourneyCoordinator: SaveJourneyCoordinatorDelegate {
-    
-    func popToHomeMap(from coordinator: Coordinator) {
-        self.childCoordinators.removeAll()
-        self.navigationController.popViewController(animated: true)
-        self.delegate?.popToHomeMap(from: self)
+    func popToHome(with endedJourney: Journey) {
+        self.delegate?.popToHome(from: self, with: endedJourney)
     }
     
 }
