@@ -147,6 +147,10 @@ export class JourneyService {
       throw new UserNotFoundException();
     }
     const journeys = user.journeys;
+    console.log(journeys);
+    if (journeys.length === 0) {
+      throw new JourneyNotFoundException();
+    }
     const boundingBox = turf.bboxPolygon([
       minCoordinate[0],
       minCoordinate[1],
