@@ -11,32 +11,35 @@ import Foundation
 
 import MSData
 import MSDomain
+import MSLogger
 
 public final class NavigateMapViewModel {
     
     public enum Action {
         case locationDidUpdated(CLLocationCoordinate2D)
+        case recordCoordinate(RecordingJourney)
     }
     
     public struct State {
         var previousCoordinate = CurrentValueSubject<CLLocationCoordinate2D?, Never>(nil)
         var currentCoordinate = CurrentValueSubject<CLLocationCoordinate2D?, Never>(nil)
         
-        var visibleJourneys = CurrentValueSubject<[Journey], Never>([])
+        var journeyID = CurrentValueSubject<String?, Never>(nil)
+        var recordingCoordinates = CurrentValueSubject<[Coordinate]?, Never>(nil)
         
         public init() { }
     }
     
     // MARK: - Properties
-    
-    private let repository: JourneyRepository
+
+    private let journeyRepository: JourneyRepository
     
     public var state = State()
     
     // MARK: - Initializer
 
     public init(repository: JourneyRepository) {
-        self.repository = repository
+        self.journeyRepository = repository
     }
     
     // MARK: - Functions
@@ -46,7 +49,20 @@ public final class NavigateMapViewModel {
         case .locationDidUpdated(let newCurrentCoordinate):
             self.state.previousCoordinate.send(self.state.currentCoordinate.value)
             self.state.currentCoordinate.send(newCurrentCoordinate)
+        case .recordCoordinate(let recordJourney):
+            Task {
+                let result = await self.journeyRepository.recordJourney(journeyID: recordJourney.id,
+                                                                        at: recordJourney.coordinates)
+                switch result {
+                case .success(let journey):
+                    self.state.journeyID.send(journey.id)
+                    self.state.recordingCoordinates.send(journey.coordinates)
+                case .failure(let error):
+                    MSLogger.make(category: .home).error("\(error)")
+                }
+            }
         }
+        
     }
     
 }
