@@ -8,6 +8,8 @@
 import Foundation
 import Combine
 
+import MSLogger
+
 public struct MSNetworking {
     
     public typealias TimeoutInterval = DispatchQueue.SchedulerTimeType.Stride
@@ -103,34 +105,46 @@ public struct MSNetworking {
             return .failure(MSNetworkError.invalidRouter)
         }
         
-        let dataTask = Task {
-            try await self.session.data(for: request, delegate: nil)
-        }
-        
-        let timeoutTask = Task {
-            try await Task.sleep(nanoseconds: UInt64(timeoutInterval.magnitude) * 1_000_000_000)
-            dataTask.cancel()
-        }
-        
         do {
-            return try await withTaskCancellationHandler {
-                let (data, response) = try await dataTask.value
-                timeoutTask.cancel()
+            return try await withThrowingTaskGroup(of: Result<T, Error>.self) { group in
+                defer { group.cancelAll() }
                 
-                guard let response = response as? HTTPURLResponse else {
-                    return .failure(MSNetworkError.unknownResponse)
-                }
-                guard 200..<300 ~= response.statusCode else {
-                    let errorResponse = try self.decoder.decode(ErrorResponseDTO.self, from: data)
-                    throw MSNetworkError.invalidStatusCode(statusCode: errorResponse.statusCode,
-                                                           description: errorResponse.message)
+                group.addTask {
+                    let (data, response) = try await self.session.data(for: request, delegate: nil)
+                    try Task.checkCancellation()
+                    
+                    guard let response = response as? HTTPURLResponse else {
+                        throw MSNetworkError.unknownResponse
+                    }
+                    
+                    guard 200..<300 ~= response.statusCode else {
+                        let errorResponse = try self.decoder.decode(ErrorResponseDTO.self, from: data)
+                        throw MSNetworkError.invalidStatusCode(statusCode: errorResponse.statusCode,
+                                                               description: errorResponse.message)
+                    }
+                    
+                    do {
+                        let decodedResult = try self.decoder.decode(T.self, from: data)
+                        return .success(decodedResult)
+                    } catch {
+                        throw error
+                    }
                 }
                 
-                let result = try self.decoder.decode(T.self, from: data)
-                return .success(result)
-            } onCancel: {
-                dataTask.cancel()
-                timeoutTask.cancel()
+                group.addTask {
+                    print(timeoutInterval.magnitude)
+                    try await Task.sleep(nanoseconds: UInt64(timeoutInterval.magnitude))
+                    try Task.checkCancellation()
+                    #if DEBUG
+                    MSLogger.make(category: .network).warning("네트워킹 타임아웃: \(timeoutInterval.magnitude)ns")
+                    #endif
+                    throw MSNetworkError.timeout
+                }
+                
+                guard let result = try await group.next() else {
+                    throw MSNetworkError.unknownChildTask
+                }
+                return result
             }
         } catch {
             return .failure(error)

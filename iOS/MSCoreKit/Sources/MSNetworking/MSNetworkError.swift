@@ -13,6 +13,7 @@ public enum MSNetworkError: Error {
     case unknownResponse
     case invalidStatusCode(statusCode: Int, description: String)
     case timeout
+    case unknownChildTask
     
 }
 
@@ -27,6 +28,8 @@ extension MSNetworkError: Equatable {
         case let (.invalidStatusCode(lhsStatusCode, _), .invalidStatusCode(rhsStatusCode, _)):
             return lhsStatusCode == rhsStatusCode
         case (.timeout, .timeout):
+            return true
+        case (.unknownChildTask, .unknownChildTask):
             return true
         default:
             return false
