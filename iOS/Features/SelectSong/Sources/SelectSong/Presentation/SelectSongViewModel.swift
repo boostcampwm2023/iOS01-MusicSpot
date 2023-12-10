@@ -58,6 +58,9 @@ public final class SelectSongViewModel {
                 
                 if #available(iOS 16.0, *) {
                     Task {
+                        self.state.isLoading.send(true)
+                        defer { self.state.isLoading.send(false) }
+                        
                         let songs = await self.fetchSongByRank()
                         self.state.songs.send(songs)
                     }
