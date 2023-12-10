@@ -68,6 +68,10 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     
     var initialTouchPoint = CGPoint(x: 0, y: 0)
     
+    // MARK: - Properties: Haptic
+    
+    private let haptic = UIImpactFeedbackGenerator(style: .medium)
+    
     // MARK: - UI Components
     
     private let backButton = UIButton()
@@ -81,6 +85,7 @@ public final class SpotViewController: UIViewController, UINavigationControllerD
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.configure()
+        self.haptic.prepare()
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -248,7 +253,7 @@ private extension SpotViewController {
         self.configureBackButtonAction()
         self.configureGalleryButtonAction()
         
-        self.configureUpToDownSwipeGesture()
+        self.configureLeftToRightSwipeGesture()
     }
     
     func configureCameraSetting() {
@@ -283,39 +288,6 @@ private extension SpotViewController {
         self.backButton.addAction(backButtonAction, for: .touchUpInside)
     }
     
-    func configureUpToDownSwipeGesture() {
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.panGestureDismiss(_:)))
-        self.view.addGestureRecognizer(panGesture)
-    }
-
-    @objc
-    func panGestureDismiss(_ sender: UIPanGestureRecognizer) {
-        let touchPoint = sender.location(in: self.view.window)
-        
-        switch sender.state {
-        case .began:
-            self.initialTouchPoint = touchPoint
-        case .changed:
-            if touchPoint.y - self.initialTouchPoint.y > .zero {
-                self.view.frame = CGRect(x: .zero,
-                                         y: touchPoint.y - self.initialTouchPoint.y,
-                                         width: self.view.frame.width,
-                                         height: self.view.frame.height)
-            }
-        case .ended, .cancelled:
-            if touchPoint.y - self.initialTouchPoint.y > 200 {
-                self.navigationDelegate?.popToHome()
-            }
-        default:
-            UIView.animate(withDuration: 0.3) {
-                self.view.frame = CGRect(x: .zero,
-                                         y: .zero,
-                                         width: self.view.frame.width,
-                                         height: self.view.frame.height)
-            }
-        }
-    }
-    
 }
 
 // MARK: - Button Actions
@@ -324,6 +296,7 @@ private extension SpotViewController {
     
     func shotButtonTapped() {
         self.viewModel.shot()
+        self.haptic.impactOccurred()
     }
     
     func swapButtonTapped() {
