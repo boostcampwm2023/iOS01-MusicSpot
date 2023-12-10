@@ -4,6 +4,7 @@ import {
   IsCoordinate,
   IsCoordinates,
 } from '../../../common/decorator/coordinate.decorator';
+import { IsObjectId } from 'src/common/decorator/objectId.decorator';
 export class RecordJourneyResDTO {
   @ApiProperty({
     example: [
@@ -23,7 +24,7 @@ export class RecordJourneyReqDTO {
     description: '여정 id',
     required: true,
   })
-  @IsString()
+  @IsObjectId({ message: 'ObjectId 형식만 유효합니다.' })
   readonly journeyId: string;
 
   @ApiProperty({

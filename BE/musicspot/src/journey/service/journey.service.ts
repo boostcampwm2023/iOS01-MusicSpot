@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 
@@ -22,6 +22,8 @@ import { EndJourneyReqDTO } from '../dto/journeyEnd/journeyEnd.dto';
 import { CheckJourneyReqDTO } from '../dto/journeyCheck/journeyCheck.dto';
 import { RecordJourneyReqDTO } from '../dto/journeyRecord/journeyRecord.dto';
 import { is1DArray } from 'src/common/util/coordinate.util';
+import { DeleteJourneyReqDTO } from '../dto/journeyDelete.dto';
+import { checkPrimeSync } from 'crypto';
 
 @Injectable()
 export class JourneyService {
@@ -238,5 +240,30 @@ export class JourneyService {
         options,
       })
       .lean();
+  }
+
+  async deleteJourneyById(deletedJourneyDto: DeleteJourneyReqDTO) {
+    const { userId, journeyId } = deletedJourneyDto;
+
+    const deletedJourney = await this.journeyModel
+      .findOneAndDelete({
+        _id: journeyId,
+      })
+      .lean();
+    if (!deletedJourney) {
+      throw new JourneyNotFoundException();
+    }
+
+    const deletedUserData = await this.userModel.findOneAndUpdate(
+      { userId },
+      { $pull: { journeys: new mongoose.Types.ObjectId(journeyId) } },
+      { new: true },
+    );
+
+    if (!deletedUserData) {
+      throw new UserNotFoundException();
+    }
+
+    return deletedJourney;
   }
 }
