@@ -13,7 +13,7 @@ import MSPersistentStorage
 
 public protocol Persistable {
     
-  func saveToLocal(value: Codable)
+  func saveToLocal(value: Codable) -> Bool
   func loadJourneyFromLocal() -> RecordingJourney?
     
 }
