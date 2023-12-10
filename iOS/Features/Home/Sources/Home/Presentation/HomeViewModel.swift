@@ -22,6 +22,7 @@ public final class HomeViewModel {
     
     public enum Action {
         case viewNeedsLoaded
+        case viewNeedsReloaded
         case startButtonDidTap(Coordinate)
         case refreshButtonDidTap(visibleCoordinates: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
         case backButtonDidTap
@@ -67,16 +68,19 @@ public final class HomeViewModel {
     func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
-            #if DEBUG
-            self.isFirstLaunch = true
-            try? self.keychain.deleteAll()
-            #endif
+//            #if DEBUG
+//            self.isFirstLaunch = true
+//            try? self.keychain.deleteAll()
+//            #endif
             let firstLaunchMessage = self.isFirstLaunch ? "앱이 처음 실행되었습니다." : "앱 첫 실행이 아닙니다."
             MSLogger.make(category: .userDefaults).log("\(firstLaunchMessage)")
             
             if self.isFirstLaunch {
                 self.createNewUser()
             }
+        case .viewNeedsReloaded:
+            let isRecording = self.journeyRepository.fetchIsRecording()
+            self.state.isRecording.send(isRecording)
         case .startButtonDidTap(let coordinate):
             #if DEBUG
             MSLogger.make(category: .home).debug("Start 버튼 탭: \(coordinate)")
