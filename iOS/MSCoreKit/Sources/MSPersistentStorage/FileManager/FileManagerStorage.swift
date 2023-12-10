@@ -74,9 +74,20 @@ public final class FileManagerStorage: NSObject, MSPersistentStorage {
         if let path = self.storageURL()?.path,
            let contents = try? self.fileManager.contentsOfDirectory(atPath: path) {
             let allDecodedData: [T] = contents.compactMap { content in
-                guard let dataPath = URL(string: (path as NSString).appendingPathComponent(content)),
-                      let data = try? Data(contentsOf: dataPath),
-                      let decodedData = try? self.decoder.decode(T.self, from: data) else { return nil }
+                let key = String(content.dropLast(".json".count))
+                guard let dataPath =
+                        fileURL(forKey: key) else {
+                    MSLogger.make(category: .fileManager).error("경로의 Data를 가져오지 못하였습니다.")
+                    return nil
+                }
+                MSLogger.make(category: .fileManager).error("경로의 Data를 성공적으로 가져왔습니다.")
+                
+                print(dataPath.description)
+                guard let data = try? Data(contentsOf: dataPath),
+                      let decodedData = try? self.decoder.decode(T.self, from: data) else {
+                    MSLogger.make(category: .fileManager).error("decode에 실패하였습니다.")
+                    return nil
+                }
                 return decodedData
             }
             return allDecodedData
@@ -96,6 +107,7 @@ public final class FileManagerStorage: NSObject, MSPersistentStorage {
         guard let fileURL = self.fileURL(forKey: key) else {
             return nil
         }
+        print(fileURL.description)
         
         guard let encodedData = try? self.encoder.encode(value) else {
             return nil
