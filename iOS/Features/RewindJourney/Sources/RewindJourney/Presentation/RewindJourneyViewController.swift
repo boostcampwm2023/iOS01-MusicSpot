@@ -11,6 +11,8 @@ import Combine
 import MSCacheStorage
 import MSData
 import MSDesignSystem
+import MSExtension
+import MSImageFetcher
 import MSLogger
 
 public final class RewindJourneyViewController: UIViewController {
@@ -21,27 +23,21 @@ public final class RewindJourneyViewController: UIViewController {
         
         // progress bar
         enum Progressbar {
-            
             static let height: CGFloat = 4.0
             static let inset: CGFloat = 4.0
             static let defaultIndex: Int = 0
-            
         }
         
         // stackView
         enum StackView {
-            
             static let inset: CGFloat = 12.0
-            
         }
         
         // musicView
         enum MusicView {
-            
             static let height: CGFloat = 69.0
             static let inset: CGFloat = 12.0
             static let bottomInset: CGFloat = 34.0
-            
         }
         
     }
@@ -50,13 +46,10 @@ public final class RewindJourneyViewController: UIViewController {
     
     public weak var navigationDelegate: RewindJourneyNavigationDelegate?
     private let viewModel: RewindJourneyViewModel
-    public var images: [UIImage] = []
-    private let cache: MSCacheStorage
+    
     private var cancellables: Set<AnyCancellable> = []
-    private var presentImageIndex: Int? {
-        didSet {
-            self.changeProgressViews()
-        }
+    private var presentingImageIndex: Int? {
+        didSet { self.changeProgressViews() }
     }
     
     // MARK: - Properties: Timer
@@ -69,7 +62,7 @@ public final class RewindJourneyViewController: UIViewController {
     
     // MARK: - UI Components
     
-    private let stackView = UIStackView()
+    private let progressStackView = UIStackView()
     private let presentImageView = UIImageView()
     private let musicView = MSMusicView()
     private var progressViews: [MSProgressView]?
@@ -80,10 +73,8 @@ public final class RewindJourneyViewController: UIViewController {
     // MARK: - Initializer
     
     public init(viewModel: RewindJourneyViewModel,
-                cache: MSCacheStorage = MSCacheStorage(),
                 nibName nibNameOrNil: String? = nil,
                 bundle nibBundleOrNil: Bundle? = nil) {
-        self.cache = cache
         self.viewModel = viewModel
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -96,9 +87,9 @@ public final class RewindJourneyViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        self.imageBinding()
         self.timerBinding()
         self.configure()
+        self.bind()
         self.viewModel.trigger(.viewNeedsLoaded)
     }
     
@@ -112,41 +103,25 @@ public final class RewindJourneyViewController: UIViewController {
     
     // MARK: - Combine Binding
     
-    func imageBinding() {
-        self.viewModel.state.stateJourneyPhotoURLs
-            .receive(on: DispatchQueue.main)
-            .sink { photoURLs in
-                for (index, url) in photoURLs.enumerated() {
-                    self.images.append(UIImage())
-                    self.load(url: url, key: index)
-                }
-                self.configureProgressbarsLayout()
+    private func bind() {
+        self.viewModel.state.photoURLs
+            .sink { [weak self] urls in
+                self?.configureProgressViewsLayout(urls: urls)
             }
             .store(in: &self.cancellables)
-    }
-    
-    private func load(url: URL, key: Int) {
-        DispatchQueue.global().async { [weak self] in
-            if let data = try? Data(contentsOf: url),
-               let image = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    self?.images[key] = image
-                }
-            }
-        }
     }
     
     // MARK: - Timer
     
     private func timerBinding() {
-        self.viewModel.timerPublisher
+        self.viewModel.state.timerPublisher
             .sink { [weak self] _ in
-                self?.rightTouchViewTapped()
+                self?.rightTouchViewDidTap()
             }
             .store(in: &self.timerSubscriber)
     }
     
-    private func timerRestart() {
+    private func restartTimer() {
         self.viewModel.trigger(.startAutoPlay)
         self.viewModel.trigger(.stopAutoPlay)
     }
@@ -167,7 +142,6 @@ public final class RewindJourneyViewController: UIViewController {
     private func configureLayout() {
         self.configurePresentImageViewLayout()
         self.configureStackViewLayout()
-        self.configureProgressbarsLayout()
         self.configureMusicViewLayout()
         self.configureTouchViewLayout()
     }
@@ -185,36 +159,32 @@ public final class RewindJourneyViewController: UIViewController {
     }
     
     private func configureStackViewLayout() {
-        self.view.addSubview(self.stackView)
+        self.view.addSubview(self.progressStackView)
         
-        self.stackView.axis = .horizontal
-        self.stackView.spacing = Metric.Progressbar.inset
-        self.stackView.distribution = .fillEqually
+        self.progressStackView.axis = .horizontal
+        self.progressStackView.spacing = Metric.Progressbar.inset
+        self.progressStackView.distribution = .fillEqually
         
-        self.stackView.translatesAutoresizingMaskIntoConstraints = false
+        self.progressStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.stackView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            self.stackView.heightAnchor.constraint(equalToConstant: Metric.Progressbar.height),
-            self.stackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor,
-                                                    constant: Metric.StackView.inset),
-            self.stackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,
-                                                     constant: -Metric.StackView.inset)])
+            self.progressStackView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.progressStackView.heightAnchor.constraint(equalToConstant: Metric.Progressbar.height),
+            self.progressStackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor,
+                                                            constant: Metric.StackView.inset),
+            self.progressStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,
+                                                             constant: -Metric.StackView.inset)])
     }
     
-    private func configureProgressbarsLayout() {
-        self.progressViews?.forEach { progressView in
-            progressView.removeFromSuperview()
-        }
+    @MainActor
+    private func configureProgressViewsLayout(urls: [URL]) {
+        self.progressViews?.forEach { $0.removeFromSuperview() }
         self.progressViews?.removeAll()
         
-        var views = [MSProgressView]()
-        self.images.forEach { _ in
+        urls.forEach { _ in
             let progressView = MSProgressView()
-            views.append(progressView)
-            self.stackView.addArrangedSubview(progressView)
+            self.progressStackView.addArrangedSubview(progressView)
+            self.progressViews?.append(progressView)
         }
-        
-        self.progressViews = views
     }
     
     private func configureMusicViewLayout() {
@@ -263,7 +233,7 @@ public final class RewindJourneyViewController: UIViewController {
     }
     
     private func configureProgressbarsStyle() {
-        self.presentImageIndex = Metric.Progressbar.defaultIndex
+        self.presentingImageIndex = Metric.Progressbar.defaultIndex
     }
     
     // MARK: - Configuration: Action
@@ -274,50 +244,58 @@ public final class RewindJourneyViewController: UIViewController {
     }
     
     private func configureLeftTouchViewAction() {
-        self.leftTouchView.addTarget(self, action: #selector(leftTouchViewTapped), for: .touchUpInside)
+        let action = UIAction { [weak self] _ in
+            self?.leftTouchViewTapped()
+        }
+        self.leftTouchView.addAction(action, for: .touchUpInside)
     }
     
     private func configureRightTouchViewAction() {
-        self.rightTouchView.addTarget(self, action: #selector(rightTouchViewTapped), for: .touchUpInside)
+        let action = UIAction { [weak self] _ in
+            self?.rightTouchViewDidTap()
+        }
+        self.rightTouchView.addAction(action, for: .touchUpInside)
     }
     
     private func changeProgressViews() {
-        guard let presentIndex = self.presentImageIndex else { return }
-        if self.images.count == 0 { return }
+        let photoURLs = self.viewModel.state.photoURLs.value
+        guard let presentingIndex = self.presentingImageIndex,
+              photoURLs.count > presentingIndex  else {
+            return
+        }
         
-        self.presentImageView.image = images[presentIndex]
-        self.preHighlightenProgressView = self.progressViews?[presentIndex]
+        let photoURL = photoURLs[presentingIndex]
+        self.presentImageView.ms.setImage(with: photoURL, forKey: photoURL.paath())
+        self.preHighlightenProgressView = self.progressViews?[presentingIndex]
         self.preHighlightenProgressView?.isHighlighted = false
         
-        let minIndex = 0
-        let maxIndex = images.count - 1
+        let minIndex: Int = .zero
+        let maxIndex = photoURLs.count - 1
         
         for index in minIndex...maxIndex {
-            self.progressViews?[index].isLeftOfCurrentHighlighting = index < presentIndex ? true : false
-            self.progressViews?[index].isHighlighted = index <= presentIndex ? true : false
+            self.progressViews?[index].isLeftOfCurrentHighlighting = index < presentingIndex ? true : false
+            self.progressViews?[index].isHighlighted = index <= presentingIndex ? true : false
         }
-        self.timerRestart()
+        self.restartTimer()
     }
     
     // MARK: - Actions
     
-    @objc private func leftTouchViewTapped() {
-        guard let presentImageIndex else {
-            return
-        }
-        if presentImageIndex > 0 {
-            let index = presentImageIndex - 1
-            self.presentImageIndex = index
+    private func leftTouchViewTapped() {
+        guard let presentingImageIndex = self.presentingImageIndex else { return }
+        
+        if presentingImageIndex > 0 {
+            let index = presentingImageIndex - 1
+            self.presentingImageIndex = index
         }
     }
     
-    @objc private func rightTouchViewTapped() {
-        guard let presentImageIndex else {
-            return
-        }
-        if presentImageIndex < images.count - 1 {
-            let index = presentImageIndex + 1
-            self.presentImageIndex = index
+    private func rightTouchViewDidTap() {
+        guard let presentingImageIndex = self.presentingImageIndex else { return }
+        
+        if presentingImageIndex < self.viewModel.state.photoURLs.value.count - 1 {
+            let index = presentingImageIndex + 1
+            self.presentingImageIndex = index
         }
     }
     
@@ -329,7 +307,7 @@ public final class RewindJourneyViewController: UIViewController {
 #Preview {
     MSFont.registerFonts()
     let spotRepository = SpotRepositoryImplementation()
-    let rewindJourneyViewModel = RewindJourneyViewModel(repository: spotRepository)
+    let rewindJourneyViewModel = RewindJourneyViewModel(photoURLs: [], repository: spotRepository)
     let rewindJourneyViewController = RewindJourneyViewController(viewModel: rewindJourneyViewModel)
     return rewindJourneyViewController
 }

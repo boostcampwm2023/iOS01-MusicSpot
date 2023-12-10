@@ -55,7 +55,9 @@ public struct SpotRepositoryImplementation: SpotRepository {
         let result = await self.networking.request([SpotDTO].self, router: router)
         switch result {
         case .success(let spot):
+            #if DEBUG
             MSLogger.make(category: .network).debug("성공적으로 다운로드하였습니다.")
+            #endif
             return .success(spot.map { $0.toDomain() })
         case .failure(let error):
             MSLogger.make(category: .network).error("\(error): 다운로드에 실패하였습니다.")
@@ -69,7 +71,9 @@ public struct SpotRepositoryImplementation: SpotRepository {
         let result = await self.networking.request(SpotDTO.self, router: router)
         switch result {
         case .success(let spot):
+            #if DEBUG
             MSLogger.make(category: .network).debug("성공적으로 업로드하였습니다.")
+            #endif
             self.saveToLocal(value: spot)
             return .success(spot.toDomain())
         case .failure(let error):
