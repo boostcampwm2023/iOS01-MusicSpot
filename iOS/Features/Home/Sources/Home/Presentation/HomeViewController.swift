@@ -147,8 +147,15 @@ public final class HomeViewController: HomeBottomSheetViewController {
         
         self.viewModel.state.isStartButtonLoading
             .receive(on: DispatchQueue.main)
-            .sink { isStartButtonLoading in
-                self.startButton.configuration?.showsActivityIndicator = isStartButtonLoading
+            .sink { [weak self] isStartButtonLoading in
+                self?.startButton.configuration?.showsActivityIndicator = isStartButtonLoading
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.overlaysShouldBeCleared
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.contentViewController.clearOverlays()
             }
             .store(in: &self.cancellables)
     }
@@ -205,10 +212,8 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
     public func backButtonDidTap(_ button: MSRectButton) {
         guard self.viewModel.state.isRecording.value == true else { return }
         
-        self.contentViewController.clearOverlays()
         self.viewModel.trigger(.backButtonDidTap)
         self.contentViewController.journeyDidCancelled()
-        // TODO: 여정 취소
     }
     
     public func spotButtonDidTap(_ button: MSRectButton) {

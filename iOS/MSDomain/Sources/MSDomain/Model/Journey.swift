@@ -49,3 +49,19 @@ extension Journey: Hashable {
     }
     
 }
+
+// MARK: - String Convertible
+
+extension Journey: CustomStringConvertible {
+    
+    public var description: String {
+        return """
+        Journey
+        - title: \(self.title)
+        - date:
+          - start: \(self.date.start)
+          - end: \(self.date.end)
+        """
+    }
+    
+}

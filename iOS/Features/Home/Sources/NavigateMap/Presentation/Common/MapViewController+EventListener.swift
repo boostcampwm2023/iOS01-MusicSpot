@@ -27,13 +27,21 @@ extension MapViewController {
 extension MapViewController {
     
     public func journeyDidStarted(_ startedJourney: RecordingJourney) {
+        let userRepository = UserRepositoryImplementation()
         let journeyRepository = JourneyRepositoryImplementation()
-        let viewModel = RecordJourneyViewModel(startedJourney: startedJourney, journeyRepository: journeyRepository)
+        let viewModel = RecordJourneyViewModel(startedJourney: startedJourney,
+                                               userRepository: userRepository,
+                                               journeyRepository: journeyRepository)
         self.swapViewModel(to: viewModel)
     }
     
     public func journeyDidCancelled() {
+        guard let viewModel = self.viewModel as? RecordJourneyViewModel else { return }
+        viewModel.trigger(.recordingDidCancelled)
         
+        let journeyRepository = JourneyRepositoryImplementation()
+        let navigateMapViewModel = NavigateMapViewModel(repository: journeyRepository)
+        self.swapViewModel(to: navigateMapViewModel)
     }
     
 }

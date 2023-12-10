@@ -31,6 +31,7 @@ public final class HomeViewModel {
         // Passthrough
         public var startedJourney = PassthroughSubject<RecordingJourney, Never>()
         public var visibleJourneys = PassthroughSubject<[Journey], Never>()
+        public var overlaysShouldBeCleared = PassthroughSubject<Bool, Never>()
         
         // CurrentValue
         public var isRecording = CurrentValueSubject<Bool, Never>(false)
@@ -83,6 +84,7 @@ public final class HomeViewModel {
             self.fetchJourneys(minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)
         case .backButtonDidTap:
             self.state.isRecording.send(false)
+            self.state.overlaysShouldBeCleared.send(true)
         }
     }
     
