@@ -11,6 +11,7 @@ import Foundation
 import MediaPlayer
 import MSData
 import MSDomain
+import MSLogger
 import MusicKit
 
 public final class SelectSongViewModel {
@@ -22,6 +23,7 @@ public final class SelectSongViewModel {
     
     public struct State {
         var songs = CurrentValueSubject<[Song], Never>([])
+        var isLoading = CurrentValueSubject<Bool, Never>(false)
         
         let lastCoordinate: Coordinate
     }
@@ -32,7 +34,8 @@ public final class SelectSongViewModel {
     
     public var state: State
     
-    private var musicAuthorizationState: MusicAuthorization.Status?
+    let recordingJourney: RecordingJourney
+    let lastCoordinate: Coordinate
     
     // MARK: - Initializer
     
@@ -40,6 +43,9 @@ public final class SelectSongViewModel {
                 repository: SongRepository) {
         self.state = State(lastCoordinate: lastCoordinate)
         self.repository = repository
+        self.state = State()
+        self.recordingJourney = recordingJourney
+        self.lastCoordinate = lastCoordinate
     }
     
     // MARK: - Functions
@@ -48,24 +54,58 @@ public final class SelectSongViewModel {
         switch action {
         case .viewNeedsLoaded:
             Task {
-                let status = await MusicAuthorization.request()
-                self.musicAuthorizationState = status
-            }
-        case .searchTextFieldDidUpdate(let text):
-            switch self.musicAuthorizationState {
-            case .authorized:
-                Task {
-                    let result = await self.repository.fetchSongList(with: text)
-                    switch result {
-                    case .success(let songCollection):
-                        self.state.songs.send(songCollection.map { $0 })
-                    case .failure(let error):
-                        dump(error)
+                if #available(iOS 16.0, *) {
+                    Task {
+                        let songs = await self.fetchSongByRank()
+                        self.state.songs.send(songs)
                     }
                 }
-            default:
+            }
+        case .searchTextFieldDidUpdate(let text):
+            if #available(iOS 16.0, *), text.isEmpty {
+                Task {
+                    let songs = await self.fetchSongByRank()
+                    self.state.songs.send(songs)
+                }
                 return
             }
+            
+            Task {
+                let songs = await self.fetchSong(byTitle: text)
+                self.state.songs.send(songs)
+            }
+        }
+    }
+    
+}
+
+// MARK: - Private Functions
+
+private extension SelectSongViewModel {
+    
+    func fetchSong(byTitle title: String) async -> [Song] {
+        self.state.isLoading.send(true)
+        defer { self.state.isLoading.send(false) }
+        
+        let result = await self.repository.fetchSongList(with: title)
+        switch result {
+        case .success(let songCollection):
+            return songCollection.map { $0 }
+        case .failure(let error):
+            MSLogger.make(category: .selectSong).error("\(error)")
+            return []
+        }
+    }
+    
+    @available(iOS 16.0, *)
+    func fetchSongByRank() async -> [Song] {
+        let result = await self.repository.fetchSongListByRank()
+        switch result {
+        case .success(let chart):
+            return chart.map { $0 }
+        case .failure(let error):
+            MSLogger.make(category: .selectSong).error("\(error)")
+            return []
         }
     }
     

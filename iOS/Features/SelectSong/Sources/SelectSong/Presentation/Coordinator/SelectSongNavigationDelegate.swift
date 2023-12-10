@@ -13,7 +13,6 @@ import MSDomain
 public protocol SelectSongNavigationDelegate: AnyObject {
     
     func navigateToSaveJourney(lastCoordinate: Coordinate,
-                               selectedSong: Song,
-                               selectedIndex: IndexPath)
+                               selectedSong: Song)
     
 }

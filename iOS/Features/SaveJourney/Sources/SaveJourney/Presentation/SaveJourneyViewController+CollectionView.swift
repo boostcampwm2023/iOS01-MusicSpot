@@ -8,9 +8,13 @@
 import CoreLocation
 import UIKit
 
+import MSLogger
+
 // MARK: - Collection View
 
 extension SaveJourneyViewController {
+    
+    // MARK: - Constants
     
     private enum Typo {
         
@@ -30,6 +34,8 @@ extension SaveJourneyViewController {
         
     }
     
+    // MARK: - Configuration: CollectionView
+    
     func configureCollectionView() {
         let layout = UICollectionViewCompositionalLayout(sectionProvider: { sectionIndex, _ in
             guard let section = self.dataSource?.sectionIdentifier(for: sectionIndex) else { return .none }
@@ -39,22 +45,23 @@ extension SaveJourneyViewController {
                         forDecorationViewOfKind: SaveJourneyBackgroundView.elementKind)
         
         self.collectionView.setCollectionViewLayout(layout, animated: false)
-        self.updateDataSource(self.configureDataSource())
+        let dataSource = self.configureDataSource()
+        self.setDataSource(dataSource)
     }
     
     func configureSection(for section: SaveJourneySection) -> NSCollectionLayoutSection {
-        let item = NSCollectionLayoutItem(layoutSize: section.itemSize)
+        let layoutItem = NSCollectionLayoutItem(layoutSize: section.itemSize)
         
         let itemCount = section == .music ? 1 : 2
         let interItemSpacing: CGFloat = section == .music ? .zero : Metric.innerSpacing
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: section.groupSize,
-                                                       item: item,
+        let layoutGroup = NSCollectionLayoutGroup.horizontal(layoutSize: section.groupSize,
+                                                       item: layoutItem,
                                                        count: itemCount)
-        group.interItemSpacing = .fixed(interItemSpacing)
+        layoutGroup.interItemSpacing = .fixed(interItemSpacing)
         
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = Metric.innerSpacing
-        section.contentInsets = NSDirectionalEdgeInsets(top: Metric.verticalInset,
+        let layoutSection = NSCollectionLayoutSection(group: layoutGroup)
+        layoutSection.interGroupSpacing = Metric.innerSpacing
+        layoutSection.contentInsets = NSDirectionalEdgeInsets(top: Metric.verticalInset,
                                                         leading: Metric.horizontalInset,
                                                         bottom: Metric.verticalInset,
                                                         trailing: Metric.horizontalInset)
@@ -68,13 +75,15 @@ extension SaveJourneyViewController {
                                                        leading: .zero,
                                                        bottom: .zero,
                                                        trailing: .zero)
-        section.boundarySupplementaryItems = [header]
+        if section != .empty {
+            layoutSection.boundarySupplementaryItems = [header]
+        }
         
         let backgroundView = NSCollectionLayoutDecorationItem.background(
             elementKind: SaveJourneyBackgroundView.elementKind)
-        section.decorationItems = [backgroundView]
+        layoutSection.decorationItems = [backgroundView]
         
-        return section
+        return layoutSection
     }
     
     func configureDataSource() -> SaveJourneyDataSource {
@@ -82,7 +91,7 @@ extension SaveJourneyViewController {
             cell.update(with: itemIdentifier)
         }
         
-        let journeyCellRegistration = SpotCellRegistration { cell, _, itemIdentifier in
+        let spotCellRegistration = SpotCellRegistration { cell, _, itemIdentifier in
             Task {
                 let location = try await itemIdentifier.locationFromSpotCoordinates()
                 
@@ -92,6 +101,8 @@ extension SaveJourneyViewController {
                 cell.update(with: cellModel)
             }
         }
+        
+        let emptyCellRegistration = EmptyCellRegistration { _, _, _ in }
         
         let headerRegistration = HeaderRegistration(elementKind: SaveJourneyHeaderView.elementKind,
                                                     handler: { header, _, indexPath in
@@ -113,10 +124,14 @@ extension SaveJourneyViewController {
                 return collectionView.dequeueConfiguredReusableCell(using: musicCellRegistration,
                                                                     for: indexPath,
                                                                     item: song)
-            case .spot(let journey):
-                return collectionView.dequeueConfiguredReusableCell(using: journeyCellRegistration,
+            case .spot(let spot):
+                return collectionView.dequeueConfiguredReusableCell(using: spotCellRegistration,
                                                                     for: indexPath,
-                                                                    item: journey)
+                                                                    item: spot)
+            case .empty:
+                return collectionView.dequeueConfiguredReusableCell(using: emptyCellRegistration,
+                                                                    for: indexPath,
+                                                                    item: UUID())
             }
         })
         
@@ -126,7 +141,7 @@ extension SaveJourneyViewController {
         }
         
         var snapshot = SaveJourneySnapshot()
-        snapshot.appendSections([.music, .spot])
+        snapshot.appendSections([.music, .spot, .empty])
         dataSource.apply(snapshot)
         
         return dataSource
@@ -136,31 +151,40 @@ extension SaveJourneyViewController {
 
 // MARK: - CollectionView Scroll
 
-import MSDomain
-
 extension SaveJourneyViewController: UICollectionViewDelegate {
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offset = scrollView.contentOffset
-        self.updateProfileViewLayout(by: offset)
+        // TODO: 맵 UX 개선
+//        let offset = scrollView.contentOffset
+//        self.updateMapViewSize(by: offset)
     }
     
-    func updateProfileViewLayout(by offset: CGPoint) {
-        let collectionViewHeight = self.collectionView.frame.height
-        let collectionViewContentInset = collectionViewHeight - self.view.safeAreaInsets.top
-        let assistanceValue = collectionViewHeight - collectionViewContentInset
-        let isContentBelowTopOfScreen = offset.y < .zero
+    private func updateMapViewSize(by offset: CGPoint) {
+        let beginStretchingOffset = -self.view.frame.width
         
-        if isContentBelowTopOfScreen {
-            self.mapViewHeightConstraint?.constant = assistanceValue + offset.y.magnitude
-        } else if !isContentBelowTopOfScreen {
-            self.mapViewHeightConstraint?.constant = .zero
-        } else {
-            self.mapViewHeightConstraint?.constant = offset.y.magnitude
+        self.mapViewHeightConstraint?.constant = self.view.frame.width
+        if offset.y < beginStretchingOffset {
+            let stretchingSize = offset.y.magnitude - self.view.frame.width
+            #if DEBUG
+            MSLogger.make(category: .uiKit).debug("MapView should stretch for: \(stretchingSize)")
+            #endif
+            
+            self.mapViewHeightConstraint?.constant += stretchingSize
         }
+        
+        #if DEBUG
+        let constraint = self.mapViewHeightConstraint?.constant
+        print(self.mapView.frame.height)
+        MSLogger.make(category: .uiKit).debug("\(constraint!)")
+        #endif
+        self.view.layoutIfNeeded()
     }
     
 }
+
+// MARK: - Extension: Spot
+
+import MSDomain
 
 private extension Spot {
     
