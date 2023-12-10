@@ -1,5 +1,5 @@
 //
-//  LocalRepository.swift
+//  JourneyRepository+Persistable.swift
 //  MSData
 //
 //  Created by 전민건 on 12/10/23.
@@ -8,46 +8,104 @@
 import Foundation
 
 import MSDomain
+import MSLogger
 import MSPersistentStorage
 
-public protocol LocalRepository {
-
-    func save(value: Codable)
-    func loadJourney() -> RecordingJourney?
-
+public protocol Persistable {
+    
+  func saveToLocal(value: Codable)
+  func loadJourneyFromLocal() -> RecordingJourney?
+    
 }
 
-public struct LocalRepositoryImplementation: LocalRepository {
+// MARK: - Interface
+
+extension JourneyRepositoryImplementation: Persistable {
     
-    // MARK: - Properties
-    
-    private var storage = FileManagerStorage()
-    private var coordinateURL: URL?
-    public let key: String
-    
-    // MARK: - Initializer
-    
-    public init() {
-        self.key = UUID().uuidString
-    }
-    
-    // MARK: - Functions
-    
-    public func save(coordinateDTO: CoordinateDTO) {
-        self.storage.set(value: coordinateDTO, forKey: self.key)
-    }
-    
-    public func save() {
+    private struct KeyStorage {
+        
+        static var id: String? = nil
+        static var startTimestamp: String? = nil
+        static var spots = [String]()
+        static var coordinates = [String]()
         
     }
     
-    public func loadCoordinates() -> [Coordinate]? {
-        let coordinates = self.storage.getAllOf(CoordinateDTO.self)
-        return coordinates?.compactMap { $0.toDomain() }
+    public func saveToLocal(value: Codable) {
+        let key = UUID().uuidString
+        self.storage.set(value: value, forKey: key)
+        
+        switch value {
+        case is String:
+            if KeyStorage.id == nil {
+                KeyStorage.id = key
+            } else {
+                MSLogger.make(category: .persistable).debug("journey ID는 하나의 값만 저장할 수 있습니다.")
+            }
+        case is Date:
+            if KeyStorage.startTimestamp == nil {
+                KeyStorage.startTimestamp = key
+            } else {
+                MSLogger.make(category: .persistable).debug("start tamp는 하나의 값만 저장할 수 있습니다.")
+            }
+        case is SpotDTO:
+            KeyStorage.spots.append(key)
+        case is CoordinateDTO:
+            KeyStorage.coordinates.append(key)
+        default:
+            MSLogger.make(category: .persistable).debug("RecordingJourney 타입의 요소들만 넣을 수 있습니다.")
+            return
+        }
     }
     
-    public func deleteAll() {
-        try? self.storage.deleteAll()
+    public func loadJourneyFromLocal() -> RecordingJourney? {
+        guard let id = self.loadID(),
+              let startTimestamp = self.loadStartTimeStamp() else {
+                  return nil
+              }
+        return RecordingJourney(id: id,
+                                startTimestamp: startTimestamp,
+                                spots: self.loadSpots(),
+                                coordinates: self.loadCoordinates())
+    }
+    
+}
+
+// MARK: - load Functions
+
+private extension JourneyRepositoryImplementation {
+    
+    func loadStartTimeStamp() -> Date? {
+        guard let startTimestampKey = KeyStorage.startTimestamp,
+              let startTimestamp = self.storage.get(Date.self, forKey: startTimestampKey)
+               else {
+            MSLogger.make(category: .persistable).debug("id 또는 startTimestamp가 저장되지 않았습니다.")
+            return nil
+        }
+        return startTimestamp
+    }
+    
+    func loadID() -> String? {
+        guard let idKey = KeyStorage.id,
+              let id = self.storage.get(String.self, forKey: idKey) else {
+            MSLogger.make(category: .persistable).debug("id 또는 startTimestamp가 저장되지 않았습니다.")
+            return nil
+        }
+        return id
+    }
+    
+    func loadSpots() -> [Spot] {
+        return KeyStorage.spots.compactMap { spotKey in
+            let spotDTO = self.storage.get(SpotDTO.self, forKey: spotKey)
+            return spotDTO?.toDomain()
+        }
+    }
+    
+    func loadCoordinates() -> [Coordinate] {
+        return KeyStorage.coordinates.compactMap { coordinateKey in
+            let coordinateDTO = self.storage.get(CoordinateDTO.self, forKey: coordinateKey)
+            return coordinateDTO?.toDomain()
+        }
     }
     
 }
