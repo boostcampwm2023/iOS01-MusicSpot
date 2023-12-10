@@ -25,6 +25,7 @@ public final class HomeViewModel {
         case startButtonDidTap(Coordinate)
         case refreshButtonDidTap(visibleCoordinates: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
         case backButtonDidTap
+        case mapViewDidChange
     }
     
     public struct State {
@@ -35,6 +36,7 @@ public final class HomeViewModel {
         
         // CurrentValue
         public var isRecording = CurrentValueSubject<Bool, Never>(false)
+        public var isRefreshButtonHidden = CurrentValueSubject<Bool, Never>(false)
         public var isStartButtonLoading = CurrentValueSubject<Bool, Never>(false)
     }
     
@@ -81,10 +83,13 @@ public final class HomeViewModel {
             #endif
             self.startJourney(at: coordinate)
         case .refreshButtonDidTap(visibleCoordinates: (let minCoordinate, let maxCoordinate)):
+            self.state.isRefreshButtonHidden.send(true)
             self.fetchJourneys(minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)
         case .backButtonDidTap:
             self.state.isRecording.send(false)
             self.state.overlaysShouldBeCleared.send(true)
+        case .mapViewDidChange:
+            self.state.isRefreshButtonHidden.send(false)
         }
     }
     

@@ -152,6 +152,14 @@ public final class HomeViewController: HomeBottomSheetViewController {
             }
             .store(in: &self.cancellables)
         
+        self.viewModel.state.isRefreshButtonHidden
+            .removeDuplicates(by: { $0 == $1 })
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isHidden in
+                self?.refreshButton.isHidden = isHidden
+            }
+            .store(in: &self.cancellables)
+        
         self.viewModel.state.overlaysShouldBeCleared
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
@@ -163,7 +171,6 @@ public final class HomeViewController: HomeBottomSheetViewController {
     // MARK: - Functions
     
     private func updateButtonMode(isRecording: Bool) {
-        self.refreshButton.isHidden = isRecording
         UIView.transition(with: startButton, duration: 0.5,
                           options: .transitionCrossDissolve,
                           animations: {
@@ -204,7 +211,6 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
             guard let coordinates = self?.contentViewController.visibleCoordinates else { return }
             
             self?.viewModel.trigger(.refreshButtonDidTap(visibleCoordinates: coordinates))
-            self?.refreshButton.isHidden = true
         }
         self.refreshButton.addAction(refreshButtonAction, for: .touchUpInside)
     }
@@ -234,6 +240,16 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
         }
         
         self.navigationDelegate?.navigateToSelectSong(lastCoordinate: currentUserCoordiante)
+    }
+    
+}
+
+// MARK: - MapViewController
+
+extension HomeViewController: MapViewControllerDelegate {
+    
+    public func mapViewControllerDidChangeVisibleRegion(_ mapViewController: MapViewController) {
+        self.viewModel.trigger(.mapViewDidChange)
     }
     
 }
