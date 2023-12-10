@@ -250,9 +250,10 @@ private extension HomeViewController {
         
         self.view.addSubview(self.recordJourneyButtonStackView)
         self.recordJourneyButtonStackView.translatesAutoresizingMaskIntoConstraints = false
+        let safeAreaBottomAnchor = self.view.safeAreaLayoutGuide.bottomAnchor
         NSLayoutConstraint.activate([
             self.recordJourneyButtonStackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            self.recordJourneyButtonStackView.bottomAnchor.constraint(equalTo: bottomSheetTopAnchor,
+            self.recordJourneyButtonStackView.bottomAnchor.constraint(equalTo: safeAreaBottomAnchor,
                                                                       constant: -Metric.startButtonBottomInset)
         ])
         
