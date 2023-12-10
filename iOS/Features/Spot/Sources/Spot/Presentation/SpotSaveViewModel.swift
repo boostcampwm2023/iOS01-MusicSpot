@@ -48,12 +48,9 @@ internal extension SpotSaveViewModel {
         case .startUploadSpot(let data):
             Task {
                 guard let recordingJourneyID = self.journeyRepository.fetchRecordingJourneyID() else {
-                    #if DEBUG
-                    MSLogger.make(category: .network).error("현재 여정 정보를 가져오는데 실패했습니다.")
-                    #endif
+                    MSLogger.make(category: .spot).error("recoding 중인 journeyID를 찾지 못하였습니다.")
                     return
                 }
-                
                 let spot = CreateSpotRequestDTO(journeyId: recordingJourneyID,
                                                 coordinate: CoordinateDTO(self.coordinate),
                                                 timestamp: .now,
