@@ -92,4 +92,8 @@ extension SpotCoordinator: HomeCoordinatorDelegate {
         self.delegate?.popToHome(from: self)
     }
     
+    func popToHome(from coordinator: Coordinator, with endedJourney: Journey) {
+        //
+    }
+    
 }

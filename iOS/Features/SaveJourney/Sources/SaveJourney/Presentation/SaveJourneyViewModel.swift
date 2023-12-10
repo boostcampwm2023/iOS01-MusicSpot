@@ -23,7 +23,7 @@ public final class SaveJourneyViewModel {
     
     public struct State {
         // Passthrough
-        var endJourneySucceed = PassthroughSubject<String, Never>()
+        var endJourneySucceed = PassthroughSubject<Journey, Never>()
         
         // CurrentValue
         /// Apple Music 권한 상태
@@ -76,10 +76,7 @@ public final class SaveJourneyViewModel {
                 self.state.buttonStateFactors.send(stateFactors)
             }
             
-            guard let recordingJourneyID = self.journeyRepository.fetchRecordingJourneyID(),
-                  let recordingJourney = self.journeyRepository.fetchRecordingJourney(forID: recordingJourneyID) else {
-                return
-            }
+            guard let recordingJourney = self.journeyRepository.loadJourneyFromLocal() else { return }
             self.state.recordingJourney.send(recordingJourney)
         case .musicControlButtonDidTap:
             let stateFactors = self.state.buttonStateFactors.value
@@ -114,11 +111,8 @@ private extension SaveJourneyViewModel {
                 #if DEBUG
                 MSLogger.make(category: .saveJourney).log("\(journeyID)가 저장되었습니다.")
                 #endif
-                self.state.endJourneySucceed.send(journeyID)
             case .failure(let error):
-                #if DEBUG
                 MSLogger.make(category: .saveJourney).error("\(error)")
-                #endif
             }
         }
     }

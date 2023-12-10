@@ -6,12 +6,11 @@
 //
 
 import Foundation
-import MusicKit
 
 import MSDomain
 
 public protocol SaveJourneyNavigationDelegate: AnyObject {
     
-    func popToHome()
+    func popToHome(with endedJourney: Journey)
     
 }

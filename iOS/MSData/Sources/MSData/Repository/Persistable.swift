@@ -1,8 +1,8 @@
 //
-//  JourneyRepository+Persistable.swift
+//  Persistable.swift
 //  MSData
 //
-//  Created by 전민건 on 12/10/23.
+//  Created by 전민건 on 2023.12.10.
 //
 
 import Foundation
@@ -13,23 +13,28 @@ import MSPersistentStorage
 
 public protocol Persistable {
     
-  func saveToLocal(value: Codable) -> Bool
-  func loadJourneyFromLocal() -> RecordingJourney?
+    var storage: MSPersistentStorage { get }
+    
+    @discardableResult
+    func saveToLocal(value: Codable) -> Bool
+    func loadJourneyFromLocal() -> RecordingJourney?
     
 }
 
-// MARK: - Interface
+// MARK: - KeyStorage
 
-extension JourneyRepositoryImplementation: Persistable {
+private struct KeyStorage {
     
-    private struct KeyStorage {
-        
-        static var id: String? = nil
-        static var startTimestamp: String? = nil
-        static var spots = [String]()
-        static var coordinates = [String]()
-        
-    }
+    static var id: String?
+    static var startTimestamp: String?
+    static var spots = [String]()
+    static var coordinates = [String]()
+    
+}
+
+// MARK: - Default Implementations
+
+extension Persistable {
     
     @discardableResult
     public func saveToLocal(value: Codable) -> Bool {
@@ -65,24 +70,18 @@ extension JourneyRepositoryImplementation: Persistable {
     public func loadJourneyFromLocal() -> RecordingJourney? {
         guard let id = self.loadID(),
               let startTimestamp = self.loadStartTimeStamp() else {
-                  return nil
-              }
+            return nil
+        }
         return RecordingJourney(id: id,
                                 startTimestamp: startTimestamp,
                                 spots: self.loadSpots(),
                                 coordinates: self.loadCoordinates())
     }
     
-}
-
-// MARK: - load Functions
-
-private extension JourneyRepositoryImplementation {
-    
     func loadStartTimeStamp() -> Date? {
         guard let startTimestampKey = KeyStorage.startTimestamp,
               let startTimestamp = self.storage.get(Date.self, forKey: startTimestampKey)
-               else {
+        else {
             MSLogger.make(category: .persistable).debug("id 또는 startTimestamp가 저장되지 않았습니다.")
             return nil
         }
