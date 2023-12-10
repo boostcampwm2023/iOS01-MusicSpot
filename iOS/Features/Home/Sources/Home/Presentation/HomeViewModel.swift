@@ -88,12 +88,12 @@ public final class HomeViewModel {
             self.fetchJourneys(minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)
         case .backButtonDidTap:
             self.state.isRecording.send(false)
+            self.state.isRefreshButtonHidden.send(false)
             self.state.overlaysShouldBeCleared.send(true)
         case .mapViewDidChange:
             if self.state.isRecording.value == false {
                 self.state.isRefreshButtonHidden.send(false)
             }
-            self.state.isRefreshButtonHidden.send(false)
         }
     }
     
