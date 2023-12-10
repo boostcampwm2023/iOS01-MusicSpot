@@ -147,6 +147,7 @@ export class JourneyService {
       throw new UserNotFoundException();
     }
     const journeys = user.journeys;
+
     const boundingBox = turf.bboxPolygon([
       minCoordinate[0],
       minCoordinate[1],
@@ -177,6 +178,9 @@ export class JourneyService {
       );
       if (!journey) {
         throw new JourneyNotFoundException();
+      }
+      if (journey.coordinates.length < 2) {
+        continue;
       }
       let journeyLine = turf.lineString(journey.coordinates);
       if (!turf.booleanDisjoint(journeyLine, boundingBox)) {
