@@ -80,6 +80,10 @@ extension SpotCoordinator: SpotNavigationDelegate {
         self.popToHome(from: self)
     }
     
+    func popToHomeWithSpot(spot: Spot) {
+        self.popToHomeWithSpot(from: self, spot: spot)
+    }
+    
 }
 
 // MARK: - HomeMap Coordinator
@@ -90,6 +94,12 @@ extension SpotCoordinator: HomeCoordinatorDelegate {
         self.childCoordinators.removeAll()
         self.navigationController.popViewController(animated: true)
         self.delegate?.popToHome(from: self)
+    }
+    
+    func popToHomeWithSpot(from coordinator: Coordinator, spot: Spot) {
+        self.childCoordinators.removeAll()
+        self.navigationController.popViewController(animated: true)
+        self.delegate?.popToHomeWithSpot(from: self, spot: spot)
     }
     
     func popToHome(from coordinator: Coordinator, with endedJourney: Journey) {

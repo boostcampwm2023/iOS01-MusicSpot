@@ -5,6 +5,7 @@
 //  Created by 전민건 on 11/22/23.
 //
 
+import Combine
 import UIKit
 
 import MSData
@@ -62,6 +63,8 @@ public final class SpotSaveViewController: UIViewController {
     private let viewModel: SpotSaveViewModel
     private let image: UIImage
     
+    private var cancellables: Set<AnyCancellable> = []
+    
     // MARK: - UI Components
     
     private let imageView: UIImageView = {
@@ -96,6 +99,7 @@ public final class SpotSaveViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.configure()
+        self.bind()
     }
     
     // MARK: - Configure
@@ -105,6 +109,18 @@ public final class SpotSaveViewController: UIViewController {
         self.configureStyles()
         self.configureAction()
         self.configureState()
+    }
+    
+    // MARK: - Combine Binding
+    
+    private func bind() {
+        self.viewModel.state.spot
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] spot in
+                guard let spot = spot else { return }
+                self?.navigationDelegate?.popToHomeWithSpot(spot: spot)
+            }
+            .store(in: &self.cancellables)
     }
 
     // MARK: - UI Components: Layout
@@ -249,6 +265,7 @@ public final class SpotSaveViewController: UIViewController {
             MSLogger.make(category: .spot).debug("현재 이미지를 Data로 변환할 수 없습니다.")
             return
         }
+        
         self.viewModel.trigger(.startUploadSpot(jpegData))
         self.navigationDelegate?.popToHome()
     }

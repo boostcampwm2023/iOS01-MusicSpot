@@ -15,5 +15,6 @@ public protocol SpotNavigationDelegate: AnyObject {
     func presentSpotSave(using image: UIImage, coordinate: Coordinate)
     func dismissToSpot()
     func popToHome()
+    func popToHomeWithSpot(spot: Spot)
     
 }

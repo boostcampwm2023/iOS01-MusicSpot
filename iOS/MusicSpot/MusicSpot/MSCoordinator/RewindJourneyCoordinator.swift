@@ -42,6 +42,9 @@ final class RewindJourneyCoordinator: Coordinator {
 // MARK: - HomeMap Coordinator
 
 extension RewindJourneyCoordinator: HomeCoordinatorDelegate {
+    func popToHomeWithSpot(from coordinator: Coordinator, spot: Spot) {
+        // 미사용 함수
+    }
     
     func popToHome(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()

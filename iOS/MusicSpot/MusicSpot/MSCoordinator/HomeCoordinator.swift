@@ -17,6 +17,7 @@ import NavigateMap
 protocol HomeCoordinatorDelegate: AnyObject {
     
     func popToHome(from coordinator: Coordinator)
+    func popToHomeWithSpot(from coordinator: Coordinator, spot: Spot)
     func popToHome(from coordinator: Coordinator, with endedJourney: Journey)
     
 }
@@ -118,6 +119,19 @@ extension HomeCoordinator: HomeCoordinatorDelegate {
         }
     }
     
+    func popToHomeWithSpot(from coordinator: Coordinator, spot: Spot) {
+        guard let homeViewController = self.navigationController.viewControllers.first(where: { viewController in
+            viewController is HomeViewController
+        }) as? HomeBottomSheetViewController else {
+            return
+        }
+        homeViewController.contentViewController.addSpotInRecording(spot: spot)
+        self.navigationController.dismiss(animated: true) { [weak self] in
+            self?.navigationController.popToViewController(homeViewController, animated: true)
+            self?.childCoordinators.removeAll()
+        }
+    }
+      
     func popToHome(from coordinator: Coordinator, with endedJourney: Journey) {
         guard let viewController = self.navigationController.viewControllers.first(where: {
             $0 is HomeViewController
