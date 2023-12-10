@@ -146,15 +146,15 @@ extension FileManagerStorage {
     func storageURL(create: Bool = false) -> URL? {
         let directoryURL: URL?
         if #available(iOS 16.0, *) {
-            let storageDirectoryURL = try? self.fileManager.url(for: .applicationDirectory,
+            let storageDirectoryURL = try? self.fileManager.url(for: .cachesDirectory,
                                                                 in: .userDomainMask,
-                                                                appropriateFor: .applicationDirectory,
+                                                                appropriateFor: .cachesDirectory,
                                                                 create: false)
             directoryURL = storageDirectoryURL?
                 .appending(path: Constants.appBundleIdentifier, directoryHint: .isDirectory)
         } else {
             let cacheDirectoryURL = self.fileManager
-                .urls(for: .applicationDirectory, in: .userDomainMask)
+                .urls(for: .cachesDirectory, in: .userDomainMask)
                 .first
             directoryURL = cacheDirectoryURL?
                 .appendingPathComponent(Constants.appBundleIdentifier, isDirectory: true)
