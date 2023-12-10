@@ -70,6 +70,20 @@ public final class FileManagerStorage: NSObject, MSPersistentStorage {
         return decodedData
     }
     
+    public func getAllOf<T: Codable>(_ type: T.Type) -> [T]? {
+        if let path = self.storageURL()?.path,
+           let contents = try? self.fileManager.contentsOfDirectory(atPath: path) {
+            let allDecodedData: [T] = contents.compactMap { content in
+                guard let dataPath = URL(string: (path as NSString).appendingPathComponent(content)),
+                      let data = try? Data(contentsOf: dataPath),
+                      let decodedData = try? self.decoder.decode(T.self, from: data) else { return nil }
+                return decodedData
+            }
+            return allDecodedData
+        }
+        return nil
+    }
+    
     /// `FileManager`를 사용한 PersistentStorage에 주어진 Key 값으로 주어진 데이터 `value`를 저장합니다.
     /// - Parameters:
     ///   - value: 저장할 데이터
