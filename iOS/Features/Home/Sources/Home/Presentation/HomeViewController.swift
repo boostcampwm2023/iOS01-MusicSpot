@@ -206,6 +206,7 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
         guard self.viewModel.state.isRecording.value == true else { return }
         
         self.contentViewController.clearOverlays()
+        self.contentViewController.clearAnnotations()
         self.viewModel.trigger(.backButtonDidTap)
         self.contentViewController.journeyDidCancelled()
         // TODO: 여정 취소

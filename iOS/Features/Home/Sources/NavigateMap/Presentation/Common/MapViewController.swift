@@ -264,6 +264,11 @@ public final class MapViewController: UIViewController {
         self.mapView.removeOverlays(overlays)
     }
     
+    public func clearAnnotations() {
+        let annotations = self.mapView.annotations
+        self.mapView.removeAnnotations(annotations)
+    }
+    
 }
 
 // MARK: - UI Configuration
