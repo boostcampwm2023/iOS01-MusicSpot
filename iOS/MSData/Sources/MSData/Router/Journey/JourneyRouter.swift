@@ -13,8 +13,8 @@ public enum JourneyRouter: Router {
     
     /// 여정 기록을 시작합니다.
     case startJourney(dto: StartJourneyRequestDTO)
-    /// 여정 좌표를 기록합니다.
-    case recordJourney(dto: RecordSpotRequestDTO)
+    /// 여정의 각 좌표를 기록합니다.
+    case recordCoordinate(dto: RecordCoordinateRequestDTO)
     /// 여정 기록을 종료합니다.
     case endJourney(dto: EndJourneyRequestDTO)
     /// 해당 범위 내 여정들을 반환합니다.
