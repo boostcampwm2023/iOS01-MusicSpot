@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsDateString, IsArray } from 'class-validator';
+import { IsString, IsDateString, IsArray, IsUUID } from 'class-validator';
 import { IsCoordinate } from '../../../common/decorator/coordinate.decorator';
 import { UUID } from 'crypto';
 export class StartJourneyReqDTO {
@@ -16,7 +16,7 @@ export class StartJourneyReqDTO {
 
   @ApiProperty({
     example: '2023-11-22T12:00:00Z',
-    description: 'timestamp',
+    description: '시작 timestamp',
     required: true,
   })
   @IsDateString()
@@ -27,7 +27,7 @@ export class StartJourneyReqDTO {
     description: '사용자 id',
     required: true,
   })
-  @IsString()
+  @IsUUID()
   readonly userId: UUID;
 
   // @ApiProperty({

@@ -140,11 +140,27 @@ export class JourneyController {
     return await this.journeyService.loadLastJourney(userId);
   }
 
+  @ApiOperation({
+    summary: '여정 조회 API',
+    description: 'journey id를 통해 여정을 조회',
+  })
+  @ApiCreatedResponse({
+    description: 'journey id에 해당하는 여정을 반환',
+    type: [Journey],
+  })
   @Get(':journeyId')
   async getJourneyById(@Param('journeyId') journeyId: string) {
     return await this.journeyService.getJourneyById(journeyId);
   }
 
+  @ApiOperation({
+    summary: '여정 삭제 api',
+    description: 'journey id에 따른 여정 삭제',
+  })
+  @ApiCreatedResponse({
+    description: '삭제된 여정을 반환',
+    type: Journey,
+  })
   @Delete('')
   async deleteJourneyById(@Body() deleteJourneyDto: DeleteJourneyReqDTO) {
     return await this.journeyService.deleteJourneyById(deleteJourneyDto);
