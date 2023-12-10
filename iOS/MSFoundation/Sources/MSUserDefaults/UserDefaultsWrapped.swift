@@ -9,21 +9,20 @@ import Foundation
 
 @propertyWrapper
 public struct UserDefaultsWrapped<T: Codable> {
-    
+
     private let key: String
     private var defaultValue: T
     private let userDefaults: UserDefaults
     private let decoder = JSONDecoder()
     private let encoder = JSONEncoder()
-    
+
     public init(_ key: String,
                 defaultValue: T,
                 userDefaults: UserDefaults = .standard) {
         self.key = key
         self.defaultValue = defaultValue
         self.userDefaults = userDefaults
-        
-        save(defaultValue)
+
     }
     
     public var wrappedValue: T {
@@ -44,5 +43,5 @@ public struct UserDefaultsWrapped<T: Codable> {
         }
         return loadedObject
     }
-    
+
 }
