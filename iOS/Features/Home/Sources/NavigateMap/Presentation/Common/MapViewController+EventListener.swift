@@ -46,6 +46,7 @@ extension MapViewController {
             MSLogger.make(category: .home).error("여정이 종료되어야 하지만 이미 Map에서 NavigateMapViewModel을 사용하고 있습니다.")
             return
         }
+        
         if isCancelling {
             viewModel.trigger(.recordingDidCancelled)
         }
