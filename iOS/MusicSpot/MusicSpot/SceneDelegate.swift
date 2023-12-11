@@ -11,6 +11,7 @@ import JourneyList
 import MSConstants
 import MSData
 import MSDesignSystem
+import MSLogger
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -24,6 +25,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var recordingJourneyID: String?
     @UserDefaultsWrapped(UserDefaultsKey.isFirstLaunch, defaultValue: false)
     var isFirstLaunch: Bool
+    @UserDefaultsWrapped(UserDefaultsKey.isRecording, defaultValue: false)
+    var isRecording: Bool
+    
     var keychain = MSKeychainStorage()
     #endif
     
@@ -36,6 +40,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         defer { self.window = window }
         
+        MSLogger.make(category: .userDefaults).info("isFirstLaunch: \(self.isFirstLaunch.description)")
+        MSLogger.make(category: .userDefaults).info("isRecording: \(self.isRecording.description)")
+        MSLogger.make(category: .userDefaults).info("recordingJourneyID: \(self.recordingJourneyID ?? "No Recording")")
+        
+        #if DEBUG
+        self.prepareToDebug()
+        #endif
         MSFont.registerFonts()
         
         let musicSpotNavigationController = self.makeNavigationController()
@@ -65,9 +76,7 @@ private extension SceneDelegate {
 // MARK: - Debug
 
 #if DEBUG
-
 import MSKeychainStorage
-import MSLogger
 import MSUserDefaults
 
 private extension SceneDelegate {
@@ -83,5 +92,4 @@ private extension SceneDelegate {
     }
     
 }
-
 #endif

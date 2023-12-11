@@ -81,15 +81,5 @@ public struct SpotRepositoryImplementation: SpotRepository {
             return .failure(error)
         }
     }
-    
-    // MARK: - Persistable
-    
-    public func saveToLocal(value: Codable) {
-        
-    }
-    
-    public func loadJourneyFromLocal() -> RecordingJourney? {
-        return nil
-    }
             
 }

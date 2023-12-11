@@ -133,9 +133,10 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
             
             self.saveToLocal(value: recordingJourney.id)
             self.saveToLocal(value: recordingJourney.startTimestamp)
-            self.isRecording = true
             
             self.recordingJourneyID = recordingJourney.id
+            self.isRecording = true
+            
             #if DEBUG
             if let recordingJourneyID = self.recordingJourneyID {
                 MSLogger.make(category: .userDefaults).debug("기록중인 여정 정보가 저장되었습니다: \(recordingJourneyID)")
