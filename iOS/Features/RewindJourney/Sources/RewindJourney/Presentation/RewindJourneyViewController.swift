@@ -49,7 +49,9 @@ public final class RewindJourneyViewController: UIViewController {
     
     private var cancellables: Set<AnyCancellable> = []
     private var presentingImageIndex: Int? {
-        didSet { self.changeProgressViews() }
+        didSet {
+            DispatchQueue.main.async { self.changeProgressViews() }
+        }
     }
     
     // MARK: - Properties: Timer
