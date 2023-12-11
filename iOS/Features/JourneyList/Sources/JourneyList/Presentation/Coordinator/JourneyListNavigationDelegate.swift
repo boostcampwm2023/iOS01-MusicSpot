@@ -7,8 +7,10 @@
 
 import Foundation
 
+import MSDomain
+
 public protocol JourneyListNavigationDelegate: AnyObject {
     
-    func navigateToRewindJourney(with urls: [URL])
+    func navigateToRewindJourney(with urls: [URL], music: Music)
     
 }

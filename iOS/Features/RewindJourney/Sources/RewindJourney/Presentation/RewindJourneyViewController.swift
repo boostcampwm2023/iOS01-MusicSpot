@@ -306,11 +306,20 @@ public final class RewindJourneyViewController: UIViewController {
 
 // MARK: - Preview
 
+#if DEBUG
+import MSDomain
+
 @available(iOS 17, *)
 #Preview {
     MSFont.registerFonts()
     let spotRepository = SpotRepositoryImplementation()
-    let rewindJourneyViewModel = RewindJourneyViewModel(photoURLs: [], repository: spotRepository)
+    let songRepository = SongRepositoryImplementation()
+    let music = Music(id: UUID().uuidString, title: "Super Shy", artist: "NewJeans", albumCover: nil)
+    let rewindJourneyViewModel = RewindJourneyViewModel(photoURLs: [],
+                                                        music: music,
+                                                        spotRepository: spotRepository,
+                                                        songRepository: songRepository)
     let rewindJourneyViewController = RewindJourneyViewController(viewModel: rewindJourneyViewModel)
     return rewindJourneyViewController
 }
+#endif

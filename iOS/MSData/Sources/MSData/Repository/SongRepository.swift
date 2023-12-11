@@ -13,6 +13,7 @@ import MSNetworking
 
 public protocol SongRepository {
     
+    func fetchSong(withID id: String) async -> Result<Song, Error>
     func fetchSongList(with term: String) async -> Result<MusicItemCollection<Song>, Error>
     @available(iOS 16.0, *)
     func fetchSongListByRank() async -> Result<MusicItemCollection<Song>, Error>
@@ -25,11 +26,25 @@ public struct SongRepositoryImplementation: SongRepository {
     
     // MARK: - Initializer
     
-    public init() {
-        
-    }
+    public init() { }
     
     // MARK: - Functions
+    
+    public func fetchSong(withID id: String) async -> Result<Song, Error> {
+        let musicItemID = MusicItemID(id)
+        let request = MusicCatalogResourceRequest<Song>(matching: \.id, equalTo: musicItemID)
+        
+        do {
+            let response = try await request.response()
+            guard let song = response.items.first else {
+                MSLogger.make(category: .music).error("주어진 ID에 맞는 음악를 찾을 수 없습니다.")
+                return .failure(RepositoryError.emptyResponse)
+            }
+            return .success(song)
+        } catch {
+            return .failure(error)
+        }
+    }
     
     public func fetchSongList(with term: String) async -> Result<MusicItemCollection<Song>, Error> {
         #if MOCK

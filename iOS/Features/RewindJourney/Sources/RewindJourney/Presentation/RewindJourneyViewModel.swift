@@ -5,10 +5,12 @@
 //  Created by 전민건 on 11/30/23.
 //
 
-import Foundation
 import Combine
+import Foundation
+import MusicKit
 
 import MSData
+import MSDomain
 import MSExtension
 import MSImageFetcher
 import MSLogger
@@ -27,15 +29,18 @@ public final class RewindJourneyViewModel {
         
         // CurrentValue
         public let photoURLs: CurrentValueSubject<[URL], Never>
+        public let prefetchedMusic: CurrentValueSubject<Music, Never>
+        public let selectedSong = CurrentValueSubject<Song?, Never>(nil)
     }
     
     // MARK: - Properties
     
-    private let repository: SpotRepository
+    private let spotRepository: SpotRepository
+    private let songRepository: SongRepository
     
     public var state: State
     
-    private var subscriber: Set<AnyCancellable> = []
+    private var cancellables: Set<AnyCancellable> = []
     
     // MARK: - Properties: Timer
     
@@ -44,9 +49,14 @@ public final class RewindJourneyViewModel {
     
     // MARK: - Initializer
     
-    public init(photoURLs: [URL], repository: SpotRepository) {
-        self.repository = repository
-        self.state = State(photoURLs: CurrentValueSubject<[URL], Never>(photoURLs))
+    public init(photoURLs: [URL],
+                music: Music,
+                spotRepository: SpotRepository,
+                songRepository: SongRepository) {
+        self.spotRepository = spotRepository
+        self.songRepository = songRepository
+        self.state = State(photoURLs: CurrentValueSubject<[URL], Never>(photoURLs),
+                           prefetchedMusic: CurrentValueSubject<Music, Never>(music))
     }
     
 }
@@ -69,6 +79,8 @@ extension RewindJourneyViewModel {
                     }
                 }
             }
+            let songID = self.state.prefetchedMusic.value.id
+            self.fetchMusic(byID: songID)
         case .startAutoPlay:
             self.startTimer()
         case .stopAutoPlay:
@@ -76,6 +88,27 @@ extension RewindJourneyViewModel {
         }
     }
 
+}
+
+// MARK: - Functions: Music
+
+private extension RewindJourneyViewModel {
+    
+    func fetchMusic(byID id: String) {
+        Task {
+            let result = await self.songRepository.fetchSong(withID: id)
+            switch result {
+            case .success(let song):
+                #if DEBUG
+                MSLogger.make(category: .rewindJourney).debug("음악을 찾았습니다: \(song)")
+                #endif
+                self.state.selectedSong.send(song)
+            case .failure(let error):
+                MSLogger.make(category: .rewindJourney).error("\(error)")
+            }
+        }
+    }
+    
 }
 
 // MARK: - Functions: Timer
