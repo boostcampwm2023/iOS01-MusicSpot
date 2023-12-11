@@ -183,6 +183,7 @@ public final class RewindJourneyViewController: UIViewController {
         urls.forEach { _ in
             let progressView = MSProgressView()
             self.progressStackView.addArrangedSubview(progressView)
+            if self.progressViews == nil { self.progressViews = [] }
             self.progressViews?.append(progressView)
         }
     }
