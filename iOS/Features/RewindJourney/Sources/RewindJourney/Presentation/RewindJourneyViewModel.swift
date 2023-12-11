@@ -83,8 +83,9 @@ extension RewindJourneyViewModel {
 private extension RewindJourneyViewModel {
     
     func startTimer() {
-        self.timer = Timer.publish(every: self.timerTimeInterval, on: .main, in: .common)
+        self.timer = Timer.publish(every: self.timerTimeInterval, on: .current, in: .common)
             .autoconnect()
+            .receive(on: DispatchQueue.global(qos: .background))
             .sink { [weak self] _ in
                 self?.state.timerPublisher.send()
             }

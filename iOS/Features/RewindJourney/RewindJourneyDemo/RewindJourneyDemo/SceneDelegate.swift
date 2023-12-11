@@ -29,7 +29,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         MSFont.registerFonts()
         
         let repository = SpotRepositoryImplementation()
-        let viewModel = RewindJourneyViewModel(repository: repository)
+        let viewModel = RewindJourneyViewModel(photoURLs: [URL(string: "")!,
+                                                           URL(string: "")!], repository: repository)
         let viewController = RewindJourneyViewController(viewModel: viewModel)
         
         window.rootViewController = viewController
