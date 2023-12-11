@@ -152,6 +152,7 @@ public final class MapViewController: UIViewController {
         viewModel.state.visibleJourneys
             .receive(on: DispatchQueue.main)
             .sink { [weak self] journeys in
+                self?.clearAnnotations()
                 self?.addAnnotations(with: journeys)
                 self?.drawPolyLinesToMap(with: journeys)
             }
