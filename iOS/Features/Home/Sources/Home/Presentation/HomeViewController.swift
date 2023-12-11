@@ -116,6 +116,12 @@ public final class HomeViewController: HomeBottomSheetViewController {
         self.navigationController?.isNavigationBarHidden = true
     }
     
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.viewModel.trigger(.viewNeedsReloaded)
+    }
+    
     // MARK: - Combine Binding
     
     private func bind() {

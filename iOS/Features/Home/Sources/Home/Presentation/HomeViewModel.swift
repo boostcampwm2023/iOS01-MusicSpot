@@ -22,6 +22,7 @@ public final class HomeViewModel {
     
     public enum Action {
         case viewNeedsLoaded
+        case viewNeedsReloaded
         case startButtonDidTap(Coordinate)
         case refreshButtonDidTap(visibleCoordinates: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
         case backButtonDidTap
@@ -68,15 +69,14 @@ public final class HomeViewModel {
         switch action {
         case .viewNeedsLoaded:
             #if DEBUG
-            self.isFirstLaunch = true
-            try? self.keychain.deleteAll()
-            #endif
             let firstLaunchMessage = self.isFirstLaunch ? "앱이 처음 실행되었습니다." : "앱 첫 실행이 아닙니다."
-            MSLogger.make(category: .userDefaults).log("\(firstLaunchMessage)")
+            MSLogger.make(category: .userDefaults).debug("\(firstLaunchMessage)")
+            #endif
             
-            if self.isFirstLaunch {
-                self.createNewUser()
-            }
+            self.createNewUserWhenFirstLaunch()
+        case .viewNeedsReloaded:
+            let isRecording = self.journeyRepository.fetchIsRecording()
+            self.state.isRecording.send(isRecording)
         case .startButtonDidTap(let coordinate):
             #if DEBUG
             MSLogger.make(category: .home).debug("Start 버튼 탭: \(coordinate)")
@@ -103,7 +103,7 @@ public final class HomeViewModel {
 
 private extension HomeViewModel {
     
-    func createNewUser() {
+    func createNewUserWhenFirstLaunch() {
         guard self.isFirstLaunch else { return }
         
         Task {
@@ -125,10 +125,8 @@ private extension HomeViewModel {
             self.state.isStartButtonLoading.send(true)
             defer { self.state.isStartButtonLoading.send(false) }
             
-            let userID = try self.userRepository.fetchUUID()
-            #if DEBUG
-            MSLogger.make(category: .home).debug("유저 ID 조회 성공: \(userID)")
-            #endif
+            guard let userID = self.userRepository.fetchUUID() else { return }
+            
             let result = await self.journeyRepository.startJourney(at: coordinate, userID: userID)
             switch result {
             case .success(let recordingJourney):
@@ -141,7 +139,7 @@ private extension HomeViewModel {
     }
     
     func fetchJourneys(minCoordinate: Coordinate, maxCoordinate: Coordinate) {
-        guard let userID = try? self.userRepository.fetchUUID() else { return }
+        guard let userID = self.userRepository.fetchUUID() else { return }
         
         Task {
             let result = await self.journeyRepository.fetchJourneyList(userID: userID,

@@ -80,6 +80,8 @@ public final class JourneyCell: UICollectionViewCell {
     
     @MainActor
     public func addImageView(count: Int) {
+        guard count != .zero else { return }
+        
         (1...count).forEach { _ in
             let imageView = SpotPhotoImageView()
             self.spotImageStack.addArrangedSubview(imageView)

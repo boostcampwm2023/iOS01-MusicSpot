@@ -73,7 +73,8 @@ public final class RecordJourneyViewModel: MapViewModel {
             }
         case .recordingDidCancelled:
             Task {
-                let userID = try self.userRepository.fetchUUID()
+                guard let userID = self.userRepository.fetchUUID() else { return }
+                
                 let recordingJourney = self.state.recordingJourney.value
                 let result = await self.journeyRepository.deleteJourney(recordingJourney, userID: userID)
                 switch result {

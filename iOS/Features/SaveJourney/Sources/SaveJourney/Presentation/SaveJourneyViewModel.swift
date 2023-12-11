@@ -111,6 +111,7 @@ private extension SaveJourneyViewModel {
                 #if DEBUG
                 MSLogger.make(category: .saveJourney).log("\(journeyID)가 저장되었습니다.")
                 #endif
+                self.state.endJourneySucceed.send(journey)
             case .failure(let error):
                 MSLogger.make(category: .saveJourney).error("\(error)")
             }
