@@ -72,7 +72,6 @@ private extension SceneDelegate {
     
 }
 
-
 // MARK: - Debug
 
 #if DEBUG

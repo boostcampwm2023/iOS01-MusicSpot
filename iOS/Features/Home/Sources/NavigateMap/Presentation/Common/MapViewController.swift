@@ -321,6 +321,12 @@ extension MapViewController: CLLocationManagerDelegate {
               let recordJourneyViewModel = self.viewModel as? RecordJourneyViewModel else {
             return
         }
+        let previousCoordinate = (self.viewModel as? RecordJourneyViewModel)?.state.previousCoordinate.value
+        if self.timeRemaining != 0 || viewModel is NavigateMapViewModel { return }
+        if let previousCoordinate {
+            if !self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate,
+                                               coordinate2: newCurrentLocation.coordinate) { return }
+        }
         
         let coordinate2D = CLLocationCoordinate2D(latitude: newCurrentLocation.coordinate.latitude,
                                                   longitude: newCurrentLocation.coordinate.longitude)
@@ -371,6 +377,7 @@ extension MapViewController: CLLocationManagerDelegate {
                                            coordinate2: CLLocationCoordinate2D) -> Bool {
         let location1 = CLLocation(latitude: coordinate1.latitude, longitude: coordinate1.longitude)
         let location2 = CLLocation(latitude: coordinate2.latitude, longitude: coordinate2.longitude)
+        MSLogger.make(category: .navigateMap).log("이동한 거리: \(location1.distance(from: location2))")
         return 5 <= location1.distance(from: location2) && location1.distance(from: location2) <= 50
     }
     
