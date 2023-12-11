@@ -49,7 +49,10 @@ public final class RewindJourneyViewController: UIViewController {
     
     private var cancellables: Set<AnyCancellable> = []
     private var presentingImageIndex: Int? {
-        didSet { self.changeProgressViews() }
+        didSet {
+            DispatchQueue.main.async { self.changeProgressViews() }
+            self.restartTimer()
+        }
     }
     
     // MARK: - Properties: Timer
@@ -87,9 +90,9 @@ public final class RewindJourneyViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        self.progressViewBinding()
         self.timerBinding()
         self.configure()
-        self.bind()
         self.viewModel.trigger(.viewNeedsLoaded)
     }
     
@@ -103,7 +106,7 @@ public final class RewindJourneyViewController: UIViewController {
     
     // MARK: - Combine Binding
     
-    private func bind() {
+    private func progressViewBinding() {
         self.viewModel.state.photoURLs
             .sink { [weak self] urls in
                 self?.configureProgressViewsLayout(urls: urls)
@@ -122,8 +125,8 @@ public final class RewindJourneyViewController: UIViewController {
     }
     
     private func restartTimer() {
-        self.viewModel.trigger(.startAutoPlay)
         self.viewModel.trigger(.stopAutoPlay)
+        self.viewModel.trigger(.startAutoPlay)
     }
     
     // MARK: - Configuration
@@ -183,6 +186,7 @@ public final class RewindJourneyViewController: UIViewController {
         urls.forEach { _ in
             let progressView = MSProgressView()
             self.progressStackView.addArrangedSubview(progressView)
+            if self.progressViews == nil { self.progressViews = [] }
             self.progressViews?.append(progressView)
         }
     }
@@ -276,7 +280,6 @@ public final class RewindJourneyViewController: UIViewController {
             self.progressViews?[index].isLeftOfCurrentHighlighting = index < presentingIndex ? true : false
             self.progressViews?[index].isHighlighted = index <= presentingIndex ? true : false
         }
-        self.restartTimer()
     }
     
     // MARK: - Actions
