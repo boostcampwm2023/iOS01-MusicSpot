@@ -171,6 +171,7 @@ public final class HomeViewController: HomeBottomSheetViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.contentViewController.clearOverlays()
+                self?.contentViewController.clearAnnotations()
             }
             .store(in: &self.cancellables)
     }
