@@ -14,6 +14,7 @@ import MSNetworking
 public protocol UserRepository {
     
     func createUser() async -> Result<UUID, Error>
+    func storeUUID(_ userID: UUID) throws -> UUID
     func fetchUUID() -> UUID?
     
 }
@@ -40,8 +41,14 @@ public struct UserRepositoryImplementation: UserRepository {
         let userID: UUID
         if let existingUserID = self.fetchUUID() {
             userID = existingUserID
+            #if DEBUG
+            MSLogger.make(category: .keychain).debug("Keychain에 유저가 존재해 해당 유저 ID를 사용합니다: \(userID)")
+            #endif
         } else {
             userID = UUID()
+            #if DEBUG
+            MSLogger.make(category: .keychain).debug("Keychain에 유저가 존재하지 않아 새로운 유저 ID를 사용합니다: \(userID)")
+            #endif
         }
         
         let requestDTO = UserRequestDTO(userID: userID)
@@ -50,9 +57,25 @@ public struct UserRepositoryImplementation: UserRepository {
         let result = await self.networking.request(UserResponseDTO.self, router: router)
         switch result {
         case .success(let userResponse):
+            if let storedUserID = try? self.storeUUID(userID) {
+                return .success(storedUserID)
+            }
+            MSLogger.make(category: .keychain).warning("서버에 새로운 유저를 생성했지만, Keychain에 저장하지 못했습니다.")
             return .success(userResponse.userID)
         case .failure(let error):
             return .failure(error)
+        }
+    }
+    
+    @discardableResult
+    public func storeUUID(_ userID: UUID) throws -> UUID {
+        let account = MSKeychainStorage.Accounts.userID.rawValue
+        
+        do {
+            try self.keychain.set(value: userID, account: account)
+            return userID
+        } catch {
+            throw MSKeychainStorage.KeychainError.creationError
         }
     }
     

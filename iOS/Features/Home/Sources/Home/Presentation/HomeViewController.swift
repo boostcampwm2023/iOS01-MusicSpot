@@ -128,7 +128,7 @@ public final class HomeViewController: HomeBottomSheetViewController {
         self.viewModel.state.startedJourney
             .receive(on: DispatchQueue.main)
             .sink { [weak self] startedJourney in
-                self?.contentViewController.journeyDidStarted(startedJourney)
+                self?.contentViewController.journeyShouldStarted(startedJourney)
             }
             .store(in: &self.cancellables)
         
@@ -140,6 +140,7 @@ public final class HomeViewController: HomeBottomSheetViewController {
             .store(in: &self.cancellables)
         
         self.viewModel.state.isRecording
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isRecording in
                 if isRecording {
@@ -225,7 +226,7 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
         guard self.viewModel.state.isRecording.value == true else { return }
         
         self.viewModel.trigger(.backButtonDidTap)
-        self.contentViewController.journeyDidCancelled()
+        self.contentViewController.journeyShouldStopped()
     }
     
     public func spotButtonDidTap(_ button: MSRectButton) {
