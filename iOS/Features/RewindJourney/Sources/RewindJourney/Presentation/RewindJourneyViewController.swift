@@ -14,6 +14,7 @@ import MSDesignSystem
 import MSExtension
 import MSImageFetcher
 import MSLogger
+import MSUIKit
 
 public final class RewindJourneyViewController: UIViewController {
     
@@ -33,10 +34,9 @@ public final class RewindJourneyViewController: UIViewController {
             static let inset: CGFloat = 12.0
         }
         
-        // musicView
+        // musicPlayerView
         enum MusicView {
-            static let height: CGFloat = 69.0
-            static let inset: CGFloat = 12.0
+            static let horizontalInset: CGFloat = 12.0
             static let bottomInset: CGFloat = 34.0
         }
         
@@ -67,7 +67,7 @@ public final class RewindJourneyViewController: UIViewController {
     
     private let progressStackView = UIStackView()
     private let presentImageView = UIImageView()
-    private let musicView = MSMusicView()
+    private let musicPlayerView = MSMusicPlayerView()
     private var progressViews: [MSProgressView]?
     private var preHighlightenProgressView: MSProgressView?
     private let leftTouchView = UIButton()
@@ -136,7 +136,6 @@ public final class RewindJourneyViewController: UIViewController {
         self.configureStyle()
         self.configureAction()
         
-        self.musicView.configure()
         self.configureLeftToRightSwipeGesture()
     }
     
@@ -145,13 +144,12 @@ public final class RewindJourneyViewController: UIViewController {
     private func configureLayout() {
         self.configurePresentImageViewLayout()
         self.configureStackViewLayout()
-        self.configureMusicViewLayout()
         self.configureTouchViewLayout()
+        self.configureMusicViewLayout()
     }
     
     private func configurePresentImageViewLayout() {
         self.view.addSubview(self.presentImageView)
-        
         self.presentImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.presentImageView.topAnchor.constraint(equalTo: self.view.topAnchor),
@@ -163,11 +161,9 @@ public final class RewindJourneyViewController: UIViewController {
     
     private func configureStackViewLayout() {
         self.view.addSubview(self.progressStackView)
-        
         self.progressStackView.axis = .horizontal
         self.progressStackView.spacing = Metric.Progressbar.inset
         self.progressStackView.distribution = .fillEqually
-        
         self.progressStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.progressStackView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
@@ -182,28 +178,12 @@ public final class RewindJourneyViewController: UIViewController {
     private func configureProgressViewsLayout(urls: [URL]) {
         self.progressViews?.forEach { $0.removeFromSuperview() }
         self.progressViews?.removeAll()
-        
         urls.forEach { _ in
             let progressView = MSProgressView()
             self.progressStackView.addArrangedSubview(progressView)
             if self.progressViews == nil { self.progressViews = [] }
             self.progressViews?.append(progressView)
         }
-    }
-    
-    private func configureMusicViewLayout() {
-        self.view.addSubview(self.musicView)
-        
-        self.musicView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            self.musicView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor,
-                                                   constant: -Metric.MusicView.bottomInset),
-            self.musicView.heightAnchor.constraint(equalToConstant: Metric.MusicView.height),
-            self.musicView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor,
-                                                    constant: Metric.MusicView.inset),
-            self.musicView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,
-                                                     constant: -Metric.MusicView.inset)
-        ])
     }
     
     private func configureTouchViewLayout() {
@@ -215,12 +195,25 @@ public final class RewindJourneyViewController: UIViewController {
         NSLayoutConstraint.activate([
             self.leftTouchView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.rightTouchView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.leftTouchView.bottomAnchor.constraint(equalTo: self.musicView.topAnchor),
-            self.rightTouchView.bottomAnchor.constraint(equalTo: self.musicView.topAnchor),
+            self.leftTouchView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.rightTouchView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             self.leftTouchView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.rightTouchView.leadingAnchor.constraint(equalTo: self.view.centerXAnchor),
             self.leftTouchView.trailingAnchor.constraint(equalTo: self.view.centerXAnchor),
             self.rightTouchView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
+        ])
+    }
+    
+    private func configureMusicViewLayout() {
+        self.view.addSubview(self.musicPlayerView)
+        self.musicPlayerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.musicPlayerView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor,
+                                                   constant: -Metric.MusicView.bottomInset),
+            self.musicPlayerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor,
+                                                    constant: Metric.MusicView.horizontalInset),
+            self.musicPlayerView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,
+                                                     constant: -Metric.MusicView.horizontalInset)
         ])
     }
     
