@@ -28,7 +28,7 @@ extension MapViewController {
 extension MapViewController {
     
     public func journeyShouldStarted(_ startedJourney: RecordingJourney) {
-        guard let viewModel = self.viewModel as? NavigateMapViewModel else {
+        guard self.viewModel is NavigateMapViewModel else {
             MSLogger.make(category: .home).error("여정이 시작되어야 하지만 이미 Map에서 RecordJourneyViewModel을 사용하고 있습니다.")
             return
         }
@@ -41,12 +41,15 @@ extension MapViewController {
         self.swapViewModel(to: recordJourneyViewModel)
     }
     
-    public func journeyShouldStopped() {
+    public func journeyShouldStopped(isCancelling: Bool) {
         guard let viewModel = self.viewModel as? RecordJourneyViewModel else {
             MSLogger.make(category: .home).error("여정이 종료되어야 하지만 이미 Map에서 NavigateMapViewModel을 사용하고 있습니다.")
             return
         }
-        viewModel.trigger(.recordingDidCancelled)
+        
+        if isCancelling {
+            viewModel.trigger(.recordingDidCancelled)
+        }
         
         let journeyRepository = JourneyRepositoryImplementation()
         let navigateMapViewModel = NavigateMapViewModel(repository: journeyRepository)

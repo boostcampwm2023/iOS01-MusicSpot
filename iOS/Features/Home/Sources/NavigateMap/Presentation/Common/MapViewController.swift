@@ -135,10 +135,16 @@ public final class MapViewController: UIViewController {
         
         if let navigateMapViewModel = viewModel as? NavigateMapViewModel {
             self.bind(navigateMapViewModel)
+            #if DEBUG
+            MSLogger.make(category: .home).debug("Map에 NavigateMapViewModel을 바인딩 했습니다.")
+            #endif
         }
         
         if let recordJourneyViewModel = viewModel as? RecordJourneyViewModel {
             self.bind(recordJourneyViewModel)
+            #if DEBUG
+            MSLogger.make(category: .home).debug("Map에 RecordJourneyViewModel을 바인딩 했습니다.")
+            #endif
         }
     }
     
