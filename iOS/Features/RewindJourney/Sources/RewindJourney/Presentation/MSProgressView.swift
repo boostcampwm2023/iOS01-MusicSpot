@@ -58,7 +58,7 @@ public final class MSProgressView: UIProgressView {
     // MARK: - Functions: change progress
     
     private func syncProgress(percentage: Float) {
-        self.progress = percentage
+        DispatchQueue.main.async { self.progress = percentage }
     }
     
     // MARK: - Timer
