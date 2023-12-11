@@ -68,10 +68,6 @@ public final class HomeViewModel {
     func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
-//            #if DEBUG
-//            self.isFirstLaunch = true
-//            try? self.keychain.deleteAll()
-//            #endif
             let firstLaunchMessage = self.isFirstLaunch ? "앱이 처음 실행되었습니다." : "앱 첫 실행이 아닙니다."
             MSLogger.make(category: .userDefaults).log("\(firstLaunchMessage)")
             
