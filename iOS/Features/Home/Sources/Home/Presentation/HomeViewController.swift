@@ -147,6 +147,7 @@ public final class HomeViewController: HomeBottomSheetViewController {
                     self?.hideBottomSheet()
                 } else {
                     self?.showBottomSheet()
+                    self?.contentViewController.journeyShouldStopped(isCancelling: false)
                 }
                 self?.updateButtonMode(isRecording: isRecording)
             }
@@ -227,7 +228,7 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
         guard self.viewModel.state.isRecording.value == true else { return }
         
         self.viewModel.trigger(.backButtonDidTap)
-        self.contentViewController.journeyShouldStopped()
+        self.contentViewController.journeyShouldStopped(isCancelling: true)
     }
     
     public func spotButtonDidTap(_ button: MSRectButton) {
