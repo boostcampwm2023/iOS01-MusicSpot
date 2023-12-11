@@ -12,6 +12,7 @@ import MSConstants
 import MSData
 import MSDesignSystem
 import MSLogger
+import MSUserDefaults
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -20,7 +21,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     private var appCoordinator: Coordinator!
     
-    #if DEBUG
     @UserDefaultsWrapped(UserDefaultsKey.recordingJourneyID, defaultValue: nil)
     var recordingJourneyID: String?
     @UserDefaultsWrapped(UserDefaultsKey.isFirstLaunch, defaultValue: false)
@@ -28,6 +28,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @UserDefaultsWrapped(UserDefaultsKey.isRecording, defaultValue: false)
     var isRecording: Bool
     
+    #if DEBUG
     var keychain = MSKeychainStorage()
     #endif
     
@@ -72,12 +73,10 @@ private extension SceneDelegate {
     
 }
 
-
 // MARK: - Debug
 
 #if DEBUG
 import MSKeychainStorage
-import MSUserDefaults
 
 private extension SceneDelegate {
     
