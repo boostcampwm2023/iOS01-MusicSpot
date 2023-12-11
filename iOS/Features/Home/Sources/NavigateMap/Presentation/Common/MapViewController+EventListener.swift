@@ -9,6 +9,7 @@ import Foundation
 
 import MSData
 import MSDomain
+import MSLogger
 
 // MARK: - NavigateMap
 
@@ -26,17 +27,25 @@ extension MapViewController {
 
 extension MapViewController {
     
-    public func journeyDidStarted(_ startedJourney: RecordingJourney) {
+    public func journeyShouldStarted(_ startedJourney: RecordingJourney) {
+        guard let viewModel = self.viewModel as? NavigateMapViewModel else {
+            MSLogger.make(category: .home).error("여정이 시작되어야 하지만 이미 Map에서 RecordJourneyViewModel을 사용하고 있습니다.")
+            return
+        }
+        
         let userRepository = UserRepositoryImplementation()
         let journeyRepository = JourneyRepositoryImplementation()
-        let viewModel = RecordJourneyViewModel(startedJourney: startedJourney,
-                                               userRepository: userRepository,
-                                               journeyRepository: journeyRepository)
-        self.swapViewModel(to: viewModel)
+        let recordJourneyViewModel = RecordJourneyViewModel(startedJourney: startedJourney,
+                                                            userRepository: userRepository,
+                                                            journeyRepository: journeyRepository)
+        self.swapViewModel(to: recordJourneyViewModel)
     }
     
-    public func journeyDidCancelled() {
-        guard let viewModel = self.viewModel as? RecordJourneyViewModel else { return }
+    public func journeyShouldStopped() {
+        guard let viewModel = self.viewModel as? RecordJourneyViewModel else {
+            MSLogger.make(category: .home).error("여정이 종료되어야 하지만 이미 Map에서 NavigateMapViewModel을 사용하고 있습니다.")
+            return
+        }
         viewModel.trigger(.recordingDidCancelled)
         
         let journeyRepository = JourneyRepositoryImplementation()
