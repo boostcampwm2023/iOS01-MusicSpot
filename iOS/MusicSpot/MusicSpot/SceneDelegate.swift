@@ -11,6 +11,7 @@ import JourneyList
 import MSConstants
 import MSData
 import MSDesignSystem
+import MSLogger
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -76,7 +77,6 @@ private extension SceneDelegate {
 
 #if DEBUG
 import MSKeychainStorage
-import MSLogger
 import MSUserDefaults
 
 private extension SceneDelegate {
