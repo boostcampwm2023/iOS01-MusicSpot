@@ -156,11 +156,11 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         let coordinatesDTO = coordinates.map { CoordinateDTO($0) }
         let requestDTO = RecordCoordinateRequestDTO(journeyID: journeyID, coordinates: coordinatesDTO)
         let router = JourneyRouter.recordCoordinate(dto: requestDTO)
-        let result = await self.networking.request(RecordCoordinateRequestDTO.self, router: router)
+        let result = await self.networking.request(RecordJourneyResponseDTO.self, router: router)
         switch result {
         case .success(let responseDTO):
             let coordinates = responseDTO.coordinates.map { $0.toDomain() }
-            let recordingJourney = RecordingJourney(id: responseDTO.journeyID,
+            let recordingJourney = RecordingJourney(id: journeyID,
                                                     startTimestamp: Date(),
                                                     spots: [],
                                                     coordinates: coordinates)
