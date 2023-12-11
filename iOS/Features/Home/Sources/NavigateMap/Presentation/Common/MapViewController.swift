@@ -317,7 +317,9 @@ extension MapViewController: CLLocationManagerDelegate {
         
         let coordinate2D = CLLocationCoordinate2D(latitude: newCurrentLocation.coordinate.latitude,
                                                   longitude: newCurrentLocation.coordinate.longitude)
+        
         recordJourneyViewModel.trigger(.locationDidUpdated(coordinate2D))
+        recordJourneyViewModel.trigger(.locationsShouldRecorded([coordinate2D]))
     }
     
     private func handleAuthorizationChange(_ manager: CLLocationManager) {

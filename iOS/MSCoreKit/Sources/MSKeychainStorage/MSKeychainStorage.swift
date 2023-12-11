@@ -68,7 +68,7 @@ public struct MSKeychainStorage {
     
     /// Keychain에 저장된 모든 데이터를 삭제합니다.
     public func deleteAll() throws {
-        for account in Accounts.allCases {
+        for account in Accounts.allCases where try self.exists(account: account.rawValue) {
             try self.delete(account: account.rawValue)
         }
     }

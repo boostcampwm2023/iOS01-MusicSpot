@@ -17,6 +17,8 @@ import MSUserDefaults
 
 public protocol JourneyRepository: Persistable {
     
+    func fetchIsRecording() -> Bool
+    mutating func updateIsRecording(_ isRecording: Bool) -> Bool
     func fetchRecordingJourneyID() -> String?
     func fetchRecordingJourney(forID id: String) -> RecordingJourney?
     func fetchJourneyList(userID: UUID,
@@ -36,6 +38,9 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     private let networking: MSNetworking
     public let storage: MSPersistentStorage
     
+    @UserDefaultsWrapped(UserDefaultsKey.isRecording, defaultValue: false)
+    private var isRecording: Bool
+    
     @UserDefaultsWrapped(UserDefaultsKey.recordingJourneyID, defaultValue: nil)
     private var recordingJourneyID: String?
     
@@ -48,6 +53,16 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     }
     
     // MARK: - Functions
+    
+    public func fetchIsRecording() -> Bool {
+        return self.isRecording
+    }
+    
+    @discardableResult
+    public mutating func updateIsRecording(_ isRecording: Bool) -> Bool {
+        self.isRecording = isRecording
+        return self.isRecording
+    }
     
     public func fetchRecordingJourneyID() -> String? {
         guard let recordingJourneyID = self.recordingJourneyID else {
@@ -118,6 +133,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
             
             self.saveToLocal(value: recordingJourney.id)
             self.saveToLocal(value: recordingJourney.startTimestamp)
+            self.isRecording = true
             
             self.recordingJourneyID = recordingJourney.id
             #if DEBUG
@@ -140,11 +156,11 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         let coordinatesDTO = coordinates.map { CoordinateDTO($0) }
         let requestDTO = RecordCoordinateRequestDTO(journeyID: journeyID, coordinates: coordinatesDTO)
         let router = JourneyRouter.recordCoordinate(dto: requestDTO)
-        let result = await self.networking.request(RecordCoordinateRequestDTO.self, router: router)
+        let result = await self.networking.request(RecordJourneyResponseDTO.self, router: router)
         switch result {
         case .success(let responseDTO):
             let coordinates = responseDTO.coordinates.map { $0.toDomain() }
-            let recordingJourney = RecordingJourney(id: responseDTO.journeyID,
+            let recordingJourney = RecordingJourney(id: journeyID,
                                                     startTimestamp: Date(),
                                                     spots: [],
                                                     coordinates: coordinates)
@@ -168,6 +184,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         switch result {
         case .success(let responseDTO):
             self.recordingJourneyID = nil
+            self.isRecording = false
             return .success(responseDTO.id)
         case .failure(let error):
             return .failure(error)
@@ -182,6 +199,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         switch result {
         case .success(let responseDTO):
             self.recordingJourneyID = nil
+            self.isRecording = false
             return .success(responseDTO.id)
         case .failure(let error):
             return .failure(error)
