@@ -30,8 +30,9 @@ final class MSProgressViewModel {
     // MARK: - Functions: Timers
 
     internal func startTimer() {
-        self.timer = Timer.publish(every: self.timerTimeInterval, on: .main, in: .common)
+        self.timer = Timer.publish(every: self.timerTimeInterval, on: .current, in: .common)
             .autoconnect()
+            .receive(on: DispatchQueue.global(qos: .background))
             .sink { [weak self] _ in
                 guard let remainingTime = self?.remainingTime,
                       let timerDuration = self?.timerDuration,
