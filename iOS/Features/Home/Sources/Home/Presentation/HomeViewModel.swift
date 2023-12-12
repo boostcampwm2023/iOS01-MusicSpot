@@ -104,7 +104,7 @@ public final class HomeViewModel {
 private extension HomeViewModel {
     
     private var shouldSignIn: Bool {
-        return self.isFirstLaunch && self.userRepository.fetchUUID() == nil
+        return self.isFirstLaunch || self.userRepository.fetchUUID() == nil
     }
     
     func createNewUserWhenFirstLaunch() {
