@@ -38,11 +38,12 @@ export class SpotService {
   async insertToSpot(spotData) {
     const data = { ...spotData, coordinate: JSON.parse(spotData.coordinate) };
     const createdSpotData = await new this.spotModel(data).save();
-    const spotId = createdSpotData._id;
+    const { _id, coordinate } = createdSpotData;
+
     await this.journeyModel
       .findOneAndUpdate(
         { _id: spotData.journeyId },
-        { $push: { spots: spotId } },
+        { $push: { spots: _id, coordinates: coordinate } },
         { new: true },
       )
       .lean();
@@ -59,8 +60,8 @@ export class SpotService {
       ...recordSpotDto,
       photoKey,
     });
-
     const { journeyId, coordinate, timestamp } = createdSpotData;
+
     const returnData: RecordSpotResDTO = {
       journeyId,
       coordinate,
