@@ -106,8 +106,6 @@ public final class HomeViewController: HomeBottomSheetViewController {
         self.configureAction()
         self.bind()
         self.viewModel.trigger(.viewNeedsLoaded)
-        // 화면 시작 시 새로고침 버튼 기능 한번 실행
-        self.refreshButton.sendActions(for: .touchUpInside)
     }
     
     public override func viewIsAppearing(_ animated: Bool) {
@@ -120,6 +118,13 @@ public final class HomeViewController: HomeBottomSheetViewController {
         super.viewWillAppear(animated)
         
         self.viewModel.trigger(.viewNeedsReloaded)
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // 화면 시작 시 새로고침 버튼 기능 한번 실행
+        self.refreshButton.sendActions(for: .touchUpInside)
     }
     
     // MARK: - Combine Binding
