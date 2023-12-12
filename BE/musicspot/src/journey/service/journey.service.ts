@@ -72,9 +72,7 @@ export class JourneyService {
 
   async end(endJourneyDTO: EndJourneyReqDTO) {
     const { journeyId, title, coordinates, endTimestamp, song } = endJourneyDTO;
-    // const coordinateToAdd = Array.isArray(coordinate[0])
-    //   ? coordinate
-    //   : [coordinate];
+
     const coordinatesLen = coordinates.length;
 
     const updatedJourney = await this.journeyModel
@@ -128,9 +126,6 @@ export class JourneyService {
     }
     const updatedCoordinates = updatedJourney.coordinates;
     return { coordinates: updatedCoordinates.slice(-coordinatesLen) };
-    // const { coordinates } = updatedJourney;
-    // const len = coordinates.length;
-    // return { coordinate: coordinates[len - 1] };
   }
 
   async checkJourney(checkJourneyDTO) {
@@ -149,7 +144,6 @@ export class JourneyService {
       throw new UserNotFoundException();
     }
     const journeys = user.journeys;
-    console.log(minCoordinate, maxCoordinate);
     const boundingBox = turf.bboxPolygon([
       minCoordinate[0],
       minCoordinate[1],
@@ -157,21 +151,12 @@ export class JourneyService {
       maxCoordinate[1],
     ]);
     // console.log(boundingBox);
-    console.log();
-    console.log('1');
-    console.log();
     const journeyList = await this.findMinMaxCoordinates(boundingBox, journeys);
-    console.log();
-    console.log('4');
-    console.log();
     return journeyList;
   }
   async findMinMaxCoordinates(boundingBox, journeys) {
     let journeyList = [];
 
-    console.log();
-    console.log('2');
-    console.log();
     for (let i = 0; i < journeys.length; i++) {
       let journey = await this.findByIdWithPopulate(
         journeys[i],
@@ -198,9 +183,6 @@ export class JourneyService {
         journeyList.push(journey);
       }
     }
-    console.log();
-    console.log('3');
-    console.log();
     return journeyList;
   }
 
