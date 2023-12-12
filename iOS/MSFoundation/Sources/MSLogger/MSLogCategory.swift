@@ -16,6 +16,7 @@ public enum MSLogCategory: String {
     case keychain = "Keychain"
     case fileManager = "FileManager"
     case persistable
+    case music = "MusicKit"
     
     case home
     case navigateMap
