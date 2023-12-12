@@ -12,7 +12,7 @@
 
 <h2 align="center">
   <br>
-  ⭐️ 프로젝트 소개
+  ⭐️ 프로젝트 소개 ⭐
   <br>
 </h2>
 
@@ -31,6 +31,23 @@
 |[@yoondj98](https://github.com/yoondj98)|[@PushedGun](https://github.com/PushedGun)|[@SwiftyJunnos](https://github.com/SwiftyJunnos)|[@twoo1999](https://github.com/twoo1999)|[@vvans](https://github.com/vvans)|
 
 <br/>
+
+## 🗺️ 주요 기능
+### 🏃‍♂️ 여정 기록
+![MusicSpot 앱 소개 001](https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/d8e6663e-ed95-4757-858c-2cead6dfa02c)
+
+### 📸 스팟!
+![MusicSpot 앱 소개 002](https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/f8b1405b-ffed-425b-8011-ff20e6fe0632)
+
+### 🎶 음악 추가
+![MusicSpot 앱 소개 003](https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/c22dd2a1-0881-43ff-9d23-0de459b45a39)
+
+### 🌠 지난 여정
+![MusicSpot 앱 소개 004](https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/2bf9568c-2846-44f5-a34e-2dbbf05b2bcc)
+
+## 🚀 기술적 도전
+
+
 
 ## 📔 문서
 
