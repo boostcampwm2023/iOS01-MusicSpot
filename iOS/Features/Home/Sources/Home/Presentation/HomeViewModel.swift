@@ -104,7 +104,9 @@ public final class HomeViewModel {
 private extension HomeViewModel {
     
     func createNewUserWhenFirstLaunch() {
-        guard self.isFirstLaunch else { return }
+        if !self.isFirstLaunch, self.userRepository.fetchUUID() != nil {
+            return
+        }
         
         Task {
             let result = await self.userRepository.createUser()
