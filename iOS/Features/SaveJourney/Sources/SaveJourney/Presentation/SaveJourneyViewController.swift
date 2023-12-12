@@ -38,7 +38,7 @@ public final class SaveJourneyViewController: UIViewController {
     
     private enum Metric {
         
-        static let collectionViewBottomSpacing: CGFloat = 80.0
+        static let collectionViewBottomSpacing: CGFloat = 150.0
         static let buttonSpacing: CGFloat = 4.0
         static let buttonBottomInset: CGFloat = 24.0
         static let lineWidth: CGFloat = 0.5
@@ -145,6 +145,7 @@ public final class SaveJourneyViewController: UIViewController {
     
     private func bind() {
         self.viewModel.state.selectedSong
+            .first()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] song in
                 guard let self = self else { return }
@@ -153,6 +154,7 @@ public final class SaveJourneyViewController: UIViewController {
                 Task {
                     self.musicPlayer.queue = ApplicationMusicPlayer.Queue(for: [song])
                     try await self.musicPlayer.prepareToPlay()
+                    self.viewModel.trigger(.musicControlButtonDidTap)
                 }
                 
                 var snapshot = MusicSnapshot()
@@ -265,6 +267,8 @@ public final class SaveJourneyViewController: UIViewController {
     }
     
 }
+
+// MARK: - MapView
 
 extension SaveJourneyViewController: MKMapViewDelegate {
     
