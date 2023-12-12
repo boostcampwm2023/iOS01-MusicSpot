@@ -17,7 +17,7 @@ extension MSKeychainStorage {
     
     public enum Accounts: String, CaseIterable {
         
-        case userID
+        case userID = "MusicSpotUser.v1"
         
     }
     
