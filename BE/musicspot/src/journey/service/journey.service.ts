@@ -138,8 +138,8 @@ export class JourneyService {
     if (!(Array.isArray(minCoordinate) && Array.isArray(maxCoordinate))) {
       throw new coordinateNotCorrectException();
     }
-    minCoordinate = minCoordinate.map((item) => Number(item));
-    maxCoordinate = maxCoordinate.map((item) => Number(item));
+    minCoordinate = minCoordinate.map((item) => parseFloat(item));
+    maxCoordinate = maxCoordinate.map((item) => parseFloat(item));
 
     if (!(is1DArray(minCoordinate) && is1DArray(maxCoordinate))) {
       throw new coordinateNotCorrectException();
@@ -149,7 +149,7 @@ export class JourneyService {
       throw new UserNotFoundException();
     }
     const journeys = user.journeys;
-
+    console.log(minCoordinate, maxCoordinate);
     const boundingBox = turf.bboxPolygon([
       minCoordinate[0],
       minCoordinate[1],
@@ -157,12 +157,21 @@ export class JourneyService {
       maxCoordinate[1],
     ]);
     // console.log(boundingBox);
+    console.log();
+    console.log('1');
+    console.log();
     const journeyList = await this.findMinMaxCoordinates(boundingBox, journeys);
+    console.log();
+    console.log('4');
+    console.log();
     return journeyList;
   }
   async findMinMaxCoordinates(boundingBox, journeys) {
     let journeyList = [];
 
+    console.log();
+    console.log('2');
+    console.log();
     for (let i = 0; i < journeys.length; i++) {
       let journey = await this.findByIdWithPopulate(
         journeys[i],
@@ -189,6 +198,9 @@ export class JourneyService {
         journeyList.push(journey);
       }
     }
+    console.log();
+    console.log('3');
+    console.log();
     return journeyList;
   }
 
