@@ -106,8 +106,6 @@ public final class HomeViewController: HomeBottomSheetViewController {
         self.configureAction()
         self.bind()
         self.viewModel.trigger(.viewNeedsLoaded)
-        // 화면 시작 시 새로고침 버튼 기능 한번 실행
-        self.refreshButton.sendActions(for: .touchUpInside)
     }
     
     public override func viewIsAppearing(_ animated: Bool) {
@@ -122,13 +120,20 @@ public final class HomeViewController: HomeBottomSheetViewController {
         self.viewModel.trigger(.viewNeedsReloaded)
     }
     
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // 화면 시작 시 새로고침 버튼 기능 한번 실행
+        self.refreshButton.sendActions(for: .touchUpInside)
+    }
+    
     // MARK: - Combine Binding
     
     private func bind() {
         self.viewModel.state.startedJourney
             .receive(on: DispatchQueue.main)
             .sink { [weak self] startedJourney in
-                self?.contentViewController.journeyDidStarted(startedJourney)
+                self?.contentViewController.journeyShouldStarted(startedJourney)
             }
             .store(in: &self.cancellables)
         
@@ -140,12 +145,14 @@ public final class HomeViewController: HomeBottomSheetViewController {
             .store(in: &self.cancellables)
         
         self.viewModel.state.isRecording
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isRecording in
                 if isRecording {
                     self?.hideBottomSheet()
                 } else {
                     self?.showBottomSheet()
+                    self?.contentViewController.journeyShouldStopped(isCancelling: false)
                 }
                 self?.updateButtonMode(isRecording: isRecording)
             }
@@ -226,7 +233,7 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
         guard self.viewModel.state.isRecording.value == true else { return }
         
         self.viewModel.trigger(.backButtonDidTap)
-        self.contentViewController.journeyDidCancelled()
+        self.contentViewController.journeyShouldStopped(isCancelling: true)
     }
     
     public func spotButtonDidTap(_ button: MSRectButton) {

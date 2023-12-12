@@ -133,9 +133,10 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
             
             self.saveToLocal(value: recordingJourney.id)
             self.saveToLocal(value: recordingJourney.startTimestamp)
-            self.isRecording = true
             
             self.recordingJourneyID = recordingJourney.id
+            self.isRecording = true
+            
             #if DEBUG
             if let recordingJourneyID = self.recordingJourneyID {
                 MSLogger.make(category: .userDefaults).debug("기록중인 여정 정보가 저장되었습니다: \(recordingJourneyID)")
@@ -156,11 +157,11 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         let coordinatesDTO = coordinates.map { CoordinateDTO($0) }
         let requestDTO = RecordCoordinateRequestDTO(journeyID: journeyID, coordinates: coordinatesDTO)
         let router = JourneyRouter.recordCoordinate(dto: requestDTO)
-        let result = await self.networking.request(RecordCoordinateRequestDTO.self, router: router)
+        let result = await self.networking.request(RecordJourneyResponseDTO.self, router: router)
         switch result {
         case .success(let responseDTO):
             let coordinates = responseDTO.coordinates.map { $0.toDomain() }
-            let recordingJourney = RecordingJourney(id: responseDTO.journeyID,
+            let recordingJourney = RecordingJourney(id: journeyID,
                                                     startTimestamp: Date(),
                                                     spots: [],
                                                     coordinates: coordinates)

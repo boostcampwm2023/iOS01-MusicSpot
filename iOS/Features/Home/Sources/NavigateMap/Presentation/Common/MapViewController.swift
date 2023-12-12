@@ -135,10 +135,16 @@ public final class MapViewController: UIViewController {
         
         if let navigateMapViewModel = viewModel as? NavigateMapViewModel {
             self.bind(navigateMapViewModel)
+            #if DEBUG
+            MSLogger.make(category: .home).debug("Map에 NavigateMapViewModel을 바인딩 했습니다.")
+            #endif
         }
         
         if let recordJourneyViewModel = viewModel as? RecordJourneyViewModel {
             self.bind(recordJourneyViewModel)
+            #if DEBUG
+            MSLogger.make(category: .home).debug("Map에 RecordJourneyViewModel을 바인딩 했습니다.")
+            #endif
         }
     }
     
@@ -146,6 +152,7 @@ public final class MapViewController: UIViewController {
         viewModel.state.visibleJourneys
             .receive(on: DispatchQueue.main)
             .sink { [weak self] journeys in
+                self?.clearAnnotations()
                 self?.addAnnotations(with: journeys)
                 self?.drawPolyLinesToMap(with: journeys)
             }
@@ -243,7 +250,11 @@ public final class MapViewController: UIViewController {
                             CLLocationCoordinate2D(latitude: $0.latitude,
                                                    longitude: $0.longitude)
                         }
-                        await self.drawPolylineToMap(using: coordinates)
+                        let spotCoordinates = journey.spots.map {
+                            CLLocationCoordinate2D(latitude: $0.coordinate.latitude,
+                                                   longitude: $0.coordinate.longitude)
+                        }
+                        await self.drawPolylineToMap(using: coordinates+spotCoordinates)
                     }
                 }
             }
@@ -290,6 +301,7 @@ private extension MapViewController {
     func configureCoreLocation() {
         self.locationManager.delegate = self
         self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
     }
     
 }
@@ -306,14 +318,26 @@ extension MapViewController: CLLocationManagerDelegate {
     
     public func locationManager(_ manager: CLLocationManager,
                                 didUpdateLocations locations: [CLLocation]) {
-        guard let newCurrentLocation = locations.last,
+        guard self.timeRemaining == .zero,
+              let newCurrentLocation = locations.last,
               let recordJourneyViewModel = self.viewModel as? RecordJourneyViewModel else {
             return
         }
         
+        let previousCoordinate = (self.viewModel as? RecordJourneyViewModel)?.state.previousCoordinate.value
+        
+        if let previousCoordinate = previousCoordinate {
+            if !self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate,
+                                               coordinate2: newCurrentLocation.coordinate) {
+                return
+            }
+        }
+        
         let coordinate2D = CLLocationCoordinate2D(latitude: newCurrentLocation.coordinate.latitude,
                                                   longitude: newCurrentLocation.coordinate.longitude)
+        
         recordJourneyViewModel.trigger(.locationDidUpdated(coordinate2D))
+        recordJourneyViewModel.trigger(.locationsShouldRecorded([coordinate2D]))
     }
     
     private func handleAuthorizationChange(_ manager: CLLocationManager) {
@@ -358,6 +382,7 @@ extension MapViewController: CLLocationManagerDelegate {
                                            coordinate2: CLLocationCoordinate2D) -> Bool {
         let location1 = CLLocation(latitude: coordinate1.latitude, longitude: coordinate1.longitude)
         let location2 = CLLocation(latitude: coordinate2.latitude, longitude: coordinate2.longitude)
+        MSLogger.make(category: .navigateMap).log("이동한 거리: \(location1.distance(from: location2))")
         return 5 <= location1.distance(from: location2) && location1.distance(from: location2) <= 50
     }
     

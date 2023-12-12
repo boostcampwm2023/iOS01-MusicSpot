@@ -91,15 +91,18 @@ public final class JourneyListViewController: BaseViewController {
     
     // MARK: - Combine Binding
     
-    func bind() {
+    private func bind() {
         self.viewModel.state.journeys
             .receive(on: DispatchQueue.main)
             .sink { [weak self] journeys in
                 guard let self = self else { return }
+                
+                let emptySnapshot = JourneySnapshot()
+                self.dataSource?.apply(emptySnapshot, animatingDifferences: true)
                 var snapshot = JourneySnapshot()
                 snapshot.appendSections([.zero])
                 snapshot.appendItems(journeys, toSection: .zero)
-                self.dataSource?.apply(snapshot)
+                self.dataSource?.apply(snapshot, animatingDifferences: true)
             }
             .store(in: &self.cancellables)
     }
@@ -133,19 +136,9 @@ public final class JourneyListViewController: BaseViewController {
 extension JourneyListViewController: UICollectionViewDelegate {
     
     private func configureCollectionView() {
-        let configuration = UICollectionViewCompositionalLayoutConfiguration()
-        
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                heightDimension: .estimated(JourneyListHeaderView.estimatedHight))
-        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
-                                                                 elementKind: UICollectionView.elementKindSectionHeader,
-                                                                 alignment: .top)
-        header.pinToVisibleBounds = true
-        configuration.boundarySupplementaryItems = [header]
-        
         let layout = UICollectionViewCompositionalLayout(sectionProvider: { _, _ in
             return self.configureSection()
-        }, configuration: configuration)
+        })
         
         self.collectionView.setCollectionViewLayout(layout, animated: false)
         self.dataSource = self.configureDataSource()
@@ -163,6 +156,15 @@ extension JourneyListViewController: UICollectionViewDelegate {
         
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = Metric.interGroupSpacing
+        
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                heightDimension: .estimated(JourneyListHeaderView.estimatedHight))
+        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
+                                                                 elementKind: UICollectionView.elementKindSectionHeader,
+                                                                 alignment: .top)
+        header.pinToVisibleBounds = true
+        
+        section.boundarySupplementaryItems = [header]
         
         return section
     }
@@ -206,7 +208,7 @@ extension JourneyListViewController: UICollectionViewDelegate {
         guard let journey = self.dataSource?.itemIdentifier(for: indexPath) else { return }
         
         let spotPhotoURLs = journey.spots.map { $0.photoURL }
-        self.navigationDelegate?.navigateToRewindJourney(with: spotPhotoURLs)
+        self.navigationDelegate?.navigateToRewindJourney(with: spotPhotoURLs, music: journey.music)
     }
     
 }

@@ -21,11 +21,13 @@ extension Music {
 
 extension AlbumCover {
     
-    public init?(_ artwork: Artwork?) {
+    public init?(_ artwork: Artwork?,
+                 width: Int = 500,
+                 height: Int = 500) {
         guard let artwork else { return nil }
-        self.init(width: artwork.maximumWidth,
-                  height: artwork.maximumHeight,
-                  url: artwork.url(width: artwork.maximumWidth, height: artwork.maximumHeight),
+        self.init(width: width,
+                  height: height,
+                  url: artwork.url(width: width, height: height),
                   backgroundColor: artwork.backgroundColor?.hexValue)
     }
     

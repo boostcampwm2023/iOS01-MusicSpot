@@ -94,11 +94,11 @@ extension HomeCoordinator: HomeNavigationDelegate {
 
 extension HomeCoordinator: JourneyListNavigationDelegate {
     
-    func navigateToRewindJourney(with urls: [URL]) {
+    func navigateToRewindJourney(with urls: [URL], music: Music) {
         let rewindJourneyCoordinator = RewindJourneyCoordinator(navigationController: self.navigationController)
         rewindJourneyCoordinator.delegate = self
         self.childCoordinators.append(rewindJourneyCoordinator)
-        rewindJourneyCoordinator.start(with: urls)
+        rewindJourneyCoordinator.start(with: urls, music: music)
     }
     
 }
@@ -133,13 +133,13 @@ extension HomeCoordinator: HomeCoordinatorDelegate {
     }
       
     func popToHome(from coordinator: Coordinator, with endedJourney: Journey) {
-        guard let viewController = self.navigationController.viewControllers.first(where: {
-            $0 is HomeViewController
-        }) else {
+        let viewControllers = self.navigationController.viewControllers
+        guard let viewController = viewControllers.first(where: { $0 is HomeViewController }),
+              let homeViewController = viewController as? HomeViewController else {
             return
         }
         
-        self.navigationController.popToViewController(viewController, animated: true)
+        self.navigationController.popToViewController(homeViewController, animated: true)
     }
     
 }
