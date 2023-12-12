@@ -65,7 +65,7 @@ public final class SaveJourneyViewController: UIViewController {
         return mapView
     }()
     
-    private var mapViewHeightConstraint: NSLayoutConstraint?
+    var mapViewHeightConstraint: NSLayoutConstraint?
     
     private(set) lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero,
