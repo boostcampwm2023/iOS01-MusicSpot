@@ -5,12 +5,22 @@
 //  Created by 전민건 on 11/22/23.
 //
 
+import Combine
 import UIKit
 
 import MSDesignSystem
+import MSDomain
+import MSExtension
+import MSImageFetcher
 import MSLogger
 
-final class MSMusicPlayerView: UIProgressView {
+protocol MSMusicPlayerViewDelegate: AnyObject {
+    
+    func musicPlayerView(_ musicPlayerView: MSMusicPlayerView, didToggleMedia isPlaying: Bool)
+    
+}
+
+final class MSMusicPlayerView: UIView {
     
     // MARK: - Constants
     
@@ -40,7 +50,6 @@ final class MSMusicPlayerView: UIProgressView {
         enum TitleView {
             static let title: String = "Attention"
             static let subTitle: String = "NewJeans"
-            static let defaultIndex: Int = 0
         }
         
         // stackView
@@ -50,7 +59,21 @@ final class MSMusicPlayerView: UIProgressView {
         
     }
     
+    // MARK: - Properties
+    
+    weak var delegate: MSMusicPlayerViewDelegate?
+    
+    let playbackPublisher = PassthroughSubject<TimeInterval, Never>()
+    var timer: AnyCancellable?
+    
+    private var isPlaying: Bool = false
+    var playbackTime: TimeInterval = .zero
+    var duration: TimeInterval?
+    
     // MARK: - UI Components
+    
+    private let progressView = UIView()
+    private var progressViewWidthConstraint: NSLayoutConstraint?
     
     private let albumArtView: UIImageView = {
         let imageView = UIImageView()
@@ -71,7 +94,7 @@ final class MSMusicPlayerView: UIProgressView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .msFont(.paragraph)
-        label.textColor = .msColor(.primaryTypo)
+        label.textColor = .msColor(.componentTypo)
         label.text = Default.TitleView.title
         return label
     }()
@@ -79,7 +102,7 @@ final class MSMusicPlayerView: UIProgressView {
     private let artistLabel: UILabel = {
         let label = UILabel()
         label.font = .msFont(.caption)
-        label.textColor = .msColor(.secondaryTypo)
+        label.textColor = .msColor(.componentTypo)
         label.text = Default.TitleView.subTitle
         return label
     }()
@@ -95,7 +118,7 @@ final class MSMusicPlayerView: UIProgressView {
     private let playTimeLabel: UILabel = {
         let label = UILabel()
         label.font = .msFont(.caption)
-        label.textColor = .msColor(.textFieldTypo)
+        label.textColor = .msColor(.componentTypo)
         label.text = Default.PlayTime.time
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return label
@@ -103,33 +126,139 @@ final class MSMusicPlayerView: UIProgressView {
     
     private let playTimeIconView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = .msIcon(.voice)
-        imageView.tintColor = .msColor(.textFieldTypo)
+        imageView.tintColor = .msColor(.componentTypo)
+
+        if #available(iOS 17.0, *) {
+            imageView.image = UIImage(systemName: "waveform")
+        } else {
+            imageView.image = .msIcon(.voice)
+        }
+        
         return imageView
+    }()
+    
+    private let controlButton: UIButton = {
+        var configuration = UIButton.Configuration.plain()
+        configuration.baseBackgroundColor = .clear
+        let button = UIButton(configuration: configuration)
+        return button
     }()
     
     // MARK: - Initializer
     
     public override init(frame: CGRect) {
+        self.isPlaying = true
         super.init(frame: frame)
         
         self.configureStyle()
         self.configureLayout()
+        self.configureAction()
     }
     
     required init?(coder: NSCoder) {
         fatalError("MusicSpot은 code-based 로 개발되었습니다.")
     }
     
-    // MARK: - UI Configuration: layout
+    deinit {
+        self.pause(playbackTime: .zero)
+    }
     
-    private func configureLayout() {
+    // MARK: - Functions
+    
+    public func update(with music: Music) {
+        self.titleLabel.text = music.title
+        self.artistLabel.text = music.artist
+        if let albumCover = music.albumCover,
+           let coverURL = albumCover.url {
+            self.albumArtView.ms.setImage(with: coverURL, forKey: coverURL.paath())
+        }
+    }
+    
+    public func togglePlayingStatus(to isPlaying: Bool) {
+        DispatchQueue.main.async {
+            self.progressView.backgroundColor = isPlaying ? .msColor(.musicSpot) : .msColor(.componentBackground)
+            
+            if #available(iOS 17.0, *) {
+                if isPlaying {
+                    self.playTimeIconView.addSymbolEffect(.variableColor.cumulative.dimInactiveLayers.nonReversing)
+                } else {
+                    self.playTimeIconView.removeAllSymbolEffects()
+                }
+            }
+        }
+    }
+    
+    public func play(progressingTimeInterval: TimeInterval = 0.1) {
+        self.timer = Timer.publish(every: progressingTimeInterval, on: .current, in: .common)
+            .autoconnect()
+            .receive(on: DispatchQueue.global(qos: .background))
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                
+                self.playbackTime += progressingTimeInterval
+                DispatchQueue.main.async {
+                    self.setProgress(to: self.playbackTime)
+                    let minute = Int(self.playbackTime / 60.0)
+                    let second = Int(self.playbackTime.truncatingRemainder(dividingBy: 60.0))
+                    self.playTimeLabel.text = String(format: "%02d : %02d", minute, second)
+                }
+            }
+        self.isPlaying = true
+    }
+    
+    public func pause(playbackTime: TimeInterval) {
+        self.timer?.cancel()
+        self.playbackTime = playbackTime
+        self.isPlaying = false
+    }
+    
+    private func setProgress(to time: TimeInterval, animted: Bool = true) {
+        guard let duration = self.duration else { return }
+        
+        let desiredWidth = (time * self.frame.width) / duration
+        
+        UIView.animate(withDuration: 0.1,
+                       delay: .zero,
+                       usingSpringWithDamping: 0.5,
+                       initialSpringVelocity: 0.2,
+                       options: [.curveEaseInOut]) {
+            self.progressViewWidthConstraint?.constant = desiredWidth
+            self.layoutIfNeeded()
+        }
+    }
+    
+}
+
+// MARK: - UI Configuration
+
+private extension MSMusicPlayerView {
+    
+    func configureLayout() {
+        self.addSubview(self.progressView)
+        self.progressView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.progressView.topAnchor.constraint(equalTo: self.topAnchor),
+            self.progressView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.progressView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        ])
+        self.progressViewWidthConstraint = self.progressView.widthAnchor.constraint(equalToConstant: .zero)
+        self.progressViewWidthConstraint?.isActive = true
+        
         self.configureAlbumArtViewLayout()
         self.configurePlayTimeViewLayout()
         self.configureTitleViewLayout()
+        
+        self.addSubview(self.controlButton)
+        self.controlButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.controlButton.topAnchor.constraint(equalTo: self.topAnchor),
+            self.controlButton.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.controlButton.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            self.controlButton.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+        ])
     }
     
-    private func configureAlbumArtViewLayout() {
+    func configureAlbumArtViewLayout() {
         self.addSubview(self.albumArtView)
         self.albumArtView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -140,8 +269,8 @@ final class MSMusicPlayerView: UIProgressView {
             self.albumArtView.heightAnchor.constraint(equalToConstant: Metric.AlbumArtView.size)
         ])
     }
-
-    private func configureTitleViewLayout() {
+    
+    func configureTitleViewLayout() {
         self.addSubview(self.titleStackView)
         self.titleStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -161,7 +290,7 @@ final class MSMusicPlayerView: UIProgressView {
         }
     }
     
-    private func configurePlayTimeViewLayout() {
+    func configurePlayTimeViewLayout() {
         self.addSubview(self.playTimeStackView)
         self.playTimeStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -183,18 +312,27 @@ final class MSMusicPlayerView: UIProgressView {
         ])
     }
     
-    // MARK: - UI Configuration: style
+    // MARK: - UI Configuration: Style
     
-    private func configureStyle() {
+    func configureStyle() {
         self.clipsToBounds = true
         self.layer.cornerRadius = Metric.cornerRadius
-        self.trackTintColor = .msColor(.textFieldBackground).withAlphaComponent(0.7)
-        self.progressTintColor = .msColor(.musicSpot)
-        self.progress = .zero
+        self.backgroundColor = .msColor(.componentBackground).withAlphaComponent(0.7)
         self.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.heightAnchor.constraint(equalToConstant: Metric.height)
         ])
+    }
+    
+    // MARK: - UI Configuration: Button Action
+    
+    func configureAction() {
+        let action = UIAction { [weak self] _ in
+            guard let self = self else { return }
+            self.isPlaying.toggle()
+            self.delegate?.musicPlayerView(self, didToggleMedia: self.isPlaying)
+        }
+        self.controlButton.addAction(action, for: .touchUpInside)
     }
     
 }

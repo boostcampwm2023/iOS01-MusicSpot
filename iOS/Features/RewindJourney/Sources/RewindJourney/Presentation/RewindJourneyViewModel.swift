@@ -21,6 +21,7 @@ public final class RewindJourneyViewModel {
         case viewNeedsLoaded
         case startAutoPlay
         case stopAutoPlay
+        case toggleMusic(isPlaying: Bool)
     }
     
     public struct State {
@@ -31,6 +32,7 @@ public final class RewindJourneyViewModel {
         public let photoURLs: CurrentValueSubject<[URL], Never>
         public let prefetchedMusic: CurrentValueSubject<Music, Never>
         public let selectedSong = CurrentValueSubject<Song?, Never>(nil)
+        public let isSongPlaying = CurrentValueSubject<Bool, Never>(false)
     }
     
     // MARK: - Properties
@@ -85,6 +87,8 @@ extension RewindJourneyViewModel {
             self.startTimer()
         case .stopAutoPlay:
             self.stopTimer()
+        case .toggleMusic(let isPlaying):
+            self.state.isSongPlaying.send(isPlaying)
         }
     }
 
@@ -103,6 +107,7 @@ private extension RewindJourneyViewModel {
                 MSLogger.make(category: .rewindJourney).debug("음악을 찾았습니다: \(song)")
                 #endif
                 self.state.selectedSong.send(song)
+                self.state.isSongPlaying.send(true)
             case .failure(let error):
                 MSLogger.make(category: .rewindJourney).error("\(error)")
             }

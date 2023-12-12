@@ -81,15 +81,15 @@ import MSKeychainStorage
 private extension SceneDelegate {
     
     func prepareToDebug() {
-        self.isFirstLaunch = true
-        self.recordingJourneyID = nil
-        self.isRecording = false
-        
-        do {
-            try self.keychain.deleteAll()
-        } catch {
-            MSLogger.make(category: .keychain).error("키체인 초기화 실패")
-        }
+//        self.isFirstLaunch = true
+//        self.recordingJourneyID = nil
+//        self.isRecording = false
+//        
+//        do {
+//            try self.keychain.deleteAll()
+//        } catch {
+//            MSLogger.make(category: .keychain).error("키체인 초기화 실패")
+//        }
     }
     
 }
