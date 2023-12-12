@@ -46,7 +46,7 @@ public final class RewindJourneyViewModel {
     
     // MARK: - Properties: Timer
     
-    private let timerTimeInterval: Double = 4.0
+    private let timerTimeInterval: Double = 10.0
     private var timer: AnyCancellable?
     
     // MARK: - Initializer
