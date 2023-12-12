@@ -14,6 +14,7 @@ public final class JourneyListHeaderView: UICollectionReusableView {
     
     // MARK: - Constants
     
+    static let elementKind: String = "JourneyListHeaderView"
     static let estimatedHight: CGFloat = 46.0 + Metric.verticalInset
     
     private enum Typo {
@@ -73,6 +74,7 @@ public final class JourneyListHeaderView: UICollectionReusableView {
     
     // MARK: - Functions
     
+    @MainActor
     func update(numberOfJourneys: Int) {
         self.subtitleLabel.text = Typo.subtitle(numberOfJourneys: numberOfJourneys)
     }

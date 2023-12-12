@@ -301,6 +301,7 @@ private extension MapViewController {
     func configureCoreLocation() {
         self.locationManager.delegate = self
         self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
     }
     
 }
@@ -317,15 +318,19 @@ extension MapViewController: CLLocationManagerDelegate {
     
     public func locationManager(_ manager: CLLocationManager,
                                 didUpdateLocations locations: [CLLocation]) {
-        guard let newCurrentLocation = locations.last,
+        guard self.timeRemaining == .zero,
+              let newCurrentLocation = locations.last,
               let recordJourneyViewModel = self.viewModel as? RecordJourneyViewModel else {
             return
         }
+        
         let previousCoordinate = (self.viewModel as? RecordJourneyViewModel)?.state.previousCoordinate.value
-        if self.timeRemaining != 0 || viewModel is NavigateMapViewModel { return }
-        if let previousCoordinate {
+        
+        if let previousCoordinate = previousCoordinate {
             if !self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate,
-                                               coordinate2: newCurrentLocation.coordinate) { return }
+                                               coordinate2: newCurrentLocation.coordinate) {
+                return
+            }
         }
         
         let coordinate2D = CLLocationCoordinate2D(latitude: newCurrentLocation.coordinate.latitude,
