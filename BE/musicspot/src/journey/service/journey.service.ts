@@ -109,11 +109,7 @@ export class JourneyService {
   async pushCoordianteToJourney(recordJourneyDTO: RecordJourneyReqDTO) {
     const { journeyId, coordinates } = recordJourneyDTO;
     const coordinatesLen = coordinates.length;
-    // coordinate가 단일 배열인 경우 이를 이중 배열로 감싸서 처리
 
-    // const coordinateToAdd = Array.isArray(coordinate[0])
-    //   ? coordinate
-    //   : [coordinate];
     const updatedJourney = await this.journeyModel
       .findOneAndUpdate(
         { _id: journeyId },
