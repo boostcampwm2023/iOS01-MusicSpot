@@ -1,12 +1,9 @@
-<h2 align="center">
-  <img src="https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/bfd918f2-5495-4b42-80a2-8612c8f4f524" width="200"> <br/>
-  <br>
-  🎶 MusicSpot
-  <br>
-</h2>
+
+<img src="https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/90ec7022-ff90-4cfe-9486-44b42c95e5a9" width="1920">
+
+***
 
 <div align="center" style="color: gray;">
-  <i>당신의 여정을 음악과 함께 기억하다.</i> <br>
   <i>네이버 부스트캠프 웹・모바일 8기 그룹 프로젝트</i> <br>
   <i>2023.11.06 ~ 2023.12.15</i> <br>
 </div>
@@ -21,7 +18,7 @@
 
 <div align="center" style="color: gray;">
   <b>Team.과열</b>은 지도에 관심을 갖고있는 사람들로 이루어져 있습니다.<br/>
-  지도를 활용해서 음악과 함께 여정을 기록하는 앱, <b>MusicSpot</b>를 소개합니다.
+  지도 기반으로 사진, 음악으로 여정을 채워나가는 앱, <b>MusicSpot</b>를 소개합니다.
 </div>
 
 <br/>
