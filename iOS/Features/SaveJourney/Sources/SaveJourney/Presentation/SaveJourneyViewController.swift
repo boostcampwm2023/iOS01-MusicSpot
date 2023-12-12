@@ -42,6 +42,7 @@ public final class SaveJourneyViewController: UIViewController {
         static let buttonSpacing: CGFloat = 4.0
         static let buttonBottomInset: CGFloat = 24.0
         static let lineWidth: CGFloat = 0.5
+        static let mapSpanAssistance: CGFloat = 1.2
         
     }
     
@@ -242,27 +243,23 @@ public final class SaveJourneyViewController: UIViewController {
     }
     
     func focusToJourney(from coordinates: [Coordinate]) -> MKCoordinateRegion? {
-        guard !coordinates.isEmpty else {
-            return nil
-        }
+        guard !coordinates.isEmpty else { return nil }
         
-        var minLat = coordinates[0].latitude
-        var maxLat = coordinates[0].latitude
-        var minLon = coordinates[0].longitude
-        var maxLon = coordinates[0].longitude
-        
-        for coordinate in coordinates {
-            minLat = min(minLat, coordinate.latitude)
-            maxLat = max(maxLat, coordinate.latitude)
-            minLon = min(minLon, coordinate.longitude)
-            maxLon = max(maxLon, coordinate.longitude)
+        let (minLat, maxLat, minLon, maxLon) = coordinates.reduce((coordinates[0].latitude,
+                                                                   coordinates[0].latitude,
+                                                                   coordinates[0].longitude,
+                                                                   coordinates[0].longitude)) { result, coordinate in
+            (min(result.0, coordinate.latitude),
+             max(result.1, coordinate.latitude),
+             min(result.2, coordinate.longitude),
+             max(result.3, coordinate.longitude))
         }
         
         let center = CLLocationCoordinate2D(latitude: (minLat + maxLat) / 2,
                                             longitude: (minLon + maxLon) / 2)
         
-        let span = MKCoordinateSpan(latitudeDelta: maxLat - minLat,
-                                    longitudeDelta: maxLon - minLon)
+        let span = MKCoordinateSpan(latitudeDelta: (maxLat - minLat) * Metric.mapSpanAssistance,
+                                    longitudeDelta: (maxLon - minLon) * Metric.mapSpanAssistance)
         
         return MKCoordinateRegion(center: center, span: span)
     }
