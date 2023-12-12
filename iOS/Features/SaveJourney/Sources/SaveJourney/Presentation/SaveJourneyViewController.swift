@@ -41,6 +41,7 @@ public final class SaveJourneyViewController: UIViewController {
         static let collectionViewBottomSpacing: CGFloat = 80.0
         static let buttonSpacing: CGFloat = 4.0
         static let buttonBottomInset: CGFloat = 24.0
+        static let lineWidth: CGFloat = 0.5
         
     }
     
@@ -57,13 +58,14 @@ public final class SaveJourneyViewController: UIViewController {
     
     private let musicPlayer = ApplicationMusicPlayer.shared
     
-    let mapView: MKMapView = {
+    private lazy var mapView: MKMapView = {
         let mapView = MKMapView()
         mapView.clipsToBounds = true
+        mapView.delegate = self
         return mapView
     }()
     
-    var mapViewHeightConstraint: NSLayoutConstraint?
+    private var mapViewHeightConstraint: NSLayoutConstraint?
     
     private(set) lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero,
@@ -176,12 +178,14 @@ public final class SaveJourneyViewController: UIViewController {
             .store(in: &self.cancellables)
         
         self.viewModel.state.recordingJourney
-            .compactMap { $0?.spots }
+            .compactMap { $0 }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] spots in
+            .sink { [weak self] recordingJourney in
                 guard let self = self else { return }
                 
+                let spots = recordingJourney.spots.compactMap { $0 }
                 self.updateSpotSectionSnapshot(with: spots)
+                self.updateMap(with: recordingJourney)
             }
             .store(in: &self.cancellables)
         
@@ -209,6 +213,74 @@ public final class SaveJourneyViewController: UIViewController {
             spotSnapshot.append(spots.map { .spot($0) })
             self.dataSource?.apply(spotSnapshot, to: .spot)
         }
+    }
+    
+    // MARK: - Functions: Polyline
+    
+    private func updateMap(with recordingJourney: RecordingJourney) {
+        self.drawPolyLinesToMap(with: recordingJourney)
+        guard let region = self.focusToJourney(from: recordingJourney.coordinates) else {
+            return
+        }
+        self.mapView.setRegion(region, animated: true)
+    }
+    
+    private func drawPolyLinesToMap(with journey: RecordingJourney) {
+        Task {
+            let coordinates = journey.coordinates.map {
+                CLLocationCoordinate2D(latitude: $0.latitude,
+                                       longitude: $0.longitude)
+            }
+            self.drawPolylineToMap(using: coordinates)
+        }
+    }
+    
+    private func drawPolylineToMap(using coordinates: [CLLocationCoordinate2D]) {
+        let polyline = MKPolyline(coordinates: coordinates,
+                                  count: coordinates.count)
+        self.mapView.addOverlay(polyline)
+    }
+    
+    func focusToJourney(from coordinates: [Coordinate]) -> MKCoordinateRegion? {
+        guard !coordinates.isEmpty else {
+            return nil
+        }
+        
+        var minLat = coordinates[0].latitude
+        var maxLat = coordinates[0].latitude
+        var minLon = coordinates[0].longitude
+        var maxLon = coordinates[0].longitude
+        
+        for coordinate in coordinates {
+            minLat = min(minLat, coordinate.latitude)
+            maxLat = max(maxLat, coordinate.latitude)
+            minLon = min(minLon, coordinate.longitude)
+            maxLon = max(maxLon, coordinate.longitude)
+        }
+        
+        let center = CLLocationCoordinate2D(latitude: (minLat + maxLat) / 2,
+                                            longitude: (minLon + maxLon) / 2)
+        
+        let span = MKCoordinateSpan(latitudeDelta: maxLat - minLat,
+                                    longitudeDelta: maxLon - minLon)
+        
+        return MKCoordinateRegion(center: center, span: span)
+    }
+    
+}
+
+extension SaveJourneyViewController: MKMapViewDelegate {
+    
+    public func mapView(_ mapView: MKMapView,
+                        rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        guard let polyLine = overlay as? MKPolyline else { return MKOverlayRenderer() }
+        
+        let renderer = MKPolylineRenderer(polyline: polyLine)
+        renderer.strokeColor = .msColor(.musicSpot)
+        renderer.lineWidth = Metric.lineWidth
+        renderer.alpha = 1.0
+        
+        return renderer
     }
     
 }
