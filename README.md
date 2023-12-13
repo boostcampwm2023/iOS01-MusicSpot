@@ -45,9 +45,20 @@
 ### 🌠 지난 여정
 ![MusicSpot 앱 소개 004](https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/2bf9568c-2846-44f5-a34e-2dbbf05b2bcc)
 
-## 🚀 기술적 도전
+## 🚀 기술적 도전기
 
+### 🍎 iOS
+[📦 라이브러리-프레임워크-패키지 무슨 차이인데?](https://www.nomatterjun.vision/blog/Swift/22.Library_Framework_Package)\
+[🌐 네트워킹이 테스트가 된다고!?]()\
+[⌛ 모듈로 나뉜 구조에서 CI는 어떤 형태이면 좋을까?]()\
+[⚾ 패키지 나눈 건 좋아. 데이터는 어떻게 넘겨주게?]()\
+[🕺 인코딩, 디코딩 예민하네~ 화났네~]()\
+[🧑‍🔧 추상화로 협업하기]()\
+[🏗️ 뷰컨이 오타니이길 바라지 말자]()\
+[🎶 MusicKit 써봅시다!]()
 
+### 💾 BE
+[]()
 
 ## 📔 문서
 
