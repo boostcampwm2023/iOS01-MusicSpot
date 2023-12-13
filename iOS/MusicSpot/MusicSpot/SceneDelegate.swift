@@ -84,7 +84,6 @@ private extension SceneDelegate {
 //        self.isFirstLaunch = true
 //        self.recordingJourneyID = nil
 //        self.isRecording = false
-//        
 //        do {
 //            try self.keychain.deleteAll()
 //        } catch {
