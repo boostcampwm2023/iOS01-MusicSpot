@@ -136,6 +136,8 @@ public final class SelectSongViewController: BaseViewController {
                 snapshot.appendSections([.zero])
                 snapshot.appendItems(songs, toSection: .zero)
                 self.dataSource?.apply(snapshot, animatingDifferences: true)
+                
+                self.collectionView.setContentOffset(.zero, animated: true)
             }
             .store(in: &self.cancellables)
     }
