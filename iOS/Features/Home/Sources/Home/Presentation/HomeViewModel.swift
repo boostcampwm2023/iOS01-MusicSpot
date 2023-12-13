@@ -103,8 +103,12 @@ public final class HomeViewModel {
 
 private extension HomeViewModel {
     
+    private var shouldSignIn: Bool {
+        return self.isFirstLaunch || self.userRepository.fetchUUID() == nil
+    }
+    
     func createNewUserWhenFirstLaunch() {
-        guard self.isFirstLaunch else { return }
+        guard self.shouldSignIn else { return }
         
         Task {
             let result = await self.userRepository.createUser()
