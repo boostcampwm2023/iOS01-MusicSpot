@@ -6,6 +6,8 @@ export const is1DArray = (arr) => {
     if (!isInCoordinateRange(arr)) {
       return false;
     }
+  } else {
+    return false;
   }
 
   return true;

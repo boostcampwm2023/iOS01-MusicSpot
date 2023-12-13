@@ -35,6 +35,7 @@ import {
 } from '../dto/journeyRecord/journeyRecord.dto';
 import { StartJourneyResDTO } from '../dto/journeyStart/journeyStart.dto';
 import { DeleteJourneyReqDTO } from '../dto/journeyDelete.dto';
+import { LastJourneyResDTO } from '../dto/journeyLast.dto';
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
@@ -133,9 +134,9 @@ export class JourneyController {
   })
   @ApiCreatedResponse({
     description: '사용자가 진행중이었던 여정 정보',
-    type: Journey,
+    type: LastJourneyResDTO,
   })
-  @Get('loadLastData')
+  @Get('last')
   async loadLastData(@Query('userId') userId: string) {
     return await this.journeyService.loadLastJourney(userId);
   }
@@ -166,17 +167,3 @@ export class JourneyController {
     return await this.journeyService.deleteJourneyById(deleteJourneyDto);
   }
 }
-
-// @ApiOperation({
-//   summary: '여정 조회 API',
-//   description: '해당 범위 내의 여정들을 반환합니다.',
-// })
-// @ApiCreatedResponse({
-//   description: '범위에 있는 여정의 기록들을 반환',
-//   type: CheckJourneyResDTO,
-// })
-// @Post('check')
-// @UsePipes(ValidationPipe) //유효성 체크
-// async checkPost(@Body() checkJourneyDTO: CheckJourneyReqDTO) {
-//   return await this.journeyService.checkJourney(checkJourneyDTO);
-// }
