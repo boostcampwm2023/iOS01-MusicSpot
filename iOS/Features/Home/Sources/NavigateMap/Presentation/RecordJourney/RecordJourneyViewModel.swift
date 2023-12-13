@@ -57,10 +57,14 @@ public final class RecordJourneyViewModel: MapViewModel {
             #if DEBUG
             MSLogger.make(category: .home).debug("View Did load.")
             #endif
+            
+        /// 이전 currentCoordinate를 previousCoordinate에, 저장할 현재 위치를 currentCoordinate에 update
         case .locationDidUpdated(let coordinate):
             let previousCoordinate = self.state.currentCoordinate.value
             self.state.previousCoordinate.send(previousCoordinate)
             self.state.currentCoordinate.send(coordinate)
+            
+        /// 저장하고 자 하는 위치 데이터를 서버에 전송
         case .locationsShouldRecorded(let coordinates):
             Task {
                 let recordingJourney = self.state.recordingJourney.value
@@ -75,6 +79,7 @@ public final class RecordJourneyViewModel: MapViewModel {
                     MSLogger.make(category: .home).error("\(error)")
                 }
             }
+        /// 기록 중에 여정 기록을 취소
         case .recordingDidCancelled:
             Task {
                 guard let userID = self.userRepository.fetchUUID() else { return }
@@ -90,6 +95,7 @@ public final class RecordJourneyViewModel: MapViewModel {
                     MSLogger.make(category: .home).error("\(error)")
                 }
             }
+        /// 업데이트되는 위치 정보를 받아와 5개가 될 경우 평균값 필터링 후 저장하는 로직
         case .fiveLocationsDidRecorded(let coordinate):
             self.filterLongestCoordinate(coordinate: coordinate)
         }
@@ -109,7 +115,11 @@ private extension RecordJourneyViewModel {
     }
     
     func filterLongestCoordinate(coordinate: CLLocationCoordinate2D) {
-        
+        if let previousCoordinate = self.state.previousCoordinate.value {
+            if calculateDistance(from: previousCoordinate, to: coordinate) <= 5 {
+                return
+            }
+        }
         var recordedCoords = self.state.recordedCoordinates.value
         recordedCoords.append(coordinate)
         self.state.recordedCoordinates.send(recordedCoords)

@@ -323,8 +323,9 @@ extension MapViewController: CLLocationManagerDelegate {
         let coordinate2D = CLLocationCoordinate2D(latitude: newCurrentLocation.coordinate.latitude,
                                                   longitude: newCurrentLocation.coordinate.longitude)
         recordJourneyViewModel.trigger(.fiveLocationsDidRecorded(coordinate2D))
+        
+        // filtering된 위치 정보가 있을 경우(5개의 위치 데이터가 들어와 필터링이 완료되었을 경우)에만 아래 두 trigger 실행 가능
         guard let filteredCoordinate2D = recordJourneyViewModel.state.filteredCoordinate.value else { return }
-        dump(filteredCoordinate2D)
         recordJourneyViewModel.trigger(.locationDidUpdated(filteredCoordinate2D))
         recordJourneyViewModel.trigger(.locationsShouldRecorded([filteredCoordinate2D]))
     }
