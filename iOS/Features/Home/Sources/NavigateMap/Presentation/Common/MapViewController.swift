@@ -324,20 +324,13 @@ extension MapViewController: CLLocationManagerDelegate {
             return
         }
         
-        let previousCoordinate = (self.viewModel as? RecordJourneyViewModel)?.state.previousCoordinate.value
-        
-        if let previousCoordinate = previousCoordinate {
-            if !self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate,
-                                               coordinate2: newCurrentLocation.coordinate) {
-                return
-            }
-        }
-        
         let coordinate2D = CLLocationCoordinate2D(latitude: newCurrentLocation.coordinate.latitude,
                                                   longitude: newCurrentLocation.coordinate.longitude)
-        
-        recordJourneyViewModel.trigger(.locationDidUpdated(coordinate2D))
-        recordJourneyViewModel.trigger(.locationsShouldRecorded([coordinate2D]))
+        recordJourneyViewModel.trigger(.fiveLocationsDidRecorded(coordinate2D))
+        guard let filteredCoordinate2D = recordJourneyViewModel.state.filteredCoordinate.value else { return }
+        dump(filteredCoordinate2D)
+        recordJourneyViewModel.trigger(.locationDidUpdated(filteredCoordinate2D))
+        recordJourneyViewModel.trigger(.locationsShouldRecorded([filteredCoordinate2D]))
     }
     
     private func handleAuthorizationChange(_ manager: CLLocationManager) {
@@ -378,13 +371,13 @@ extension MapViewController: CLLocationManagerDelegate {
         }
     }
     
-    private func isDistanceOver5AndUnder50(coordinate1: CLLocationCoordinate2D,
-                                           coordinate2: CLLocationCoordinate2D) -> Bool {
-        let location1 = CLLocation(latitude: coordinate1.latitude, longitude: coordinate1.longitude)
-        let location2 = CLLocation(latitude: coordinate2.latitude, longitude: coordinate2.longitude)
-        MSLogger.make(category: .navigateMap).log("이동한 거리: \(location1.distance(from: location2))")
-        return 5 <= location1.distance(from: location2) && location1.distance(from: location2) <= 50
-    }
+//    private func isDistanceOver5AndUnder50(coordinate1: CLLocationCoordinate2D,
+//                                           coordinate2: CLLocationCoordinate2D) -> Bool {
+//        let location1 = CLLocation(latitude: coordinate1.latitude, longitude: coordinate1.longitude)
+//        let location2 = CLLocation(latitude: coordinate2.latitude, longitude: coordinate2.longitude)
+//        MSLogger.make(category: .navigateMap).log("이동한 거리: \(location1.distance(from: location2))")
+//        return 5 <= location1.distance(from: location2) && location1.distance(from: location2) <= 50
+//    }
     
 }
 
