@@ -223,7 +223,8 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
         
         let refreshButtonAction = UIAction { [weak self] _ in
             guard let coordinates = self?.contentViewController.visibleCoordinates else { return }
-            
+            self?.contentViewController.clearAnnotations()
+            self?.contentViewController.clearOverlays()
             self?.viewModel.trigger(.refreshButtonDidTap(visibleCoordinates: coordinates))
         }
         self.refreshButton.addAction(refreshButtonAction, for: .touchUpInside)
