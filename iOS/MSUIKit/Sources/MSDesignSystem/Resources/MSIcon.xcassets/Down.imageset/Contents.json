@@ -1,0 +1,15 @@
+{
+  "images" : [
+    {
+      "filename" : "Down 2.pdf",
+      "idiom" : "iphone"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "preserves-vector-representation" : true
+  }
+}
