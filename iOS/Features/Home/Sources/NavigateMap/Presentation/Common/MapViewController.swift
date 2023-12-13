@@ -250,11 +250,7 @@ public final class MapViewController: UIViewController {
                             CLLocationCoordinate2D(latitude: $0.latitude,
                                                    longitude: $0.longitude)
                         }
-                        let spotCoordinates = journey.spots.map {
-                            CLLocationCoordinate2D(latitude: $0.coordinate.latitude,
-                                                   longitude: $0.coordinate.longitude)
-                        }
-                        await self.drawPolylineToMap(using: coordinates+spotCoordinates)
+                        await self.drawPolylineToMap(using: coordinates)
                     }
                 }
             }

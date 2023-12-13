@@ -8,6 +8,7 @@
 import UIKit
 
 import MSDesignSystem
+import MSExtension
 import MSImageFetcher
 
 public final class JourneyCell: UICollectionViewCell {
@@ -96,8 +97,7 @@ public final class JourneyCell: UICollectionViewCell {
             return
         }
         
-        let key = "\(indexPath.section)-\(indexPath.item)"
-        photoView.imageView.ms.setImage(with: imageURL, forKey: key)
+        photoView.imageView.ms.setImage(with: imageURL, forKey: imageURL.paath())
     }
     
 }
