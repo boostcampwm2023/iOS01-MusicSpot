@@ -54,12 +54,15 @@ public final class MSRectButton: UIButton {
         }
     }
     
+    private let haptic = UIImpactFeedbackGenerator(style: .medium)
+    
     // MARK: - Initializer
     
     private override init(frame: CGRect) {
         super.init(frame: frame)
         self.configureStyles()
         self.configureLayout()
+        self.haptic.prepare()
     }
     
     required init?(coder: NSCoder) {
@@ -78,6 +81,15 @@ public final class MSRectButton: UIButton {
         configuration.imagePlacement = .leading
         configuration.titleAlignment = .center
         self.configuration = configuration
+        
+        self.configurationUpdateHandler = { button in
+            switch button.state {
+            case .highlighted:
+                self.haptic.impactOccurred()
+            default:
+                break
+            }
+        }
     }
     
     private func configureLayout() {

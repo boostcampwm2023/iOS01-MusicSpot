@@ -6,34 +6,51 @@
 //
 
 import Combine
+import Foundation
+import MusicKit
 
 import MSData
+import MSDomain
 import MSLogger
 
 public final class SaveJourneyViewModel {
     
     public enum Action {
         case viewNeedsLoaded
-        case mediaControlButtonDidTap
+        case musicControlButtonDidTap
+        case titleDidConfirmed(String)
     }
     
     public struct State {
-        var song: CurrentValueSubject<Song, Never>
-        var spots = CurrentValueSubject<[Spot], Never>([])
+        // Passthrough
+        var endJourneySucceed = PassthroughSubject<Journey, Never>()
+        
+        // CurrentValue
+        /// Apple Music 권한 상태
+        var musicAuthorizatonStatus = CurrentValueSubject<MusicAuthorization.Status, Never>(.notDetermined)
+        var buttonStateFactors = CurrentValueSubject<ButtonStateFactor, Never>(ButtonStateFactor())
+        
+        var recordingJourney = CurrentValueSubject<RecordingJourney?, Never>(nil)
+        var selectedSong: CurrentValueSubject<Song, Never>
     }
     
     // MARK: - Properties
     
-    private let spotRepository: SpotRepository
+    private var journeyRepository: JourneyRepository
     
     public var state: State
     
+    /// 완료 버튼을 누른 시점의 마지막 좌표
+    private let lastCoordiante: Coordinate
+    
     // MARK: - Initializer
     
-    public init(selectedSong: Song,
-                spotRepository: SpotRepository) {
-        self.spotRepository = spotRepository
-        self.state = State(song: CurrentValueSubject<Song, Never>(selectedSong))
+    public init(lastCoordinate: Coordinate,
+                selectedSong: Song,
+                journeyRepository: JourneyRepository) {
+        self.journeyRepository = journeyRepository
+        self.state = State(selectedSong: CurrentValueSubject<Song, Never>(selectedSong))
+        self.lastCoordiante = lastCoordinate
     }
     
     // MARK: - Functions
@@ -42,19 +59,63 @@ public final class SaveJourneyViewModel {
         switch action {
         case .viewNeedsLoaded:
             Task {
-                let result = await self.spotRepository.fetchRecordingSpots()
-                switch result {
-                case .success(let responseDTOs):
-                    let spots = responseDTOs.map { Spot(dto: $0) }
-                    self.state.spots.send(spots)
-                case .failure(let error):
-                    #if DEBUG
-                    MSLogger.make(category: .saveJourney).error("\(error)")
-                    #endif
-                }
+                let status = await MusicAuthorization.request()
+                #if DEBUG
+                MSLogger.make(category: .saveJourney).info("음악 권한 상태: \(status)")
+                #endif
+                self.state.musicAuthorizatonStatus.send(status)
             }
-        case .mediaControlButtonDidTap:
-            print("Media Control Button Tap.")
+             
+            Task {
+                let subscription = try await MusicSubscription.current
+                #if DEBUG
+                MSLogger.make(category: .saveJourney).debug("\(subscription)")
+                #endif
+                let stateFactors = self.state.buttonStateFactors.value
+                stateFactors.canBecomeSubscriber = subscription.canBecomeSubscriber
+                self.state.buttonStateFactors.send(stateFactors)
+            }
+            
+            guard let recordingJourney = self.journeyRepository.loadJourneyFromLocal() else { return }
+            self.state.recordingJourney.send(recordingJourney)
+        case .musicControlButtonDidTap:
+            let stateFactors = self.state.buttonStateFactors.value
+            stateFactors.isMusicPlaying.toggle()
+            self.state.buttonStateFactors.send(stateFactors)
+        case .titleDidConfirmed(let title):
+            self.endJourney(named: title)
+        }
+    }
+    
+}
+
+// MARK: - Private Functions
+
+private extension SaveJourneyViewModel {
+    
+    func endJourney(named title: String) {
+        guard let recordingJourney = self.state.recordingJourney.value else { return }
+        guard let journeyID = self.journeyRepository.fetchRecordingJourneyID() else { return }
+                
+        let selectedSong = self.state.selectedSong.value
+        let coordinates = recordingJourney.coordinates + [self.lastCoordiante]
+        let journey = Journey(id: journeyID,
+                              title: title,
+                              date: (start: recordingJourney.startTimestamp, end: .now),
+                              spots: recordingJourney.spots,
+                              coordinates: coordinates,
+                              music: Music(selectedSong))
+        Task {
+            let result = await self.journeyRepository.endJourney(journey)
+            switch result {
+            case .success(let journeyID):
+                #if DEBUG
+                MSLogger.make(category: .saveJourney).log("\(journeyID)가 저장되었습니다.")
+                #endif
+                self.state.endJourneySucceed.send(journey)
+            case .failure(let error):
+                MSLogger.make(category: .saveJourney).error("\(error)")
+            }
         }
     }
     

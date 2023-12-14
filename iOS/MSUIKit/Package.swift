@@ -27,6 +27,7 @@ private enum Dependency {
     
     static let msImageFetcher = "MSImageFetcher"
     static let msCoreKit = "MSCoreKit"
+    static let msExtension = "MSExtension"
     static let msLogger = "MSLogger"
     static let msFoundation = "MSFoundation"
     
@@ -64,6 +65,8 @@ let package = Package(
                     .target(name: Target.msDesignSystem),
                     .product(name: Dependency.msImageFetcher,
                              package: Dependency.msCoreKit),
+                    .product(name: Dependency.msExtension,
+                             package: Dependency.msFoundation),
                     .product(name: Dependency.msLogger,
                              package: Dependency.msFoundation)
                 ])

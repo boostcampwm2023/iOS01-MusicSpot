@@ -7,17 +7,28 @@
 
 import UIKit
 
+import MSData
+import MSDomain
 import Spot
 
 final class SpotCoordinator: Coordinator {
-    
+
     // MARK: - Properties
     
     var navigationController: UINavigationController
-    
     var childCoordinators: [Coordinator] = []
     
-    var delegate: HomeMapCoordinatorDelegate?
+    weak var delegate: HomeCoordinatorDelegate?
+    
+    // MARK: - Functions
+    
+    func start(spotCoordinate coordinate: Coordinate) {
+        let viewModel = SpotViewModel(coordinate: coordinate)
+        let spotViewController = SpotViewController(viewModel: viewModel)
+        self.navigationController.modalTransitionStyle = .coverVertical
+        self.navigationController.pushViewController(spotViewController, animated: true)
+        spotViewController.navigationDelegate = self
+    }
     
     // MARK: - Initializer
     
@@ -25,24 +36,74 @@ final class SpotCoordinator: Coordinator {
         self.navigationController = navigationController
     }
     
-    // MARK: - Functions
+}
+
+// MARK: - Spot Navigation
+
+extension SpotCoordinator: SpotNavigationDelegate {
     
-    func start() {
-        let spotViewController = SpotViewController()
-//        spotViewController.delegate = self
-        self.navigationController.pushViewController(spotViewController, animated: true)
+    func presentPhotos(from viewController: UIViewController) {
+        guard let spotViewController = viewController as? SpotViewController else {
+            return
+        }
+        
+        let picker = UIImagePickerController()
+        picker.sourceType = .photoLibrary
+        picker.allowsEditing = true
+        picker.delegate = spotViewController
+        spotViewController.present(picker, animated: true)
+    }
+    
+    func presentSpotSave(using image: UIImage, coordinate: Coordinate) {
+        let journeyRepository = JourneyRepositoryImplementation()
+        let spotRepository = SpotRepositoryImplementation()
+        let viewModel = SpotSaveViewModel(journeyRepository: journeyRepository,
+                                          spotRepository: spotRepository,
+                                          coordinate: coordinate)
+        let spotSaveViewController = SpotSaveViewController(image: image, viewModel: viewModel)
+        spotSaveViewController.modalPresentationStyle = .fullScreen
+        spotSaveViewController.navigationDelegate = self
+        self.navigationController.presentedViewController?.dismiss(animated: true)
+        self.navigationController.present(spotSaveViewController, animated: true)
+    }
+    
+    func dismissToSpot() {
+        guard let presentedViewController = self.navigationController.presentedViewController,
+              let spotSaveViewController = presentedViewController as? SpotSaveViewController else {
+            return
+        }
+        
+        spotSaveViewController.dismiss(animated: true)
+    }
+    
+    func popToHome() {
+        self.popToHome(from: self)
+    }
+    
+    func popToHomeWithSpot(spot: Spot) {
+        self.popToHomeWithSpot(from: self, spot: spot)
     }
     
 }
 
 // MARK: - HomeMap Coordinator
 
-extension SpotCoordinator: HomeMapCoordinatorDelegate {
+extension SpotCoordinator: HomeCoordinatorDelegate {
     
-    func popToHomeMap(from coordinator: Coordinator) {
+    func popToHome(from coordinator: Coordinator) {
         self.childCoordinators.removeAll()
         self.navigationController.popViewController(animated: true)
-        self.delegate?.popToHomeMap(from: self)
+        self.delegate?.popToHome(from: self)
+    }
+    
+    func popToHomeWithSpot(from coordinator: Coordinator, spot: Spot) {
+        self.childCoordinators.removeAll()
+        self.navigationController.popViewController(animated: true)
+        self.delegate?.popToHomeWithSpot(from: self, spot: spot)
+    }
+    
+    func popToHome(from coordinator: Coordinator, with endedJourney: Journey) {
+        //
     }
     
 }

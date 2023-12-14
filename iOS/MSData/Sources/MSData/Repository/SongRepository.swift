@@ -8,11 +8,15 @@
 import Foundation
 import MusicKit
 
+import MSLogger
 import MSNetworking
 
 public protocol SongRepository {
     
+    func fetchSong(withID id: String) async -> Result<Song, Error>
     func fetchSongList(with term: String) async -> Result<MusicItemCollection<Song>, Error>
+    @available(iOS 16.0, *)
+    func fetchSongListByRank() async -> Result<MusicItemCollection<Song>, Error>
     
 }
 
@@ -22,16 +26,30 @@ public struct SongRepositoryImplementation: SongRepository {
     
     // MARK: - Initializer
     
-    public init() {
-        
-    }
+    public init() { }
     
     // MARK: - Functions
     
+    public func fetchSong(withID id: String) async -> Result<Song, Error> {
+        let musicItemID = MusicItemID(id)
+        let request = MusicCatalogResourceRequest<Song>(matching: \.id, equalTo: musicItemID)
+        
+        do {
+            let response = try await request.response()
+            guard let song = response.items.first else {
+                MSLogger.make(category: .music).error("주어진 ID에 맞는 음악를 찾을 수 없습니다.")
+                return .failure(RepositoryError.emptyResponse)
+            }
+            return .success(song)
+        } catch {
+            return .failure(error)
+        }
+    }
+    
     public func fetchSongList(with term: String) async -> Result<MusicItemCollection<Song>, Error> {
-        #if DEBUG
+        #if MOCK
         guard let jsonURL = Bundle.module.url(forResource: "MockSong", withExtension: "json") else {
-            return .failure((MSNetworkError.invalidRouter))
+            return .failure(MSNetworkError.invalidRouter)
         }
         
         do {
@@ -41,20 +59,32 @@ public struct SongRepositoryImplementation: SongRepository {
                 return .success(result.songs)
             }
         } catch {
-            print(error)
+            return .failure(error)
         }
         #else
         var searchRequest = MusicCatalogSearchRequest(term: term, types: [Song.self])
         searchRequest.limit = 10
+        if #available(iOS 16.0, *) {
+            searchRequest.includeTopResults = true
+        }
         do {
             let searchResponse = try await searchRequest.response()
             return .success(searchResponse.songs)
         } catch {
-            print(error)
+            return .failure(error)
         }
         #endif
-        
-        return .failure(MSNetworkError.unknownResponse)
+    }
+    
+    @available(iOS 16.0, *)
+    public func fetchSongListByRank() async -> Result<MusicItemCollection<Song>, Error> {
+        let request = MusicCatalogChartsRequest(kinds: [.cityTop], types: [Song.self])
+        do {
+            let searchResponse = try await request.response()
+            return .success(searchResponse.songCharts.first!.items)
+        } catch {
+            return .failure(error)
+        }
     }
     
 }

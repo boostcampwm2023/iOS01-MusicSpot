@@ -8,9 +8,8 @@
 import UIKit
 
 import MSDesignSystem
-#if canImport(MSImageFetcher)
+import MSExtension
 import MSImageFetcher
-#endif
 
 public final class SongListCell: UICollectionViewCell {
     
@@ -81,16 +80,20 @@ public final class SongListCell: UICollectionViewCell {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
     
+    // MARK: - Life Cycle
+    
+    public override func prepareForReuse() {
+        self.albumArtImageView.image = nil
+    }
+    
     // MARK: - Functions
     
     public func update(with cellModel: SongListCellModel) {
         self.songTitleLabel.text = cellModel.title
         self.artistLabel.text = cellModel.artist
-    }
-    
-    public func updateArtwork(with artWorkURL: URL) {
-        // TODO: MSImageFetcher Merge 후 적용
-//        self.albumArtImageView.ms.setImage(with: artWorkURL, to: IndexPath(item: .zero, section: .zero))
+        
+        guard let albumArtURL = cellModel.albumArtURL else { return }
+        self.albumArtImageView.ms.setImage(with: albumArtURL, forKey: albumArtURL.paath())
     }
     
 }
@@ -100,7 +103,7 @@ public final class SongListCell: UICollectionViewCell {
 private extension SongListCell {
     
     func configureStyles() {
-        
+        self.backgroundColor = .msColor(.primaryBackground)
     }
     
     func configureLayout() {
@@ -164,6 +167,4 @@ private extension SongListCell {
     
     return cell
 }
-
-
 #endif

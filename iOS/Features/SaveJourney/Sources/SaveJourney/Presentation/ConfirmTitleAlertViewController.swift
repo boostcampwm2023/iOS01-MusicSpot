@@ -93,6 +93,7 @@ final class ConfirmTitleAlertViewController: MSAlertViewController {
         
         self.doneButtonAction = UIAction { [weak self] _ in
             guard let title = self?.textField.text else { return }
+            self?.dismissBottomSheet()
             self?.delegate?.titleDidConfirmed(title)
         }
     }
