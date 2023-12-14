@@ -70,7 +70,19 @@
 | MusicKit | [🎶 이 노래가 뮤스에서 나온다면]() |
 
 ### 💾 BE
-[]()
+| 키워드 | 제목 |
+| :-: | :- |
+| `NoSQL` | [ NoSQL이 뭐야?](https://www.notion.so/musicspot/NoSQL-16c8fa4b1ff84f86a321c87aa66e1504) |
+| `DocumentDB`, `MongoDB` | [ 너무 자유로운 구조는 초보 개발자를 불안하게 해요!](https://www.notion.so/musicspot/03e6b9a70d7f4097b3256c19b8098b85) |
+| `CI/CD`, `Docker` | [ Docker(???: 이미지 저장하는거 아니야?) ](https://www.notion.so/musicspot/Docker-121ba909e2e240dc94f25ac88c38a516) |
+| `CI/CD`,`Docker` | [ Docker와 친해지기 ](https://www.notion.so/musicspot/Docker-6a845439466f431ea4281fc09d938648) |
+| `SSH 연결`, '트러블 슈팅' | [ SSH연결이 안 돼요(근데 잘 돼요 ](https://www.notion.so/musicspot/ssh-fb93c27023e0406bb9bde19d661a6f4c) |
+| `HTTP`, `HTTPS`, `CA` | [ HTTPS(선택이 아닌 필수…!) ](https://www.notion.so/musicspot/HTTPS-244427527b894f85938ab6f1d3a19bc9) |
+| `Domain`, `가비아` | [ 도메인 사기(전세 사기의 그 사기 아님) ](https://www.notion.so/musicspot/8dd48b218be042fcbb9237aff9bc32fe) |
+| `HTTPS`, `NGINX`, `프록시` | [ Nginx를 통한 HTTPS연결 ](https://www.notion.so/musicspot/Nginx-HTTPS-bcf75adc83bb414089c697ddf9d6e97b) |
+| `CI/CD`, `github action` | [ github action 시작합니다. ](https://www.notion.so/musicspot/github-action-687b4b951adf4e83a1564d06a366ffbb) |
+
+
 
 ## 📔 문서
 
