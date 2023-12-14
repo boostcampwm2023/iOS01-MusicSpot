@@ -72,9 +72,7 @@ export class JourneyService {
 
   async end(endJourneyDTO: EndJourneyReqDTO) {
     const { journeyId, title, coordinates, endTimestamp, song } = endJourneyDTO;
-    // const coordinateToAdd = Array.isArray(coordinate[0])
-    //   ? coordinate
-    //   : [coordinate];
+
     const coordinatesLen = coordinates.length;
 
     const updatedJourney = await this.journeyModel
@@ -111,11 +109,7 @@ export class JourneyService {
   async pushCoordianteToJourney(recordJourneyDTO: RecordJourneyReqDTO) {
     const { journeyId, coordinates } = recordJourneyDTO;
     const coordinatesLen = coordinates.length;
-    // coordinate가 단일 배열인 경우 이를 이중 배열로 감싸서 처리
 
-    // const coordinateToAdd = Array.isArray(coordinate[0])
-    //   ? coordinate
-    //   : [coordinate];
     const updatedJourney = await this.journeyModel
       .findOneAndUpdate(
         { _id: journeyId },
@@ -128,9 +122,6 @@ export class JourneyService {
     }
     const updatedCoordinates = updatedJourney.coordinates;
     return { coordinates: updatedCoordinates.slice(-coordinatesLen) };
-    // const { coordinates } = updatedJourney;
-    // const len = coordinates.length;
-    // return { coordinate: coordinates[len - 1] };
   }
 
   async checkJourney(checkJourneyDTO) {
@@ -138,8 +129,8 @@ export class JourneyService {
     if (!(Array.isArray(minCoordinate) && Array.isArray(maxCoordinate))) {
       throw new coordinateNotCorrectException();
     }
-    minCoordinate = minCoordinate.map((item) => Number(item));
-    maxCoordinate = maxCoordinate.map((item) => Number(item));
+    minCoordinate = minCoordinate.map((item) => parseFloat(item));
+    maxCoordinate = maxCoordinate.map((item) => parseFloat(item));
 
     if (!(is1DArray(minCoordinate) && is1DArray(maxCoordinate))) {
       throw new coordinateNotCorrectException();
@@ -149,7 +140,6 @@ export class JourneyService {
       throw new UserNotFoundException();
     }
     const journeys = user.journeys;
-
     const boundingBox = turf.bboxPolygon([
       minCoordinate[0],
       minCoordinate[1],
@@ -193,31 +183,66 @@ export class JourneyService {
   }
 
   async loadLastJourney(userId) {
-    const user = await this.userModel.findById(userId).lean();
-
+    // const user = await this.userModel.findById(userId).lean();
+    const user = await this.userModel.findOne({ userId }).lean();
     if (!user) {
       throw new UserNotFoundException();
     }
-    const journeys = user.journeys;
 
-    const journey = await this.findLastJourney(journeys);
-    if (journey) {
-      return journey;
+    const journeys = user.journeys;
+    const len = journeys.length;
+    const lastJourneyId = journeys[len - 1];
+
+    const lastJourney = await this.journeyModel
+      .findById(lastJourneyId)
+      .populate({
+        path: 'spots',
+        model: 'Spot',
+        options: {
+          transform: (spot) => {
+            return {
+              coordinate: spot.coordinate,
+              timestamp: spot.timestamp,
+              photoUrl: makePresignedUrl(spot.photoKey),
+            };
+          },
+        },
+      })
+      .lean();
+
+    if (!lastJourney) {
+      return {
+        journey: null,
+        isRecording: false,
+      };
     }
-    return '진행중이었던 여정이 없습니다.';
+
+    return {
+      journey: lastJourney.title ? null : lastJourney,
+      isRecording: lastJourney.title ? false : true,
+    };
+    // returnData['isRecording'] = lastJourney.title ? true : false;
+    // returnData['journey'] = lastJourney;
+
+    // return returnData;
+    // const journey = await this.findLastJourney(journeys);
+    // if (journey) {
+    //   return journey;
+    // }
+    // return '진행중이었던 여정이 없습니다.';
   }
-  async findLastJourney(journeys) {
-    for (let i = 0; i < journeys.length; i++) {
-      let journey = await this.journeyModel.findById(journeys[i]).lean();
-      if (!journey) {
-        throw new JourneyNotFoundException();
-      }
-      if (journey.title === '') {
-        return journey;
-      }
-    }
-    return false;
-  }
+  // async findLastJourney(journeys) {
+  //   for (let i = 0; i < journeys.length; i++) {
+  //     let journey = await this.journeyModel.findById(journeys[i]).lean();
+  //     if (!journey) {
+  //       throw new JourneyNotFoundException();
+  //     }
+  //     if (journey.title === '') {
+  //       return journey;
+  //     }
+  //   }
+  //   return false;
+  // }
 
   async getJourneyById(journeyId) {
     return await this.findByIdWithPopulate(journeyId, 'spots', 'Spot', {
