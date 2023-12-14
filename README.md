@@ -18,14 +18,14 @@
 
 <div align="center" style="color: gray;">
   <b>Team.과열</b>은 지도에 관심을 갖고있는 사람들로 이루어져 있습니다.<br/>
-  지도 기반으로 사진, 음악으로 여정을 채워나가는 앱, <b>MusicSpot</b>를 소개합니다.
+  여정동안 <b>사진과 음악</b>으로 지도에 흔적을 남기는 앱, <b>MusicSpot</b>을 소개합니다.
 </div>
 
 <br/>
 
 ## 🔥 Team. 과열 🔥
 
-|S023 윤동주|S034 전민건|S045 이창준|J037 김태우|J131 임정훈|
+| S023 윤동주 | S034 전민건 | S045 이창준 | J037 김태우 | J131 임정훈 |
 |:-:|:-:|:-:|:-:|:-:|
 |<img src="https://avatars.githubusercontent.com/u/54929503?v=4" width=100>|<img src="https://avatars.githubusercontent.com/u/111111595?v=4" width=100>|<img src="https://avatars.githubusercontent.com/u/138548400?v=4" width=100>|<img src="https://avatars.githubusercontent.com/u/125804293?v=4" width=100>|<img src="https://avatars.githubusercontent.com/u/83702560?v=4" width=100>|
 |[@yoondj98](https://github.com/yoondj98)|[@PushedGun](https://github.com/PushedGun)|[@SwiftyJunnos](https://github.com/SwiftyJunnos)|[@twoo1999](https://github.com/twoo1999)|[@vvans](https://github.com/vvans)|
