@@ -34,7 +34,6 @@ Temporary Items
 # iCloud generated files
 *.icloud
 
-<<<<<<< HEAD
 ### Swift ###
 # Xcode
 #
@@ -167,6 +166,3 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/macos,windows,xcode,swift,swiftpackagemanager
 node_modules
 # End of https://www.toptal.com/developers/gitignore/api/macos
-=======
-# End of https://www.toptal.com/developers/gitignore/api/macos
->>>>>>> cfee8958f52b8f065d33aee44f7b2189cc3f530f
