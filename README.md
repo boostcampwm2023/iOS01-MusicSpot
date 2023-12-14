@@ -45,6 +45,16 @@
 ### 🌠 지난 여정
 ![MusicSpot 앱 소개 004](https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/2bf9568c-2846-44f5-a34e-2dbbf05b2bcc)
 
+## 🧰 기술 스택
+
+### iOS
+
+<img src="https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/2d6be807-117f-40a3-9007-84fdd2c3f6e8" width="750">
+
+### BE
+
+> 추가 예정
+
 ## 🚀 기술적 도전기
 
 ### 🍎 iOS
