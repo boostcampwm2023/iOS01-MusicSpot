@@ -37,13 +37,13 @@
 ![MusicSpot 앱 소개 001](https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/d8e6663e-ed95-4757-858c-2cead6dfa02c)
 
 ### 📸 스팟!
-![MusicSpot 앱 소개 002](https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/f8b1405b-ffed-425b-8011-ff20e6fe0632)
+![MusicSpot 앱 소개 002](https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/f9deb9f5-49c1-4f24-b692-0ea3016bf910)
 
 ### 🎶 음악 추가
-![MusicSpot 앱 소개 003](https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/c22dd2a1-0881-43ff-9d23-0de459b45a39)
+![MusicSpot 앱 소개 003](https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/22766d78-380d-4d9d-b3ab-a105b7835854)
 
 ### 🌠 지난 여정
-![MusicSpot 앱 소개 004](https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/2bf9568c-2846-44f5-a34e-2dbbf05b2bcc)
+![MusicSpot 앱 소개 004](https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/06e129ea-7883-4c98-a39f-41867df2bb0f)
 
 ## 🧰 기술 스택
 
@@ -53,7 +53,7 @@
 
 ### BE
 
-> 추가 예정
+<img src="https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/534eb35b-fff1-4146-a3e6-dff40acc1dce" width="750">
 
 ## 🚀 기술적 도전기
 
@@ -61,13 +61,11 @@
 | 키워드 | 제목 |
 | :-: | :- |
 | XCFramework, Package | [📦 라이브러리-프레임워크-패키지 무슨 차이인데?](https://www.nomatterjun.vision/blog/Swift/22.Library_Framework_Package) |
-| `URLProtocol` | [🌐 네트워킹이 테스트가 된다고!?]() |
-| GitHub Actions, matrix | [🏭 모듈로 나뉜 구조에서 CI는 어떤 형태이면 좋을까?]() |
-| Boundary Model, Domain Layer | [🎫 데이터 입국심사가 너무 어려워요!]() |
-| `*codingContainer`, `Codable` | [🕺 인코딩, 디코딩 예민하네~ 화났네~]() |
-| 추상화 | [🧑‍🔧 추상화로 협업하기]() |
-| ViewModel Coupling | [🏗️ 뷰컨이 오타니이길 바라지 말자]() |
-| MusicKit | [🎶 이 노래가 뮤스에서 나온다면]() |
+| `URLProtocol` | [🌐 네트워킹이 테스트가 된다고!?](https://www.nomatterjun.vision/blog/Swift/23.URLProtocol) |
+| GitHub Actions, matrix | [🏭 모듈로 나뉜 구조에서 CI는 어떤 형태이면 좋을까?](https://www.nomatterjun.vision/blog/Swift/24.MusicSpot_CI) |
+| Boundary Model, Domain Layer | [🎫 데이터 입국심사가 너무 어려워요!](https://www.nomatterjun.vision/blog/Swift/25.DomainLayer) |
+| `*codingContainer`, `Codable` | [🕺 인코딩, 디코딩 예민하네~ 화났네~](https://www.nomatterjun.vision/blog/Swift/26.DecodingContainer) |
+| 추상화 | [🧑‍🔧 추상화로 협업하기](https://www.nomatterjun.vision/blog/Swift/27.Abstraction_Coop) |
 
 ### 💾 BE
 | 키워드 | 제목 |
