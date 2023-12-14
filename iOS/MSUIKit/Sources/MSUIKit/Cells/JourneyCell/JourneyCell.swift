@@ -8,6 +8,7 @@
 import UIKit
 
 import MSDesignSystem
+import MSExtension
 import MSImageFetcher
 
 public final class JourneyCell: UICollectionViewCell {
@@ -80,6 +81,8 @@ public final class JourneyCell: UICollectionViewCell {
     
     @MainActor
     public func addImageView(count: Int) {
+        guard count != .zero else { return }
+        
         (1...count).forEach { _ in
             let imageView = SpotPhotoImageView()
             self.spotImageStack.addArrangedSubview(imageView)
@@ -94,8 +97,7 @@ public final class JourneyCell: UICollectionViewCell {
             return
         }
         
-        let key = "\(indexPath.section)-\(indexPath.item)"
-        photoView.imageView.ms.setImage(with: imageURL, forKey: key)
+        photoView.imageView.ms.setImage(with: imageURL, forKey: imageURL.paath())
     }
     
 }

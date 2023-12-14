@@ -9,13 +9,9 @@ import Combine
 import UIKit
 
 import MSCacheStorage
+import MSData
+import MSDomain
 import MSUIKit
-
-public protocol JourneyListViewControllerDelegate: AnyObject {
-    
-    func navigateToRewind()
-    
-}
 
 public final class JourneyListViewController: BaseViewController {
     
@@ -44,11 +40,11 @@ public final class JourneyListViewController: BaseViewController {
     
     // MARK: - Properties
     
-    public weak var delegate: JourneyListViewControllerDelegate?
+    public weak var navigationDelegate: JourneyListNavigationDelegate?
     
     private let cache: MSCacheStorage
     
-    private var viewModel: JourneyListViewModel
+    private(set) var viewModel: JourneyListViewModel
     
     private var dataSource: JourneyListDataSource?
     
@@ -91,27 +87,24 @@ public final class JourneyListViewController: BaseViewController {
         self.configureLayout()
         self.configureCollectionView()
         self.bind()
-        self.viewModel.trigger(.viewNeedsLoaded)
     }
     
     // MARK: - Combine Binding
     
-    func bind() {
+    private func bind() {
         self.viewModel.state.journeys
             .receive(on: DispatchQueue.main)
-            .sink { journeys in
+            .sink { [weak self] journeys in
+                guard let self = self else { return }
+                
+                let emptySnapshot = JourneySnapshot()
+                self.dataSource?.apply(emptySnapshot, animatingDifferences: true)
                 var snapshot = JourneySnapshot()
                 snapshot.appendSections([.zero])
                 snapshot.appendItems(journeys, toSection: .zero)
-                self.dataSource?.apply(snapshot)
+                self.dataSource?.apply(snapshot, animatingDifferences: true)
             }
             .store(in: &self.cancellables)
-    }
-    
-    // MARK: - Functions
-    
-    public func fetchJourneys(from coordinate: Coordinate) {
-        self.viewModel.trigger(.fetchJourney(at: coordinate))
     }
     
     // MARK: - UI Configuration
@@ -143,19 +136,9 @@ public final class JourneyListViewController: BaseViewController {
 extension JourneyListViewController: UICollectionViewDelegate {
     
     private func configureCollectionView() {
-        let configuration = UICollectionViewCompositionalLayoutConfiguration()
-        
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                heightDimension: .estimated(JourneyListHeaderView.estimatedHight))
-        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
-                                                                 elementKind: UICollectionView.elementKindSectionHeader,
-                                                                 alignment: .top)
-        header.pinToVisibleBounds = true
-        configuration.boundarySupplementaryItems = [header]
-        
         let layout = UICollectionViewCompositionalLayout(sectionProvider: { _, _ in
             return self.configureSection()
-        }, configuration: configuration)
+        })
         
         self.collectionView.setCollectionViewLayout(layout, animated: false)
         self.dataSource = self.configureDataSource()
@@ -174,28 +157,24 @@ extension JourneyListViewController: UICollectionViewDelegate {
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = Metric.interGroupSpacing
         
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                heightDimension: .estimated(JourneyListHeaderView.estimatedHight))
+        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
+                                                                 elementKind: UICollectionView.elementKindSectionHeader,
+                                                                 alignment: .top)
+        header.pinToVisibleBounds = true
+        
+        section.boundarySupplementaryItems = [header]
+        
         return section
     }
     
-    private func fetchImage(url: URL) async throws -> Data {
-        let request = URLRequest(url: url)
-        let (data, response) = try await URLSession.shared.data(for: request)
-        
-        guard let statusCode = (response as? HTTPURLResponse)?.statusCode,
-              (200...299).contains(statusCode) else {
-            throw NSError(domain: "fetch error", code: 1004)
-        }
-        
-        return data
-    }
-    
     private func configureDataSource() -> JourneyListDataSource {
-        // TODO: 최적화 & 캐싱
         let cellRegistration = JourneyCellRegistration { cell, indexPath, itemIdentifier in
-            let cellModel = JourneyCellModel(location: itemIdentifier.location,
-                                             date: itemIdentifier.date,
-                                             songTitle: itemIdentifier.song.title,
-                                             songArtist: itemIdentifier.song.artist)
+            let cellModel = JourneyCellModel(location: itemIdentifier.title,
+                                             date: itemIdentifier.date.start,
+                                             songTitle: itemIdentifier.music.title,
+                                             songArtist: itemIdentifier.music.artist)
             cell.update(with: cellModel)
             let photoURLs = itemIdentifier.spots
                 .map { $0.photoURL }
@@ -204,8 +183,9 @@ extension JourneyListViewController: UICollectionViewDelegate {
         }
         
         let headerRegistration = JourneyListHeaderRegistration(elementKind: UICollectionView.elementKindSectionHeader,
-                                                               handler: { header, _, indexPath in
-            
+                                                               handler: { header, _, _ in
+            guard let numberOfItems = self.currentSnapshot?.numberOfItems else { return }
+            header.update(numberOfJourneys: numberOfItems)
         })
       
         let dataSource = JourneyListDataSource(collectionView: self.collectionView,
@@ -223,23 +203,12 @@ extension JourneyListViewController: UICollectionViewDelegate {
         return dataSource
     }
     
-    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.delegate?.navigateToRewind()
+    public func collectionView(_ collectionView: UICollectionView,
+                               didSelectItemAt indexPath: IndexPath) {
+        guard let journey = self.dataSource?.itemIdentifier(for: indexPath) else { return }
+        
+        let spotPhotoURLs = journey.spots.map { $0.photoURL }
+        self.navigationDelegate?.navigateToRewindJourney(with: spotPhotoURLs, music: journey.music)
     }
     
-}
-
-// MARK: - Preview
-
-import MSData
-import MSDesignSystem
-import MSData
-import MSNetworking
-@available(iOS 17, *)
-#Preview {
-    MSFont.registerFonts()
-    let journeyRepository = JourneyRepositoryImplementation()
-    let testViewModel = JourneyListViewModel(repository: journeyRepository)
-    let testViewController = JourneyListViewController(viewModel: testViewModel)
-    return testViewController
 }

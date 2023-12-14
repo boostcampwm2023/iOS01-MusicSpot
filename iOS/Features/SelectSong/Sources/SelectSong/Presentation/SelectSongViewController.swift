@@ -11,6 +11,7 @@ import UIKit
 
 import CombineCocoa
 import MSDesignSystem
+import MSDomain
 import MSLogger
 import MSUIKit
 
@@ -32,12 +33,13 @@ public final class SelectSongViewController: BaseViewController {
     private enum Metric {
         
         static let searchTextFieldBottomSpacing: CGFloat = 16.0
+        static let albumCoverSize: Int = 52
         
     }
     
     // MARK: - Properties
     
-    private let musicPlayer = ApplicationMusicPlayer.shared
+    public weak var navigationDelegate: SelectSongNavigationDelegate?
     
     private let viewModel: SelectSongViewModel
     
@@ -50,6 +52,7 @@ public final class SelectSongViewController: BaseViewController {
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero,
                                               collectionViewLayout: UICollectionViewLayout())
+        collectionView.backgroundColor = .clear
         collectionView.keyboardDismissMode = .onDrag
         collectionView.delegate = self
         return collectionView
@@ -65,6 +68,12 @@ public final class SelectSongViewController: BaseViewController {
         let attributedString = AttributedString(Typo.searchTextFieldPlaceholder, attributes: container)
         textField.attributedPlaceholder = NSAttributedString(attributedString)
         return textField
+    }()
+    
+    private let loadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.hidesWhenStopped = true
+        return indicator
     }()
     
     // MARK: - Initializer
@@ -89,24 +98,46 @@ public final class SelectSongViewController: BaseViewController {
         self.viewModel.trigger(.viewNeedsLoaded)
     }
     
+    public override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        
+        self.navigationController?.isNavigationBarHidden = false
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.searchTextField.becomeFirstResponder()
+    }
+    
     // MARK: - Combine Binding
     
-    func bind() {
+    private func bind() {
         self.searchTextField.textPublisher
-            .filter { !$0.isEmpty }
-            .print()
-            .sink { text in
-                self.viewModel.trigger(.searchTextFieldDidUpdate(text))
+            .debounce(for: 0.5, scheduler: DispatchQueue.main)
+            .sink { [weak viewModel = self.viewModel] text in
+                viewModel?.trigger(.searchTextFieldDidUpdate(text))
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak loadingIndicator = self.loadingIndicator] isLoading in
+                isLoading ? loadingIndicator?.startAnimating() : loadingIndicator?.stopAnimating()
             }
             .store(in: &self.cancellables)
         
         self.viewModel.state.songs
             .receive(on: DispatchQueue.main)
-            .sink { songs in
+            .sink { [weak self] songs in
+                guard let self = self else { return }
+                
                 var snapshot = SongListSnapshot()
                 snapshot.appendSections([.zero])
                 snapshot.appendItems(songs, toSection: .zero)
                 self.dataSource?.apply(snapshot, animatingDifferences: true)
+                
+                self.collectionView.setContentOffset(.zero, animated: true)
             }
             .store(in: &self.cancellables)
     }
@@ -117,7 +148,6 @@ public final class SelectSongViewController: BaseViewController {
         super.configureStyle()
         
         self.title = Typo.title
-        self.searchTextField.becomeFirstResponder()
     }
     
     public override func configureLayout() {
@@ -126,7 +156,6 @@ public final class SelectSongViewController: BaseViewController {
         NSLayoutConstraint.activate([
             self.collectionView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             self.collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
         ])
         
@@ -136,7 +165,16 @@ public final class SelectSongViewController: BaseViewController {
             self.searchTextField.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             self.searchTextField.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor,
                                                          constant: -Metric.searchTextFieldBottomSpacing),
-            self.searchTextField.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
+            self.searchTextField.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            self.collectionView.bottomAnchor.constraint(equalTo: self.searchTextField.topAnchor,
+                                                        constant: -Metric.searchTextFieldBottomSpacing)
+        ])
+        
+        self.view.addSubview(self.loadingIndicator)
+        self.loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.loadingIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.loadingIndicator.centerYAnchor.constraint(equalTo: self.collectionView.centerYAnchor)
         ])
     }
     
@@ -171,10 +209,12 @@ private extension SelectSongViewController {
     }
     
     private func configureDataSource() -> SongListDataSource {
-        let cellRegistration = SongListCellRegistration { cell, indexPath, itemIdentifier in
-            let cellModel = SongListCellModel(title: itemIdentifier.title,
-                                              artist: itemIdentifier.artist,
-                                              albumArtURL: itemIdentifier.albumArtURL)
+        let cellRegistration = SongListCellRegistration { cell, _, itemIdentifier in
+            let cellModel = SongListCellModel(id: itemIdentifier.id.rawValue,
+                                              title: itemIdentifier.title,
+                                              artist: itemIdentifier.artistName,
+                                              albumArtURL: itemIdentifier.artwork?.url(width: Metric.albumCoverSize,
+                                                                                       height: Metric.albumCoverSize))
             cell.update(with: cellModel)
         }
         
@@ -196,28 +236,13 @@ extension SelectSongViewController: UICollectionViewDelegate {
     
     public func collectionView(_ collectionView: UICollectionView,
                                didSelectItemAt indexPath: IndexPath) {
-        guard let item = self.dataSource?.itemIdentifier(for: indexPath) else {
-            return
-        }
+        guard let item = self.dataSource?.itemIdentifier(for: indexPath) else { return }
         
+        #if DEBUG
         MSLogger.make(category: .selectSong).log("\(item.title) selected")
+        #endif
+        self.navigationDelegate?.navigateToSaveJourney(lastCoordinate: self.viewModel.state.lastCoordinate,
+                                                       selectedSong: item)
     }
     
 }
-
-// MARK: - Preview
-
-#if DEBUG
-import MSData
-import MSDesignSystem
-
-@available(iOS 17, *)
-#Preview {
-    MSFont.registerFonts()
-    
-    let songRepository = SongRepositoryImplementation()
-    let selectSongViewModel = SelectSongViewModel(repository: songRepository)
-    let selectSongViewController = SelectSongViewController(viewModel: selectSongViewModel)
-    return selectSongViewController
-}
-#endif

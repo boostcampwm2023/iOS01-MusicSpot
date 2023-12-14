@@ -9,18 +9,22 @@ import Foundation
 
 public enum MSLogCategory: String {
     
-    case ui = "UI"
+    case uiKit = "UI"
     case network
     case imageFetcher = "ImageFetcher"
     case userDefaults
-	
-    case recordJourney
-    case rewindJourney
-    case checkJourney
-    case login    
-    case selectSong = "SelectSong"
-    case saveJourney
+    case keychain = "Keychain"
+    case fileManager = "FileManager"
+    case persistable
+    case music = "MusicKit"
+    
+    case home
+    case navigateMap
     case camera
     case spot
+    case selectSong = "SelectSong"
+    case saveJourney
+    case journeyList
+    case rewindJourney
     
 }

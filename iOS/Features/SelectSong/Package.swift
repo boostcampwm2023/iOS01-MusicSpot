@@ -27,12 +27,16 @@ private enum Target {
 
 private enum Dependency {
     
+    static let msDomain = "MSDomain"
     static let msData = "MSData"
+    
     static let msImageFetcher = "MSImageFetcher"
     static let msCoreKit = "MSCoreKit"
+    
+    static let combineCocoa = "CombineCocoa"
     static let msDesignsystem = "MSDesignSystem"
     static let msUIKit = "MSUIKit"
-    static let combineCocoa = "CombineCocoa"
+    
     static let msLogger = "MSLogger"
     static let msFoundation = "MSFoundation"
     
@@ -50,23 +54,26 @@ let package = Package(
                  targets: [Target.selectSong])
     ],
     dependencies: [
+        .package(name: Dependency.msDomain,
+                 path: Dependency.msDomain.fromRootPath),
         .package(name: Dependency.msData,
                  path: Dependency.msData.fromRootPath),
-//        .package(name: Dependency.msCoreKit,
-//                 path: Dependency.msCoreKit.fromRootPath),
+        .package(name: Dependency.msCoreKit,
+                 path: Dependency.msCoreKit.fromRootPath),
         .package(name: Dependency.msUIKit,
                  path: Dependency.msUIKit.fromRootPath),
         .package(name: Dependency.msFoundation,
                  path: Dependency.msFoundation.fromRootPath)
     ],
     targets: [
-        .target(name:Target.selectSong,
+        .target(name: Target.selectSong,
                 dependencies: [
+                    .product(name: Dependency.msDomain,
+                             package: Dependency.msDomain),
                     .product(name: Dependency.msData,
                              package: Dependency.msData),
-                    // TODO: MSImageFetcher Merge 후 적용
-//                    .product(name: Dependency.msImageFetcher,
-//                             package: Dependency.msCoreKit),
+                    .product(name: Dependency.msImageFetcher,
+                             package: Dependency.msCoreKit),
                     .product(name: Dependency.msUIKit,
                              package: Dependency.msUIKit),
                     .product(name: Dependency.combineCocoa,

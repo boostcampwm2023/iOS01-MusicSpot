@@ -39,6 +39,7 @@ private enum Dependency {
     
     // package = library
     static let msData = "MSData"
+    static let msDomain = "MSDomain"
     
 }
 
@@ -61,11 +62,15 @@ let package = Package(
         .package(name: Dependency.msCoreKit,
                  path: Dependency.msCoreKit.fromRootPath),
         .package(name: Dependency.msData,
-                 path: Dependency.msData.fromRootPath)
+                 path: Dependency.msData.fromRootPath),
+        .package(name: Dependency.msDomain,
+                 path: Dependency.msDomain.fromRootPath)
     ],
     targets: [
         .target(name: Target.spot,
                 dependencies: [
+                    .product(name: Dependency.msDomain,
+                             package: Dependency.msDomain),
                     .product(name: Dependency.msUIKit,
                              package: Dependency.msUIKit),
                     .product(name: Dependency.msDesignsystem,

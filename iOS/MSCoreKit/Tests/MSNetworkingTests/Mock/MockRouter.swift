@@ -14,9 +14,7 @@ struct MockRouter: Router {
         return "https://www.naver.com"
     }
     
-    var pathURL: String {
-        return "api"
-    }
+    var pathURL: String?
     
     var method: HTTPMethod {
         return .get
@@ -25,5 +23,7 @@ struct MockRouter: Router {
     var body: HTTPBody?
     
     var headers: HTTPHeaders?
+    
+    var queries: [URLQueryItem]?
     
 }

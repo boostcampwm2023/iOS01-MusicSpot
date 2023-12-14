@@ -7,42 +7,28 @@
         },
         "spots": [
             {
-                "id": "389354bc-7c14-402b-90ce-ff9b1e6aec13",
+                "journeyId": "389354bc-7c14-402b-90ce-ff9b1e6aec13",
                 "coordinate": [
                     74.34012768689522,
                     -20.0591261579182
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "ede775e3-7ec4-4b92-a314-a8682d00c3f6",
+                "journeyId": "ede775e3-7ec4-4b92-a314-a8682d00c3f6",
                 "coordinate": [
                     39.79236622936409,
                     -20.288943745440292
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "82fff66b-538b-4c4d-9f0c-cf0b10098374",
+                "journeyId": "82fff66b-538b-4c4d-9f0c-cf0b10098374",
                 "coordinate": [
                     -61.2994089681573,
                     147.81682997676376
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             }
         ],
         "coordinates": [
@@ -79,62 +65,44 @@
         },
         "spots": [
             {
-                "id": "8e4fd5a5-d5bc-4fe7-aaf5-e0de9da96685",
+                "journeyId": "8e4fd5a5-d5bc-4fe7-aaf5-e0de9da96685",
                 "coordinate": [
                     31.52421333174138,
                     -43.89463635754254
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "272fdb4c-6aca-45dc-b00c-528e6204e294",
+                "journeyId": "272fdb4c-6aca-45dc-b00c-528e6204e294",
                 "coordinate": [
                     -68.4588807563729,
                     43.959766770510186
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "d210ee40-8895-46d5-8f5b-85c31b441d8a",
+                "journeyId": "d210ee40-8895-46d5-8f5b-85c31b441d8a",
                 "coordinate": [
                     -34.28043419715898,
                     -164.73303980456268
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "e330d5f1-45e4-4dfa-a2a6-291e6be56f35",
+                "journeyId": "e330d5f1-45e4-4dfa-a2a6-291e6be56f35",
                 "coordinate": [
                     -66.19095010133054,
                     -8.569810942887017
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "68140671-237f-48d1-9888-4eb2d0d02b2c",
+                "journeyId": "68140671-237f-48d1-9888-4eb2d0d02b2c",
                 "coordinate": [
                     -55.72402145238744,
                     -18.60154681858242
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             }
         ],
         "coordinates": [
@@ -171,41 +139,28 @@
         },
         "spots": [
             {
-                "id": "d76c335b-e410-4fea-9270-e417c4f57c0f",
+                "journeyId": "d76c335b-e410-4fea-9270-e417c4f57c0f",
                 "coordinate": [
                     -64.81468160689631,
                     -76.60199610190303
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "dc7436fc-58d2-422e-85ea-f7542198c0d5",
+                "journeyId": "dc7436fc-58d2-422e-85ea-f7542198c0d5",
                 "coordinate": [
                     73.79998313510268,
                     68.35171492227144
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "6732642e-1972-4c85-8697-3d3ddc2eb1c0",
+                "journeyId": "6732642e-1972-4c85-8697-3d3ddc2eb1c0",
                 "coordinate": [
                     8.909582214448818,
                     -151.7541955219229
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             }
         ],
         "coordinates": [
@@ -234,22 +189,18 @@
         },
         "spots": [
             {
-                "id": "6d3ee7b2-32af-4d64-8704-a8b0fd2254cb",
+                "journeyId": "6d3ee7b2-32af-4d64-8704-a8b0fd2254cb",
                 "coordinate": [
-                    53.33285523016107,
-                    158.99249150635194
+                    37.496598,
+                    126.958120
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             }
         ],
         "coordinates": [
             {
-                "latitude": -57.08651016285746,
-                "longitude": 125.44987777466031
+                "latitude": 37.496598,
+                "longitude": 126.958120
             },
             {
                 "latitude": -65.0654246205996,
@@ -272,24 +223,20 @@
         },
         "spots": [
             {
-                "id": "1f25a310-5e5d-42c7-918f-a61a0187db68",
+                "journeyId": "1f25a310-5e5d-42c7-918f-a61a0187db68",
                 "coordinate": [
-                    -65.01383977190413,
-                    25.7298686850134
+                    37.495976,
+                    126.956837
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "833719bd-7b54-489b-b3e7-9bc6b667dc5e",
+                "journeyId": "833719bd-7b54-489b-b3e7-9bc6b667dc5e",
                 "coordinate": [
-                    -2.9616202692170788,
-                    -90.07641195961408
+                    36.495973,
+                    125.956837
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             }
         ],
         "coordinates": [
@@ -322,77 +269,62 @@
         },
         "spots": [
             {
-                "id": "24ca84aa-6a80-47c0-8302-6a0924791c80",
+                "journeyId": "24ca84aa-6a80-47c0-8302-6a0924791c80",
                 "coordinate": [
-                    47.16742284659284,
-                    13.225978927134577
+                    37.16742284659284,
+                    126.225978927134577
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "2f812435-5d79-4e49-bee1-51a541b7e2bc",
+                "journeyId": "2f812435-5d79-4e49-bee1-51a541b7e2bc",
                 "coordinate": [
-                    52.537466139282714,
-                    -91.92574821724574
+                    37.537466139282714,
+                    126.92574821724574
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "b52aa54e-8ca2-4581-aa03-b3b50fc9e031",
+                "journeyId": "b52aa54e-8ca2-4581-aa03-b3b50fc9e031",
                 "coordinate": [
-                    -34.68755334180694,
-                    -104.4740708009648
+                    37.68755334180694,
+                    126.4740708009648
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "0a416cf3-f957-4372-9cae-5a1997161c3b",
+                "journeyId": "0a416cf3-f957-4372-9cae-5a1997161c3b",
                 "coordinate": [
-                    81.38993174770837,
-                    -119.94575572765291
+                    37.38993174770837,
+                    126.94575572765291
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "3a3869bf-a149-4ae2-8936-61ef4025921f",
+                "journeyId": "3a3869bf-a149-4ae2-8936-61ef4025921f",
                 "coordinate": [
                     26.00204566583929,
                     -38.88354925355324
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             }
         ],
         "coordinates": [
             {
-                "latitude": -31.696373986551137,
-                "longitude": -44.326735402336965
+                "latitude": 37.42509,
+                "longitude": 124.9565
             },
             {
-                "latitude": -36.571803691977,
-                "longitude": 79.89271047045634
+                "latitude": 37.39509,
+                "longitude": 125.9565
             },
             {
-                "latitude": -50.98418938820977,
-                "longitude": -37.3881976010955
+                "latitude": 37.49539,
+                "longitude": 126.9565
             },
             {
-                "latitude": 41.7173317046923,
-                "longitude": -165.96283512867097
+                "latitude": 37.49509,
+                "longitude": 127.9565
             }
         ],
         "song": {
@@ -411,39 +343,28 @@
         },
         "spots": [
             {
-                "id": "5ee04c1e-d914-4fe0-bafc-6410415323a0",
+                "journeyId": "5ee04c1e-d914-4fe0-bafc-6410415323a0",
                 "coordinate": [
                     -72.15636930638713,
                     -136.0116257911593
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "e4445b1a-d4b8-4215-a50e-c3088d18d7d8",
+                "journeyId": "e4445b1a-d4b8-4215-a50e-c3088d18d7d8",
                 "coordinate": [
                     86.14073588308193,
                     71.3073252728758
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "d8af22f2-e004-4d37-a6ca-6ad99c6c7d89",
+                "journeyId": "d8af22f2-e004-4d37-a6ca-6ad99c6c7d89",
                 "coordinate": [
                     77.87222808724792,
                     -3.792694490590094
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             }
         ],
         "coordinates": [
@@ -480,16 +401,12 @@
         },
         "spots": [
             {
-                "id": "70a868dc-52d4-4a6c-aefa-8f4d2db72bbd",
+                "journeyId": "70a868dc-52d4-4a6c-aefa-8f4d2db72bbd",
                 "coordinate": [
                     -67.2052661143819,
                     -103.79187685194488
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             }
         ],
         "coordinates": [
@@ -522,64 +439,44 @@
         },
         "spots": [
             {
-                "id": "ce8fb5a9-cf2e-44bb-a695-07ef19df8684",
+                "journeyId": "ce8fb5a9-cf2e-44bb-a695-07ef19df8684",
                 "coordinate": [
                     26.754371020802807,
                     -136.87790951732427
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "2a5bcf5d-ff5c-458f-ad3d-1f3560a01f05",
+                "journeyId": "2a5bcf5d-ff5c-458f-ad3d-1f3560a01f05",
                 "coordinate": [
                     -31.05255299691919,
                     109.12110052412726
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "b8736196-293e-4674-9b49-882419739bc2",
+                "journeyId": "b8736196-293e-4674-9b49-882419739bc2",
                 "coordinate": [
                     44.11921868914504,
                     -1.3713120422063696
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "4fac5c54-a3d3-4a2e-b7bc-b9a24f6f716f",
+                "journeyId": "4fac5c54-a3d3-4a2e-b7bc-b9a24f6f716f",
                 "coordinate": [
                     -9.650099854349605,
                     63.87852947086256
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             },
             {
-                "id": "24f129a0-fdef-41e3-8590-a70de1568f09",
+                "journeyId": "24f129a0-fdef-41e3-8590-a70de1568f09",
                 "coordinate": [
                     -54.74979632677334,
                     165.518236994507
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             }
         ],
         "coordinates": [
@@ -612,16 +509,12 @@
         },
         "spots": [
             {
-                "id": "25ac53b9-86d2-4935-99a7-1cf2f362f6e1",
+                "journeyId": "25ac53b9-86d2-4935-99a7-1cf2f362f6e1",
                 "coordinate": [
                     -12.855147544861794,
                     -44.31218853533764
                 ],
-                "photoURLs": [
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300",
-                    "https://source.unsplash.com/random/200x300"
-                ]
+                "photoUrl": "https://source.unsplash.com/random/200x300"
             }
         ],
         "coordinates": [

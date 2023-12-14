@@ -6,8 +6,10 @@
 //
 
 import UIKit
+import MusicKit
 
 import MSData
+import MSDomain
 import SaveJourney
 
 final class SaveJourneyCoordinator: Coordinator {
@@ -18,7 +20,7 @@ final class SaveJourneyCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     
-//    var delegate: SearchMusicCoordinatorDelegate?
+    weak var delegate: SelectSongCoordinatorDelegate?
     
     // MARK: - Initializer
     
@@ -28,27 +30,25 @@ final class SaveJourneyCoordinator: Coordinator {
     
     // MARK: - Functions
     
-    func start() {
-        let song = Song(title: "OMG", artist: "New Jeans", albumArtURL: nil)
-        let spotRepository = SpotRepositoryImplementation()
-        let saveJourneyViewModel = SaveJourneyViewModel(selectedSong: song, spotRepository: spotRepository)
+    func start(lastCoordinate: Coordinate,
+               selectedSong: Song) {
+        let journeyRepository = JourneyRepositoryImplementation()
+        let saveJourneyViewModel = SaveJourneyViewModel(lastCoordinate: lastCoordinate,
+                                                        selectedSong: selectedSong,
+                                                        journeyRepository: journeyRepository)
         let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
-//        saveJourneyViewController.delegate = self
+        saveJourneyViewController.navigationDelegate = self
         self.navigationController.pushViewController(saveJourneyViewController, animated: true)
     }
     
 }
 
-// MARK: - SaveJourneyViewController
+// MARK: - SaveJourney Navigation
 
-//extension SaveJourneyCoordinator: SaveJourneyViewControllerDelegate {
-//    
-//    func navigateToHomeMap() {
-//        self.delegate?.popToHomeMap(from: self)
-//    }
-//    
-//    func navigateToSearchMusic() {
-//        self.delegate?.popToSearchMusic(from: self)
-//    }
-//    
-//}
+extension SaveJourneyCoordinator: SaveJourneyNavigationDelegate {
+    
+    func popToHome(with endedJourney: Journey) {
+        self.delegate?.popToHome(from: self, with: endedJourney)
+    }
+    
+}

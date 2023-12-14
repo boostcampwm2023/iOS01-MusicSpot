@@ -36,6 +36,7 @@ public final class MSImageFetcher {
     /// - Parameters:
     ///   - photoURL: 가져올 사진의 URL
     ///   - key: 사진의 캐싱을 처리하기 위한 key 값
+    @discardableResult
     public func fetchImage(from photoURL: URL,
                            forKey key: String) async -> Data? {
         // 1. 캐싱된 값이 있는 지 확인합니다.
@@ -49,7 +50,6 @@ public final class MSImageFetcher {
         }
         // 3. 없다면 네트워크 요청을 합니다.
         // 4. 네트워크에서 받아온 이미지를 반환합니다.
-        // TODO: MSNetworking 사용하는 코드로 수정
         var request = URLRequest(url: photoURL)
         request.httpMethod = "GET"
         if let (data, _) = try? await self.session.data(for: request) {

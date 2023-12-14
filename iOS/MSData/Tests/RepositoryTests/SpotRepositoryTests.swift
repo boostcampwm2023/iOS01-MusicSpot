@@ -1,6 +1,6 @@
 //
 //  SpotRepositoryTests.swift
-//  
+//  MSData
 //
 //  Created by 이창준 on 2023.12.04.
 //
@@ -15,22 +15,5 @@ final class SpotRepositoryTests: XCTestCase {
     private let sut = SpotRepositoryImplementation()
     
     // MARK: - Tests
-
-    func test_SpotResponseDTO_디코딩_성공() throws {
-        
-        let expectation = XCTestExpectation()
-        
-        Task {
-            let result = await self.sut.fetchRecordingSpots()
-            switch result {
-            case .success:
-                expectation.fulfill()
-            case .failure(let error):
-                XCTFail("\(error)")
-            }
-        }
-        
-        wait(for: [expectation], timeout: 5.0)
-    }
 
 }

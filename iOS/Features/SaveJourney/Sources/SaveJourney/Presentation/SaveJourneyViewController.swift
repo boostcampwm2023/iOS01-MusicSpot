@@ -8,63 +8,67 @@
 import Combine
 import CoreLocation
 import MapKit
+import MusicKit
+import StoreKit
+import SwiftUI
 import UIKit
 
+import MSDomain
 import MSUIKit
-import MediaPlayer
 
 public final class SaveJourneyViewController: UIViewController {
     
     typealias SaveJourneyDataSource = UICollectionViewDiffableDataSource<SaveJourneySection, SaveJourneyItem>
     typealias HeaderRegistration = UICollectionView.SupplementaryRegistration<SaveJourneyHeaderView>
-    typealias MusicCellRegistration = UICollectionView.CellRegistration<SaveJourneyMusicCell, Song>
+    typealias MusicCellRegistration = UICollectionView.CellRegistration<SaveJourneyMusicCell, Music>
     typealias SpotCellRegistration = UICollectionView.CellRegistration<SpotCell, Spot>
+    typealias EmptyCellRegistration = UICollectionView.CellRegistration<EmptyCell, UUID>
     typealias SaveJourneySnapshot = NSDiffableDataSourceSnapshot<SaveJourneySection, SaveJourneyItem>
     typealias MusicSnapshot = NSDiffableDataSourceSectionSnapshot<SaveJourneyItem>
     typealias SpotSnapshot = NSDiffableDataSourceSectionSnapshot<SaveJourneyItem>
+    typealias EmptySnapshot = NSDiffableDataSourceSectionSnapshot<SaveJourneyItem>
     
     // MARK: - Constants
     
     private enum Typo {
         
-        static let songSectionTitle = "함께한 음악"
-        static func spotSectionTitle(_ numberOfSpots: Int) -> String {
-            return "\(numberOfSpots)개의 스팟"
-        }
         static let nextButtonTitle = "다음"
         
     }
     
     private enum Metric {
         
-        static let horizontalInset: CGFloat = 24.0
-        static let verticalInset: CGFloat = 12.0
-        static let collectionViewBottomSpacing: CGFloat = 80.0
-        static let innerSpacing: CGFloat = 4.0
-        static let headerTopInset: CGFloat = 24.0
+        static let collectionViewBottomSpacing: CGFloat = 150.0
         static let buttonSpacing: CGFloat = 4.0
         static let buttonBottomInset: CGFloat = 24.0
+        static let lineWidth: CGFloat = 0.5
+        static let mapSpanAssistance: CGFloat = 1.2
         
     }
     
     // MARK: - Properties
     
-    private let viewModel: SaveJourneyViewModel
+    public weak var navigationDelegate: SaveJourneyNavigationDelegate?
     
-    private var dataSource: SaveJourneyDataSource?
-    
-    private let musicPlayer = MPMusicPlayerApplicationController.applicationMusicPlayer
+    let viewModel: SaveJourneyViewModel
+    private(set) var dataSource: SaveJourneyDataSource?
     
     private var cancellables: Set<AnyCancellable> = []
     
     // MARK: - UI Components
     
-    private let mapView: MKMapView = {
+    private let musicPlayer = ApplicationMusicPlayer.shared
+    
+    private lazy var mapView: MKMapView = {
         let mapView = MKMapView()
+        mapView.clipsToBounds = true
+        mapView.delegate = self
         return mapView
     }()
     
-    private lazy var collectionView: UICollectionView = {
+    var mapViewHeightConstraint: NSLayoutConstraint?
+    
+    private(set) lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero,
                                               collectionViewLayout: UICollectionViewLayout())
         collectionView.backgroundColor = .clear
@@ -72,11 +76,10 @@ public final class SaveJourneyViewController: UIViewController {
                                                    left: .zero,
                                                    bottom: Metric.collectionViewBottomSpacing,
                                                    right: .zero)
+        collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.delegate = self
         return collectionView
     }()
-    
-    private var mapViewHeightConstraint: NSLayoutConstraint?
     
     private let buttonStack: UIStackView = {
         let stackView = UIStackView()
@@ -89,6 +92,12 @@ public final class SaveJourneyViewController: UIViewController {
     private let mediaControlButton: MSRectButton = {
         let button = MSRectButton.small()
         button.image = .msIcon(.play)
+        return button
+    }()
+    
+    private lazy var musicControlButton: UIHostingController = {
+        let stateFactor = self.viewModel.state.buttonStateFactors.value
+        let button = UIHostingController(rootView: MusicControlButton(stateFactor: stateFactor))
         return button
     }()
     
@@ -122,25 +131,157 @@ public final class SaveJourneyViewController: UIViewController {
         self.viewModel.trigger(.viewNeedsLoaded)
     }
     
+    public override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        self.navigationController?.isNavigationBarHidden = false
+    }
+    
+    public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.musicPlayer.pause()
+    }
+    
     // MARK: - Combine Binding
     
-    func bind() {
-        self.viewModel.state.song
-            .sink { song in
+    private func bind() {
+        self.viewModel.state.selectedSong
+            .first()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] song in
+                guard let self = self else { return }
+                
+                self.musicControlButton.rootView.song = song
+                Task {
+                    self.musicPlayer.queue = ApplicationMusicPlayer.Queue(for: [song])
+                    try await self.musicPlayer.prepareToPlay()
+                    self.viewModel.trigger(.musicControlButtonDidTap)
+                }
+                
                 var snapshot = MusicSnapshot()
-                snapshot.append([.song(song)])
-                self.dataSource?.apply(snapshot, to: .song)
+                let music = Music(song)
+                snapshot.append([.music(music)])
+                self.dataSource?.apply(snapshot, to: .music)
             }
             .store(in: &self.cancellables)
         
-        self.viewModel.state.spots
+        self.viewModel.state.buttonStateFactors
+            .map { $0.isMusicPlaying }
             .receive(on: DispatchQueue.main)
-            .sink { spots in
-                var snapshot = SpotSnapshot()
-                snapshot.append(spots.map { .spot($0) })
-                self.dataSource?.apply(snapshot, to: .spot)
+            .sink { [weak self] isMusicPlaying in
+                guard let self = self else { return }
+                
+                if isMusicPlaying, self.musicPlayer.isPreparedToPlay {
+                    Task {
+                        try await self.musicPlayer.play()
+                    }
+                } else {
+                    self.musicPlayer.pause()
+                }
             }
             .store(in: &self.cancellables)
+        
+        self.viewModel.state.recordingJourney
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] recordingJourney in
+                guard let self = self else { return }
+                
+                let spots = recordingJourney.spots.compactMap { $0 }
+                self.updateSpotSectionSnapshot(with: spots)
+                self.updateMap(with: recordingJourney)
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.endJourneySucceed
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] endedJourney in
+                self?.navigationDelegate?.popToHome(with: endedJourney)
+            }
+            .store(in: &self.cancellables)
+    }
+    
+    // MARK: - Functions
+    
+    func setDataSource(_ dataSource: SaveJourneyDataSource) {
+        self.dataSource = dataSource
+    }
+    
+    private func updateSpotSectionSnapshot(with spots: [Spot]) {
+        if spots.isEmpty {
+            var emptySnapshot = EmptySnapshot()
+            emptySnapshot.append([.empty])
+            self.dataSource?.apply(emptySnapshot, to: .empty)
+        } else {
+            var spotSnapshot = SpotSnapshot()
+            spotSnapshot.append(spots.map { .spot($0) })
+            self.dataSource?.apply(spotSnapshot, to: .spot)
+        }
+    }
+    
+    // MARK: - Functions: Polyline
+    
+    private func updateMap(with recordingJourney: RecordingJourney) {
+        self.drawPolyLinesToMap(with: recordingJourney)
+        guard let region = self.focusToJourney(from: recordingJourney.coordinates) else {
+            return
+        }
+        self.mapView.setRegion(region, animated: true)
+    }
+    
+    private func drawPolyLinesToMap(with journey: RecordingJourney) {
+        Task {
+            let coordinates = journey.coordinates.map {
+                CLLocationCoordinate2D(latitude: $0.latitude,
+                                       longitude: $0.longitude)
+            }
+            self.drawPolylineToMap(using: coordinates)
+        }
+    }
+    
+    private func drawPolylineToMap(using coordinates: [CLLocationCoordinate2D]) {
+        let polyline = MKPolyline(coordinates: coordinates,
+                                  count: coordinates.count)
+        self.mapView.addOverlay(polyline)
+    }
+    
+    func focusToJourney(from coordinates: [Coordinate]) -> MKCoordinateRegion? {
+        guard !coordinates.isEmpty else { return nil }
+        
+        let (minLat, maxLat, minLon, maxLon) = coordinates.reduce((coordinates[0].latitude,
+                                                                   coordinates[0].latitude,
+                                                                   coordinates[0].longitude,
+                                                                   coordinates[0].longitude)) { result, coordinate in
+            (min(result.0, coordinate.latitude),
+             max(result.1, coordinate.latitude),
+             min(result.2, coordinate.longitude),
+             max(result.3, coordinate.longitude))
+        }
+        
+        let center = CLLocationCoordinate2D(latitude: (minLat + maxLat) / 2,
+                                            longitude: (minLon + maxLon) / 2)
+        
+        let span = MKCoordinateSpan(latitudeDelta: (maxLat - minLat) * Metric.mapSpanAssistance,
+                                    longitudeDelta: (maxLon - minLon) * Metric.mapSpanAssistance)
+        
+        return MKCoordinateRegion(center: center, span: span)
+    }
+    
+}
+
+// MARK: - MapView
+
+extension SaveJourneyViewController: MKMapViewDelegate {
+    
+    public func mapView(_ mapView: MKMapView,
+                        rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        guard let polyLine = overlay as? MKPolyline else { return MKOverlayRenderer() }
+        
+        let renderer = MKPolylineRenderer(polyline: polyLine)
+        renderer.strokeColor = .msColor(.musicSpot)
+        renderer.lineWidth = Metric.lineWidth
+        renderer.alpha = 1.0
+        
+        return renderer
     }
     
 }
@@ -150,186 +291,14 @@ public final class SaveJourneyViewController: UIViewController {
 private extension SaveJourneyViewController {
     
     func configureButtons() {
-        let mediaControlAction = UIAction { [weak self] _ in
-            self?.viewModel.trigger(.mediaControlButtonDidTap)
+        self.musicControlButton.rootView.musicControlAction = { [weak self] in
+            self?.viewModel.trigger(.musicControlButtonDidTap)
         }
-        self.mediaControlButton.addAction(mediaControlAction, for: .touchUpInside)
         
         let nextButtonAction = UIAction { [weak self] _ in
             self?.presentSaveJourney()
         }
         self.nextButton.addAction(nextButtonAction, for: .touchUpInside)
-    }
-    
-}
-
-// MARK: - Media Player
-
-private extension SaveJourneyViewController {
-    
-    func configureMusicPlayer() {
-        let songTitleFilter = MPMediaPropertyPredicate(value: "ETA",
-                                                       forProperty: MPMediaItemPropertyTitle,
-                                                       comparisonType: .contains)
-        let filterSet = Set([songTitleFilter])
-        let query = MPMediaQuery(filterPredicates: filterSet)
-        self.musicPlayer.setQueue(with: query)
-    }
-    
-}
-
-// MARK: - Collection View
-
-private extension SaveJourneyViewController {
-    
-    func configureCollectionView() {
-        let layout = UICollectionViewCompositionalLayout(sectionProvider: { sectionIndex, _ in
-            guard let section = self.dataSource?.sectionIdentifier(for: sectionIndex) else { return .none }
-            return self.configureSection(for: section)
-        })
-        layout.register(SaveJourneyBackgroundView.self,
-                        forDecorationViewOfKind: SaveJourneyBackgroundView.elementKind)
-        
-        self.collectionView.setCollectionViewLayout(layout, animated: false)
-        self.dataSource = self.configureDataSource()
-    }
-    
-    func configureSection(for section: SaveJourneySection) -> NSCollectionLayoutSection {
-        let item = NSCollectionLayoutItem(layoutSize: section.itemSize)
-        
-        let group: NSCollectionLayoutGroup
-        let itemCount = section == .song ? 1 : 2
-        let interItemSpacing: CGFloat = section == .song ? .zero : Metric.innerSpacing
-        if #available(iOS 16.0, *) {
-            group = NSCollectionLayoutGroup.horizontal(layoutSize: section.groupSize,
-                                                           repeatingSubitem: item,
-                                                           count: itemCount)
-        } else {
-            group = NSCollectionLayoutGroup.horizontal(layoutSize: section.groupSize,
-                                                           subitem: item,
-                                                           count: itemCount)
-        }
-        group.interItemSpacing = .fixed(interItemSpacing)
-        
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = Metric.innerSpacing
-        section.contentInsets = NSDirectionalEdgeInsets(top: Metric.verticalInset,
-                                                        leading: Metric.horizontalInset,
-                                                        bottom: Metric.verticalInset,
-                                                        trailing: Metric.horizontalInset)
-        
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                heightDimension: .absolute(SaveJourneyHeaderView.estimatedHeight))
-        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
-                                                                 elementKind: SaveJourneyHeaderView.elementKind,
-                                                                 alignment: .top)
-        header.contentInsets = NSDirectionalEdgeInsets(top: -Metric.headerTopInset,
-                                                       leading: .zero,
-                                                       bottom: .zero,
-                                                       trailing: .zero)
-        section.boundarySupplementaryItems = [header]
-        
-        let backgroundView = NSCollectionLayoutDecorationItem.background(
-            elementKind: SaveJourneyBackgroundView.elementKind)
-        section.decorationItems = [backgroundView]
-        
-        return section
-    }
-    
-    func configureDataSource() -> SaveJourneyDataSource {
-        let musicCellRegistration = MusicCellRegistration { cell, _, itemIdentifier in
-            cell.update(with: itemIdentifier)
-        }
-        
-        let journeyCellRegistration = SpotCellRegistration { cell, indexPath, itemIdentifier in
-            let geocoder = CLGeocoder()
-            let location = CLLocation(latitude: itemIdentifier.location.latitude,
-                                      longitude: itemIdentifier.location.longitude)
-            Task {
-                guard let placemark = try? await geocoder.reverseGeocodeLocation(location).first else {
-                    return
-                }
-                var location = ""
-                
-                if let locality = placemark.locality {
-                    location += locality
-                }
-                
-                if let subLocality = placemark.subLocality {
-                    location += " \(subLocality)"
-                }
-                
-                let cellModel = SpotCellModel(location: location,
-                                              date: itemIdentifier.date,
-                                              photoURL: itemIdentifier.photoURL)
-                cell.update(with: cellModel)
-            }
-            // TODO: ImageFetcher 사용해 이미지 업데이트
-        }
-        
-        let headerRegistration = HeaderRegistration(elementKind: SaveJourneyHeaderView.elementKind,
-                                                    handler: { header, _, indexPath in
-            switch indexPath.section {
-            case .zero:
-                header.update(with: Typo.songSectionTitle)
-            case 1:
-                let spots = self.viewModel.state.spots
-                header.update(with: Typo.spotSectionTitle(spots.value.count))
-            default:
-                break
-            }
-        })
-        
-        let dataSource = SaveJourneyDataSource(collectionView: self.collectionView,
-                                               cellProvider: { collectionView, indexPath, item in
-            switch item {
-            case .song(let song):
-                return collectionView.dequeueConfiguredReusableCell(using: musicCellRegistration,
-                                                                    for: indexPath,
-                                                                    item: song)
-            case .spot(let journey):
-                return collectionView.dequeueConfiguredReusableCell(using: journeyCellRegistration,
-                                                                    for: indexPath,
-                                                                    item: journey)
-            }
-        })
-        
-        dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
-            return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration,
-                                                                         for: indexPath)
-        }
-        
-        var snapshot = SaveJourneySnapshot()
-        snapshot.appendSections([.song, .spot])
-        dataSource.apply(snapshot)
-        
-        return dataSource
-    }
-    
-}
-
-// MARK: - CollectionView Scroll
-
-extension SaveJourneyViewController: UICollectionViewDelegate {
-    
-    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offset = scrollView.contentOffset
-        self.updateProfileViewLayout(by: offset)
-    }
-    
-    func updateProfileViewLayout(by offset: CGPoint) {
-        let collectionViewHeight = self.collectionView.frame.height
-        let collectionViewContentInset = collectionViewHeight - self.view.safeAreaInsets.top
-        let assistanceValue = collectionViewHeight - collectionViewContentInset
-        let isContentBelowTopOfScreen = offset.y < 0
-        
-        if isContentBelowTopOfScreen {
-            self.mapViewHeightConstraint?.constant = assistanceValue + offset.y.magnitude
-        } else if !isContentBelowTopOfScreen {
-            self.mapViewHeightConstraint?.constant = 0
-        } else {
-            self.mapViewHeightConstraint?.constant = offset.y.magnitude
-        }
     }
     
 }
@@ -346,7 +315,7 @@ extension SaveJourneyViewController: AlertViewControllerDelegate {
     }
     
     func titleDidConfirmed(_ title: String) {
-        print("Title: \(title)")
+        self.viewModel.trigger(.titleDidConfirmed(title))
     }
     
 }
@@ -388,33 +357,25 @@ private extension SaveJourneyViewController {
                                                      constant: -Metric.buttonBottomInset)
         ])
         
+        guard let musicControlButton = self.musicControlButton.view else { return }
+        self.addChild(self.musicControlButton)
+        self.view.addSubview(musicControlButton)
         [
-            self.mediaControlButton,
+            musicControlButton,
             self.nextButton
         ].forEach {
             self.buttonStack.addArrangedSubview($0)
         }
+        self.musicControlButton.didMove(toParent: self)
+        NSLayoutConstraint.activate([
+            self.musicControlButton.view.widthAnchor.constraint(equalToConstant: 52.0),
+            self.musicControlButton.view.heightAnchor.constraint(equalTo: self.nextButton.heightAnchor)
+        ])
     }
     
     func configureComponents() {
         self.configureCollectionView()
         self.configureButtons()
-        self.configureMusicPlayer()
     }
     
 }
-
-// MARK: - Preview
-
-#if DEBUG
-import MSData
-
-@available(iOS 17, *)
-#Preview {
-    let song = Song(title: "OMG", artist: "NewJeans", albumArtURL: URL(string: "sdf")!)
-    let spotRepository = SpotRepositoryImplementation()
-    let saveJourneyViewModel = SaveJourneyViewModel(selectedSong: song, spotRepository: spotRepository)
-    let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
-    return saveJourneyViewController
-}
-#endif

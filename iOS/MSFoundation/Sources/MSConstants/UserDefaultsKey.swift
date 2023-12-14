@@ -9,6 +9,8 @@ import Foundation
 
 public enum UserDefaultsKey {
     
+    public static let isFirstLaunch = "isFirstLaunch"
     public static let isRecording = "isRecording"
+    public static let recordingJourneyID = "recordingJourneyID"
     
 }

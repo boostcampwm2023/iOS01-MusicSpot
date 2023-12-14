@@ -77,7 +77,7 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
     // MARK: - Functions
     
     open func stateDidChanged(_ state: State) {
-        MSLogger.make(category: .ui).log("Bottom Sheet 상태가 \(state.rawValue)로 업데이트 되었습니다.")
+        MSLogger.make(category: .uiKit).log("Bottom Sheet 상태가 \(state.rawValue)로 업데이트 되었습니다.")
         
         if case .full = state {
             self.resizeIndicator.isHidden = true
@@ -132,6 +132,41 @@ open class MSBottomSheetViewController<Content: UIViewController, BottomSheet: U
                            options: [.curveEaseInOut]) {
                 self.view.layoutIfNeeded()
             } completion: { _ in
+                self.state = .minimized
+            }
+        } else {
+            self.view.layoutIfNeeded()
+            self.state = .minimized
+        }
+    }
+    
+    public func hideBottomSheet(animated: Bool = true) {
+        self.topConstraints?.constant = .zero
+        
+        if animated {
+            UIView.animate(withDuration: 0.5,
+                           delay: .zero,
+                           usingSpringWithDamping: 0.8,
+                           initialSpringVelocity: 0.5,
+                           options: [.curveEaseInOut]) {
+                self.view.layoutIfNeeded()
+            }
+        } else {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    public func showBottomSheet(animated: Bool = true) {
+        guard let configuration = self.configuration else { return }
+        self.topConstraints?.constant = -configuration.minimizedHeight
+        
+        if animated {
+            UIView.animate(withDuration: 0.5,
+                           delay: .zero,
+                           usingSpringWithDamping: 0.8,
+                           initialSpringVelocity: 0.5,
+                           options: [.curveEaseInOut]) {
+                self.view.layoutIfNeeded()
                 self.state = .minimized
             }
         } else {
