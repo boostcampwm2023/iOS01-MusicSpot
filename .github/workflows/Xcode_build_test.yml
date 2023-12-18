@@ -56,7 +56,7 @@ jobs:
         BUILD_CERTIFICATE_BASE64: ${{ secrets.IOS_BUILD_CERTIFICATE_BASE64 }}
         P12_PASSWORD: ${{ secrets.IOS_P12_PASSWORD }}
         BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.IOS_BUILD_PROVISION_PROFILE_BASE64 }}
-        KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
+        KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWD }}
       run: |
         CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
         PROFILE_PATH=$RUNNER_TEMP/build_pp.mobileprovision
