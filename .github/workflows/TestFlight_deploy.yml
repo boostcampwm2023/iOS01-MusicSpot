@@ -57,7 +57,7 @@ jobs:
 
       - name: Archive
         run: |
-          xcodebuild -
+          xcodebuild -workspace $WORKSPACE -list
           xcodebuild clean archive \
             -workspace $WORKSPACE \
             -scheme $SCHEME \
