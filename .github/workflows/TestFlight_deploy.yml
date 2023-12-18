@@ -1,7 +1,7 @@
 name: TestFlight Deploy
 
 env:
-  WORKSPACE: iOS/MusicSpot.xcworkspace
+  PROJECT: iOS/MusicSpot/MusicSpot.xcodeproj
   SCHEME: MusicSpot-Release
   ARCHIVE: MusicSpot.xcarchive
 
@@ -57,9 +57,9 @@ jobs:
 
       - name: Archive
         run: |
-          xcodebuild -workspace $WORKSPACE -list
+          xcodebuild -project $PROJECT -list
           xcodebuild clean archive \
-            -workspace $WORKSPACE \
+            -project $PROJECT \
             -scheme $SCHEME \
             -configuration release \
             -archivePath $ARCHIVE
