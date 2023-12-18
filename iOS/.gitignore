@@ -1,15 +1,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/macos,xcode,swiftpackagemanager,swift
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,xcode,swiftpackagemanager,swift
 
-### macOS ###
-# General
-.DS_Store
-.AppleDouble
-.LSOverride
-
 # Icon must end with two \r
 Icon
-
 
 # Thumbnails
 ._*
@@ -129,7 +122,7 @@ xcuserdata
 ### Xcode Patch ###
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
-!*.xcodeproj/xcshareddata/
+!*.xcodeproj/xcshareddata/xcschemes/**
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
