@@ -81,7 +81,7 @@ jobs:
             APPSTORE_API_KEY_ID: ${{ secrets.APPSTORE_API_KEY_ID }}
         run: | 
             mkdir -p ~/private_keys
-            echo -n "$APPSTORE_API_PRIVATE_KEY" | base64 -d -o ~/private_keys/api_key.p8
+            echo -n "$APPSTORE_API_PRIVATE_KEY" | base64 -d -o ~/private_keys/AuthKey_$APPSTORE_API_KEY_ID.p8
     
       - name: Upload to TestFlight
         env:
