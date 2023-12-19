@@ -3,21 +3,24 @@
 <plist version="1.0">
 <dict>
 	<key>destination</key>
-	<string>upload</string>
-	<key>generateAppStoreInformation</key>
-	<false/>
+	<string>export</string>
 	<key>manageAppVersionAndBuildNumber</key>
 	<true/>
 	<key>method</key>
 	<string>app-store</string>
+	<key>provisioningProfiles</key>
+	<dict>
+		<key>com.overheat.boostcamp8.MusicSpot</key>
+		<string>MusicSpot Distribution</string>
+	</dict>
+	<key>signingCertificate</key>
+	<string>Apple Distribution</string>
 	<key>signingStyle</key>
-	<string>automatic</string>
+	<string>manual</string>
 	<key>stripSwiftSymbols</key>
 	<true/>
 	<key>teamID</key>
 	<string>XW996HTK32</string>
-	<key>testFlightInternalTestingOnly</key>
-	<false/>
 	<key>uploadSymbols</key>
 	<true/>
 </dict>
