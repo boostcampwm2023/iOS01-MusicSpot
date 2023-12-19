@@ -75,10 +75,23 @@ jobs:
             -exportPath . \
             -allowProvisioningUpdates
     
+      - name: Install Private API Key P8
+        env:
+            APPSTORE_API_PRIVATE_KEY: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+            APPSTORE_API_KEY_ID: ${{ secrets.APPSTORE_API_KEY_ID }}
+        run: | 
+            mkdir -p ~/private_keys
+            echo -n "$APPSTORE_API_PRIVATE_KEY" | base64 -d -o ~/private_keys/AuthKey_$APPSTORE_API_KEY_ID.p8
+    
       - name: Upload to TestFlight
-        uses: apple-actions/upload-testflight-build@v1
-        with:
-          app-path: 'MusicSpot.ipa'
-          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
-          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
-          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+        env:
+            APPSTORE_API_KEY_ID: ${{ secrets.APPSTORE_API_KEY_ID }}
+            APPSTORE_ISSUER_ID : ${{ secrets.APPSTORE_ISSUER_ID  }}
+        run: |
+          xcrun altool \
+          --output-format xml \
+          --upload-app \
+          -f 'MusicSpot.ipa' \
+          -t ios \
+          --apiKey $APPSTORE_API_KEY_ID \
+          --apiIssuer $APPSTORE_ISSUER_ID
