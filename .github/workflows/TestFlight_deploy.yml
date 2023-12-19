@@ -81,23 +81,17 @@ jobs:
             APPSTORE_API_KEY_ID: ${{ secrets.APPSTORE_API_KEY_ID }}
         run: | 
             mkdir -p ~/private_keys
-            echo -n "$APPSTORE_API_PRIVATE_KEY" | base64 -d -o ~/private_keys/AuthKey_$APPSTORE_API_KEY_ID.p8
+            echo -n "$APPSTORE_API_PRIVATE_KEY" | base64 -d -o ~/private_keys/api_key.p8
     
       - name: Upload to TestFlight
         env:
             APPSTORE_API_KEY_ID: ${{ secrets.APPSTORE_API_KEY_ID }}
             APPSTORE_ISSUER_ID : ${{ secrets.APPSTORE_ISSUER_ID  }}
         run: |
-          API_KEY_PATH=$RUNNER_TEMP/api_key
-          ISSUER_ID_PATH=$RUNNER_TEMP/issuer_id
-
-          echo -n "$APPSTORE_API_KEY_ID" | base64 --decode -o $API_KEY_PATH
-          echo -n "$APPSTORE_ISSUER_ID" | base64 --decode -o $ISSUER_ID_PATH
-
           xcrun altool \
           --output-format xml \
           --upload-app \
           -f 'MusicSpot.ipa' \
           -t ios \
-          --apiKey $API_KEY_PATH \
-          --apiIssuer $ISSUER_ID_PATH
+          --apiKey $APPSTORE_API_KEY_ID \
+          --apiIssuer $APPSTORE_ISSUER_ID
