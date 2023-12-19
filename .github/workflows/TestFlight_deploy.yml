@@ -9,7 +9,6 @@ on:
   push:
     branches:
       - 'iOS/release'
-      - 'iOS/**'
 
 jobs:
   deploy:
