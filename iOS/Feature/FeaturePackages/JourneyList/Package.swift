@@ -24,7 +24,9 @@ private enum Target {
 private enum Dependency {
     
     static let msData = "MSData"
+    
     static let msUIKit = "MSUIKit"
+    
     static let msLogger = "MSLogger"
     static let msFoundation = "MSFoundation"
     

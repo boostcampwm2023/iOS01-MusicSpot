@@ -29,7 +29,9 @@ private enum Dependency {
     
     static let msDomain = "MSDomain"
     static let msData = "MSData"
+    
     static let msUIKit = "MSUIKit"
+    
     static let msExtension = "MSExtension"
     static let msLogger = "MSLogger"
     static let msFoundation = "MSFoundation"

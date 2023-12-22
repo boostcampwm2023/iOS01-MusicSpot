@@ -10,7 +10,7 @@ private extension String {
     static let package = "Feature"
     
     var fromPackagesPath: String {
-        return "Packages/" + self
+        return "FeaturePackages/" + self
     }
     
 }
