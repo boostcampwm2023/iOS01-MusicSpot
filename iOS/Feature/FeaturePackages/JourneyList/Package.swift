@@ -7,13 +7,9 @@ import PackageDescription
 
 private extension String {
     
-    static let package = "FeatureSpot"
-    
-    var testTarget: String {
-        return self + "Tests"
-    }
-    
-    var fromRootPath: String {
+    static let package = "FeatureJourneyList"
+
+	var fromRootPath: String {
         return "../../" + self
     }
     
@@ -21,20 +17,16 @@ private extension String {
 
 private enum Target {
     
-    static let spot = "Spot"
+    static let journeyList = "JourneyList"
     
 }
 
 private enum Dependency {
     
-    // package
     static let msData = "MSData"
-    static let msDomain = "MSDomain"
     static let msUIKit = "MSUIKit"
-    static let msFoundation = "MSFoundation"
-    
-    // library
     static let msLogger = "MSLogger"
+    static let msFoundation = "MSFoundation"
     
 }
 
@@ -46,12 +38,11 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(name: Target.spot,
-                 targets: [Target.spot])
+        .library(name: Target.journeyList,
+                 type: .static,
+                 targets: [Target.journeyList])
     ],
     dependencies: [
-        .package(name: Dependency.msDomain,
-                 path: Dependency.msDomain.fromRootPath),
         .package(name: Dependency.msData,
                  path: Dependency.msData.fromRootPath),
         .package(name: Dependency.msUIKit,
@@ -60,14 +51,12 @@ let package = Package(
                  path: Dependency.msFoundation.fromRootPath)
     ],
     targets: [
-        .target(name: Target.spot,
+        .target(name: Target.journeyList,
                 dependencies: [
-                    .product(name: Dependency.msDomain,
-                             package: Dependency.msDomain),
-                    .product(name: Dependency.msData,
-                             package: Dependency.msData),
                     .product(name: Dependency.msUIKit,
                              package: Dependency.msUIKit),
+                    .product(name: Dependency.msData,
+                             package: Dependency.msData),
                     .product(name: Dependency.msLogger,
                              package: Dependency.msFoundation)
                 ])

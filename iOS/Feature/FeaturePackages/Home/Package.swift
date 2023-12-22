@@ -49,8 +49,10 @@ let package = Package(
     ],
     products: [
         .library(name: Target.home,
+                 type: .static,
                  targets: [Target.home]),
         .library(name: Target.navigateMap,
+                 type: .static,
                  targets: [Target.navigateMap])
     ],
     dependencies: [

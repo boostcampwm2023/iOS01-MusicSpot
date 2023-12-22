@@ -7,7 +7,7 @@ import PackageDescription
 
 private extension String {
     
-    static let package = "FeatureSelectSong"
+    static let package = "FeatureRewindJourney"
     
     var testTarget: String {
         return self + "Tests"
@@ -21,7 +21,7 @@ private extension String {
 
 private enum Target {
     
-    static let selectSong = "SelectSong"
+    static let rewindJourney = "RewindJourney"
     
 }
 
@@ -29,9 +29,8 @@ private enum Dependency {
     
     static let msDomain = "MSDomain"
     static let msData = "MSData"
-    
     static let msUIKit = "MSUIKit"
-    
+    static let msExtension = "MSExtension"
     static let msLogger = "MSLogger"
     static let msFoundation = "MSFoundation"
     
@@ -45,8 +44,9 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(name: Target.selectSong,
-                 targets: [Target.selectSong])
+        .library(name: Target.rewindJourney,
+                 type: .static,
+                 targets: [Target.rewindJourney])
     ],
     dependencies: [
         .package(name: Dependency.msDomain,
@@ -59,7 +59,7 @@ let package = Package(
                  path: Dependency.msFoundation.fromRootPath)
     ],
     targets: [
-        .target(name: Target.selectSong,
+        .target(name: Target.rewindJourney,
                 dependencies: [
                     .product(name: Dependency.msDomain,
                              package: Dependency.msDomain),
@@ -68,6 +68,8 @@ let package = Package(
                     .product(name: Dependency.msUIKit,
                              package: Dependency.msUIKit),
                     .product(name: Dependency.msLogger,
+                             package: Dependency.msFoundation),
+                    .product(name: Dependency.msExtension,
                              package: Dependency.msFoundation)
                 ])
     ]

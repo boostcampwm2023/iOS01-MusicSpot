@@ -47,6 +47,7 @@ let package = Package(
     ],
     products: [
         .library(name: Target.saveJourney,
+                 type: .static,
                  targets: [Target.saveJourney])
     ],
     dependencies: [
