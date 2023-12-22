@@ -41,12 +41,8 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(name: Target.msDesignSystem,
-                 targets: [Target.msDesignSystem]),
         .library(name: Target.msUIKit,
-                 targets: [Target.msUIKit]),
-        .library(name: Target.combineCocoa,
-                 targets: [Target.combineCocoa])
+                 targets: [Target.msUIKit])
     ],
     dependencies: [
         .package(name: Dependency.msCoreKit,
@@ -62,6 +58,7 @@ let package = Package(
         .target(name: Target.combineCocoa),
         .target(name: Target.msUIKit,
                 dependencies: [
+                    .target(name: Target.combineCocoa),
                     .target(name: Target.msDesignSystem),
                     .product(name: Dependency.msImageFetcher,
                              package: Dependency.msCoreKit),
