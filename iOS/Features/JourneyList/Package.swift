@@ -23,11 +23,8 @@ private enum Target {
 
 private enum Dependency {
     
-    static let msCacheStorage = "MSCacheStorage"
-    static let msImageFetcher = "MSImageFetcher"
-    static let msCoreKit = "MSCoreKit"
-    static let msUIKit = "MSUIKit"
     static let msData = "MSData"
+    static let msUIKit = "MSUIKit"
     static let msLogger = "MSLogger"
     static let msFoundation = "MSFoundation"
     
@@ -45,22 +42,16 @@ let package = Package(
                  targets: [Target.journeyList])
     ],
     dependencies: [
-        .package(name: Dependency.msUIKit,
-                 path: Dependency.msUIKit.fromRootPath),
-        .package(name: Dependency.msCoreKit,
-                 path: Dependency.msCoreKit.fromRootPath),
         .package(name: Dependency.msData,
                  path: Dependency.msData.fromRootPath),
+        .package(name: Dependency.msUIKit,
+                 path: Dependency.msUIKit.fromRootPath),
         .package(name: Dependency.msFoundation,
                  path: Dependency.msFoundation.fromRootPath)
     ],
     targets: [
         .target(name: Target.journeyList,
                 dependencies: [
-                    .product(name: Dependency.msCacheStorage,
-                             package: Dependency.msCoreKit),
-                    .product(name: Dependency.msImageFetcher,
-                             package: Dependency.msCoreKit),
                     .product(name: Dependency.msUIKit,
                              package: Dependency.msUIKit),
                     .product(name: Dependency.msData,

@@ -28,18 +28,14 @@ private enum Target {
 private enum Dependency {
     
     // package
+    static let msData = "MSData"
+    static let msDomain = "MSDomain"
     static let msUIKit = "MSUIKit"
     static let msFoundation = "MSFoundation"
-    static let msCoreKit = "MSCoreKit"
     
     // library
     static let msDesignsystem = "MSDesignSystem"
     static let msLogger = "MSLogger"
-    static let msNetworking = "MSNetworking"
-    
-    // package = library
-    static let msData = "MSData"
-    static let msDomain = "MSDomain"
     
 }
 
@@ -55,32 +51,28 @@ let package = Package(
                  targets: [Target.spot])
     ],
     dependencies: [
+        .package(name: Dependency.msDomain,
+                 path: Dependency.msDomain.fromRootPath),
+        .package(name: Dependency.msData,
+                 path: Dependency.msData.fromRootPath),
         .package(name: Dependency.msUIKit,
                  path: Dependency.msUIKit.fromRootPath),
         .package(name: Dependency.msFoundation,
-                 path: Dependency.msFoundation.fromRootPath),
-        .package(name: Dependency.msCoreKit,
-                 path: Dependency.msCoreKit.fromRootPath),
-        .package(name: Dependency.msData,
-                 path: Dependency.msData.fromRootPath),
-        .package(name: Dependency.msDomain,
-                 path: Dependency.msDomain.fromRootPath)
+                 path: Dependency.msFoundation.fromRootPath)
     ],
     targets: [
         .target(name: Target.spot,
                 dependencies: [
                     .product(name: Dependency.msDomain,
                              package: Dependency.msDomain),
-                    .product(name: Dependency.msUIKit,
-                             package: Dependency.msUIKit),
+                    .product(name: Dependency.msData,
+                             package: Dependency.msData),
                     .product(name: Dependency.msDesignsystem,
                              package: Dependency.msUIKit),
+                    .product(name: Dependency.msUIKit,
+                             package: Dependency.msUIKit),
                     .product(name: Dependency.msLogger,
-                             package: Dependency.msFoundation),
-                    .product(name: Dependency.msNetworking,
-                             package: Dependency.msCoreKit),
-                    .product(name: Dependency.msData,
-                             package: Dependency.msData)
+                             package: Dependency.msFoundation)
                 ])
     ]
 )
