@@ -30,6 +30,8 @@ private enum Dependency {
     static let msDomain = "MSDomain"
     static let msData = "MSData"
     
+    static let combineCocoa = "CombineCocoa"
+    static let msDesignsystem = "MSDesignSystem"
     static let msUIKit = "MSUIKit"
     
     static let msLogger = "MSLogger"
