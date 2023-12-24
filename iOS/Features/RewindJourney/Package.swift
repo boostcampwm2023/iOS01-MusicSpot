@@ -70,8 +70,6 @@ let package = Package(
                              package: Dependency.msData),
                     .product(name: Dependency.msUIKit,
                              package: Dependency.msUIKit),
-                    .product(name: Dependency.combineCocoa,
-                             package: Dependency.msUIKit),
                     .product(name: Dependency.msLogger,
                              package: Dependency.msFoundation),
                     .product(name: Dependency.msExtension,

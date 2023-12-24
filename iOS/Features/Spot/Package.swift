@@ -68,8 +68,6 @@ let package = Package(
                              package: Dependency.msData),
                     .product(name: Dependency.msUIKit,
                              package: Dependency.msUIKit),
-                    .product(name: Dependency.msDesignsystem,
-                             package: Dependency.msUIKit),
                     .product(name: Dependency.msLogger,
                              package: Dependency.msFoundation)
                 ])
