@@ -7,34 +7,34 @@ import PackageDescription
 
 private extension String {
     
-    static let package = "FeatureSpot"
-    
-    var testTarget: String {
-        return self + "Tests"
-    }
+    static let package = "FeatureHome"
     
     var fromRootPath: String {
         return "../../" + self
+    }
+    
+    var fromCurrentPath: String {
+        return "../" + self
     }
     
 }
 
 private enum Target {
     
-    static let spot = "Spot"
+    static let home = "Home"
+    static let navigateMap = "NavigateMap"
     
 }
 
 private enum Dependency {
     
-    // package
-    static let msData = "MSData"
+    static let journeyList = "JourneyList"
     static let msDomain = "MSDomain"
+    static let msData = "MSData"
     static let msUIKit = "MSUIKit"
-    static let msFoundation = "MSFoundation"
-    
-    // library
+    static let msUserDefaults = "MSUserDefaults"
     static let msLogger = "MSLogger"
+    static let msFoundation = "MSFoundation"
     
 }
 
@@ -46,11 +46,14 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(name: Target.spot,
-                 type: .static,
-                 targets: [Target.spot])
+        .library(name: Target.home,
+                 targets: [Target.home]),
+        .library(name: Target.navigateMap,
+                 targets: [Target.navigateMap])
     ],
     dependencies: [
+        .package(name: Dependency.journeyList,
+                 path: Dependency.journeyList.fromCurrentPath),
         .package(name: Dependency.msDomain,
                  path: Dependency.msDomain.fromRootPath),
         .package(name: Dependency.msData,
@@ -61,7 +64,21 @@ let package = Package(
                  path: Dependency.msFoundation.fromRootPath)
     ],
     targets: [
-        .target(name: Target.spot,
+        .target(name: Target.home,
+                dependencies: [
+                    .product(name: Dependency.journeyList,
+                             package: Dependency.journeyList),
+                    .target(name: Target.navigateMap),
+                    .product(name: Dependency.msDomain,
+                             package: Dependency.msDomain),
+                    .product(name: Dependency.msData,
+                             package: Dependency.msData),
+                    .product(name: Dependency.msUserDefaults,
+                             package: Dependency.msFoundation),
+                    .product(name: Dependency.msLogger,
+                             package: Dependency.msFoundation)
+                ]),
+        .target(name: Target.navigateMap,
                 dependencies: [
                     .product(name: Dependency.msDomain,
                              package: Dependency.msDomain),
@@ -69,8 +86,8 @@ let package = Package(
                              package: Dependency.msData),
                     .product(name: Dependency.msUIKit,
                              package: Dependency.msUIKit),
-                    .product(name: Dependency.msDesignsystem,
-                             package: Dependency.msUIKit),
+                    .product(name: Dependency.msUserDefaults,
+                             package: Dependency.msFoundation),
                     .product(name: Dependency.msLogger,
                              package: Dependency.msFoundation)
                 ])

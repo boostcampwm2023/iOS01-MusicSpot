@@ -7,7 +7,7 @@ import PackageDescription
 
 private extension String {
     
-    static let package = "FeatureSaveJourney"
+    static let package = "FeatureRewindJourney"
     
     var testTarget: String {
         return self + "Tests"
@@ -21,7 +21,7 @@ private extension String {
 
 private enum Target {
     
-    static let saveJourney = "SaveJourney"
+    static let rewindJourney = "RewindJourney"
     
 }
 
@@ -30,8 +30,9 @@ private enum Dependency {
     static let msDomain = "MSDomain"
     static let msData = "MSData"
     
+    static let combineCocoa = "CombineCocoa"
+    static let msDesignsystem = "MSDesignSystem"
     static let msUIKit = "MSUIKit"
-    static let msFoundation = "MSFoundation"
     
     static let msExtension = "MSExtension"
     static let msLogger = "MSLogger"
@@ -47,9 +48,8 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        .library(name: Target.saveJourney,
-                 type: .static,
-                 targets: [Target.saveJourney])
+        .library(name: Target.rewindJourney,
+                 targets: [Target.rewindJourney])
     ],
     dependencies: [
         .package(name: Dependency.msDomain,
@@ -62,19 +62,19 @@ let package = Package(
                  path: Dependency.msFoundation.fromRootPath)
     ],
     targets: [
-        .target(name: Target.saveJourney,
+        .target(name: Target.rewindJourney,
                 dependencies: [
                     .product(name: Dependency.msDomain,
                              package: Dependency.msDomain),
                     .product(name: Dependency.msData,
                              package: Dependency.msData),
-                    .product(name: Dependency.msDesignsystem,
-                             package: Dependency.msUIKit),
                     .product(name: Dependency.msUIKit,
                              package: Dependency.msUIKit),
-                    .product(name: Dependency.msExtension,
-                             package: Dependency.msFoundation),
+                    .product(name: Dependency.combineCocoa,
+                             package: Dependency.msUIKit),
                     .product(name: Dependency.msLogger,
+                             package: Dependency.msFoundation),
+                    .product(name: Dependency.msExtension,
                              package: Dependency.msFoundation)
                 ])
     ]
