@@ -9,7 +9,6 @@ import UIKit
 
 import MSDesignSystem
 import MSDomain
-import MSImageFetcher
 
 final class SaveJourneyMusicCell: UICollectionViewCell {
     
