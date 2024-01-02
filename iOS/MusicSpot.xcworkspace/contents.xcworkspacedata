@@ -27,15 +27,18 @@
       </FileRef>
    </Group>
    <FileRef
-      location = "group:MSData">
-   </FileRef>
-   <FileRef
-      location = "group:MSUIKit">
-   </FileRef>
-   <FileRef
       location = "group:MSCoreKit">
    </FileRef>
    <FileRef
+      location = "group:MSData">
+   </FileRef>
+   <FileRef
+      location = "group:MSDomain">
+   </FileRef>
+   <FileRef
       location = "group:MSFoundation">
+   </FileRef>
+   <FileRef
+      location = "group:MSUIKit">
    </FileRef>
 </Workspace>

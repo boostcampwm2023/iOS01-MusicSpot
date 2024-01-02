@@ -25,6 +25,12 @@
 		DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */; };
 		DD73F8622B024C4B00EE9BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */; };
 		DD73F8652B024C4B00EE9BF2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8632B024C4B00EE9BF2 /* LaunchScreen.storyboard */; };
+		DDBB292D2B310B1300A742CD /* MSCacheStorage in Frameworks */ = {isa = PBXBuildFile; productRef = DDBB292C2B310B1300A742CD /* MSCacheStorage */; };
+		DDBB292F2B310B1300A742CD /* MSFetcher in Frameworks */ = {isa = PBXBuildFile; productRef = DDBB292E2B310B1300A742CD /* MSFetcher */; };
+		DDBB29312B310B1300A742CD /* MSImageFetcher in Frameworks */ = {isa = PBXBuildFile; productRef = DDBB29302B310B1300A742CD /* MSImageFetcher */; };
+		DDBB29332B310B1300A742CD /* MSKeychainStorage in Frameworks */ = {isa = PBXBuildFile; productRef = DDBB29322B310B1300A742CD /* MSKeychainStorage */; };
+		DDBB29352B310B1300A742CD /* MSNetworking in Frameworks */ = {isa = PBXBuildFile; productRef = DDBB29342B310B1300A742CD /* MSNetworking */; };
+		DDBB29372B310B1300A742CD /* MSPersistentStorage in Frameworks */ = {isa = PBXBuildFile; productRef = DDBB29362B310B1300A742CD /* MSPersistentStorage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,13 +55,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDBB29312B310B1300A742CD /* MSImageFetcher in Frameworks */,
 				DD0194EB2B25C42E007CE082 /* NavigateMap in Frameworks */,
 				DD0194E92B25C42E007CE082 /* Home in Frameworks */,
 				DD0194F12B25C43B007CE082 /* RewindJourney in Frameworks */,
 				DD0194EE2B25C434007CE082 /* JourneyList in Frameworks */,
+				DDBB29372B310B1300A742CD /* MSPersistentStorage in Frameworks */,
 				DD0194FA2B25C44E007CE082 /* Spot in Frameworks */,
 				DD0194F42B25C441007CE082 /* SaveJourney in Frameworks */,
+				DDBB29332B310B1300A742CD /* MSKeychainStorage in Frameworks */,
+				DDBB29352B310B1300A742CD /* MSNetworking in Frameworks */,
 				DD0194F72B25C448007CE082 /* SelectSong in Frameworks */,
+				DDBB292F2B310B1300A742CD /* MSFetcher in Frameworks */,
+				DDBB292D2B310B1300A742CD /* MSCacheStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +157,12 @@
 				DD0194F32B25C441007CE082 /* SaveJourney */,
 				DD0194F62B25C448007CE082 /* SelectSong */,
 				DD0194F92B25C44E007CE082 /* Spot */,
+				DDBB292C2B310B1300A742CD /* MSCacheStorage */,
+				DDBB292E2B310B1300A742CD /* MSFetcher */,
+				DDBB29302B310B1300A742CD /* MSImageFetcher */,
+				DDBB29322B310B1300A742CD /* MSKeychainStorage */,
+				DDBB29342B310B1300A742CD /* MSNetworking */,
+				DDBB29362B310B1300A742CD /* MSPersistentStorage */,
 			);
 			productName = MusicSpot;
 			productReference = DD73F8552B024C4900EE9BF2 /* MusicSpot.app */;
@@ -181,6 +199,7 @@
 				DD0194F22B25C441007CE082 /* XCLocalSwiftPackageReference "../Features/SaveJourney" */,
 				DD0194F52B25C448007CE082 /* XCLocalSwiftPackageReference "../Features/SelectSong" */,
 				DD0194F82B25C44E007CE082 /* XCLocalSwiftPackageReference "../Features/Spot" */,
+				DDBB292B2B310B1300A742CD /* XCLocalSwiftPackageReference "../MSCoreKit" */,
 			);
 			productRefGroup = DD73F8562B024C4900EE9BF2 /* Products */;
 			projectDirPath = "";
@@ -361,9 +380,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = B3PWYBKFUK;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = XW996HTK32;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MusicSpot/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MusicSpot;
@@ -383,8 +405,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.5.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcamp8.MusicSpot;
+				PRODUCT_BUNDLE_IDENTIFIER = com.overheat.boostcamp8.MusicSpot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "MusicSpot Development";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -399,9 +423,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = B3PWYBKFUK;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = XW996HTK32;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MusicSpot/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MusicSpot;
@@ -421,8 +448,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.5.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcamp8.MusicSpot;
+				PRODUCT_BUNDLE_IDENTIFIER = com.overheat.boostcamp8.MusicSpot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "MusicSpot Distribution";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -501,9 +530,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = B3PWYBKFUK;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = XW996HTK32;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MusicSpot/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MusicSpot;
@@ -523,8 +555,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.5.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcamp8.MusicSpot;
+				PRODUCT_BUNDLE_IDENTIFIER = com.overheat.boostcamp8.MusicSpot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "MusicSpot Development";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -585,6 +619,10 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Features/Spot;
 		};
+		DDBB292B2B310B1300A742CD /* XCLocalSwiftPackageReference "../MSCoreKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MSCoreKit;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -615,6 +653,30 @@
 		DD0194F92B25C44E007CE082 /* Spot */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Spot;
+		};
+		DDBB292C2B310B1300A742CD /* MSCacheStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSCacheStorage;
+		};
+		DDBB292E2B310B1300A742CD /* MSFetcher */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSFetcher;
+		};
+		DDBB29302B310B1300A742CD /* MSImageFetcher */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSImageFetcher;
+		};
+		DDBB29322B310B1300A742CD /* MSKeychainStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSKeychainStorage;
+		};
+		DDBB29342B310B1300A742CD /* MSNetworking */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSNetworking;
+		};
+		DDBB29362B310B1300A742CD /* MSPersistentStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSPersistentStorage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
