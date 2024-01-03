@@ -25,6 +25,7 @@
 		DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */; };
 		DD73F8622B024C4B00EE9BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */; };
 		DD73F8652B024C4B00EE9BF2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8632B024C4B00EE9BF2 /* LaunchScreen.storyboard */; };
+		DDB22F752B433EC300F83D84 /* CoordinatorFinishDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB22F742B433EC300F83D84 /* CoordinatorFinishDelegate.swift */; };
 		DDBB292D2B310B1300A742CD /* MSCacheStorage in Frameworks */ = {isa = PBXBuildFile; productRef = DDBB292C2B310B1300A742CD /* MSCacheStorage */; };
 		DDBB292F2B310B1300A742CD /* MSFetcher in Frameworks */ = {isa = PBXBuildFile; productRef = DDBB292E2B310B1300A742CD /* MSFetcher */; };
 		DDBB29312B310B1300A742CD /* MSImageFetcher in Frameworks */ = {isa = PBXBuildFile; productRef = DDBB29302B310B1300A742CD /* MSImageFetcher */; };
@@ -48,6 +49,7 @@
 		DD73F8642B024C4B00EE9BF2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DD73F8662B024C4B00EE9BF2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DD73F86D2B024CA000EE9BF2 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		DDB22F742B433EC300F83D84 /* CoordinatorFinishDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorFinishDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,7 +76,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		08CBF86F2B18468E007D3797 /* MSCoordinator */ = {
+		08CBF86F2B18468E007D3797 /* Coordinator */ = {
 			isa = PBXGroup;
 			children = (
 				DD2856C32B187BAB002C994D /* Protocol */,
@@ -85,13 +87,14 @@
 				08CBF8702B18468E007D3797 /* SaveJourneyCoordinator.swift */,
 				08CBF8722B18468E007D3797 /* RewindJourneyCoordinator.swift */,
 			);
-			path = MSCoordinator;
+			path = Coordinator;
 			sourceTree = "<group>";
 		};
 		DD2856C32B187BAB002C994D /* Protocol */ = {
 			isa = PBXGroup;
 			children = (
 				08CBF8772B18468E007D3797 /* Coordinator.swift */,
+				DDB22F742B433EC300F83D84 /* CoordinatorFinishDelegate.swift */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -123,7 +126,7 @@
 		DD73F8572B024C4900EE9BF2 /* MusicSpot */ = {
 			isa = PBXGroup;
 			children = (
-				08CBF86F2B18468E007D3797 /* MSCoordinator */,
+				08CBF86F2B18468E007D3797 /* Coordinator */,
 				DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */,
 				DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */,
 				DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */,
@@ -227,6 +230,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DDB22F752B433EC300F83D84 /* CoordinatorFinishDelegate.swift in Sources */,
 				08CBF8792B18468E007D3797 /* AppCoordinator.swift in Sources */,
 				08CBF8782B18468E007D3797 /* SaveJourneyCoordinator.swift in Sources */,
 				08CBF87F2B18468E007D3797 /* Coordinator.swift in Sources */,

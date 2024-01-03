@@ -138,7 +138,11 @@ public final class SaveJourneyViewController: UIViewController {
     
     public override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        
         self.musicPlayer.pause()
+        if self.isMovingFromParent {
+            self.navigationDelegate?.popToSelectSong()
+        }
     }
     
     // MARK: - Combine Binding

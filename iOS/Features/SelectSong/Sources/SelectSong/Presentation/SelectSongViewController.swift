@@ -110,6 +110,14 @@ public final class SelectSongViewController: BaseViewController {
         self.searchTextField.becomeFirstResponder()
     }
     
+    public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        if self.isMovingFromParent {
+            self.navigationDelegate?.popToHome()
+        }
+    }
+    
     // MARK: - Combine Binding
     
     private func bind() {
@@ -185,8 +193,8 @@ public final class SelectSongViewController: BaseViewController {
 private extension SelectSongViewController {
     
     func configureCollectionView() {
-        let layout = UICollectionViewCompositionalLayout(sectionProvider: { _, _ in
-            return self.configureSection()
+        let layout = UICollectionViewCompositionalLayout(sectionProvider: { [weak self] _, _ in
+            return self?.configureSection()
         })
         
         self.collectionView.setCollectionViewLayout(layout, animated: false)

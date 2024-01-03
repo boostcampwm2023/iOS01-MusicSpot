@@ -5,8 +5,8 @@
 //  Created by 윤동주 on 11/29/23.
 //
 
-import UIKit
 import MusicKit
+import UIKit
 
 import MSData
 import MSDomain
@@ -16,11 +16,11 @@ final class SaveJourneyCoordinator: Coordinator {
     
     // MARK: - Properties
     
-    var navigationController: UINavigationController
+    let navigationController: UINavigationController
+    var rootViewController: UIViewController?
     
     var childCoordinators: [Coordinator] = []
-    
-    weak var delegate: SelectSongCoordinatorDelegate?
+    weak var finishDelegate: CoordinatorFinishDelegate?
     
     // MARK: - Initializer
     
@@ -38,6 +38,8 @@ final class SaveJourneyCoordinator: Coordinator {
                                                         journeyRepository: journeyRepository)
         let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
         saveJourneyViewController.navigationDelegate = self
+        self.rootViewController = saveJourneyViewController
+        
         self.navigationController.pushViewController(saveJourneyViewController, animated: true)
     }
     
@@ -48,7 +50,11 @@ final class SaveJourneyCoordinator: Coordinator {
 extension SaveJourneyCoordinator: SaveJourneyNavigationDelegate {
     
     func popToHome(with endedJourney: Journey) {
-        self.delegate?.popToHome(from: self, with: endedJourney)
+        
+    }
+    
+    func popToSelectSong() {
+        self.finish()
     }
     
 }

@@ -304,7 +304,7 @@ private extension SpotViewController {
     }
     
     func galleryButtonTapped() {
-        self.navigationDelegate?.presentPhotos(from: self)
+        self.navigationDelegate?.presentPhotoLibrary(from: self)
     }
     
     func backButtonTapped() {
@@ -359,7 +359,7 @@ private extension SpotViewController {
     
     func presentSpotSaveViewController(with image: UIImage, coordinate: Coordinate) {
         self.viewModel.stopCamera()
-        self.navigationDelegate?.presentSpotSave(using: image, coordinate: coordinate)
+        self.navigationDelegate?.presentSaveSpot(using: image, coordinate: coordinate)
     }
     
 }

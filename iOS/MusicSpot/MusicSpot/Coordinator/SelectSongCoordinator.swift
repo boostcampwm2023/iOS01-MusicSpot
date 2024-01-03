@@ -5,30 +5,23 @@
 //  Created by 윤동주 on 11/29/23.
 //
 
-import UIKit
 import MusicKit
+import UIKit
 
 import MSData
 import MSDomain
 import SaveJourney
 import SelectSong
 
-protocol SelectSongCoordinatorDelegate: AnyObject {
-    
-    func popToHome(from coordinator: Coordinator, with endedJourney: Journey)
-    func popToSelectSong(from coordinator: Coordinator)
-    
-}
-
 final class SelectSongCoordinator: Coordinator {
     
     // MARK: - Properties
     
-    var navigationController: UINavigationController
+    let navigationController: UINavigationController
+    var rootViewController: UIViewController?
     
     var childCoordinators: [Coordinator] = []
-    
-    weak var delegate: HomeCoordinatorDelegate?
+    weak var finishDelegate: CoordinatorFinishDelegate?
     
     // MARK: - Initializer
     
@@ -42,9 +35,24 @@ final class SelectSongCoordinator: Coordinator {
         let songRepository = SongRepositoryImplementation()
         let selectSongViewModel = SelectSongViewModel(lastCoordinate: lastCoordinate,
                                                       repository: songRepository)
-        let searchMusicViewController = SelectSongViewController(viewModel: selectSongViewModel)
-        searchMusicViewController.navigationDelegate = self
-        self.navigationController.pushViewController(searchMusicViewController, animated: true)
+        let selectSongViewController = SelectSongViewController(viewModel: selectSongViewModel)
+        selectSongViewController.navigationDelegate = self
+        self.rootViewController = selectSongViewController
+        
+        self.navigationController.pushViewController(selectSongViewController, animated: true)
+    }
+    
+}
+
+// MARK: - Finish Delegate
+
+extension SelectSongCoordinator: CoordinatorFinishDelegate {
+    
+    func shouldFinish(childCoordinator: Coordinator) {
+        guard let selectSongViewController = self.rootViewController else { return }
+        
+        self.childCoordinators.removeAll { $0 === childCoordinator }
+        self.navigationController.popToViewController(selectSongViewController, animated: true)
     }
     
 }
@@ -53,30 +61,15 @@ final class SelectSongCoordinator: Coordinator {
 
 extension SelectSongCoordinator: SelectSongNavigationDelegate {
     
-    func navigateToHomeMap() {
-        self.delegate?.popToHome(from: self)
-    }
-    
     func navigateToSaveJourney(lastCoordinate: Coordinate, selectedSong: Song) {
         let saveJourneyCoordinator = SaveJourneyCoordinator(navigationController: self.navigationController)
-        saveJourneyCoordinator.delegate = self
+        saveJourneyCoordinator.finishDelegate = self
         self.childCoordinators.append(saveJourneyCoordinator)
         saveJourneyCoordinator.start(lastCoordinate: lastCoordinate, selectedSong: selectedSong)
     }
     
-}
-
-// MARK: - SelectSong Coordinator
-
-extension SelectSongCoordinator: SelectSongCoordinatorDelegate {
-    
-    func popToHome(from coordinator: Coordinator, with endedJourney: Journey) {
-        self.childCoordinators.removeAll()
-        self.delegate?.popToHome(from: coordinator)
-    }
-    
-    func popToSelectSong(from coordinator: Coordinator) {
-        self.childCoordinators.removeAll()
+    func popToHome() {
+        self.finish()
     }
     
 }

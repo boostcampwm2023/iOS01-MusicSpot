@@ -9,6 +9,6 @@ import Foundation
 
 public protocol RewindJourneyNavigationDelegate: AnyObject {
     
-    func popToHomeMap()
+    func popToHome()
     
 }
