@@ -57,10 +57,11 @@ internal extension SpotSaveViewModel {
                     MSLogger.make(category: .spot).error("recoding 중인 journeyID를 찾지 못하였습니다.")
                     return
                 }
-                let spot = CreateSpotRequestDTO(journeyId: recordingJourneyID,
-                                                coordinate: CoordinateDTO(self.coordinate),
+                let spot = RequestableSpot(journeyID: recordingJourneyID,
+                                                coordinate: self.coordinate,
                                                 timestamp: .now,
                                                 photoData: data)
+                
                 let result = await self.spotRepository.upload(spot: spot)
                 switch result {
                 case .success(let spot):

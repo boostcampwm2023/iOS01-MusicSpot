@@ -59,7 +59,12 @@ public struct SpotRepositoryImplementation: SpotRepository {
         #endif
     }
     
-    public func upload(spot: CreateSpotRequestDTO, at journeyId: String) async -> Result<Spot, Error> {
+    public func upload(spot: RequestableSpot) async -> Result<Spot, Error> {
+        
+        let spot = CreateSpotRequestDTO(journeyId: spot.journeyID,
+                                        coordinate: CoordinateDTO(spot.coordinate),
+                                        timestamp: spot.timestamp,
+                                        photoData: spot.photoData)
         
         let router = SpotRouter.upload(spot: spot, id: UUID())
         let result = await self.networking.request(SpotDTO.self, router: router)
