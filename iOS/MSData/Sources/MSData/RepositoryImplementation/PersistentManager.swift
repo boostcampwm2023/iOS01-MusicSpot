@@ -24,7 +24,9 @@ private struct KeyStorage {
 
 // MARK: - Default Implementations
 
-extension Persistable {
+ public struct PersistentManager {
+     
+    static let shared = PersistentManager()
     
     @discardableResult
     public func saveToLocal(_ value: Codable, at storage: MSPersistentStorage) -> Bool {

@@ -12,7 +12,7 @@ import MSNetworking
 import MSLogger
 import MSPersistentStorage
 
-public struct SpotRepositoryImplementation: SpotRepository, Persistable {
+public struct SpotRepositoryImplementation: SpotRepository {
     
     // MARK: - Properties
     

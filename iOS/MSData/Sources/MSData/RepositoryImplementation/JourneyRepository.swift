@@ -15,7 +15,7 @@ import MSNetworking
 import MSPersistentStorage
 import MSUserDefaults
 
-public struct JourneyRepositoryImplementation: JourneyRepository, Persistable {
+public struct JourneyRepositoryImplementation: JourneyRepository {
     
     // MARK: - Properties
     
