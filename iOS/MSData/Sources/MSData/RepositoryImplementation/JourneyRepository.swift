@@ -115,8 +115,8 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                                                     spots: [],
                                                     coordinates: [responseDTO.coordinate.toDomain()])
             
-            self.saveToLocal(recordingJourney.id, at: self.storage)
-            self.saveToLocal(recordingJourney.startTimestamp, at: self.storage)
+            PersistentManager.shared.saveToLocal(recordingJourney.id, at: self.storage)
+            PersistentManager.shared.saveToLocal(recordingJourney.startTimestamp, at: self.storage)
             
             self.recordingJourneyID = recordingJourney.id
             self.isRecording = true
@@ -151,7 +151,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                                                     coordinates: coordinates)
             
             responseDTO.coordinates.forEach {
-                self.saveToLocal($0, at: self.storage)
+                PersistentManager.shared.saveToLocal($0, at: self.storage)
             }
             
             return .success(recordingJourney)

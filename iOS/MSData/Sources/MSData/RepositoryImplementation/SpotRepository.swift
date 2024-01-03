@@ -59,7 +59,8 @@ public struct SpotRepositoryImplementation: SpotRepository {
         #endif
     }
     
-    public func upload(spot: CreateSpotRequestDTO) async -> Result<Spot, Error> {
+    public func upload(spot: CreateSpotRequestDTO, at journeyId: String) async -> Result<Spot, Error> {
+        
         let router = SpotRouter.upload(spot: spot, id: UUID())
         let result = await self.networking.request(SpotDTO.self, router: router)
         switch result {
@@ -67,7 +68,7 @@ public struct SpotRepositoryImplementation: SpotRepository {
             #if DEBUG
             MSLogger.make(category: .network).debug("성공적으로 업로드하였습니다.")
             #endif
-            self.saveToLocal(spot, at: self.storage)
+            PersistentManager.shared.saveToLocal(spot, at: self.storage)
             return .success(spot.toDomain())
         case .failure(let error):
             MSLogger.make(category: .network).error("\(error): 업로드에 실패하였습니다.")
