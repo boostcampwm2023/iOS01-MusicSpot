@@ -20,5 +20,5 @@ public protocol JourneyRepository {
     mutating func endJourney(_ journey: Journey) async -> Result<String, Error>
     func recordJourney(journeyID: String, at coordinates: [Coordinate]) async -> Result<RecordingJourney, Error>
     mutating func deleteJourney(_ journey: RecordingJourney, userID: UUID) async -> Result<String, Error>
-    
+    func loadJourneyFromLocal() -> RecordingJourney?
 }

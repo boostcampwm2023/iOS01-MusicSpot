@@ -193,4 +193,8 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         }
     }
     
+    public func loadJourneyFromLocal() -> RecordingJourney? {
+        return PersistentManager.shared.loadJourney(from: self.storage)
+    }
+    
 }
