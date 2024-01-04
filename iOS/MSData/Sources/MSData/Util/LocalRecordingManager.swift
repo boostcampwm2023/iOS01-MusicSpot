@@ -1,5 +1,5 @@
 //
-//  PersistentManager.swift
+//  LocalRecordingManager.swift
 //  MSData
 //
 //  Created by 전민건 on 2023.12.10.
@@ -24,9 +24,9 @@ private struct KeyStorage {
 
 // MARK: - Default Implementations
 
-struct PersistentManager {
+struct LocalRecordingManager {
      
-    static let shared = PersistentManager()
+    static let shared = LocalRecordingManager()
     
     @discardableResult
     public func saveToLocal(_ value: Codable, at storage: MSPersistentStorage) -> Bool {

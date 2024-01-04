@@ -115,8 +115,8 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                                                     spots: [],
                                                     coordinates: [responseDTO.coordinate.toDomain()])
             
-            PersistentManager.shared.saveToLocal(recordingJourney.id, at: self.storage)
-            PersistentManager.shared.saveToLocal(recordingJourney.startTimestamp, at: self.storage)
+            LocalRecordingManager.shared.saveToLocal(recordingJourney.id, at: self.storage)
+            LocalRecordingManager.shared.saveToLocal(recordingJourney.startTimestamp, at: self.storage)
             
             self.recordingJourneyID = recordingJourney.id
             self.isRecording = true
@@ -151,7 +151,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                                                     coordinates: coordinates)
             
             responseDTO.coordinates.forEach {
-                PersistentManager.shared.saveToLocal($0, at: self.storage)
+                LocalRecordingManager.shared.saveToLocal($0, at: self.storage)
             }
             
             return .success(recordingJourney)
@@ -194,7 +194,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     }
     
     public func loadJourneyFromLocal() -> RecordingJourney? {
-        return PersistentManager.shared.loadJourney(from: self.storage)
+        return LocalRecordingManager.shared.loadJourney(from: self.storage)
     }
     
 }

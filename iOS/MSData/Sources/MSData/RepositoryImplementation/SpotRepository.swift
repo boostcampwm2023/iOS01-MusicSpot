@@ -73,7 +73,7 @@ public struct SpotRepositoryImplementation: SpotRepository {
             #if DEBUG
             MSLogger.make(category: .network).debug("성공적으로 업로드하였습니다.")
             #endif
-            PersistentManager.shared.saveToLocal(spot, at: self.storage)
+            LocalRecordingManager.shared.saveToLocal(spot, at: self.storage)
             return .success(spot.toDomain())
         case .failure(let error):
             MSLogger.make(category: .network).error("\(error): 업로드에 실패하였습니다.")

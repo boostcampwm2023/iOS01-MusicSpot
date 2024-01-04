@@ -24,11 +24,11 @@ final class PersistentManagerTests: XCTestCase {
         
         let spot = Spot(coordinate: coordinate, timestamp: .now, photoURL: url)
         
-        XCTAssertTrue(PersistentManager.shared.saveToLocal(SpotDTO(spot), at: self.storage))
+        XCTAssertTrue(LocalRecordingManager.shared.saveToLocal(SpotDTO(spot), at: self.storage))
     }
     
     func test_RecordingJourney_하위요소가_아닌_것들_저장_실패() {
-        XCTAssertFalse(PersistentManager.shared.saveToLocal(Int(), at: self.storage))
+        XCTAssertFalse(LocalRecordingManager.shared.saveToLocal(Int(), at: self.storage))
     }
     
     func test_RecordingJourney_반환_성공() {
