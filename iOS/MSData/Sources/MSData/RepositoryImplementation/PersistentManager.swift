@@ -24,7 +24,7 @@ private struct KeyStorage {
 
 // MARK: - Default Implementations
 
- public struct PersistentManager {
+struct PersistentManager {
      
     static let shared = PersistentManager()
     
