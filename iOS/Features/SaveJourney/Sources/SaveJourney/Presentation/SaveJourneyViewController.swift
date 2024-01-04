@@ -9,7 +9,6 @@ import Combine
 import CoreLocation
 import MapKit
 import MusicKit
-import StoreKit
 import SwiftUI
 import UIKit
 
@@ -198,7 +197,7 @@ public final class SaveJourneyViewController: UIViewController {
         
         self.viewModel.state.endJourneySucceed
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] endedJourney in
+            .sink { [weak self] _ in
                 self?.navigationDelegate?.popToHome()
             }
             .store(in: &self.cancellables)
