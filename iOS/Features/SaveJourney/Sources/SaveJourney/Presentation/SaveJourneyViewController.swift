@@ -199,7 +199,7 @@ public final class SaveJourneyViewController: UIViewController {
         self.viewModel.state.endJourneySucceed
             .receive(on: DispatchQueue.main)
             .sink { [weak self] endedJourney in
-                self?.navigationDelegate?.popToHome(with: endedJourney)
+                self?.navigationDelegate?.popToHome()
             }
             .store(in: &self.cancellables)
     }

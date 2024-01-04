@@ -89,7 +89,7 @@ extension HomeCoordinator: HomeNavigationDelegate {
     }
     
     func navigateToSelectSong(lastCoordinate: Coordinate) {
-        let selectSongCoordinator = SelectSongCoordinator(navigationController: self.navigationController)
+        let selectSongCoordinator = SaveJourneyFlowCoordinator(navigationController: self.navigationController)
         selectSongCoordinator.finishDelegate = self
         self.childCoordinators.append(selectSongCoordinator)
         selectSongCoordinator.start(lastCoordinate: lastCoordinate)

@@ -1,5 +1,5 @@
 //
-//  SelectSongCoordinator.swift
+//  SaveJourneyFlowCoordinator.swift
 //  MusicSpot
 //
 //  Created by 윤동주 on 11/29/23.
@@ -13,7 +13,7 @@ import MSDomain
 import SaveJourney
 import SelectSong
 
-final class SelectSongCoordinator: Coordinator {
+final class SaveJourneyFlowCoordinator: Coordinator {
     
     // MARK: - Properties
     
@@ -31,6 +31,7 @@ final class SelectSongCoordinator: Coordinator {
     
     // MARK: - Functions
     
+    /// rootViewController: SelectSongViewController
     func start(lastCoordinate: Coordinate) {
         let songRepository = SongRepositoryImplementation()
         let selectSongViewModel = SelectSongViewModel(lastCoordinate: lastCoordinate,
@@ -46,7 +47,7 @@ final class SelectSongCoordinator: Coordinator {
 
 // MARK: - Finish Delegate
 
-extension SelectSongCoordinator: CoordinatorFinishDelegate {
+extension SaveJourneyFlowCoordinator: CoordinatorFinishDelegate {
     
     func shouldFinish(childCoordinator: Coordinator) {
         guard let selectSongViewController = self.rootViewController else { return }
@@ -59,17 +60,34 @@ extension SelectSongCoordinator: CoordinatorFinishDelegate {
 
 // MARK: - SelectSong Navigation
 
-extension SelectSongCoordinator: SelectSongNavigationDelegate {
+extension SaveJourneyFlowCoordinator: SelectSongNavigationDelegate {
     
-    func navigateToSaveJourney(lastCoordinate: Coordinate, selectedSong: Song) {
-        let saveJourneyCoordinator = SaveJourneyCoordinator(navigationController: self.navigationController)
-        saveJourneyCoordinator.finishDelegate = self
-        self.childCoordinators.append(saveJourneyCoordinator)
-        saveJourneyCoordinator.start(lastCoordinate: lastCoordinate, selectedSong: selectedSong)
+    func navigateToSaveJourney(lastCoordinate: Coordinate,
+                               selectedSong: Song) {
+        let journeyRepository = JourneyRepositoryImplementation()
+        let saveJourneyViewModel = SaveJourneyViewModel(lastCoordinate: lastCoordinate,
+                                                        selectedSong: selectedSong,
+                                                        journeyRepository: journeyRepository)
+        let saveJourneyViewController = SaveJourneyViewController(viewModel: saveJourneyViewModel)
+        saveJourneyViewController.navigationDelegate = self
+        
+        self.navigationController.pushViewController(saveJourneyViewController, animated: true)
     }
     
     func popToHome() {
         self.finish()
+    }
+    
+}
+
+// MARK: - SaveJourney Navigation
+
+extension SaveJourneyFlowCoordinator: SaveJourneyNavigationDelegate {
+    
+    func popToSelectSong() {
+        guard self.navigationController.topViewController is SaveJourneyViewController else { return }
+        
+        self.navigationController.popViewController(animated: true)
     }
     
 }
