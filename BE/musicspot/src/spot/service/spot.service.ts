@@ -14,6 +14,8 @@ import {
   bucketName,
   makePresignedUrl,
 } from '../../common/s3/objectStorage';
+import { coordinateNotCorrectException } from 'src/filters/journey.exception';
+import { is1DArray } from 'src/common/util/coordinate.util';
 @Injectable()
 export class SpotService {
   constructor(
@@ -36,7 +38,7 @@ export class SpotService {
   }
 
   async insertToSpot(spotData) {
-    const data = { ...spotData, coordinate: JSON.parse(spotData.coordinate) };
+    const data = { ...spotData };
     const createdSpotData = await new this.spotModel(data).save();
     const {_id, coordinate} = createdSpotData;
     await this.journeyModel
@@ -50,6 +52,15 @@ export class SpotService {
   }
 
   async create(file, recordSpotDto) {
+    let parsedCoordinate;
+    try {
+      parsedCoordinate = JSON.parse(recordSpotDto.coordinate);
+    } catch (err) {
+      throw new coordinateNotCorrectException();
+    }
+    if (!is1DArray(parsedCoordinate)) {
+      throw new coordinateNotCorrectException();
+    }
     const photoKey = await this.uploadPhotoToStorage(
       recordSpotDto.journeyId,
       file,
@@ -58,6 +69,7 @@ export class SpotService {
     const createdSpotData = await this.insertToSpot({
       ...recordSpotDto,
       photoKey,
+      coordinate: parsedCoordinate
     });
     const { journeyId, coordinate, timestamp } = createdSpotData;
     const returnData: RecordSpotResDTO = {
