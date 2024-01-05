@@ -135,8 +135,8 @@ export class JourneyController {
     description: '사용자가 진행중이었던 여정 정보',
     type: Journey,
   })
-  @Get('loadLastData')
-  async loadLastData(@Query('userId') userId: string) {
+  @Get(':userId/last')
+  async loadLastData(@Param('userId') userId: string) {
     return await this.journeyService.loadLastJourney(userId);
   }
 
