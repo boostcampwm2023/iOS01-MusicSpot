@@ -193,30 +193,44 @@ export class JourneyService {
   }
 
   async loadLastJourney(userId) {
-    const user = await this.userModel.findById(userId).lean();
-
-    if (!user) {
+    const user = await this.userModel.findOne({userId}).lean();
+    if(!user){
       throw new UserNotFoundException();
     }
+
     const journeys = user.journeys;
 
-    const journey = await this.findLastJourney(journeys);
-    if (journey) {
-      return journey;
-    }
-    return '진행중이었던 여정이 없습니다.';
-  }
-  async findLastJourney(journeys) {
-    for (let i = 0; i < journeys.length; i++) {
-      let journey = await this.journeyModel.findById(journeys[i]).lean();
-      if (!journey) {
-        throw new JourneyNotFoundException();
+    const len = journeys.length;
+    const lastJourneyId = journeys[len-1];
+    
+    const lastJourney = await this.journeyModel
+      .findById(lastJourneyId)
+      .populate({
+        path: 'spots',
+        model: 'Spot',
+        options: {
+          transform: (spot) => {
+            return {
+              coordinate: spot.coordinate,
+              timestamp: spot.timestamp,
+              photoUrl: makePresignedUrl(spot.photoKey),
+            };
+          },
+        },
+      })
+      .lean();
+
+      if (!lastJourney) {
+        return {
+          journey: null,
+          isRecording: false,
+        };
       }
-      if (journey.title === '') {
-        return journey;
-      }
-    }
-    return false;
+
+      return {
+        journey: lastJourney.title ? null : lastJourney,
+        isRecording: lastJourney.title ? false : true,
+      };
   }
 
   async getJourneyById(journeyId) {
