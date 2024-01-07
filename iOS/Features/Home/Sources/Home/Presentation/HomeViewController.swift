@@ -133,7 +133,7 @@ public final class HomeViewController: HomeBottomSheetViewController {
         self.viewModel.state.startedJourney
             .receive(on: DispatchQueue.main)
             .sink { [weak self] startedJourney in
-                self?.contentViewController.journeyShouldStarted(startedJourney)
+                self?.contentViewController.recordingShouldStart(startedJourney)
             }
             .store(in: &self.cancellables)
         
@@ -152,7 +152,7 @@ public final class HomeViewController: HomeBottomSheetViewController {
                     self?.hideBottomSheet()
                 } else {
                     self?.showBottomSheet()
-                    self?.contentViewController.journeyShouldStopped(isCancelling: false)
+                    self?.contentViewController.recordingShouldStop(isCancelling: false)
                 }
                 self?.updateButtonMode(isRecording: isRecording)
             }
@@ -233,7 +233,7 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
         guard self.viewModel.state.isRecording.value == true else { return }
         
         self.viewModel.trigger(.backButtonDidTap)
-        self.contentViewController.journeyShouldStopped(isCancelling: true)
+        self.contentViewController.recordingShouldStop(isCancelling: true)
     }
     
     public func spotButtonDidTap(_ button: MSRectButton) {

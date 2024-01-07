@@ -65,7 +65,7 @@ public final class MapViewController: UIViewController {
     public weak var delegate: MapViewControllerDelegate?
     var viewModel: (any MapViewModel)?
     
-    private let locationManager = CLLocationManager()
+    internal let locationManager = CLLocationManager()
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -118,7 +118,7 @@ public final class MapViewController: UIViewController {
         
         self.configureLayout()
         self.configureCoreLocation()
-        self.bind(viewModel)
+        self.bind(self.viewModel)
     }
     
     // MARK: - Combine Binding
@@ -304,7 +304,6 @@ private extension MapViewController {
         default:
             return
         }
-        self.locationManager.allowsBackgroundLocationUpdates = true
         self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
     }
     
@@ -351,7 +350,6 @@ extension MapViewController: CLLocationManagerDelegate {
         case .restricted, .denied:
             self.presentLocationAuthorizationAlert()
         case .authorizedAlways, .authorizedWhenInUse:
-            manager.startUpdatingLocation()
             self.checkAccuracyAuthorizationStatus(manager)
         @unknown default:
             MSLogger.make(category: .home).error("잘못된 위치 권한입니다.")
