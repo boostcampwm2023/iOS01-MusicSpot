@@ -146,6 +146,7 @@ public final class HomeViewController: HomeBottomSheetViewController {
         
         self.viewModel.state.isRecording
             .removeDuplicates()
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isRecording in
                 if isRecording {

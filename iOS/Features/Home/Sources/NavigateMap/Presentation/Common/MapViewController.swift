@@ -169,6 +169,7 @@ public final class MapViewController: UIViewController {
                 }
                 return (previousCoordinate, currentCoordinate)
             }
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] previousCoordinate, currentCoordinate in
                 let points = [previousCoordinate, currentCoordinate]
                 self?.drawPolylineToMap(using: points)
