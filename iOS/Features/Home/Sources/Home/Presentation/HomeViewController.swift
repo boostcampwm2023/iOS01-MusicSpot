@@ -188,22 +188,14 @@ public final class HomeViewController: HomeBottomSheetViewController {
     private func updateButtonMode(isRecording: Bool) {
         UIView.transition(with: startButton, duration: 0.5,
                           options: .transitionCrossDissolve,
-                          animations: {
-            self.startButton.isHidden = isRecording
+                          animations: { [weak self] in
+            self?.startButton.isHidden = isRecording
         })
         UIView.transition(with: recordJourneyButtonStackView, duration: 0.5,
                           options: .transitionCrossDissolve,
-                          animations: {
-            self.recordJourneyButtonStackView.isHidden = !isRecording
+                          animations: { [weak self] in
+            self?.recordJourneyButtonStackView.isHidden = !isRecording
         })
-        
-        if isRecording {
-            self.setUserLocationToCenter()
-        }
-    }
-    
-    private func setUserLocationToCenter() {
-        
     }
     
 }
