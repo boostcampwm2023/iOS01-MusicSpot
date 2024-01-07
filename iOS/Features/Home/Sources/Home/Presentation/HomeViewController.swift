@@ -33,6 +33,7 @@ public final class HomeViewController: HomeBottomSheetViewController {
     private enum Metric {
         
         static let startButtonBottomInset: CGFloat = 16.0
+        static let recordJourneyButtonBottomInset: CGFloat = 50.0
         
         enum RefreshButton {
             static let topSpacing: CGFloat = 80.0
@@ -282,7 +283,7 @@ private extension HomeViewController {
         NSLayoutConstraint.activate([
             self.recordJourneyButtonStackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             self.recordJourneyButtonStackView.bottomAnchor.constraint(equalTo: safeAreaBottomAnchor,
-                                                                      constant: -Metric.startButtonBottomInset)
+                                                                      constant: -Metric.recordJourneyButtonBottomInset)
         ])
         
         self.view.insertSubview(self.refreshButton, belowSubview: self.bottomSheetViewController.view)
