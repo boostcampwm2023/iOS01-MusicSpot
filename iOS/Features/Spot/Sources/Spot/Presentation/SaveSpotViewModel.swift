@@ -1,5 +1,5 @@
 //
-//  SpotSaveViewModel.swift
+//  SaveSpotViewModel.swift
 //  Spot
 //
 //  Created by 전민건 on 11/29/23.
@@ -12,7 +12,7 @@ import MSData
 import MSDomain
 import MSLogger
 
-public final class SpotSaveViewModel {
+public final class SaveSpotViewModel {
     
     public enum Action {
         case startUploadSpot(Data)
@@ -47,7 +47,7 @@ public final class SpotSaveViewModel {
 
 // MARK: - Interface: Actions
 
-internal extension SpotSaveViewModel {
+internal extension SaveSpotViewModel {
     
     func trigger(_ action: Action) {
         switch action {

@@ -65,7 +65,7 @@ public final class SaveJourneyViewModel {
                 #endif
                 self.state.musicAuthorizatonStatus.send(status)
             }
-             
+            
             Task {
                 let subscription = try await MusicSubscription.current
                 #if DEBUG
@@ -96,7 +96,7 @@ private extension SaveJourneyViewModel {
     func endJourney(named title: String) {
         guard let recordingJourney = self.state.recordingJourney.value else { return }
         guard let journeyID = self.journeyRepository.fetchRecordingJourneyID() else { return }
-                
+        
         let selectedSong = self.state.selectedSong.value
         let coordinates = recordingJourney.coordinates + [self.lastCoordiante]
         let journey = Journey(id: journeyID,

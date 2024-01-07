@@ -15,11 +15,11 @@ final class RewindJourneyCoordinator: Coordinator {
     
     // MARK: - Properties
     
-    var navigationController: UINavigationController
+    let navigationController: UINavigationController
+    var rootViewController: UIViewController?
     
     var childCoordinators: [Coordinator] = []
-    
-    weak var delegate: HomeCoordinatorDelegate?
+    weak var finishDelegate: CoordinatorFinishDelegate?
     
     // MARK: - Initializer
     
@@ -38,26 +38,9 @@ final class RewindJourneyCoordinator: Coordinator {
                                                songRepository: songRepository)
         let rewindJourneyViewController = RewindJourneyViewController(viewModel: viewModel)
         rewindJourneyViewController.navigationDelegate = self
-        self.navigationController.pushViewController(rewindJourneyViewController, animated: true)
-    }
-    
-}
-
-// MARK: - HomeMap Coordinator
-
-extension RewindJourneyCoordinator: HomeCoordinatorDelegate {
-    func popToHomeWithSpot(from coordinator: Coordinator, spot: Spot) {
-        // 미사용 함수
-    }
-    
-    func popToHome(from coordinator: Coordinator) {
-        self.childCoordinators.removeAll()
-        self.navigationController.popViewController(animated: true)
-        self.delegate?.popToHome(from: self)
-    }
-    
-    func popToHome(from coordinator: Coordinator, with endedJourney: Journey) {
+        self.rootViewController = rewindJourneyViewController
         
+        self.navigationController.pushViewController(rewindJourneyViewController, animated: true)
     }
     
 }
@@ -66,8 +49,8 @@ extension RewindJourneyCoordinator: HomeCoordinatorDelegate {
 
 extension RewindJourneyCoordinator: RewindJourneyNavigationDelegate {
     
-    func popToHomeMap() {
-        self.popToHome(from: self)
+    func popToHome() {
+        self.finish()
     }
     
 }

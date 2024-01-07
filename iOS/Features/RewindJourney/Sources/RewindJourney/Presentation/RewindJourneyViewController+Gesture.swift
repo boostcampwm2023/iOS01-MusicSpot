@@ -43,7 +43,7 @@ internal extension RewindJourneyViewController {
             }
         case .ended, .cancelled:
             if touchPoint.x - self.initialTouchPoint.x > Metric.movedXPositionToBackScene {
-                self.navigationDelegate?.popToHomeMap()
+                self.navigationDelegate?.popToHome()
             } else {
                 self.view.frame = CGRect(x: .zero,
                                          y: .zero,
