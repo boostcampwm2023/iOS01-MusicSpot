@@ -175,6 +175,15 @@ public final class MapViewController: UIViewController {
                 self?.drawPolylineToMap(using: points)
             }
             .store(in: &self.cancellables)
+        
+        viewModel.state.filteredCoordinate
+            .receive(on: DispatchQueue.main)
+            .sink { coordinate in
+                guard let filteredCoordinate2D = coordinate else { return }
+                viewModel.trigger(.locationDidUpdated(filteredCoordinate2D))
+                viewModel.trigger(.locationsShouldRecorded([filteredCoordinate2D]))
+            }
+            .store(in: &self.cancellables)
     }
     
     // MARK: - Functions: Annotation
@@ -328,20 +337,9 @@ extension MapViewController: CLLocationManagerDelegate {
             return
         }
         
-        let previousCoordinate = (self.viewModel as? RecordJourneyViewModel)?.state.previousCoordinate.value
-        
-        if let previousCoordinate = previousCoordinate {
-            if !self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate,
-                                               coordinate2: newCurrentLocation.coordinate) {
-                return
-            }
-        }
-        
         let coordinate2D = CLLocationCoordinate2D(latitude: newCurrentLocation.coordinate.latitude,
                                                   longitude: newCurrentLocation.coordinate.longitude)
-        
-        recordJourneyViewModel.trigger(.locationDidUpdated(coordinate2D))
-        recordJourneyViewModel.trigger(.locationsShouldRecorded([coordinate2D]))
+        recordJourneyViewModel.trigger(.tenLocationsDidRecorded(coordinate2D))
     }
     
     private func handleAuthorizationChange(_ manager: CLLocationManager) {
@@ -369,13 +367,13 @@ extension MapViewController: CLLocationManagerDelegate {
         }
     }
     
-    private func isDistanceOver5AndUnder50(coordinate1: CLLocationCoordinate2D,
-                                           coordinate2: CLLocationCoordinate2D) -> Bool {
-        let location1 = CLLocation(latitude: coordinate1.latitude, longitude: coordinate1.longitude)
-        let location2 = CLLocation(latitude: coordinate2.latitude, longitude: coordinate2.longitude)
-        MSLogger.make(category: .navigateMap).log("이동한 거리: \(location1.distance(from: location2))")
-        return 5 <= location1.distance(from: location2) && location1.distance(from: location2) <= 50
-    }
+//    private func isDistanceOver5AndUnder50(coordinate1: CLLocationCoordinate2D,
+//                                           coordinate2: CLLocationCoordinate2D) -> Bool {
+//        let location1 = CLLocation(latitude: coordinate1.latitude, longitude: coordinate1.longitude)
+//        let location2 = CLLocation(latitude: coordinate2.latitude, longitude: coordinate2.longitude)
+//        MSLogger.make(category: .navigateMap).log("이동한 거리: \(location1.distance(from: location2))")
+//        return 5 <= location1.distance(from: location2) && location1.distance(from: location2) <= 50
+//    }
     
     private func presentLocationAuthorizationAlert() {
         let sheet = UIAlertController(title: Typo.locationAlertTitle,
