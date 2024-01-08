@@ -57,11 +57,15 @@ public struct UserRepositoryImplementation: UserRepository {
         let result = await self.networking.request(UserResponseDTO.self, router: router)
         switch result {
         case .success(let userResponse):
+            #if DEBUG
+            MSLogger.make(category: .network).debug("서버에 새로운 유저를 생성했습니다.")
+            #endif
             if let storedUserID = try? self.storeUUID(userID) {
                 return .success(storedUserID)
+            } else {
+                MSLogger.make(category: .keychain).warning("Keychain에 새로운 유저 정보를 저장하지 못했습니다.")
+                return .success(userResponse.userID)
             }
-            MSLogger.make(category: .keychain).warning("서버에 새로운 유저를 생성했지만, Keychain에 저장하지 못했습니다.")
-            return .success(userResponse.userID)
         case .failure(let error):
             return .failure(error)
         }
@@ -73,6 +77,9 @@ public struct UserRepositoryImplementation: UserRepository {
         
         do {
             try self.keychain.set(value: userID, account: account)
+            #if DEBUG
+            MSLogger.make(category: .keychain).debug("Keychain에 서버 정보를 저장했습니다.")
+            #endif
             return userID
         } catch {
             throw MSKeychainStorage.KeychainError.creationError
