@@ -305,7 +305,7 @@ private extension MapViewController {
         default:
             return
         }
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
     }
     
 }
