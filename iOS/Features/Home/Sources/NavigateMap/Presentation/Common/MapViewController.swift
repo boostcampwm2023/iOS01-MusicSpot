@@ -174,6 +174,15 @@ public final class MapViewController: UIViewController {
                 self?.drawPolylineToMap(using: points)
             }
             .store(in: &self.cancellables)
+        
+        viewModel.state.filteredCoordinate
+            .receive(on: DispatchQueue.main)
+            .sink { coordinate in
+                guard let filteredCoordinate2D = coordinate else { return }
+                viewModel.trigger(.locationDidUpdated(filteredCoordinate2D))
+                viewModel.trigger(.locationsShouldRecorded([filteredCoordinate2D]))
+            }
+            .store(in: &self.cancellables)
     }
     
     // MARK: - Functions: Annotation
@@ -322,12 +331,7 @@ extension MapViewController: CLLocationManagerDelegate {
         
         let coordinate2D = CLLocationCoordinate2D(latitude: newCurrentLocation.coordinate.latitude,
                                                   longitude: newCurrentLocation.coordinate.longitude)
-        recordJourneyViewModel.trigger(.fiveLocationsDidRecorded(coordinate2D))
-        
-        // filtering된 위치 정보가 있을 경우(5개의 위치 데이터가 들어와 필터링이 완료되었을 경우)에만 아래 두 trigger 실행 가능
-        guard let filteredCoordinate2D = recordJourneyViewModel.state.filteredCoordinate.value else { return }
-        recordJourneyViewModel.trigger(.locationDidUpdated(filteredCoordinate2D))
-        recordJourneyViewModel.trigger(.locationsShouldRecorded([filteredCoordinate2D]))
+        recordJourneyViewModel.trigger(.tenLocationsDidRecorded(coordinate2D))
     }
     
     private func handleAuthorizationChange(_ manager: CLLocationManager) {
