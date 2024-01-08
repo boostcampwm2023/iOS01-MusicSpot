@@ -24,9 +24,9 @@ private struct KeyStorage {
 
 // MARK: - Default Implementations
 
-struct LocalRecordingManager {
+public struct LocalRecordingManager {
      
-    static let shared = LocalRecordingManager()
+    public static let shared = LocalRecordingManager()
     
     @discardableResult
     public func saveToLocal(_ value: Codable, at storage: MSPersistentStorage) -> Bool {
@@ -70,7 +70,7 @@ struct LocalRecordingManager {
                                 coordinates: self.loadCoordinates(from: storage))
     }
     
-    func loadStartTimeStamp(from storage: MSPersistentStorage) -> Date? {
+    private func loadStartTimeStamp(from storage: MSPersistentStorage) -> Date? {
         guard let startTimestampKey = KeyStorage.startTimestamp,
               let startTimestamp = storage.get(Date.self, forKey: startTimestampKey)
         else {
@@ -80,7 +80,7 @@ struct LocalRecordingManager {
         return startTimestamp
     }
     
-    func loadID(from storage: MSPersistentStorage) -> String? {
+    private func loadID(from storage: MSPersistentStorage) -> String? {
         guard let idKey = KeyStorage.id,
               let id = storage.get(String.self, forKey: idKey) else {
             MSLogger.make(category: .persistable).debug("id 또는 startTimestamp가 저장되지 않았습니다.")
@@ -89,14 +89,14 @@ struct LocalRecordingManager {
         return id
     }
     
-    func loadSpots(from storage: MSPersistentStorage) -> [Spot] {
+    private func loadSpots(from storage: MSPersistentStorage) -> [Spot] {
         return KeyStorage.spots.compactMap { spotKey in
             let spotDTO = storage.get(SpotDTO.self, forKey: spotKey)
             return spotDTO?.toDomain()
         }
     }
     
-    func loadCoordinates(from storage: MSPersistentStorage) -> [Coordinate] {
+    private func loadCoordinates(from storage: MSPersistentStorage) -> [Coordinate] {
         return KeyStorage.coordinates.compactMap { coordinateKey in
             let coordinateDTO = storage.get(CoordinateDTO.self, forKey: coordinateKey)
             return coordinateDTO?.toDomain()

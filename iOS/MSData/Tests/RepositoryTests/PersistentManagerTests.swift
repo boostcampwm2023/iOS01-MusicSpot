@@ -39,12 +39,12 @@ final class PersistentManagerTests: XCTestCase {
         let coordinate = Coordinate(latitude: 5, longitude: 5)
         let spot = Spot(coordinate: coordinate, timestamp: .now, photoURL: url)
         
-        PersistentManager.shared.saveToLocal(id, at: self.storage)
-        PersistentManager.shared.saveToLocal(Date.now, at: self.storage)
-        PersistentManager.shared.saveToLocal(SpotDTO(spot), at: self.storage)
-        PersistentManager.shared.saveToLocal(CoordinateDTO(coordinate), at: self.storage)
+        LocalRecordingManager.shared.saveToLocal(id, at: self.storage)
+        LocalRecordingManager.shared.saveToLocal(Date.now, at: self.storage)
+        LocalRecordingManager.shared.saveToLocal(SpotDTO(spot), at: self.storage)
+        LocalRecordingManager.shared.saveToLocal(CoordinateDTO(coordinate), at: self.storage)
         
-        guard let loadedJourney = PersistentManager.shared.loadJourney(from: self.storage) else {
+        guard let loadedJourney = LocalRecordingManager.shared.loadJourney(from: self.storage) else {
             XCTFail("load 실패")
             return
         }
