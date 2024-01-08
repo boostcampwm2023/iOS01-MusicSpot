@@ -1,5 +1,5 @@
 //
-//  Persistable.swift
+//  LocalRecordingManager.swift
 //  MSData
 //
 //  Created by 전민건 on 2023.12.10.
@@ -10,16 +10,6 @@ import Foundation
 import MSDomain
 import MSLogger
 import MSPersistentStorage
-
-public protocol Persistable {
-    
-    var storage: MSPersistentStorage { get }
-    
-    @discardableResult
-    func saveToLocal(value: Codable) -> Bool
-    func loadJourneyFromLocal() -> RecordingJourney?
-    
-}
 
 // MARK: - KeyStorage
 
@@ -34,12 +24,14 @@ private struct KeyStorage {
 
 // MARK: - Default Implementations
 
-extension Persistable {
+public struct LocalRecordingManager {
+     
+    public static let shared = LocalRecordingManager()
     
     @discardableResult
-    public func saveToLocal(value: Codable) -> Bool {
+    public func saveToLocal(_ value: Codable, at storage: MSPersistentStorage) -> Bool {
         let key = UUID().uuidString
-        self.storage.set(value: value, forKey: key)
+        storage.set(value: value, forKey: key)
         
         switch value {
         case is String:
@@ -53,7 +45,7 @@ extension Persistable {
             if KeyStorage.startTimestamp == nil {
                 KeyStorage.startTimestamp = key
             } else {
-                MSLogger.make(category: .persistable).debug("start tamp는 하나의 값만 저장할 수 있습니다.")
+                MSLogger.make(category: .persistable).debug("start timestamp는 하나의 값만 저장할 수 있습니다.")
                 return false
             }
         case is SpotDTO:
@@ -67,20 +59,20 @@ extension Persistable {
         return true
     }
     
-    public func loadJourneyFromLocal() -> RecordingJourney? {
-        guard let id = self.loadID(),
-              let startTimestamp = self.loadStartTimeStamp() else {
+    public func loadJourney(from storage: MSPersistentStorage) -> RecordingJourney? {
+        guard let id = self.loadID(from: storage),
+              let startTimestamp = self.loadStartTimeStamp(from: storage) else {
             return nil
         }
         return RecordingJourney(id: id,
                                 startTimestamp: startTimestamp,
-                                spots: self.loadSpots(),
-                                coordinates: self.loadCoordinates())
+                                spots: self.loadSpots(from: storage),
+                                coordinates: self.loadCoordinates(from: storage))
     }
     
-    func loadStartTimeStamp() -> Date? {
+    private func loadStartTimeStamp(from storage: MSPersistentStorage) -> Date? {
         guard let startTimestampKey = KeyStorage.startTimestamp,
-              let startTimestamp = self.storage.get(Date.self, forKey: startTimestampKey)
+              let startTimestamp = storage.get(Date.self, forKey: startTimestampKey)
         else {
             MSLogger.make(category: .persistable).debug("id 또는 startTimestamp가 저장되지 않았습니다.")
             return nil
@@ -88,25 +80,25 @@ extension Persistable {
         return startTimestamp
     }
     
-    func loadID() -> String? {
+    private func loadID(from storage: MSPersistentStorage) -> String? {
         guard let idKey = KeyStorage.id,
-              let id = self.storage.get(String.self, forKey: idKey) else {
+              let id = storage.get(String.self, forKey: idKey) else {
             MSLogger.make(category: .persistable).debug("id 또는 startTimestamp가 저장되지 않았습니다.")
             return nil
         }
         return id
     }
     
-    func loadSpots() -> [Spot] {
+    private func loadSpots(from storage: MSPersistentStorage) -> [Spot] {
         return KeyStorage.spots.compactMap { spotKey in
-            let spotDTO = self.storage.get(SpotDTO.self, forKey: spotKey)
+            let spotDTO = storage.get(SpotDTO.self, forKey: spotKey)
             return spotDTO?.toDomain()
         }
     }
     
-    func loadCoordinates() -> [Coordinate] {
+    private func loadCoordinates(from storage: MSPersistentStorage) -> [Coordinate] {
         return KeyStorage.coordinates.compactMap { coordinateKey in
-            let coordinateDTO = self.storage.get(CoordinateDTO.self, forKey: coordinateKey)
+            let coordinateDTO = storage.get(CoordinateDTO.self, forKey: coordinateKey)
             return coordinateDTO?.toDomain()
         }
     }

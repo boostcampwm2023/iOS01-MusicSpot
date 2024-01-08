@@ -27,6 +27,29 @@ public struct Spot {
     
 }
 
+public struct RequestableSpot {
+    
+    // MARK: - Properties
+    
+    public let journeyID: String
+    public let coordinate: Coordinate
+    public let timestamp: Date
+    public let photoData: Data
+    
+    // MARK: - Initializer
+    
+    public init(journeyID: String,
+                coordinate: Coordinate,
+                timestamp: Date,
+                photoData: Data) {
+        self.journeyID = journeyID
+        self.coordinate = coordinate
+        self.timestamp = timestamp
+        self.photoData = photoData
+    }
+    
+}
+
 // MARK: - Hashable
 
 extension Spot: Hashable { }
