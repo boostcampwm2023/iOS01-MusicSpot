@@ -1,5 +1,5 @@
 //
-//  SpotViewController.swift
+//  SaveSpotViewController.swift
 //  Spot
 //
 //  Created by 전민건 on 11/22/23.
@@ -13,7 +13,7 @@ import MSDesignSystem
 import MSLogger
 import MSUIKit
 
-public final class SpotSaveViewController: UIViewController {
+public final class SaveSpotViewController: UIViewController {
     
     // MARK: - Constants
     
@@ -60,7 +60,7 @@ public final class SpotSaveViewController: UIViewController {
     // MARK: - Properties
     
     public weak var navigationDelegate: SpotNavigationDelegate?
-    private let viewModel: SpotSaveViewModel
+    private let viewModel: SaveSpotViewModel
     private let image: UIImage
     
     private var cancellables: Set<AnyCancellable> = []
@@ -82,7 +82,7 @@ public final class SpotSaveViewController: UIViewController {
     // MARK: - Initializer
     
     public init(image: UIImage,
-                viewModel: SpotSaveViewModel,
+                viewModel: SaveSpotViewModel,
                 nibName nibNameOrNil: String? = nil,
                 bundle nibBundleOrNil: Bundle? = nil) {
         self.image = image
@@ -118,7 +118,7 @@ public final class SpotSaveViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] spot in
                 guard let spot = spot else { return }
-                self?.navigationDelegate?.popToHomeWithSpot(spot: spot)
+                self?.navigationDelegate?.popToHome(spot: spot)
             }
             .store(in: &self.cancellables)
     }

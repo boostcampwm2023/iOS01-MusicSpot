@@ -137,7 +137,11 @@ public final class SaveJourneyViewController: UIViewController {
     
     public override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        
         self.musicPlayer.pause()
+        if self.isMovingFromParent {
+            self.navigationDelegate?.popToSelectSong()
+        }
     }
     
     // MARK: - Combine Binding
@@ -193,8 +197,8 @@ public final class SaveJourneyViewController: UIViewController {
         
         self.viewModel.state.endJourneySucceed
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] endedJourney in
-                self?.navigationDelegate?.popToHome(with: endedJourney)
+            .sink { [weak self] _ in
+                self?.navigationDelegate?.popToHome()
             }
             .store(in: &self.cancellables)
     }
