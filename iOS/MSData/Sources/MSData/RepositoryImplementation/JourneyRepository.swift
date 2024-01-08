@@ -15,22 +15,6 @@ import MSNetworking
 import MSPersistentStorage
 import MSUserDefaults
 
-public protocol JourneyRepository: Persistable {
-    
-    func fetchIsRecording() -> Bool
-    mutating func updateIsRecording(_ isRecording: Bool) -> Bool
-    func fetchRecordingJourneyID() -> String?
-    func fetchRecordingJourney(forID id: String) -> RecordingJourney?
-    func fetchJourneyList(userID: UUID,
-                          minCoordinate: Coordinate,
-                          maxCoordinate: Coordinate) async -> Result<[Journey], Error>
-    mutating func startJourney(at coordinate: Coordinate, userID: UUID) async -> Result<RecordingJourney, Error>
-    mutating func endJourney(_ journey: Journey) async -> Result<String, Error>
-    func recordJourney(journeyID: String, at coordinates: [Coordinate]) async -> Result<RecordingJourney, Error>
-    mutating func deleteJourney(_ journey: RecordingJourney, userID: UUID) async -> Result<String, Error>
-    
-}
-
 public struct JourneyRepositoryImplementation: JourneyRepository {
     
     // MARK: - Properties
@@ -131,8 +115,8 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                                                     spots: [],
                                                     coordinates: [responseDTO.coordinate.toDomain()])
             
-            self.saveToLocal(value: recordingJourney.id)
-            self.saveToLocal(value: recordingJourney.startTimestamp)
+            LocalRecordingManager.shared.saveToLocal(recordingJourney.id, at: self.storage)
+            LocalRecordingManager.shared.saveToLocal(recordingJourney.startTimestamp, at: self.storage)
             
             self.recordingJourneyID = recordingJourney.id
             self.isRecording = true
@@ -166,7 +150,9 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                                                     spots: [],
                                                     coordinates: coordinates)
             
-            responseDTO.coordinates.forEach { self.saveToLocal(value: $0) }
+            responseDTO.coordinates.forEach {
+                LocalRecordingManager.shared.saveToLocal($0, at: self.storage)
+            }
             
             return .success(recordingJourney)
         case .failure(let error):
@@ -205,6 +191,10 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         case .failure(let error):
             return .failure(error)
         }
+    }
+    
+    public func loadJourneyFromLocal() -> RecordingJourney? {
+        return LocalRecordingManager.shared.loadJourney(from: self.storage)
     }
     
 }

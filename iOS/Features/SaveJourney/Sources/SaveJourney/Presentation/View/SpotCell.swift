@@ -9,7 +9,6 @@ import UIKit
 
 import MSDesignSystem
 import MSExtension
-import MSImageFetcher
 
 final class SpotCell: UICollectionViewCell {
     

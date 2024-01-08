@@ -7,17 +7,10 @@
 
 import Foundation
 
+import MSDomain
 import MSKeychainStorage
 import MSLogger
 import MSNetworking
-
-public protocol UserRepository {
-    
-    func createUser() async -> Result<UUID, Error>
-    func storeUUID(_ userID: UUID) throws -> UUID
-    func fetchUUID() -> UUID?
-    
-}
 
 public struct UserRepositoryImplementation: UserRepository {
     

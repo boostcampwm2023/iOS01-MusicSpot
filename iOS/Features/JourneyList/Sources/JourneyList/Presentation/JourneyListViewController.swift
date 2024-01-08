@@ -8,7 +8,6 @@
 import Combine
 import UIKit
 
-import MSCacheStorage
 import MSData
 import MSDomain
 import MSUIKit
@@ -42,8 +41,6 @@ public final class JourneyListViewController: BaseViewController {
     
     public weak var navigationDelegate: JourneyListNavigationDelegate?
     
-    private let cache: MSCacheStorage
-    
     private(set) var viewModel: JourneyListViewModel
     
     private var dataSource: JourneyListDataSource?
@@ -67,11 +64,9 @@ public final class JourneyListViewController: BaseViewController {
     // MARK: - Initializer
     
     public init(viewModel: JourneyListViewModel,
-                cache: MSCacheStorage = MSCacheStorage(),
                 nibName nibNameOrNil: String? = nil,
                 bundle nibBundleOrNil: Bundle? = nil) {
         self.viewModel = viewModel
-        self.cache = cache
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
