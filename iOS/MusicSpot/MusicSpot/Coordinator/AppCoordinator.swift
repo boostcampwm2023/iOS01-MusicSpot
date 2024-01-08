@@ -7,20 +7,15 @@
 
 import UIKit
 
-protocol AppCoordinatorDelegate: AnyObject {
-    
-    func popToHomeMap(from coordinator: Coordinator)
-    func popToSearchMusic(from coordinator: Coordinator)
-    
-}
-
 final class AppCoordinator: Coordinator {
     
     // MARK: - Properties
     
     let navigationController: UINavigationController
+    var rootViewController: UIViewController?
     
     var childCoordinators: [Coordinator] = []
+    weak var finishDelegate: CoordinatorFinishDelegate?
     
     // MARK: - Initializer
     
@@ -31,9 +26,9 @@ final class AppCoordinator: Coordinator {
     // MARK: - From: HomeMap
     
     func start() {
-        let homeMapCoordinator = HomeCoordinator(navigationController: self.navigationController)
-        self.childCoordinators.append(homeMapCoordinator)
-        homeMapCoordinator.start()
+        let homeCoordinator = HomeCoordinator(navigationController: self.navigationController)
+        self.childCoordinators.append(homeCoordinator)
+        homeCoordinator.start()
     }
     
 }
