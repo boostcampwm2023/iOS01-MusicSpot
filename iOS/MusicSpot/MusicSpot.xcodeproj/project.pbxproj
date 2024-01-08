@@ -3,38 +3,53 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		08CBF8782B18468E007D3797 /* SaveJourneyCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8702B18468E007D3797 /* SaveJourneyCoordinator.swift */; };
 		08CBF8792B18468E007D3797 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8712B18468E007D3797 /* AppCoordinator.swift */; };
 		08CBF87A2B18468E007D3797 /* RewindJourneyCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8722B18468E007D3797 /* RewindJourneyCoordinator.swift */; };
 		08CBF87B2B18468E007D3797 /* HomeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8732B18468E007D3797 /* HomeCoordinator.swift */; };
 		08CBF87D2B18468E007D3797 /* SpotCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8752B18468E007D3797 /* SpotCoordinator.swift */; };
-		08CBF87E2B18468E007D3797 /* SelectSongCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8762B18468E007D3797 /* SelectSongCoordinator.swift */; };
+		08CBF87E2B18468E007D3797 /* SaveJourneyFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8762B18468E007D3797 /* SaveJourneyFlowCoordinator.swift */; };
 		08CBF87F2B18468E007D3797 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8772B18468E007D3797 /* Coordinator.swift */; };
-		DD0194E92B25C42E007CE082 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = DD0194E82B25C42E007CE082 /* Home */; };
-		DD0194EB2B25C42E007CE082 /* NavigateMap in Frameworks */ = {isa = PBXBuildFile; productRef = DD0194EA2B25C42E007CE082 /* NavigateMap */; };
-		DD0194EE2B25C434007CE082 /* JourneyList in Frameworks */ = {isa = PBXBuildFile; productRef = DD0194ED2B25C434007CE082 /* JourneyList */; };
-		DD0194F12B25C43B007CE082 /* RewindJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD0194F02B25C43B007CE082 /* RewindJourney */; };
-		DD0194F42B25C441007CE082 /* SaveJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD0194F32B25C441007CE082 /* SaveJourney */; };
-		DD0194F72B25C448007CE082 /* SelectSong in Frameworks */ = {isa = PBXBuildFile; productRef = DD0194F62B25C448007CE082 /* SelectSong */; };
-		DD0194FA2B25C44E007CE082 /* Spot in Frameworks */ = {isa = PBXBuildFile; productRef = DD0194F92B25C44E007CE082 /* Spot */; };
+		DD72AF642B4B89E700EB4E81 /* CoordinatorFinishDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB22F742B433EC300F83D84 /* CoordinatorFinishDelegate.swift */; };
 		DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */; };
 		DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */; };
 		DD73F8622B024C4B00EE9BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */; };
 		DD73F8652B024C4B00EE9BF2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8632B024C4B00EE9BF2 /* LaunchScreen.storyboard */; };
+		DD92FEAB2B35EDFF00A672F5 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = DD92FEAA2B35EDFF00A672F5 /* Home */; };
+		DD92FEAD2B35EE0700A672F5 /* NavigateMap in Frameworks */ = {isa = PBXBuildFile; productRef = DD92FEAC2B35EE0700A672F5 /* NavigateMap */; };
+		DD92FEAF2B35EE0700A672F5 /* JourneyList in Frameworks */ = {isa = PBXBuildFile; productRef = DD92FEAE2B35EE0700A672F5 /* JourneyList */; };
+		DD92FEB12B35EE0700A672F5 /* RewindJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD92FEB02B35EE0700A672F5 /* RewindJourney */; };
+		DD92FEB32B35EE0700A672F5 /* SelectSong in Frameworks */ = {isa = PBXBuildFile; productRef = DD92FEB22B35EE0700A672F5 /* SelectSong */; };
+		DD92FEB52B35EE0700A672F5 /* Spot in Frameworks */ = {isa = PBXBuildFile; productRef = DD92FEB42B35EE0700A672F5 /* Spot */; };
+		DD92FEB82B35EE5500A672F5 /* MSUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = DD92FEB72B35EE5500A672F5 /* MSUIKit */; };
+		DD92FEBA2B35EEAF00A672F5 /* SaveJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD92FEB92B35EEAF00A672F5 /* SaveJourney */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		DD72AF302B4A4A8A00EB4E81 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		08CBF8702B18468E007D3797 /* SaveJourneyCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveJourneyCoordinator.swift; sourceTree = "<group>"; };
 		08CBF8712B18468E007D3797 /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		08CBF8722B18468E007D3797 /* RewindJourneyCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RewindJourneyCoordinator.swift; sourceTree = "<group>"; };
 		08CBF8732B18468E007D3797 /* HomeCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeCoordinator.swift; sourceTree = "<group>"; };
 		08CBF8752B18468E007D3797 /* SpotCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotCoordinator.swift; sourceTree = "<group>"; };
-		08CBF8762B18468E007D3797 /* SelectSongCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectSongCoordinator.swift; sourceTree = "<group>"; };
+		08CBF8762B18468E007D3797 /* SaveJourneyFlowCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveJourneyFlowCoordinator.swift; sourceTree = "<group>"; };
 		08CBF8772B18468E007D3797 /* Coordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		DD72AF192B4A4A8800EB4E81 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		DD72AF1B2B4A4A8800EB4E81 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		DD73F8552B024C4900EE9BF2 /* MusicSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -42,6 +57,7 @@
 		DD73F8642B024C4B00EE9BF2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DD73F8662B024C4B00EE9BF2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DD73F86D2B024CA000EE9BF2 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		DDB22F742B433EC300F83D84 /* CoordinatorFinishDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorFinishDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,37 +65,38 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD0194EB2B25C42E007CE082 /* NavigateMap in Frameworks */,
-				DD0194E92B25C42E007CE082 /* Home in Frameworks */,
-				DD0194F12B25C43B007CE082 /* RewindJourney in Frameworks */,
-				DD0194EE2B25C434007CE082 /* JourneyList in Frameworks */,
-				DD0194FA2B25C44E007CE082 /* Spot in Frameworks */,
-				DD0194F42B25C441007CE082 /* SaveJourney in Frameworks */,
-				DD0194F72B25C448007CE082 /* SelectSong in Frameworks */,
+				DD92FEAD2B35EE0700A672F5 /* NavigateMap in Frameworks */,
+				DD92FEAB2B35EDFF00A672F5 /* Home in Frameworks */,
+				DD92FEB52B35EE0700A672F5 /* Spot in Frameworks */,
+				DD92FEB32B35EE0700A672F5 /* SelectSong in Frameworks */,
+				DD92FEB82B35EE5500A672F5 /* MSUIKit in Frameworks */,
+				DD92FEB12B35EE0700A672F5 /* RewindJourney in Frameworks */,
+				DD92FEBA2B35EEAF00A672F5 /* SaveJourney in Frameworks */,
+				DD92FEAF2B35EE0700A672F5 /* JourneyList in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		08CBF86F2B18468E007D3797 /* MSCoordinator */ = {
+		08CBF86F2B18468E007D3797 /* Coordinator */ = {
 			isa = PBXGroup;
 			children = (
 				DD2856C32B187BAB002C994D /* Protocol */,
 				08CBF8712B18468E007D3797 /* AppCoordinator.swift */,
 				08CBF8732B18468E007D3797 /* HomeCoordinator.swift */,
 				08CBF8752B18468E007D3797 /* SpotCoordinator.swift */,
-				08CBF8762B18468E007D3797 /* SelectSongCoordinator.swift */,
-				08CBF8702B18468E007D3797 /* SaveJourneyCoordinator.swift */,
+				08CBF8762B18468E007D3797 /* SaveJourneyFlowCoordinator.swift */,
 				08CBF8722B18468E007D3797 /* RewindJourneyCoordinator.swift */,
 			);
-			path = MSCoordinator;
+			path = Coordinator;
 			sourceTree = "<group>";
 		};
 		DD2856C32B187BAB002C994D /* Protocol */ = {
 			isa = PBXGroup;
 			children = (
 				08CBF8772B18468E007D3797 /* Coordinator.swift */,
+				DDB22F742B433EC300F83D84 /* CoordinatorFinishDelegate.swift */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -87,6 +104,8 @@
 		DD5EA23F2B16EC690080AEC1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DD72AF192B4A4A8800EB4E81 /* WidgetKit.framework */,
+				DD72AF1B2B4A4A8800EB4E81 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -111,7 +130,7 @@
 		DD73F8572B024C4900EE9BF2 /* MusicSpot */ = {
 			isa = PBXGroup;
 			children = (
-				08CBF86F2B18468E007D3797 /* MSCoordinator */,
+				08CBF86F2B18468E007D3797 /* Coordinator */,
 				DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */,
 				DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */,
 				DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */,
@@ -131,6 +150,7 @@
 				DD73F8512B024C4900EE9BF2 /* Sources */,
 				DD73F8522B024C4900EE9BF2 /* Frameworks */,
 				DD73F8532B024C4900EE9BF2 /* Resources */,
+				DD72AF302B4A4A8A00EB4E81 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -138,13 +158,14 @@
 			);
 			name = MusicSpot;
 			packageProductDependencies = (
-				DD0194E82B25C42E007CE082 /* Home */,
-				DD0194EA2B25C42E007CE082 /* NavigateMap */,
-				DD0194ED2B25C434007CE082 /* JourneyList */,
-				DD0194F02B25C43B007CE082 /* RewindJourney */,
-				DD0194F32B25C441007CE082 /* SaveJourney */,
-				DD0194F62B25C448007CE082 /* SelectSong */,
-				DD0194F92B25C44E007CE082 /* Spot */,
+				DD92FEAA2B35EDFF00A672F5 /* Home */,
+				DD92FEAC2B35EE0700A672F5 /* NavigateMap */,
+				DD92FEAE2B35EE0700A672F5 /* JourneyList */,
+				DD92FEB02B35EE0700A672F5 /* RewindJourney */,
+				DD92FEB22B35EE0700A672F5 /* SelectSong */,
+				DD92FEB42B35EE0700A672F5 /* Spot */,
+				DD92FEB72B35EE5500A672F5 /* MSUIKit */,
+				DD92FEB92B35EEAF00A672F5 /* SaveJourney */,
 			);
 			productName = MusicSpot;
 			productReference = DD73F8552B024C4900EE9BF2 /* MusicSpot.app */;
@@ -157,7 +178,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 1510;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					DD73F8542B024C4900EE9BF2 = {
@@ -166,7 +187,7 @@
 				};
 			};
 			buildConfigurationList = DD73F8502B024C4900EE9BF2 /* Build configuration list for PBXProject "MusicSpot" */;
-			compatibilityVersion = "Xcode 14.0";
+			compatibilityVersion = "Xcode 15.0";
 			developmentRegion = ko;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -175,12 +196,6 @@
 			);
 			mainGroup = DD73F84C2B024C4900EE9BF2;
 			packageReferences = (
-				DD0194E72B25C42E007CE082 /* XCLocalSwiftPackageReference "../Features/Home" */,
-				DD0194EC2B25C434007CE082 /* XCLocalSwiftPackageReference "../Features/JourneyList" */,
-				DD0194EF2B25C43B007CE082 /* XCLocalSwiftPackageReference "../Features/RewindJourney" */,
-				DD0194F22B25C441007CE082 /* XCLocalSwiftPackageReference "../Features/SaveJourney" */,
-				DD0194F52B25C448007CE082 /* XCLocalSwiftPackageReference "../Features/SelectSong" */,
-				DD0194F82B25C44E007CE082 /* XCLocalSwiftPackageReference "../Features/Spot" */,
 			);
 			productRefGroup = DD73F8562B024C4900EE9BF2 /* Products */;
 			projectDirPath = "";
@@ -209,14 +224,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				08CBF8792B18468E007D3797 /* AppCoordinator.swift in Sources */,
-				08CBF8782B18468E007D3797 /* SaveJourneyCoordinator.swift in Sources */,
 				08CBF87F2B18468E007D3797 /* Coordinator.swift in Sources */,
 				08CBF87D2B18468E007D3797 /* SpotCoordinator.swift in Sources */,
-				08CBF87E2B18468E007D3797 /* SelectSongCoordinator.swift in Sources */,
+				08CBF87E2B18468E007D3797 /* SaveJourneyFlowCoordinator.swift in Sources */,
 				08CBF87A2B18468E007D3797 /* RewindJourneyCoordinator.swift in Sources */,
 				DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */,
 				08CBF87B2B18468E007D3797 /* HomeCoordinator.swift in Sources */,
 				DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */,
+				DD72AF642B4B89E700EB4E81 /* CoordinatorFinishDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -359,11 +374,15 @@
 		DD73F86A2B024C4B00EE9BF2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = B3PWYBKFUK;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = XW996HTK32;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MusicSpot/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MusicSpot;
@@ -375,6 +394,7 @@
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "MusicSPot은 위치 기반 여정 저장 앱입니다. 사용자의 위치 권한을 허용해주세요.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -382,9 +402,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcamp8.MusicSpot;
+				MARKETING_VERSION = 0.6.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.overheat.boostcamp8.MusicSpot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "MusicSpot Development";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -397,11 +419,15 @@
 		DD73F86B2B024C4B00EE9BF2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = B3PWYBKFUK;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = XW996HTK32;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MusicSpot/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MusicSpot;
@@ -413,6 +439,7 @@
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "MusicSPot은 위치 기반 여정 저장 앱입니다. 사용자의 위치 권한을 허용해주세요.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -420,9 +447,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcamp8.MusicSpot;
+				MARKETING_VERSION = 0.6.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.overheat.boostcamp8.MusicSpot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "MusicSpot Distribution";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -499,11 +528,15 @@
 		DDEADCBC2B22BEE0008D59E9 /* Mock */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = B3PWYBKFUK;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = XW996HTK32;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MusicSpot/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MusicSpot;
@@ -515,6 +548,7 @@
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "MusicSPot은 위치 기반 여정 저장 앱입니다. 사용자의 위치 권한을 허용해주세요.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -522,9 +556,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.5.0;
-				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcamp8.MusicSpot;
+				MARKETING_VERSION = 0.6.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.overheat.boostcamp8.MusicSpot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "MusicSpot Development";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -560,61 +596,38 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		DD0194E72B25C42E007CE082 /* XCLocalSwiftPackageReference "../Features/Home" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Features/Home;
-		};
-		DD0194EC2B25C434007CE082 /* XCLocalSwiftPackageReference "../Features/JourneyList" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Features/JourneyList;
-		};
-		DD0194EF2B25C43B007CE082 /* XCLocalSwiftPackageReference "../Features/RewindJourney" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Features/RewindJourney;
-		};
-		DD0194F22B25C441007CE082 /* XCLocalSwiftPackageReference "../Features/SaveJourney" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Features/SaveJourney;
-		};
-		DD0194F52B25C448007CE082 /* XCLocalSwiftPackageReference "../Features/SelectSong" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Features/SelectSong;
-		};
-		DD0194F82B25C44E007CE082 /* XCLocalSwiftPackageReference "../Features/Spot" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Features/Spot;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
-		DD0194E82B25C42E007CE082 /* Home */ = {
+		DD92FEAA2B35EDFF00A672F5 /* Home */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Home;
 		};
-		DD0194EA2B25C42E007CE082 /* NavigateMap */ = {
+		DD92FEAC2B35EE0700A672F5 /* NavigateMap */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = NavigateMap;
 		};
-		DD0194ED2B25C434007CE082 /* JourneyList */ = {
+		DD92FEAE2B35EE0700A672F5 /* JourneyList */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = JourneyList;
 		};
-		DD0194F02B25C43B007CE082 /* RewindJourney */ = {
+		DD92FEB02B35EE0700A672F5 /* RewindJourney */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RewindJourney;
 		};
-		DD0194F32B25C441007CE082 /* SaveJourney */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SaveJourney;
-		};
-		DD0194F62B25C448007CE082 /* SelectSong */ = {
+		DD92FEB22B35EE0700A672F5 /* SelectSong */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SelectSong;
 		};
-		DD0194F92B25C44E007CE082 /* Spot */ = {
+		DD92FEB42B35EE0700A672F5 /* Spot */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Spot;
+		};
+		DD92FEB72B35EE5500A672F5 /* MSUIKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSUIKit;
+		};
+		DD92FEB92B35EEAF00A672F5 /* SaveJourney */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SaveJourney;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

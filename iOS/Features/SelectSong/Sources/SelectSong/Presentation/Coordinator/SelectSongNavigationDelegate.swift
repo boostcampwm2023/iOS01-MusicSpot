@@ -14,5 +14,6 @@ public protocol SelectSongNavigationDelegate: AnyObject {
     
     func navigateToSaveJourney(lastCoordinate: Coordinate,
                                selectedSong: Song)
+    func popToHome()
     
 }

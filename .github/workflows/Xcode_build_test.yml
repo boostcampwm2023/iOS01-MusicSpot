@@ -8,7 +8,7 @@ on:
     branches:
       - 'iOS/release'
       - 'iOS/epic/**'
-    types: [assigned, labeled, opened, synchronize, reopened]
+    types: [ opened, synchronize, reopened, auto_merge_enabled, ready_for_review ]
 
 jobs:
   prepare-matrix:

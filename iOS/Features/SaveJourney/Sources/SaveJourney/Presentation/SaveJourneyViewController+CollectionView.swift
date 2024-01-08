@@ -37,9 +37,9 @@ extension SaveJourneyViewController {
     // MARK: - Configuration: CollectionView
     
     func configureCollectionView() {
-        let layout = UICollectionViewCompositionalLayout(sectionProvider: { sectionIndex, _ in
-            guard let section = self.dataSource?.sectionIdentifier(for: sectionIndex) else { return .none }
-            return self.configureSection(for: section)
+        let layout = UICollectionViewCompositionalLayout(sectionProvider: { [weak self] sectionIndex, _ in
+            guard let section = self?.dataSource?.sectionIdentifier(for: sectionIndex) else { return .none }
+            return self?.configureSection(for: section)
         })
         layout.register(SaveJourneyBackgroundView.self,
                         forDecorationViewOfKind: SaveJourneyBackgroundView.elementKind)
@@ -105,12 +105,12 @@ extension SaveJourneyViewController {
         let emptyCellRegistration = EmptyCellRegistration { _, _, _ in }
         
         let headerRegistration = HeaderRegistration(elementKind: SaveJourneyHeaderView.elementKind,
-                                                    handler: { header, _, indexPath in
+                                                    handler: { [weak self] header, _, indexPath in
             switch indexPath.section {
             case .zero:
                 header.update(with: Typo.songSectionTitle)
             case 1:
-                guard let spots = self.viewModel.state.recordingJourney.value?.spots else { return }
+                guard let spots = self?.viewModel.state.recordingJourney.value?.spots else { return }
                 header.update(with: Typo.spotSectionTitle(spots.count))
             default:
                 break

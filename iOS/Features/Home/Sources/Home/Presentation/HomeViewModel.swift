@@ -5,6 +5,7 @@
 //  Created by 이창준 on 2023.12.06.
 //
 
+import ActivityKit
 import Combine
 import Foundation
 
@@ -12,9 +13,6 @@ import MSConstants
 import MSData
 import MSDomain
 import MSImageFetcher
-#if DEBUG
-import MSKeychainStorage
-#endif
 import MSLogger
 import MSUserDefaults
 
@@ -47,10 +45,6 @@ public final class HomeViewModel {
     
     private var journeyRepository: JourneyRepository
     private let userRepository: UserRepository
-    
-    #if DEBUG
-    private let keychain = MSKeychainStorage()
-    #endif
     
     @UserDefaultsWrapped(UserDefaultsKey.isFirstLaunch, defaultValue: false)
     private var isFirstLaunch: Bool

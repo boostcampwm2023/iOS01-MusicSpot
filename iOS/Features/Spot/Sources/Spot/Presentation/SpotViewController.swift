@@ -261,30 +261,30 @@ private extension SpotViewController {
     }
     
     func configureShotButtonAction() {
-        let shotButtonAction = UIAction(handler: { _ in
-            self.shotButtonTapped()
-        })
+        let shotButtonAction = UIAction { [weak self] _ in
+            self?.shotButtonTapped()
+        }
         self.shotButton.addAction(shotButtonAction, for: .touchUpInside)
     }
     
     func configureSwapButtonAction() {
-        let swapButtonAction = UIAction(handler: { _ in
-            self.swapButtonTapped()
-        })
+        let swapButtonAction = UIAction { [weak self] _ in
+            self?.swapButtonTapped()
+        }
         self.swapButton.addAction(swapButtonAction, for: .touchUpInside)
     }
     
     func configureGalleryButtonAction() {
-        let galleryButtonAction = UIAction(handler: { _ in
-            self.galleryButtonTapped()
-        })
+        let galleryButtonAction = UIAction { [weak self] _ in
+            self?.galleryButtonTapped()
+        }
         self.galleryButton.addAction(galleryButtonAction, for: .touchUpInside)
     }
     
     func configureBackButtonAction() {
-        let backButtonAction = UIAction(handler: { _ in
-            self.backButtonTapped()
-        })
+        let backButtonAction = UIAction { [weak self] _ in
+            self?.backButtonTapped()
+        }
         self.backButton.addAction(backButtonAction, for: .touchUpInside)
     }
     
@@ -304,7 +304,7 @@ private extension SpotViewController {
     }
     
     func galleryButtonTapped() {
-        self.navigationDelegate?.presentPhotos(from: self)
+        self.navigationDelegate?.presentPhotoLibrary(from: self)
     }
     
     func backButtonTapped() {
@@ -359,7 +359,7 @@ private extension SpotViewController {
     
     func presentSpotSaveViewController(with image: UIImage, coordinate: Coordinate) {
         self.viewModel.stopCamera()
-        self.navigationDelegate?.presentSpotSave(using: image, coordinate: coordinate)
+        self.navigationDelegate?.presentSaveSpot(using: image, coordinate: coordinate)
     }
     
 }

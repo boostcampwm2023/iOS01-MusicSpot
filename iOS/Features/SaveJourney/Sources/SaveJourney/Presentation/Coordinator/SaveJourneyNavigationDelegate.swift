@@ -11,6 +11,7 @@ import MSDomain
 
 public protocol SaveJourneyNavigationDelegate: AnyObject {
     
-    func popToHome(with endedJourney: Journey)
+    func popToHome()
+    func popToSelectSong()
     
 }

@@ -112,22 +112,22 @@ public final class RecordJourneyButtonStackView: UIView {
     }
     
     private func configureBackButtonAction() {
-        let backButtonAction = UIAction { _ in
-            self.backButtonDidTap()
+        let backButtonAction = UIAction { [weak self] _ in
+            self?.backButtonDidTap()
         }
         self.backButton.addAction(backButtonAction, for: .touchUpInside)
     }
     
     private func configureSpotButtonAction() {
-        let spotButtonAction = UIAction { _ in
-            self.spotButtonDidTap()
+        let spotButtonAction = UIAction { [weak self] _ in
+            self?.spotButtonDidTap()
         }
         self.spotButton.addAction(spotButtonAction, for: .touchUpInside)
     }
     
     private func configureNextButtonAction() {
-        let nextButtonAction = UIAction { _ in
-            self.nextButtonDidTap()
+        let nextButtonAction = UIAction { [weak self] _ in
+            self?.nextButtonDidTap()
         }
         self.nextButton.addAction(nextButtonAction, for: .touchUpInside)
     }

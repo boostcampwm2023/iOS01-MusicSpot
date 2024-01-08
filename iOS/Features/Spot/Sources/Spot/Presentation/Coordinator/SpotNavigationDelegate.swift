@@ -11,10 +11,17 @@ import MSDomain
 
 public protocol SpotNavigationDelegate: AnyObject {
     
-    func presentPhotos(from viewController: UIViewController)
-    func presentSpotSave(using image: UIImage, coordinate: Coordinate)
+    func presentPhotoLibrary(from viewController: UIViewController)
+    func presentSaveSpot(using image: UIImage, coordinate: Coordinate)
     func dismissToSpot()
-    func popToHome()
-    func popToHomeWithSpot(spot: Spot)
+    func popToHome(spot: Spot?)
+    
+}
+
+extension SpotNavigationDelegate {
+    
+    public func popToHome(spot: Spot? = nil) {
+        self.popToHome(spot: nil)
+    }
     
 }
