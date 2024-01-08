@@ -21,8 +21,8 @@ public final class MapViewController: UIViewController {
     
     private enum Typo {
         
-        static let locationAlertTitle = "위치 권한"
-        static let locationAlertMessage = "위치 권한을 허용하시지 않아서 위치 접근이 불가능합니다."
+        static let locationAlertTitle = "위치 권한이 허용되지 않음"
+        static let locationAlertMessage = "MusicSpot은 위치 권한을 필요합니다. 설정에서 \"앱을 사용하는 동안\" 이상의 권한을 허용해주세요."
         static let locationAlertCancel = "취소"
         static let locationAlertSettings = "설정"
         
@@ -65,7 +65,7 @@ public final class MapViewController: UIViewController {
     public weak var delegate: MapViewControllerDelegate?
     var viewModel: (any MapViewModel)?
     
-    private let locationManager = CLLocationManager()
+    internal let locationManager = CLLocationManager()
     
     private var cancellables: Set<AnyCancellable> = []
     
@@ -118,7 +118,7 @@ public final class MapViewController: UIViewController {
         
         self.configureLayout()
         self.configureCoreLocation()
-        self.bind(viewModel)
+        self.bind(self.viewModel)
     }
     
     // MARK: - Combine Binding
@@ -169,6 +169,7 @@ public final class MapViewController: UIViewController {
                 }
                 return (previousCoordinate, currentCoordinate)
             }
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] previousCoordinate, currentCoordinate in
                 let points = [previousCoordinate, currentCoordinate]
                 self?.drawPolylineToMap(using: points)
@@ -294,10 +295,17 @@ private extension MapViewController {
         ])
     }
     
-    func configureCoreLocation() {
+    private func configureCoreLocation() {
         self.locationManager.delegate = self
-        self.locationManager.requestWhenInUseAuthorization()
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        switch self.locationManager.authorizationStatus {
+        case .restricted, .denied:
+            self.presentLocationAuthorizationAlert()
+        case .notDetermined:
+            self.locationManager.requestWhenInUseAuthorization()
+        default:
+            return
+        }
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
     }
     
 }
@@ -341,21 +349,8 @@ extension MapViewController: CLLocationManagerDelegate {
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
         case .restricted, .denied:
-            let sheet = UIAlertController(title: Typo.locationAlertTitle,
-                                          message: Typo.locationAlertMessage,
-                                          preferredStyle: .alert)
-            let cancelAction = UIAlertAction(title: Typo.locationAlertCancel, style: .cancel)
-            let settingsAction = UIAlertAction(title: Typo.locationAlertSettings, style: .default) { _ in
-                guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
-                UIApplication.shared.open(url)
-            }
-            sheet.addAction(cancelAction)
-            sheet.addAction(settingsAction)
-            DispatchQueue.main.async {
-                self.present(sheet, animated: true)
-            }
+            self.presentLocationAuthorizationAlert()
         case .authorizedAlways, .authorizedWhenInUse:
-            manager.startUpdatingLocation()
             self.checkAccuracyAuthorizationStatus(manager)
         @unknown default:
             MSLogger.make(category: .home).error("잘못된 위치 권한입니다.")
@@ -380,6 +375,22 @@ extension MapViewController: CLLocationManagerDelegate {
         let location2 = CLLocation(latitude: coordinate2.latitude, longitude: coordinate2.longitude)
         MSLogger.make(category: .navigateMap).log("이동한 거리: \(location1.distance(from: location2))")
         return 5 <= location1.distance(from: location2) && location1.distance(from: location2) <= 50
+    }
+    
+    private func presentLocationAuthorizationAlert() {
+        let sheet = UIAlertController(title: Typo.locationAlertTitle,
+                                      message: Typo.locationAlertMessage,
+                                      preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: Typo.locationAlertCancel, style: .cancel)
+        let settingsAction = UIAlertAction(title: Typo.locationAlertSettings, style: .default) { _ in
+            guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+            UIApplication.shared.open(url)
+        }
+        sheet.addAction(cancelAction)
+        sheet.addAction(settingsAction)
+        DispatchQueue.main.async {
+            self.present(sheet, animated: true)
+        }
     }
     
 }

@@ -5,6 +5,7 @@
 //  Created by 이창준 on 2023.12.06.
 //
 
+import ActivityKit
 import Combine
 import Foundation
 
