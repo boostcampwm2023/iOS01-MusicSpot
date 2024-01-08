@@ -137,28 +137,9 @@ private extension HomeViewModel {
             case .success(let recordingJourney):
                 self.state.startedJourney.send(recordingJourney)
                 self.state.isRecording.send(true)
-                
-                if #available(iOS 16.2, *) {
-                    self.requestLiveActivity()
-                }
             case .failure(let error):
                 MSLogger.make(category: .home).error("\(error)")
             }
-        }
-    }
-    
-    @available(iOS 16.2, *)
-    func requestLiveActivity() {
-        let recordingJourney = RecordingJourneyAttributes()
-        let initialState = RecordingJourneyAttributes.ContentState(travelingDistance: 512.0, numberOfSpots: 5)
-        let content = ActivityContent(state: initialState, staleDate: nil, relevanceScore: 0.0)
-        
-        do {
-            let activity = try Activity.request(attributes: recordingJourney,
-                                                content: content,
-                                                pushType: nil)
-        } catch {
-            
         }
     }
     
