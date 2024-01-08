@@ -10,6 +10,6 @@ import Foundation
 public protocol SpotRepository {
     
     func fetchRecordingSpots() async -> Result<[Spot], Error>
-    func upload(spot: Spot) async -> Result<Spot, Error>
+    func upload(spot: RequestableSpot) async -> Result<Spot, Error>
     
 }

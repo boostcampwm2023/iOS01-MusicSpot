@@ -8,12 +8,13 @@
 import XCTest
 @testable import MSData
 @testable import MSDomain
+@testable import MSPersistentStorage
 
-final class PersistableRepositoryTests: XCTestCase {
+final class PersistentManagerTests: XCTestCase {
     
     // MARK: - Properties
     
-    private let journeyRepository = JourneyRepositoryImplementation()
+    let storage = FileManagerStorage()
     
     // MARK: - Tests
 
@@ -23,11 +24,11 @@ final class PersistableRepositoryTests: XCTestCase {
         
         let spot = Spot(coordinate: coordinate, timestamp: .now, photoURL: url)
         
-        XCTAssertTrue(self.journeyRepository.saveToLocal(value: SpotDTO(spot)))
+        XCTAssertTrue(LocalRecordingManager.shared.saveToLocal(SpotDTO(spot), at: self.storage))
     }
     
     func test_RecordingJourney_하위요소가_아닌_것들_저장_실패() {
-        XCTAssertFalse(self.journeyRepository.saveToLocal(value: Int()))
+        XCTAssertFalse(LocalRecordingManager.shared.saveToLocal(Int(), at: self.storage))
     }
     
     func test_RecordingJourney_반환_성공() {
@@ -38,12 +39,12 @@ final class PersistableRepositoryTests: XCTestCase {
         let coordinate = Coordinate(latitude: 5, longitude: 5)
         let spot = Spot(coordinate: coordinate, timestamp: .now, photoURL: url)
         
-        self.journeyRepository.saveToLocal(value: id)
-        self.journeyRepository.saveToLocal(value: Date.now)
-        self.journeyRepository.saveToLocal(value: SpotDTO(spot))
-        self.journeyRepository.saveToLocal(value: CoordinateDTO(coordinate))
+        PersistentManager.shared.saveToLocal(id, at: self.storage)
+        PersistentManager.shared.saveToLocal(Date.now, at: self.storage)
+        PersistentManager.shared.saveToLocal(SpotDTO(spot), at: self.storage)
+        PersistentManager.shared.saveToLocal(CoordinateDTO(coordinate), at: self.storage)
         
-        guard let loadedJourney = self.journeyRepository.loadJourneyFromLocal() else {
+        guard let loadedJourney = PersistentManager.shared.loadJourney(from: self.storage) else {
             XCTFail("load 실패")
             return
         }

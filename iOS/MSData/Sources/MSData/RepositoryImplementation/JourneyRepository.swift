@@ -15,7 +15,7 @@ import MSNetworking
 import MSPersistentStorage
 import MSUserDefaults
 
-public struct JourneyRepositoryImplementation: JourneyRepository, Persistable {
+public struct JourneyRepositoryImplementation: JourneyRepository {
     
     // MARK: - Properties
     
@@ -115,8 +115,8 @@ public struct JourneyRepositoryImplementation: JourneyRepository, Persistable {
                                                     spots: [],
                                                     coordinates: [responseDTO.coordinate.toDomain()])
             
-            self.saveToLocal(recordingJourney.id, at: self.storage)
-            self.saveToLocal(recordingJourney.startTimestamp, at: self.storage)
+            LocalRecordingManager.shared.saveToLocal(recordingJourney.id, at: self.storage)
+            LocalRecordingManager.shared.saveToLocal(recordingJourney.startTimestamp, at: self.storage)
             
             self.recordingJourneyID = recordingJourney.id
             self.isRecording = true
@@ -151,7 +151,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository, Persistable {
                                                     coordinates: coordinates)
             
             responseDTO.coordinates.forEach {
-                self.saveToLocal($0, at: self.storage)
+                LocalRecordingManager.shared.saveToLocal($0, at: self.storage)
             }
             
             return .success(recordingJourney)
@@ -191,6 +191,10 @@ public struct JourneyRepositoryImplementation: JourneyRepository, Persistable {
         case .failure(let error):
             return .failure(error)
         }
+    }
+    
+    public func loadJourneyFromLocal() -> RecordingJourney? {
+        return LocalRecordingManager.shared.loadJourney(from: self.storage)
     }
     
 }

@@ -12,7 +12,7 @@ import MSNetworking
 import MSLogger
 import MSPersistentStorage
 
-public struct SpotRepositoryImplementation: SpotRepository, Persistable {
+public struct SpotRepositoryImplementation: SpotRepository {
     
     // MARK: - Properties
     
@@ -59,7 +59,13 @@ public struct SpotRepositoryImplementation: SpotRepository, Persistable {
         #endif
     }
     
-    public func upload(spot: CreateSpotRequestDTO) async -> Result<Spot, Error> {
+    public func upload(spot: RequestableSpot) async -> Result<Spot, Error> {
+        
+        let spot = CreateSpotRequestDTO(journeyId: spot.journeyID,
+                                        coordinate: CoordinateDTO(spot.coordinate),
+                                        timestamp: spot.timestamp,
+                                        photoData: spot.photoData)
+        
         let router = SpotRouter.upload(spot: spot, id: UUID())
         let result = await self.networking.request(SpotDTO.self, router: router)
         switch result {
@@ -67,7 +73,7 @@ public struct SpotRepositoryImplementation: SpotRepository, Persistable {
             #if DEBUG
             MSLogger.make(category: .network).debug("성공적으로 업로드하였습니다.")
             #endif
-            self.saveToLocal(spot, at: self.storage)
+            LocalRecordingManager.shared.saveToLocal(spot, at: self.storage)
             return .success(spot.toDomain())
         case .failure(let error):
             MSLogger.make(category: .network).error("\(error): 업로드에 실패하였습니다.")
