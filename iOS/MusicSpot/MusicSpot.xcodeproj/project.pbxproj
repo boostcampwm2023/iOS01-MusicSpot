@@ -13,6 +13,7 @@
 		08CBF87D2B18468E007D3797 /* SpotCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8752B18468E007D3797 /* SpotCoordinator.swift */; };
 		08CBF87E2B18468E007D3797 /* SaveJourneyFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8762B18468E007D3797 /* SaveJourneyFlowCoordinator.swift */; };
 		08CBF87F2B18468E007D3797 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8772B18468E007D3797 /* Coordinator.swift */; };
+		DD72AF642B4B89E700EB4E81 /* CoordinatorFinishDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB22F742B433EC300F83D84 /* CoordinatorFinishDelegate.swift */; };
 		DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */; };
 		DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */; };
 		DD73F8622B024C4B00EE9BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */; };
@@ -204,7 +205,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDB22F752B433EC300F83D84 /* CoordinatorFinishDelegate.swift in Sources */,
 				08CBF8792B18468E007D3797 /* AppCoordinator.swift in Sources */,
 				08CBF87F2B18468E007D3797 /* Coordinator.swift in Sources */,
 				08CBF87D2B18468E007D3797 /* SpotCoordinator.swift in Sources */,
@@ -213,6 +213,7 @@
 				DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */,
 				08CBF87B2B18468E007D3797 /* HomeCoordinator.swift in Sources */,
 				DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */,
+				DD72AF642B4B89E700EB4E81 /* CoordinatorFinishDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
