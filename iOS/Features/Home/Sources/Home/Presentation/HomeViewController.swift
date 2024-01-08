@@ -5,6 +5,7 @@
 //  Created by 이창준 on 2023.12.01.
 //
 
+import ActivityKit
 import Combine
 import UIKit
 
@@ -207,20 +208,27 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
     
     private func configureAction() {
         let startButtonAction = UIAction { [weak self] _ in
-            guard let userLocation = self?.contentViewController.userLocation else { return }
-            
-            let coordinate = Coordinate(latitude: userLocation.coordinate.latitude,
-                                        longitude: userLocation.coordinate.longitude)
-            self?.viewModel.trigger(.startButtonDidTap(coordinate))
+            self?.startButtonDidTap()
         }
         self.startButton.addAction(startButtonAction, for: .touchUpInside)
         
         let refreshButtonAction = UIAction { [weak self] _ in
-            guard let coordinates = self?.contentViewController.visibleCoordinates else { return }
-            
-            self?.viewModel.trigger(.refreshButtonDidTap(visibleCoordinates: coordinates))
+            self?.refreshButtonDidTap()
         }
         self.refreshButton.addAction(refreshButtonAction, for: .touchUpInside)
+    }
+    
+    private func startButtonDidTap() {
+        guard let userLocation = self.contentViewController.userLocation else { return }
+        
+        let coordinate = Coordinate(latitude: userLocation.coordinate.latitude,
+                                    longitude: userLocation.coordinate.longitude)
+        self.viewModel.trigger(.startButtonDidTap(coordinate))
+    }
+    
+    private func refreshButtonDidTap() {
+        let coordinates = self.contentViewController.visibleCoordinates
+        self.viewModel.trigger(.refreshButtonDidTap(visibleCoordinates: coordinates))
     }
     
     public func backButtonDidTap(_ button: MSRectButton) {
