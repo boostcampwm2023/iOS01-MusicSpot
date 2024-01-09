@@ -59,8 +59,10 @@ public final class FileManagerStorage: NSObject, MSPersistentStorage {
     ///   - type: 불러올 값의 타입
     ///   - key: 불러올 값에 대응되는 Key 값
     /// - Returns: `FileManager`에서 불러온 뒤 지정된 타입으로 디코딩 된 값
-    public func get<T: Codable>(_ type: T.Type, forKey key: String) -> T? {
-        guard let fileURL = self.fileURL(forKey: key),
+    public func get<T: Codable>(_ type: T.Type,
+                                forKey key: String,
+                                subpath: String? = nil) -> T? {
+        guard let fileURL = self.fileURL(forKey: key, subpath: subpath),
               let data = try? Data(contentsOf: fileURL) else {
             return nil
         }
@@ -104,8 +106,10 @@ public final class FileManagerStorage: NSObject, MSPersistentStorage {
     /// `FileManager`를 사용한 저장에 성공했을 경우 요청한 데이터를 반환합니다. \
     /// 저장에 실패했거나 이미 존재한다면 `nil`을 반환합니다.
     @discardableResult
-    public func set<T: Codable>(value: T, forKey key: String) -> T? {
-        guard let fileURL = self.fileURL(forKey: key) else {
+    public func set<T: Codable>(value: T,
+                                forKey key: String,
+                                subpath: String? = nil) -> T? {
+        guard let fileURL = self.fileURL(forKey: key, subpath: subpath) else {
             return nil
         }
         
@@ -121,6 +125,12 @@ public final class FileManagerStorage: NSObject, MSPersistentStorage {
             MSLogger.make(category: .fileManager).error("인코딩 데이터를 저장하는데 실패했습니다: \(fileURL.absoluteString)")
             #endif
             return nil
+        }
+    }
+    
+    public func delete(forKey key: String) throws {
+        if let path = self.fileURL(forKey: key) {
+            try self.fileManager.removeItem(at: path)
         }
     }
     
@@ -143,8 +153,8 @@ extension FileManagerStorage {
     /// - Returns:
     /// Storage가 사용하는 디렉토리 URL. \
     /// 휙득에 실패했거나, `create` flag가 `true`일 때 생성에 실패했을 경우 `nil`을 반환합니다.
-    func storageURL(create: Bool = false) -> URL? {
-        let directoryURL: URL?
+    func storageURL(subpath: String? = nil, create: Bool = false) -> URL? {
+        var directoryURL: URL?
         if #available(iOS 16.0, *) {
             let storageDirectoryURL = try? self.fileManager.url(for: .cachesDirectory,
                                                                 in: .userDomainMask,
@@ -152,12 +162,18 @@ extension FileManagerStorage {
                                                                 create: false)
             directoryURL = storageDirectoryURL?
                 .appending(path: Constants.appBundleIdentifier, directoryHint: .isDirectory)
+            if let subpath = subpath {
+                directoryURL = directoryURL?.appending(path: subpath, directoryHint: .isDirectory)
+            }
         } else {
             let cacheDirectoryURL = self.fileManager
                 .urls(for: .cachesDirectory, in: .userDomainMask)
                 .first
             directoryURL = cacheDirectoryURL?
                 .appendingPathComponent(Constants.appBundleIdentifier, isDirectory: true)
+            if let subpath = subpath {
+                directoryURL = directoryURL?.appendingPathComponent(subpath, isDirectory: true)
+            }
         }
         
         if create {
@@ -181,18 +197,19 @@ extension FileManagerStorage {
     /// - Returns:
     /// 지정된 Key 값에 대응되는 파일의 URL. \
     /// 휙득에 실패했을 경우 `nil`을 반환합니다.
-    func fileURL(forKey key: String) -> URL? {
+    func fileURL(forKey key: String, subpath: String? = nil) -> URL? {
+        let storageURL = self.storageURL(subpath: subpath, create: true)
+        
         let fileURL: URL?
+        let fileExtension = "json"
         if #available(iOS 16.0, *) {
-            fileURL = self.storageURL(create: true)?
+            fileURL = storageURL?
                 .appending(component: key, directoryHint: .notDirectory)
-                .appendingPathExtension("json")
         } else {
-            fileURL = self.storageURL(create: true)?
+            fileURL = storageURL?
                 .appendingPathComponent(key, isDirectory: false)
-                .appendingPathExtension("json")
         }
-        return fileURL
+        return fileURL?.appendingPathExtension(fileExtension)
     }
     
     /// 주어진 URL에 디렉토리를 생성합니다.
