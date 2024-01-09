@@ -50,6 +50,16 @@ public struct RecordingJourneyStorage {
     // MARK: - Functions
     
     public mutating func start(initialData recordingJourney: RecordingJourney) {
+        // 삭제되지 않은 이전 여정 기록이 남아있다면 삭제
+        if let previousRecordingJourneyID = self.recordingJourneyID {
+            do {
+                try self.finish()
+            } catch {
+                MSLogger.make(category: .recordingJourneyStorage)
+                    .warning("삭제되지 않은 이전 여정 기록 초기화에 실패했습니다.")
+            }
+        }
+        
         self.recordingJourneyID = recordingJourney.id
         
         if let startTimestampKey = self.key(recordingJourney.id,
@@ -72,6 +82,7 @@ public struct RecordingJourneyStorage {
         }
         
         if let key = self.key(recordingJourneyID, forProperty: keyPath) {
+            // TODO: 기록중이던 Spot이나 Coordinate가 있을 경우, 이전 기록에 합쳐 저장
             self.storage.set(value: value, forKey: key, subpath: recordingJourneyID)
             return true
         } else {
