@@ -75,7 +75,7 @@ public final class SaveJourneyViewModel {
                 self.state.buttonStateFactors.send(stateFactors)
             }
             
-            guard let recordingJourney = self.journeyRepository.loadJourneyFromLocal() else { return }
+            guard let recordingJourney = self.journeyRepository.fetchRecordingJourney() else { return }
             self.state.recordingJourney.send(recordingJourney)
         case .musicControlButtonDidTap:
             let stateFactors = self.state.buttonStateFactors.value
@@ -93,8 +93,10 @@ public final class SaveJourneyViewModel {
 private extension SaveJourneyViewModel {
     
     func endJourney(named title: String) {
-        guard let recordingJourney = self.state.recordingJourney.value else { return }
-        guard let journeyID = self.journeyRepository.fetchRecordingJourneyID() else { return }
+        guard let recordingJourney = self.state.recordingJourney.value,
+              let journeyID = self.journeyRepository.recordingJourneyID else {
+            return
+        }
         
         let selectedSong = self.state.selectedSong.value
         let coordinates = recordingJourney.coordinates + [self.lastCoordiante]

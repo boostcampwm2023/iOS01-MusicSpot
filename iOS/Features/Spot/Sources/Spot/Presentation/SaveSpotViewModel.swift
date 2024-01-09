@@ -53,7 +53,7 @@ internal extension SaveSpotViewModel {
         switch action {
         case .startUploadSpot(let data):
             Task {
-                guard let recordingJourneyID = self.journeyRepository.fetchRecordingJourneyID() else {
+                guard let recordingJourneyID = self.journeyRepository.recordingJourneyID else {
                     MSLogger.make(category: .spot).error("recoding 중인 journeyID를 찾지 못하였습니다.")
                     return
                 }

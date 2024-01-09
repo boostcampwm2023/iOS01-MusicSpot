@@ -24,11 +24,11 @@ final class PersistentManagerTests: XCTestCase {
         
         let spot = Spot(coordinate: coordinate, timestamp: .now, photoURL: url)
         
-        XCTAssertTrue(LocalRecordingManager.shared.saveToLocal(SpotDTO(spot), at: self.storage))
+        XCTAssertTrue(RecordingJourneyStorage.shared.record(SpotDTO(spot), at: self.storage))
     }
     
     func test_RecordingJourney_하위요소가_아닌_것들_저장_실패() {
-        XCTAssertFalse(LocalRecordingManager.shared.saveToLocal(Int(), at: self.storage))
+        XCTAssertFalse(RecordingJourneyStorage.shared.record(Int(), at: self.storage))
     }
     
     func test_RecordingJourney_반환_성공() {
@@ -39,12 +39,12 @@ final class PersistentManagerTests: XCTestCase {
         let coordinate = Coordinate(latitude: 5, longitude: 5)
         let spot = Spot(coordinate: coordinate, timestamp: .now, photoURL: url)
         
-        LocalRecordingManager.shared.saveToLocal(id, at: self.storage)
-        LocalRecordingManager.shared.saveToLocal(Date.now, at: self.storage)
-        LocalRecordingManager.shared.saveToLocal(SpotDTO(spot), at: self.storage)
-        LocalRecordingManager.shared.saveToLocal(CoordinateDTO(coordinate), at: self.storage)
+        RecordingJourneyStorage.shared.record(id, at: self.storage)
+        RecordingJourneyStorage.shared.record(Date.now, at: self.storage)
+        RecordingJourneyStorage.shared.record(SpotDTO(spot), at: self.storage)
+        RecordingJourneyStorage.shared.record(CoordinateDTO(coordinate), at: self.storage)
         
-        guard let loadedJourney = LocalRecordingManager.shared.loadJourney(from: self.storage) else {
+        guard let loadedJourney = RecordingJourneyStorage.shared.loadJourney(from: self.storage) else {
             XCTFail("load 실패")
             return
         }

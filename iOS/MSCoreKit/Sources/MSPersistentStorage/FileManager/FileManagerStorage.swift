@@ -134,8 +134,8 @@ public final class FileManagerStorage: NSObject, MSPersistentStorage {
         }
     }
     
-    public func deleteAll() throws {
-        if let path = self.storageURL()?.path,
+    public func deleteAll(subpath: String? = nil) throws {
+        if let path = self.storageURL(subpath: subpath)?.path,
            self.fileManager.fileExists(atPath: path) {
             try self.fileManager.removeItem(atPath: path)
         }

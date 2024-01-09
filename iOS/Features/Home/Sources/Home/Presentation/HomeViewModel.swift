@@ -69,7 +69,13 @@ public final class HomeViewModel {
             
             self.createNewUserWhenFirstLaunch()
         case .viewNeedsReloaded:
-            let isRecording = self.journeyRepository.fetchIsRecording()
+            let isRecording = self.journeyRepository.isRecording
+            #if DEBUG
+            MSLogger.make(category: .home).debug("여정 기록 중 여부: \(isRecording)")
+            #endif
+            if isRecording {
+                self.resumeJourney()
+            }
             self.state.isRecording.send(isRecording)
         case .startButtonDidTap(let coordinate):
             #if DEBUG
@@ -150,6 +156,14 @@ private extension HomeViewModel {
                 MSLogger.make(category: .home).error("\(error)")
             }
         }
+    }
+    
+    func resumeJourney() {
+        guard let recordingJourney = self.journeyRepository.fetchRecordingJourney() else {
+            return
+        }
+        
+        MSLogger.make(category: .home).debug("Recording Journey: \(recordingJourney)")
     }
     
 }
