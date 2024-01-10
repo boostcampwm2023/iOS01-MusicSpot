@@ -144,10 +144,15 @@ public final class HomeViewController: HomeBottomSheetViewController {
         
         self.viewModel.state.journeyDidCancelled
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] cancelledJourney in
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure = completion {
+                    self?.contentViewController.clearOverlays()
+                    self?.contentViewController.recordingDidStop()
+                }
+            }, receiveValue: { [weak self] cancelledJourney in
                 self?.contentViewController.clearOverlays()
                 self?.contentViewController.recordingDidStop(cancelledJourney)
-            }
+            })
             .store(in: &self.cancellables)
         
         self.viewModel.state.visibleJourneys
@@ -196,7 +201,7 @@ public final class HomeViewController: HomeBottomSheetViewController {
     
     private func updateButtonMode(isRecording: Bool) {
         UIView.transition(with: self.view,
-                          duration: 0.5,
+                          duration: 0.34,
                           options: .transitionCrossDissolve,
                           animations: { [weak self] in
             self?.startButton.isHidden = isRecording

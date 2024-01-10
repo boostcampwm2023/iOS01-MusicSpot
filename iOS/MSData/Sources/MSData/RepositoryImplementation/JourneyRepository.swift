@@ -150,18 +150,16 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     
     public mutating func deleteJourney(_ recordingJourney: RecordingJourney,
                                        userID: UUID) async -> Result<RecordingJourney, Error> {
+        defer { try? self.recordingJourney.finish() }
+        
         let requestDTO = DeleteJourneyRequestDTO(userID: userID, journeyID: recordingJourney.id)
         let router = JourneyRouter.deleteJourney(dto: requestDTO)
         let result = await self.networking.request(DeleteJourneyResponseDTO.self, router: router)
+        
         switch result {
         case .success(let responseDTO):
-            do {
-                try self.recordingJourney.finish()
-                let deletedJourney = responseDTO.toDomain()
-                return .success(deletedJourney)
-            } catch {
-                return .failure(error)
-            }
+            let deletedJourney = responseDTO.toDomain()
+            return .success(deletedJourney)
         case .failure(let error):
             return .failure(error)
         }

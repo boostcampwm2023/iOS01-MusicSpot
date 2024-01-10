@@ -31,7 +31,7 @@ public final class HomeViewModel {
         // Passthrough
         public var journeyDidStarted = PassthroughSubject<RecordingJourney, Never>()
         public var journeyDidResumed = PassthroughSubject<RecordingJourney, Never>()
-        public var journeyDidCancelled = PassthroughSubject<RecordingJourney, Never>()
+        public var journeyDidCancelled = PassthroughSubject<RecordingJourney, Error>()
         public var visibleJourneys = PassthroughSubject<[Journey], Never>()
         
         // CurrentValue
@@ -181,6 +181,7 @@ private extension HomeViewModel {
                 self.state.journeyDidCancelled.send(deletedJourney)
             case .failure(let error):
                 MSLogger.make(category: .home).error("\(error)")
+                self.state.journeyDidCancelled.send(completion: .failure(error))
             }
         }
     }
