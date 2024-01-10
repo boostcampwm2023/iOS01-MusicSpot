@@ -9,17 +9,14 @@ import Combine
 import CoreLocation
 import Foundation
 
-import MSData
 import MSDomain
 import MSLogger
 
 public final class RecordJourneyViewModel: MapViewModel {
     
     public enum Action {
-        case viewNeedsLoaded
         case locationDidUpdated(CLLocationCoordinate2D)
         case locationsShouldRecorded([CLLocationCoordinate2D])
-        case recordingDidCancelled
     }
     
     public struct State {
@@ -50,10 +47,6 @@ public final class RecordJourneyViewModel: MapViewModel {
     
     public func trigger(_ action: Action) {
         switch action {
-        case .viewNeedsLoaded:
-            #if DEBUG
-            MSLogger.make(category: .home).debug("View Did load.")
-            #endif
         case .locationDidUpdated(let coordinate):
             let previousCoordinate = self.state.currentCoordinate.value
             self.state.previousCoordinate.send(previousCoordinate)
@@ -67,21 +60,6 @@ public final class RecordJourneyViewModel: MapViewModel {
                 switch result {
                 case .success(let recordingJourney):
                     self.state.recordingJourney.send(recordingJourney)
-                case .failure(let error):
-                    MSLogger.make(category: .home).error("\(error)")
-                }
-            }
-        case .recordingDidCancelled:
-            Task {
-                guard let userID = self.userRepository.fetchUUID() else { return }
-                
-                let recordingJourney = self.state.recordingJourney.value
-                let result = await self.journeyRepository.deleteJourney(recordingJourney, userID: userID)
-                switch result {
-                case .success(let cancelledJourney):
-                    #if DEBUG
-                    MSLogger.make(category: .home).debug("여정이 취소 되었습니다: \(cancelledJourney)")
-                    #endif
                 case .failure(let error):
                     MSLogger.make(category: .home).error("\(error)")
                 }

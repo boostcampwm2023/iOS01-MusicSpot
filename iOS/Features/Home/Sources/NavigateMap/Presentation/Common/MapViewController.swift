@@ -135,39 +135,26 @@ public final class MapViewController: UIViewController {
         
         if let navigateMapViewModel = viewModel as? NavigateMapViewModel {
             self.bind(navigateMapViewModel)
-            #if DEBUG
             MSLogger.make(category: .home).debug("Map에 NavigateMapViewModel을 바인딩 했습니다.")
-            #endif
-            
-            navigateMapViewModel.trigger(.viewNeedsLoaded)
+            return
         }
         
         if let recordJourneyViewModel = viewModel as? RecordJourneyViewModel {
             self.bind(recordJourneyViewModel)
-            #if DEBUG
             MSLogger.make(category: .home).debug("Map에 RecordJourneyViewModel을 바인딩 했습니다.")
-            #endif
+            return
         }
+        
+        MSLogger.make(category: .home).warning("Map에 ViewModel을 바인딩하지 못했습니다.")
     }
     
     private func bind(_ viewModel: NavigateMapViewModel) {
         viewModel.state.visibleJourneys
             .receive(on: DispatchQueue.main)
             .sink { [weak self] journeys in
-                self?.clearAnnotations()
+                self?.clearOverlays()
                 self?.addAnnotations(with: journeys)
-                self?.drawPolyLinesToMap(with: journeys)
-            }
-            .store(in: &self.cancellables)
-        
-        viewModel.state.recordingJourneyShouldResume
-            .sink { [weak self] recordingJourney in
-                self?.recordingShouldResume(recordingJourney)
-                
-                let coordinates = recordingJourney.coordinates.map {
-                    CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude)
-                }
-                self?.drawPolylineToMap(using: coordinates)
+                self?.drawJourneyListPolylines(with: journeys)
             }
             .store(in: &self.cancellables)
     }
@@ -185,7 +172,7 @@ public final class MapViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] previousCoordinate, currentCoordinate in
                 let points = [previousCoordinate, currentCoordinate]
-                self?.drawPolylineToMap(using: points)
+                self?.drawPolyline(using: points)
             }
             .store(in: &self.cancellables)
     }
@@ -237,7 +224,7 @@ public final class MapViewController: UIViewController {
     
     // MARK: - Functions: Polyline
     
-    private func drawPolyLinesToMap(with journeys: [Journey]) {
+    func drawJourneyListPolylines(with journeys: [Journey]) {
         Task {
             await withTaskGroup(of: Void.self) { group in
                 for journey in journeys {
@@ -246,29 +233,28 @@ public final class MapViewController: UIViewController {
                             CLLocationCoordinate2D(latitude: $0.latitude,
                                                    longitude: $0.longitude)
                         }
-                        await self.drawPolylineToMap(using: coordinates)
+                        await self.drawPolyline(using: coordinates)
                     }
                 }
             }
         }
     }
     
-    private func drawPolylineToMap(using coordinates: [CLLocationCoordinate2D]) {
-        let polyline = MKPolyline(coordinates: coordinates,
-                                  count: coordinates.count)
+    func drawPolyline(using coordinates: [CLLocationCoordinate2D]) {
+        let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
         self.mapView.addOverlay(polyline)
     }
     
     // MARK: - Functions
     
-    public func clearOverlays() {
-        let overlays = self.mapView.overlays
-        self.mapView.removeOverlays(overlays)
-    }
-    
     public func clearAnnotations() {
         let annotations = self.mapView.annotations
         self.mapView.removeAnnotations(annotations)
+    }
+    
+    public func clearOverlays() {
+        let overlays = self.mapView.overlays
+        self.mapView.removeOverlays(overlays)
     }
     
 }

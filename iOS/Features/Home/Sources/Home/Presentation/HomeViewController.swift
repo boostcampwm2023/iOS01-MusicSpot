@@ -116,12 +116,6 @@ public final class HomeViewController: HomeBottomSheetViewController {
         self.navigationController?.isNavigationBarHidden = true
     }
     
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        self.viewModel.trigger(.viewNeedsReloaded)
-    }
-    
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -132,10 +126,27 @@ public final class HomeViewController: HomeBottomSheetViewController {
     // MARK: - Combine Binding
     
     private func bind() {
-        self.viewModel.state.startedJourney
+        self.viewModel.state.journeyDidStarted
             .receive(on: DispatchQueue.main)
             .sink { [weak self] startedJourney in
-                self?.contentViewController.recordingShouldStart(startedJourney)
+                self?.contentViewController.clearOverlays()
+                self?.contentViewController.recordingDidStart(startedJourney)
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.journeyDidResumed
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] resumedJourney in
+                self?.contentViewController.clearOverlays()
+                self?.contentViewController.recordingDidResume(resumedJourney)
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.journeyDidCancelled
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] cancelledJourney in
+                self?.contentViewController.clearOverlays()
+                self?.contentViewController.recordingDidStop(cancelledJourney)
             }
             .store(in: &self.cancellables)
         
@@ -155,7 +166,6 @@ public final class HomeViewController: HomeBottomSheetViewController {
                     self?.hideBottomSheet()
                 } else {
                     self?.showBottomSheet()
-                    self?.contentViewController.recordingShouldStop(isCancelling: false)
                 }
                 self?.updateButtonMode(isRecording: isRecording)
             }
@@ -169,19 +179,15 @@ public final class HomeViewController: HomeBottomSheetViewController {
             .store(in: &self.cancellables)
         
         self.viewModel.state.isRefreshButtonHidden
-            .removeDuplicates(by: { $0 == $1 })
             .combineLatest(self.viewModel.state.isRecording)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isHidden, isRecording in
-                self?.refreshButton.isHidden = (isHidden && !isRecording)
-            }
-            .store(in: &self.cancellables)
-        
-        self.viewModel.state.overlaysShouldBeCleared
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.contentViewController.clearOverlays()
-                self?.contentViewController.clearAnnotations()
+                guard let self = self else { return }
+                UIView.transition(with: self.refreshButton,
+                                  duration: 0.2,
+                                  options: .transitionCrossDissolve) { [weak self] in
+                    self?.refreshButton.isHidden = (isHidden || isRecording)
+                }
             }
             .store(in: &self.cancellables)
     }
@@ -189,14 +195,11 @@ public final class HomeViewController: HomeBottomSheetViewController {
     // MARK: - Functions
     
     private func updateButtonMode(isRecording: Bool) {
-        UIView.transition(with: startButton, duration: 0.5,
+        UIView.transition(with: self.view,
+                          duration: 0.5,
                           options: .transitionCrossDissolve,
                           animations: { [weak self] in
             self?.startButton.isHidden = isRecording
-        })
-        UIView.transition(with: recordJourneyButtonStackView, duration: 0.5,
-                          options: .transitionCrossDissolve,
-                          animations: { [weak self] in
             self?.recordJourneyButtonStackView.isHidden = !isRecording
         })
     }
@@ -236,7 +239,6 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
         guard self.viewModel.state.isRecording.value == true else { return }
         
         self.viewModel.trigger(.backButtonDidTap)
-        self.contentViewController.recordingShouldStop(isCancelling: true)
     }
     
     public func spotButtonDidTap(_ button: MSRectButton) {

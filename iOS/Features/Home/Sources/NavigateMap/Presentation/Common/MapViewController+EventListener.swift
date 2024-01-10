@@ -5,6 +5,7 @@
 //  Created by 이창준 on 2023.12.10.
 //
 
+import CoreLocation
 import Foundation
 
 import MSData
@@ -27,7 +28,7 @@ extension MapViewController {
 
 extension MapViewController {
     
-    public func recordingShouldStart(_ startedJourney: RecordingJourney) {
+    public func recordingDidStart(_ startedJourney: RecordingJourney) {
         guard self.viewModel is NavigateMapViewModel else {
             MSLogger.make(category: .home).error("여정이 시작되어야 하지만 이미 Map에서 RecordJourneyViewModel을 사용하고 있습니다.")
             return
@@ -44,11 +45,11 @@ extension MapViewController {
         self.locationManager.allowsBackgroundLocationUpdates = true
         
         #if DEBUG
-        MSLogger.make(category: .home).debug("여정 기록이 시작되었습니다.")
+        MSLogger.make(category: .home).debug("여정 기록이 시작되었습니다: \(startedJourney)")
         #endif
     }
     
-    public func recordingShouldResume(_ recordedJourney: RecordingJourney) {
+    public func recordingDidResume(_ recordedJourney: RecordingJourney) {
         let userRepository = UserRepositoryImplementation()
         let journeyRepository = JourneyRepositoryImplementation()
         let recordJourneyViewModel = RecordJourneyViewModel(startedJourney: recordedJourney,
@@ -56,22 +57,24 @@ extension MapViewController {
                                                             journeyRepository: journeyRepository)
         self.swapViewModel(to: recordJourneyViewModel)
         
+        let coordinates = recordedJourney.coordinates.map {
+            CLLocationCoordinate2D(latitude: $0.latitude,
+                                   longitude: $0.longitude)
+        }
+        self.drawPolyline(using: coordinates)
+        
         self.locationManager.startUpdatingLocation()
         self.locationManager.allowsBackgroundLocationUpdates = true
         
         #if DEBUG
-        MSLogger.make(category: .home).debug("여정 기록이 재개되었습니다.")
+        MSLogger.make(category: .home).debug("여정 기록이 재개되었습니다: \(recordedJourney)")
         #endif
     }
     
-    public func recordingShouldStop(isCancelling: Bool) {
-        guard let viewModel = self.viewModel as? RecordJourneyViewModel else {
+    public func recordingDidStop(_ stoppedJourney: RecordingJourney) {
+        guard self.viewModel is RecordJourneyViewModel else {
             MSLogger.make(category: .home).error("여정이 종료되어야 하지만 이미 Map에서 NavigateMapViewModel을 사용하고 있습니다.")
             return
-        }
-        
-        if isCancelling {
-            viewModel.trigger(.recordingDidCancelled)
         }
         
         let journeyRepository = JourneyRepositoryImplementation()
@@ -82,7 +85,7 @@ extension MapViewController {
         self.locationManager.allowsBackgroundLocationUpdates = false
         
         #if DEBUG
-        MSLogger.make(category: .home).debug("여정 기록이 종료되었습니다.")
+        MSLogger.make(category: .home).debug("여정 기록이 종료되었습니다: \(stoppedJourney)")
         #endif
     }
     

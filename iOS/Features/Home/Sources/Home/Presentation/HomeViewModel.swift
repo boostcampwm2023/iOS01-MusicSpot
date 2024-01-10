@@ -20,18 +20,19 @@ public final class HomeViewModel {
     
     public enum Action {
         case viewNeedsLoaded
-        case viewNeedsReloaded
         case startButtonDidTap(Coordinate)
         case refreshButtonDidTap(visibleCoordinates: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
         case backButtonDidTap
+        case recordingStateDidChange(Bool)
         case mapViewDidChange
     }
     
     public struct State {
         // Passthrough
-        public var startedJourney = PassthroughSubject<RecordingJourney, Never>()
+        public var journeyDidStarted = PassthroughSubject<RecordingJourney, Never>()
+        public var journeyDidResumed = PassthroughSubject<RecordingJourney, Never>()
+        public var journeyDidCancelled = PassthroughSubject<RecordingJourney, Never>()
         public var visibleJourneys = PassthroughSubject<[Journey], Never>()
-        public var overlaysShouldBeCleared = PassthroughSubject<Bool, Never>()
         
         // CurrentValue
         public var isRecording = CurrentValueSubject<Bool, Never>(false)
@@ -68,28 +69,23 @@ public final class HomeViewModel {
             #endif
             
             self.createNewUserWhenFirstLaunch()
-        case .viewNeedsReloaded:
-            let isRecording = self.journeyRepository.isRecording
-            #if DEBUG
-            MSLogger.make(category: .home).debug("여정 기록 중 여부: \(isRecording)")
-            #endif
-            if isRecording {
-                self.resumeJourney()
-            }
-            self.state.isRecording.send(isRecording)
+            
+            self.resumeJourneyIfNeeded()
         case .startButtonDidTap(let coordinate):
             #if DEBUG
-            MSLogger.make(category: .home).debug("Start 버튼 탭: \(coordinate)")
+            MSLogger.make(category: .home).debug("시작 버튼이 탭 되었습니다: \(coordinate)")
             #endif
             self.startJourney(at: coordinate)
-            self.state.isRefreshButtonHidden.send(true)
         case .refreshButtonDidTap(visibleCoordinates: (let minCoordinate, let maxCoordinate)):
             self.state.isRefreshButtonHidden.send(true)
             self.fetchJourneys(minCoordinate: minCoordinate, maxCoordinate: maxCoordinate)
         case .backButtonDidTap:
-            self.state.isRecording.send(false)
-            self.state.isRefreshButtonHidden.send(false)
-            self.state.overlaysShouldBeCleared.send(true)
+            #if DEBUG
+            MSLogger.make(category: .home).debug("취소 버튼이 탭 되었습니다.")
+            #endif
+            self.cancelJourney()
+        case .recordingStateDidChange(let isRecording):
+            self.state.isRecording.send(isRecording)
         case .mapViewDidChange:
             if self.state.isRecording.value == false {
                 self.state.isRefreshButtonHidden.send(false)
@@ -124,24 +120,6 @@ private extension HomeViewModel {
         }
     }
     
-    func startJourney(at coordinate: Coordinate) {
-        Task {
-            self.state.isStartButtonLoading.send(true)
-            defer { self.state.isStartButtonLoading.send(false) }
-            
-            guard let userID = self.userRepository.fetchUUID() else { return }
-            
-            let result = await self.journeyRepository.startJourney(at: coordinate, userID: userID)
-            switch result {
-            case .success(let recordingJourney):
-                self.state.startedJourney.send(recordingJourney)
-                self.state.isRecording.send(true)
-            case .failure(let error):
-                MSLogger.make(category: .home).error("\(error)")
-            }
-        }
-    }
-    
     func fetchJourneys(minCoordinate: Coordinate, maxCoordinate: Coordinate) {
         guard let userID = self.userRepository.fetchUUID() else { return }
         
@@ -158,12 +136,58 @@ private extension HomeViewModel {
         }
     }
     
-    func resumeJourney() {
+    func startJourney(at coordinate: Coordinate) {
+        Task {
+            defer { self.syncRecordingState() }
+            
+            self.state.isStartButtonLoading.send(true)
+            defer { self.state.isStartButtonLoading.send(false) }
+            
+            guard let userID = self.userRepository.fetchUUID() else { return }
+            
+            let result = await self.journeyRepository.startJourney(at: coordinate, userID: userID)
+            switch result {
+            case .success(let recordingJourney):
+                self.state.journeyDidStarted.send(recordingJourney)
+                self.state.isRefreshButtonHidden.send(true)
+            case .failure(let error):
+                MSLogger.make(category: .home).error("\(error)")
+            }
+        }
+    }
+    
+    func resumeJourneyIfNeeded() {
+        defer { self.syncRecordingState() }
+        
         guard let recordingJourney = self.journeyRepository.fetchRecordingJourney() else {
             return
         }
         
-        MSLogger.make(category: .home).debug("Recording Journey: \(recordingJourney)")
+        self.state.journeyDidResumed.send(recordingJourney)
+    }
+    
+    func cancelJourney() {
+        guard let userID = self.userRepository.fetchUUID(),
+              let recordingJourney = self.journeyRepository.fetchRecordingJourney() else {
+            return
+        }
+        
+        Task {
+            defer { self.syncRecordingState() }
+            
+            let result = await self.journeyRepository.deleteJourney(recordingJourney, userID: userID)
+            switch result {
+            case .success(let deletedJourney):
+                self.state.journeyDidCancelled.send(deletedJourney)
+            case .failure(let error):
+                MSLogger.make(category: .home).error("\(error)")
+            }
+        }
+    }
+    
+    func syncRecordingState() {
+        let isRecording = self.journeyRepository.isRecording
+        self.state.isRecording.send(isRecording)
     }
     
 }

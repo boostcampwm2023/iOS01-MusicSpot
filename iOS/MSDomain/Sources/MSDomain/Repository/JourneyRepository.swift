@@ -17,8 +17,8 @@ public protocol JourneyRepository {
                           maxCoordinate: Coordinate) async -> Result<[Journey], Error>
     func fetchRecordingJourney() -> RecordingJourney?
     mutating func startJourney(at coordinate: Coordinate, userID: UUID) async -> Result<RecordingJourney, Error>
-    mutating func endJourney(_ journey: Journey) async -> Result<String, Error>
     func recordJourney(journeyID: String, at coordinates: [Coordinate]) async -> Result<RecordingJourney, Error>
-    mutating func deleteJourney(_ journey: RecordingJourney, userID: UUID) async -> Result<String, Error>
+    mutating func endJourney(_ journey: Journey) async -> Result<String, Error>
+    mutating func deleteJourney(_ journey: RecordingJourney, userID: UUID) async -> Result<RecordingJourney, Error>
     
 }
