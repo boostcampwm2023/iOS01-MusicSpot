@@ -79,8 +79,12 @@ extension SpotCoordinator: SpotNavigationDelegate {
     }
     
     func popToHome(spot: Spot?) {
-        self.navigationController.presentedViewController?.dismiss(animated: true) { [weak self] in
-            self?.finish()
+        if spot != nil {
+            self.navigationController.presentedViewController?.dismiss(animated: true) { [weak self] in
+                self?.finish()
+            }
+        } else {
+            self.finish()
         }
     }
     
