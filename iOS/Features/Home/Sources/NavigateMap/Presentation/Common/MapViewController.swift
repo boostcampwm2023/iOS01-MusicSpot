@@ -138,6 +138,8 @@ public final class MapViewController: UIViewController {
             #if DEBUG
             MSLogger.make(category: .home).debug("Map에 NavigateMapViewModel을 바인딩 했습니다.")
             #endif
+            
+            navigateMapViewModel.trigger(.viewNeedsLoaded)
         }
         
         if let recordJourneyViewModel = viewModel as? RecordJourneyViewModel {
@@ -155,6 +157,17 @@ public final class MapViewController: UIViewController {
                 self?.clearAnnotations()
                 self?.addAnnotations(with: journeys)
                 self?.drawPolyLinesToMap(with: journeys)
+            }
+            .store(in: &self.cancellables)
+        
+        viewModel.state.recordingJourneyShouldResume
+            .sink { [weak self] recordingJourney in
+                self?.recordingShouldResume(recordingJourney)
+                
+                let coordinates = recordingJourney.coordinates.map {
+                    CLLocationCoordinate2D(latitude: $0.latitude, longitude: $0.longitude)
+                }
+                self?.drawPolylineToMap(using: coordinates)
             }
             .store(in: &self.cancellables)
     }
@@ -220,24 +233,6 @@ public final class MapViewController: UIViewController {
                                           coordinate: coordinate,
                                           photoData: photoData)
         self.mapView.addAnnotation(annotation)
-    }
-    
-    public func addSpotInRecording(spot: Spot) {
-        Task {
-            
-            let imageFetcher = MSImageFetcher.shared
-            guard let photoData = await imageFetcher.fetchImage(from: spot.photoURL,
-                                                                forKey: spot.photoURL.paath()) else {
-                throw ImageFetchError.imageFetchFailed
-            }
-            
-            let coordinate = CLLocationCoordinate2D(latitude: spot.coordinate.latitude,
-                                                    longitude: spot.coordinate.longitude)
-            
-            self.addAnnotation(title: "",
-                               coordinate: coordinate,
-                               photoData: photoData)
-        }
     }
     
     // MARK: - Functions: Polyline
@@ -328,15 +323,6 @@ extension MapViewController: CLLocationManagerDelegate {
             return
         }
         
-        let previousCoordinate = (self.viewModel as? RecordJourneyViewModel)?.state.previousCoordinate.value
-        
-        if let previousCoordinate = previousCoordinate {
-            if !self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate,
-                                               coordinate2: newCurrentLocation.coordinate) {
-                return
-            }
-        }
-        
         let coordinate2D = CLLocationCoordinate2D(latitude: newCurrentLocation.coordinate.latitude,
                                                   longitude: newCurrentLocation.coordinate.longitude)
         
@@ -367,14 +353,6 @@ extension MapViewController: CLLocationManagerDelegate {
         default:
             MSLogger.make(category: .home).error("잘못된 위치 정보 정확도에 대한 값입니다.")
         }
-    }
-    
-    private func isDistanceOver5AndUnder50(coordinate1: CLLocationCoordinate2D,
-                                           coordinate2: CLLocationCoordinate2D) -> Bool {
-        let location1 = CLLocation(latitude: coordinate1.latitude, longitude: coordinate1.longitude)
-        let location2 = CLLocation(latitude: coordinate2.latitude, longitude: coordinate2.longitude)
-        MSLogger.make(category: .navigateMap).log("이동한 거리: \(location1.distance(from: location2))")
-        return 5 <= location1.distance(from: location2) && location1.distance(from: location2) <= 50
     }
     
     private func presentLocationAuthorizationAlert() {

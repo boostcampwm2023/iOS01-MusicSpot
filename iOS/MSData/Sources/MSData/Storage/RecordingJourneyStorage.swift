@@ -50,6 +50,8 @@ public struct RecordingJourneyStorage {
     // MARK: - Functions
     
     public mutating func start(initialData recordingJourney: RecordingJourney) {
+        defer { self.isRecording = true }
+        
         // 삭제되지 않은 이전 여정 기록이 남아있다면 삭제
         if self.recordingJourneyID != nil {
             do {

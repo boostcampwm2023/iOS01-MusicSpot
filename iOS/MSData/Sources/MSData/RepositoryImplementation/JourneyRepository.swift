@@ -74,11 +74,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     }
     
     public func fetchRecordingJourney() -> RecordingJourney? {
-        guard let recordingJourneyID = self.fetchRecordingJourneyID(),
-              let recordingJourney = self.fetchRecordingJourney(forID: recordingJourneyID) else {
-            return nil
-        }
-        return recordingJourney
+        return self.recordingJourney.currentState
     }
     
     public mutating func startJourney(at coordinate: Coordinate,
@@ -168,24 +164,6 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         case .failure(let error):
             return .failure(error)
         }
-    }
-    
-}
-
-// MARK: - Private Functions
-
-private extension JourneyRepositoryImplementation {
-    
-    func fetchRecordingJourneyID() -> String? {
-        guard let recordingJourneyID = self.recordingJourney.id else {
-            MSLogger.make(category: .recordingJourneyStorage).error("기록 중인 여정 정보를 가져오는데 실패했습니다.")
-            return nil
-        }
-        return recordingJourneyID
-    }
-    
-    func fetchRecordingJourney(forID id: String) -> RecordingJourney? {
-        return self.storage.get(RecordingJourneyDTO.self, forKey: id)?.toDomain()
     }
     
 }
