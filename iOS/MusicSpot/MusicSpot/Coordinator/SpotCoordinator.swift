@@ -61,11 +61,15 @@ extension SpotCoordinator: SpotNavigationDelegate {
                                           spotRepository: spotRepository,
                                           coordinate: coordinate)
         let spotSaveViewController = SaveSpotViewController(image: image, viewModel: viewModel)
-        spotSaveViewController.modalPresentationStyle = .overFullScreen
+        spotSaveViewController.modalPresentationStyle = .fullScreen
         spotSaveViewController.navigationDelegate = self
         
-        self.navigationController.presentedViewController?.dismiss(animated: true) { [weak self] in
-            self?.navigationController.present(spotSaveViewController, animated: true)
+        if let presentedViewController = self.navigationController.presentedViewController {
+            presentedViewController.dismiss(animated: true) { [weak self] in
+                self?.navigationController.present(spotSaveViewController, animated: true)
+            }
+        } else {
+            self.navigationController.present(spotSaveViewController, animated: true)
         }
     }
     
@@ -79,8 +83,8 @@ extension SpotCoordinator: SpotNavigationDelegate {
     }
     
     func popToHome(spot: Spot?) {
-        if spot != nil {
-            self.navigationController.presentedViewController?.dismiss(animated: true) { [weak self] in
+        if let presentedViewController = self.navigationController.presentedViewController {
+            presentedViewController.dismiss(animated: true) { [weak self] in
                 self?.finish()
             }
         } else {
