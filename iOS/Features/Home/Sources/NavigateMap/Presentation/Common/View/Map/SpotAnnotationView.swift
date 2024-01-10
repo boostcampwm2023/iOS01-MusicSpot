@@ -1,5 +1,5 @@
 //
-//  CustomAnnotationView.swift
+//  SpotAnnotationView.swift
 //  Home
 //
 //  Created by 윤동주 on 11/23/23.
@@ -11,16 +11,16 @@ import UIKit
 
 import MSDesignSystem
 
-final class CustomAnnotationView: MKAnnotationView {
+final class SpotAnnotationView: MKAnnotationView {
     
     // MARK: - Constants
     
-    public static let identifier = "CustomAnnotationView"
+    public static let identifier = "SpotAnnotationView"
     
     private enum Metric {
         
-        static let markerWidth: CGFloat = 43.0
-        static let markerHeight: CGFloat = 53.0
+        static let markerWidth: CGFloat = 60.0
+        static let markerHeight: CGFloat = 60.0
         static let inset: CGFloat = 4.0
         static let thumbnailImageViewSize: CGFloat = Metric.markerWidth - Metric.inset * 2
         
@@ -42,9 +42,7 @@ final class CustomAnnotationView: MKAnnotationView {
     // MARK: - Properties
     
     override var annotation: MKAnnotation? {
-        didSet {
-            self.clusteringIdentifier = "spotIdentifier"
-        }
+        didSet { self.clusteringIdentifier = "spotIdentifier" }
     }
     
     // MARK: - Initializer
@@ -103,7 +101,7 @@ final class CustomAnnotationView: MKAnnotationView {
     // MARK: - Functions
     
     func updateThumbnailImage() {
-        guard let annotation = self.annotation as? CustomAnnotation else { return }
+        guard let annotation = self.annotation as? SpotAnnotation else { return }
         self.thumbnailImageView.image = UIImage(data: annotation.photoData)
     }
     

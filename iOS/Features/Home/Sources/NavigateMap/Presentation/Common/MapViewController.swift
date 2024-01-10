@@ -45,8 +45,8 @@ public final class MapViewController: UIViewController {
         mapView.userTrackingMode = .follow
         mapView.showsCompass = false
         
-        mapView.register(CustomAnnotationView.self,
-                         forAnnotationViewWithReuseIdentifier: CustomAnnotationView.identifier)
+        mapView.register(SpotAnnotationView.self,
+                         forAnnotationViewWithReuseIdentifier: SpotAnnotationView.identifier)
         mapView.register(ClusterAnnotationView.self,
                          forAnnotationViewWithReuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
         
@@ -153,6 +153,7 @@ public final class MapViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] journeys in
                 self?.clearOverlays()
+                self?.clearAnnotations()
                 self?.addAnnotations(with: journeys)
                 self?.drawJourneyListPolylines(with: journeys)
             }
@@ -180,9 +181,9 @@ public final class MapViewController: UIViewController {
     // MARK: - Functions: Annotation
     
     /// 식별자를 갖고 Annotation view 생성
-    func addAnnotationView(using annotation: CustomAnnotation,
+    func addAnnotationView(using annotation: SpotAnnotation,
                            on mapView: MKMapView) -> MKAnnotationView {
-        return mapView.dequeueReusableAnnotationView(withIdentifier: CustomAnnotationView.identifier,
+        return mapView.dequeueReusableAnnotationView(withIdentifier: SpotAnnotationView.identifier,
                                                      for: annotation)
     }
     
@@ -216,7 +217,7 @@ public final class MapViewController: UIViewController {
     private func addAnnotation(title: String,
                                coordinate: CLLocationCoordinate2D,
                                photoData: Data) {
-        let annotation = CustomAnnotation(title: title,
+        let annotation = SpotAnnotation(title: title,
                                           coordinate: coordinate,
                                           photoData: photoData)
         self.mapView.addAnnotation(annotation)
@@ -385,7 +386,7 @@ extension MapViewController: MKMapViewDelegate {
                                          reuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
         }
         
-        let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: CustomAnnotationView.identifier,
+        let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: SpotAnnotationView.identifier,
                                                                    for: annotation)
         return annotationView
     }
