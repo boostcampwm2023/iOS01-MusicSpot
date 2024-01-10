@@ -170,9 +170,10 @@ public final class HomeViewController: HomeBottomSheetViewController {
         
         self.viewModel.state.isRefreshButtonHidden
             .removeDuplicates(by: { $0 == $1 })
+            .combineLatest(self.viewModel.state.isRecording)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isHidden in
-                self?.refreshButton.isHidden = isHidden
+            .sink { [weak self] isHidden, isRecording in
+                self?.refreshButton.isHidden = (isHidden && !isRecording)
             }
             .store(in: &self.cancellables)
         
