@@ -51,7 +51,7 @@ extension SpotCoordinator: SpotNavigationDelegate {
         picker.sourceType = .photoLibrary
         picker.allowsEditing = true
         picker.delegate = spotViewController
-        spotViewController.present(picker, animated: true)
+        self.navigationController.present(picker, animated: true)
     }
     
     func presentSaveSpot(using image: UIImage, coordinate: Coordinate) {
@@ -61,10 +61,12 @@ extension SpotCoordinator: SpotNavigationDelegate {
                                           spotRepository: spotRepository,
                                           coordinate: coordinate)
         let spotSaveViewController = SaveSpotViewController(image: image, viewModel: viewModel)
-        spotSaveViewController.modalPresentationStyle = .fullScreen
+        spotSaveViewController.modalPresentationStyle = .overFullScreen
         spotSaveViewController.navigationDelegate = self
-        self.navigationController.presentedViewController?.dismiss(animated: true)
-        self.navigationController.present(spotSaveViewController, animated: true)
+        
+        self.navigationController.presentedViewController?.dismiss(animated: true) { [weak self] in
+            self?.navigationController.present(spotSaveViewController, animated: true)
+        }
     }
     
     func dismissToSpot() {
@@ -76,8 +78,10 @@ extension SpotCoordinator: SpotNavigationDelegate {
         spotSaveViewController.dismiss(animated: true)
     }
     
-    func popToHome(spot: Spot? = nil) {
-        self.finish()
+    func popToHome(spot: Spot?) {
+        self.navigationController.presentedViewController?.dismiss(animated: true) { [weak self] in
+            self?.finish()
+        }
     }
     
 }

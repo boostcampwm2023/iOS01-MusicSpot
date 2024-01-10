@@ -114,10 +114,9 @@ public final class SaveSpotViewController: UIViewController {
     // MARK: - Combine Binding
     
     private func bind() {
-        self.viewModel.state.spot
+        self.viewModel.state.uploadedSpot
             .receive(on: DispatchQueue.main)
             .sink { [weak self] spot in
-                guard let spot = spot else { return }
                 self?.navigationDelegate?.popToHome(spot: spot)
             }
             .store(in: &self.cancellables)
@@ -262,12 +261,11 @@ public final class SaveSpotViewController: UIViewController {
     
     private func completeButtonDidTap() {
         guard let jpegData = self.image.jpegData(compressionQuality: 0.1) else {
-            MSLogger.make(category: .spot).debug("현재 이미지를 Data로 변환할 수 없습니다.")
+            MSLogger.make(category: .spot).warning("현재 이미지를 Data로 변환할 수 없습니다.")
             return
         }
         
-        self.viewModel.trigger(.startUploadSpot(jpegData))
-        self.navigationDelegate?.popToHome()
+        self.viewModel.trigger(.uploadSpot(jpegData))
     }
     
 }
