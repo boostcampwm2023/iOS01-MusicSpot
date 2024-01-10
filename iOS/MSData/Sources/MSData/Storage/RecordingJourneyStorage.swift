@@ -51,7 +51,7 @@ public struct RecordingJourneyStorage {
     
     public mutating func start(initialData recordingJourney: RecordingJourney) {
         // 삭제되지 않은 이전 여정 기록이 남아있다면 삭제
-        if let previousRecordingJourneyID = self.recordingJourneyID {
+        if self.recordingJourneyID != nil {
             do {
                 try self.finish()
             } catch {
@@ -74,7 +74,7 @@ public struct RecordingJourneyStorage {
     }
     
     @discardableResult
-    public func record<T: Codable>(_ value: T, keyPath: KeyPath<RecordingJourneyDTO, T>) -> Bool {
+    public func record<T: Codable>(_ values: [T], keyPath: KeyPath<RecordingJourneyDTO, [T]>) -> Bool {
         guard let recordingJourneyID = self.recordingJourneyID else {
             MSLogger.make(category: .recordingJourneyStorage)
                 .error("recordingJourneyID를 조회할 수 없습니다. 여정이 기록 중인지 확인해주세요.")
@@ -82,8 +82,12 @@ public struct RecordingJourneyStorage {
         }
         
         if let key = self.key(recordingJourneyID, forProperty: keyPath) {
-            // TODO: 기록중이던 Spot이나 Coordinate가 있을 경우, 이전 기록에 합쳐 저장
-            self.storage.set(value: value, forKey: key, subpath: recordingJourneyID)
+            let recordingValues = self.makeRecordingValue(appendingValues: values,
+                                                          forKey: key,
+                                                          subpath: recordingJourneyID)
+            self.storage.set(value: recordingValues,
+                             forKey: key,
+                             subpath: recordingJourneyID)
             return true
         } else {
             return false
@@ -104,12 +108,19 @@ public struct RecordingJourneyStorage {
 
 private extension RecordingJourneyStorage {
     
+    private enum Prefix {
+        static let idKey = "id"
+        static let startTimestampKey = "ts"
+        static let spotsKey = "sp"
+        static let coordinatesKey = "co"
+    }
+    
     func key<T>(_ key: String, forProperty keyPath: KeyPath<RecordingJourneyDTO, T>) -> String? {
         switch keyPath {
-        case \.id: return "id" + key
-        case \.startTimestamp: return "ts" + key
-        case \.spots: return "sp" + key
-        case \.coordinates: return "co" + key
+        case \.id: return Prefix.idKey + key
+        case \.startTimestamp: return Prefix.startTimestampKey + key
+        case \.spots: return Prefix.spotsKey + key
+        case \.coordinates: return Prefix.coordinatesKey + key
         default: return nil
         }
     }
@@ -164,6 +175,18 @@ private extension RecordingJourneyStorage {
         }
         
         return coordinates.map { $0.toDomain() }
+    }
+    
+    /// 기록 중인 이전 데이터가 남아있다면 새로운 데이터를 이전 데이터에 합칩니다.
+    /// 이전에 기록한 데이터가 없는 새로운 데이터라면 주어진 데이터를 그대로 반환합니다.
+    func makeRecordingValue<T: Codable>(appendingValues values: [T],
+                                        forKey key: String,
+                                        subpath: String? = nil) -> [T] {
+        guard let recordedData = self.storage.get([T].self, forKey: key, subpath: subpath) else {
+            return values
+        }
+        
+        return recordedData + values
     }
     
 }
