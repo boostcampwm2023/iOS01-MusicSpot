@@ -20,6 +20,7 @@ public final class HomeViewModel {
     
     public enum Action {
         case viewNeedsLoaded
+        case viewNeedsReloaded
         case startButtonDidTap(Coordinate)
         case refreshButtonDidTap(visibleCoordinates: (minCoordinate: Coordinate, maxCoordinate: Coordinate))
         case backButtonDidTap
@@ -71,6 +72,8 @@ public final class HomeViewModel {
             self.createNewUserWhenFirstLaunch()
             
             self.resumeJourneyIfNeeded()
+        case .viewNeedsReloaded:
+            self.syncRecordingState()
         case .startButtonDidTap(let coordinate):
             #if DEBUG
             MSLogger.make(category: .home).debug("시작 버튼이 탭 되었습니다: \(coordinate)")
@@ -188,6 +191,10 @@ private extension HomeViewModel {
     
     func syncRecordingState() {
         let isRecording = self.journeyRepository.isRecording
+        #if DEBUG
+        MSLogger.make(category: .home)
+            .debug("여정 기록 여부를 싱크하고 있습니다. 현재 기록 상태: \(isRecording ? "기록 중" : "기록 중이지 않음")")
+        #endif
         self.state.isRecording.send(isRecording)
     }
     

@@ -93,6 +93,20 @@ extension HomeCoordinator: SpotCoordinatorFinishDelegate {
     
 }
 
+// MARK: - Finish Delegate: SaveJourneyFlow
+
+extension HomeCoordinator: SaveJourneyFlowCoordinatorFinishDelegate {
+    
+    func shouldFinish(childCoordinator: Coordinator, with endedJourney: Journey) {
+        guard let homeViewController = self.rootViewController as? HomeViewController else { return }
+        
+        homeViewController.journeyDidEnded(endedJourney: endedJourney)
+        
+        self.shouldFinish(childCoordinator: childCoordinator)
+    }
+    
+}
+
 // MARK: - Home Navigation
 
 extension HomeCoordinator: HomeNavigationDelegate {
@@ -105,11 +119,12 @@ extension HomeCoordinator: HomeNavigationDelegate {
         spotCoordinator.start(spotCoordinate: coordinate)
     }
     
-    func navigateToSelectSong(lastCoordinate: Coordinate) {
-        let selectSongCoordinator = SaveJourneyFlowCoordinator(navigationController: self.navigationController)
-        selectSongCoordinator.finishDelegate = self
-        self.childCoordinators.append(selectSongCoordinator)
-        selectSongCoordinator.start(lastCoordinate: lastCoordinate)
+    func navigateToSaveJourneyFlow(lastCoordinate: Coordinate) {
+        let saveJourneyFlowCoordinator = SaveJourneyFlowCoordinator(navigationController: self.navigationController)
+        saveJourneyFlowCoordinator.finishDelegate = self
+        saveJourneyFlowCoordinator.saveJourneyFinishDelegate = self
+        self.childCoordinators.append(saveJourneyFlowCoordinator)
+        saveJourneyFlowCoordinator.start(lastCoordinate: lastCoordinate)
     }
     
 }

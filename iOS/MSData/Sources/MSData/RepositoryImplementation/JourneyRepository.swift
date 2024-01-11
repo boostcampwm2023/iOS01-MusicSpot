@@ -117,7 +117,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         case .success(let responseDTO):
             let coordinates = responseDTO.coordinates.map { $0.toDomain() }
             let recordingJourney = RecordingJourney(id: journeyID,
-                                                    startTimestamp: Date(),
+                                                    startTimestamp: Date.now,
                                                     spots: [],
                                                     coordinates: coordinates)
             self.recordingJourney.record(responseDTO.coordinates, keyPath: \.coordinates)

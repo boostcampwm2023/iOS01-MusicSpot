@@ -102,6 +102,10 @@ public struct RecordingJourneyStorage {
         
         self.isRecording = false
         self.recordingJourneyID = nil
+        
+        #if DEBUG
+        MSLogger.make(category: .recordingJourneyStorage).debug("여정 기록을 종료합니다: \(recordingJourneyID)")
+        #endif
     }
     
 }

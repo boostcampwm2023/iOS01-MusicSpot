@@ -13,6 +13,7 @@
 		08CBF87D2B18468E007D3797 /* SpotCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8752B18468E007D3797 /* SpotCoordinator.swift */; };
 		08CBF87E2B18468E007D3797 /* SaveJourneyFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8762B18468E007D3797 /* SaveJourneyFlowCoordinator.swift */; };
 		08CBF87F2B18468E007D3797 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08CBF8772B18468E007D3797 /* Coordinator.swift */; };
+		DD612FB92B50080600E681CC /* SaveJourneyFlowCoordinatorFinishDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD612FB82B50080600E681CC /* SaveJourneyFlowCoordinatorFinishDelegate.swift */; };
 		DD72AF642B4B89E700EB4E81 /* CoordinatorFinishDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB22F742B433EC300F83D84 /* CoordinatorFinishDelegate.swift */; };
 		DD73F8592B024C4900EE9BF2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F8582B024C4900EE9BF2 /* AppDelegate.swift */; };
 		DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */; };
@@ -49,6 +50,7 @@
 		08CBF8752B18468E007D3797 /* SpotCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotCoordinator.swift; sourceTree = "<group>"; };
 		08CBF8762B18468E007D3797 /* SaveJourneyFlowCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveJourneyFlowCoordinator.swift; sourceTree = "<group>"; };
 		08CBF8772B18468E007D3797 /* Coordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		DD612FB82B50080600E681CC /* SaveJourneyFlowCoordinatorFinishDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveJourneyFlowCoordinatorFinishDelegate.swift; sourceTree = "<group>"; };
 		DD72AF192B4A4A8800EB4E81 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		DD72AF1B2B4A4A8800EB4E81 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		DD73F8552B024C4900EE9BF2 /* MusicSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -100,6 +102,7 @@
 				08CBF8772B18468E007D3797 /* Coordinator.swift */,
 				DDB22F742B433EC300F83D84 /* CoordinatorFinishDelegate.swift */,
 				DDB3B9F12B4F6DF60024C6BF /* SpotCoordinatorFinishDelegate.swift */,
+				DD612FB82B50080600E681CC /* SaveJourneyFlowCoordinatorFinishDelegate.swift */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -227,6 +230,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				08CBF8792B18468E007D3797 /* AppCoordinator.swift in Sources */,
+				DD612FB92B50080600E681CC /* SaveJourneyFlowCoordinatorFinishDelegate.swift in Sources */,
 				08CBF87F2B18468E007D3797 /* Coordinator.swift in Sources */,
 				08CBF87D2B18468E007D3797 /* SpotCoordinator.swift in Sources */,
 				08CBF87E2B18468E007D3797 /* SaveJourneyFlowCoordinator.swift in Sources */,

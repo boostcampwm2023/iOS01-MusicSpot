@@ -12,6 +12,6 @@ import MSDomain
 public protocol HomeNavigationDelegate: AnyObject {
     
     func navigateToSpot(spotCoordinate coordinate: Coordinate)
-    func navigateToSelectSong(lastCoordinate: Coordinate)
+    func navigateToSaveJourneyFlow(lastCoordinate: Coordinate)
     
 }

@@ -116,6 +116,12 @@ public final class HomeViewController: HomeBottomSheetViewController {
         self.navigationController?.isNavigationBarHidden = true
     }
     
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.viewModel.trigger(.viewNeedsReloaded)
+    }
+    
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -213,6 +219,10 @@ public final class HomeViewController: HomeBottomSheetViewController {
         self.contentViewController.spotDidAdded(spot, photoData: photoData)
     }
     
+    public func journeyDidEnded(endedJourney: Journey) {
+        self.contentViewController.recordingDidStop(RecordingJourney(endedJourney))
+    }
+    
 }
 
 // MARK: - Buttons
@@ -267,7 +277,7 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
             return
         }
         
-        self.navigationDelegate?.navigateToSelectSong(lastCoordinate: currentUserCoordiante)
+        self.navigationDelegate?.navigateToSaveJourneyFlow(lastCoordinate: currentUserCoordiante)
     }
     
 }

@@ -29,6 +29,13 @@ public struct RecordingJourney: Identifiable {
         self.coordinates = coordinates
     }
     
+    public init(_ journey: Journey) {
+        self.id = journey.id
+        self.startTimestamp = journey.date.start
+        self.spots = journey.spots
+        self.coordinates = journey.coordinates
+    }
+    
     // MARK: - Subscript
     
     subscript<T>(dynamicMember keyPath: KeyPath<RecordingJourney, T>) -> T {
