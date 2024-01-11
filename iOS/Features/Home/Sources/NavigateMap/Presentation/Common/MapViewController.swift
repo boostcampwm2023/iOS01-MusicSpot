@@ -53,6 +53,16 @@ public final class MapViewController: UIViewController {
         return mapView
     }()
     
+    private let gradientLayer: MSGradientLayer = {
+        let gradientLayer = MSGradientLayer()
+        gradientLayer.gradientColors = [
+            .msColor(.primaryBackground).withAlphaComponent(.zero),
+            .msColor(.primaryBackground).withAlphaComponent(0.7)
+        ]
+        gradientLayer.locations = [0.55, 0.95]
+        return gradientLayer
+    }()
+    
     /// HomeMap 내 우상단 버튼 View
     private lazy var buttonStackView: ButtonStackView = {
         let stackView = ButtonStackView()
@@ -117,8 +127,21 @@ public final class MapViewController: UIViewController {
         super.viewDidLoad()
         
         self.configureLayout()
+        self.configureStyles()
         self.configureCoreLocation()
         self.bind(self.viewModel)
+    }
+    
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.gradientLayer.frame = self.view.bounds
+    }
+    
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        self.updateGradientColors()
     }
     
     // MARK: - Combine Binding
@@ -262,6 +285,7 @@ private extension MapViewController {
     
     func configureLayout() {
         self.view = self.mapView
+        self.mapView.layer.addSublayer(self.gradientLayer)
         
         self.view.addSubview(self.buttonStackView)
         self.buttonStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -271,6 +295,21 @@ private extension MapViewController {
             self.buttonStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,
                                                            constant: -Metric.buttonStackTrailingSpacing)
         ])
+    }
+    
+    func configureStyles() {
+        if #available(iOS 17.0, *) {
+            self.registerForTraitChanges([UITraitUserInterfaceStyle.self]) { [weak self] (_: Self, _) in
+                self?.updateGradientColors()
+            }
+        }
+    }
+    
+    private func updateGradientColors() {
+        self.gradientLayer.gradientColors = [
+            .msColor(.primaryBackground).withAlphaComponent(.zero),
+            .msColor(.primaryBackground).withAlphaComponent(0.7)
+        ]
     }
     
     private func configureCoreLocation() {
