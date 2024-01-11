@@ -116,8 +116,8 @@ public final class SaveSpotViewController: UIViewController {
     private func bind() {
         self.viewModel.state.uploadedSpot
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] spot in
-                self?.navigationDelegate?.popToHome(spot: spot)
+            .sink { [weak self] spot, photoData in
+                self?.navigationDelegate?.popToHome(with: spot, photoData: photoData)
             }
             .store(in: &self.cancellables)
     }

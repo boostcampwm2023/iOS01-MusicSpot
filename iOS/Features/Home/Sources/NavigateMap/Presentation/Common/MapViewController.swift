@@ -214,12 +214,8 @@ public final class MapViewController: UIViewController {
         }
     }
     
-    private func addAnnotation(title: String,
-                               coordinate: CLLocationCoordinate2D,
-                               photoData: Data) {
-        let annotation = SpotAnnotation(title: title,
-                                          coordinate: coordinate,
-                                          photoData: photoData)
+    func addAnnotation(title: String, coordinate: CLLocationCoordinate2D, photoData: Data) {
+        let annotation = SpotAnnotation(title: title, coordinate: coordinate, photoData: photoData)
         self.mapView.addAnnotation(annotation)
     }
     

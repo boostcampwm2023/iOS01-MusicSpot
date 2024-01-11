@@ -77,6 +77,23 @@ extension HomeCoordinator: CoordinatorFinishDelegate {
     
 }
 
+// MARK: - Finish Delegate: Spot
+
+extension HomeCoordinator: SpotCoordinatorFinishDelegate {
+    
+    func shouldFinish(childCoordinator: Coordinator, with spot: Spot?, photoData: Data?) {
+        guard let homeViewController = self.rootViewController as? HomeViewController else { return }
+        
+        if let spot = spot, let photoData = photoData {
+            homeViewController.spotDidAdded(spot, photoData: photoData)
+        }
+        
+        self.shouldFinish(childCoordinator: childCoordinator)
+    }
+    
+}
+
+
 // MARK: - Home Navigation
 
 extension HomeCoordinator: HomeNavigationDelegate {
@@ -84,6 +101,7 @@ extension HomeCoordinator: HomeNavigationDelegate {
     func navigateToSpot(spotCoordinate coordinate: Coordinate) {
         let spotCoordinator = SpotCoordinator(navigationController: self.navigationController)
         spotCoordinator.finishDelegate = self
+        spotCoordinator.spotFinishDelegate = self
         self.childCoordinators.append(spotCoordinator)
         spotCoordinator.start(spotCoordinate: coordinate)
     }

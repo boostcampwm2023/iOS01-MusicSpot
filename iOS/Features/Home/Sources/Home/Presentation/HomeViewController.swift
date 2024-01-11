@@ -209,6 +209,10 @@ public final class HomeViewController: HomeBottomSheetViewController {
         })
     }
     
+    public func spotDidAdded(_ spot: Spot, photoData: Data) {
+        self.contentViewController.spotDidAdded(spot, photoData: photoData)
+    }
+    
 }
 
 // MARK: - Buttons
@@ -240,13 +244,13 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
         self.viewModel.trigger(.refreshButtonDidTap(visibleCoordinates: coordinates))
     }
     
-    public func backButtonDidTap(_ button: MSRectButton) {
+    func backButtonDidTap(_ button: MSRectButton) {
         guard self.viewModel.state.isRecording.value == true else { return }
         
         self.viewModel.trigger(.backButtonDidTap)
     }
     
-    public func spotButtonDidTap(_ button: MSRectButton) {
+    func spotButtonDidTap(_ button: MSRectButton) {
         guard self.viewModel.state.isRecording.value == true else { return }
         
         guard let currentUserCoordiante = self.contentViewController.currentUserCoordinate else {
@@ -256,7 +260,7 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
         self.navigationDelegate?.navigateToSpot(spotCoordinate: currentUserCoordiante)
     }
     
-    public func nextButtonDidTap(_ button: MSRectButton) {
+    func nextButtonDidTap(_ button: MSRectButton) {
         guard self.viewModel.state.isRecording.value == true else { return }
         
         guard let currentUserCoordiante = self.contentViewController.currentUserCoordinate else {

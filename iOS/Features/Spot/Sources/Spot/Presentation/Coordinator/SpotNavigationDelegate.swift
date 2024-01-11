@@ -14,14 +14,14 @@ public protocol SpotNavigationDelegate: AnyObject {
     func presentPhotoLibrary(from viewController: UIViewController)
     func presentSaveSpot(using image: UIImage, coordinate: Coordinate)
     func dismissToSpot()
-    func popToHome(spot: Spot?)
+    func popToHome(with spot: Spot?, photoData: Data?)
     
 }
 
 extension SpotNavigationDelegate {
     
-    public func popToHome(spot: Spot? = nil) {
-        self.popToHome(spot: nil)
+    public func popToHome(with spot: Spot? = nil, photoData: Data? = nil) {
+        self.popToHome(with: nil, photoData: nil)
     }
     
 }

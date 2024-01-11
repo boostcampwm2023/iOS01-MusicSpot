@@ -92,3 +92,18 @@ extension MapViewController {
     }
     
 }
+
+// MARK: - Spot
+
+extension MapViewController {
+    
+    public func spotDidAdded(_ spot: Spot, photoData: Data) {
+        let coordinate = CLLocationCoordinate2D(latitude: spot.coordinate.latitude,
+                                                longitude: spot.coordinate.longitude)
+        
+        self.addAnnotation(title: spot.timestamp.description,
+                           coordinate: coordinate,
+                           photoData: photoData)
+    }
+    
+}

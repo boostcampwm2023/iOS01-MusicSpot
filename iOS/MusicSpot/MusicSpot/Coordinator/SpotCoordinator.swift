@@ -20,6 +20,7 @@ final class SpotCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     weak var finishDelegate: CoordinatorFinishDelegate?
+    weak var spotFinishDelegate: SpotCoordinatorFinishDelegate?
     
     // MARK: - Initializer
     
@@ -82,13 +83,14 @@ extension SpotCoordinator: SpotNavigationDelegate {
         spotSaveViewController.dismiss(animated: true)
     }
     
-    func popToHome(spot: Spot?) {
+    func popToHome(with spot: Spot?, photoData: Data?) {
         if let presentedViewController = self.navigationController.presentedViewController {
             presentedViewController.dismiss(animated: true) { [weak self] in
-                self?.finish()
+                guard let self = self else { return }
+                self.spotFinishDelegate?.shouldFinish(childCoordinator: self, with: spot, photoData: photoData)
             }
         } else {
-            self.finish()
+            self.spotFinishDelegate?.shouldFinish(childCoordinator: self, with: spot, photoData: photoData)
         }
     }
     

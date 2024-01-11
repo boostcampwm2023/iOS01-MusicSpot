@@ -20,7 +20,7 @@ public final class SaveSpotViewModel {
     
     public struct State {
         // Passthrough
-        public var uploadedSpot = PassthroughSubject<Spot, Never>()
+        public var uploadedSpot = PassthroughSubject<(Spot, Data), Never>()
     }
     
     // MARK: - Properties
@@ -66,7 +66,7 @@ internal extension SaveSpotViewModel {
                 let result = await self.spotRepository.upload(spot: spot)
                 switch result {
                 case .success(let spot):
-                    self.state.uploadedSpot.send(spot)
+                    self.state.uploadedSpot.send((spot, data))
                     MSLogger.make(category: .network).debug("성공적으로 업로드되었습니다: \(spot)")
                 case .failure(let error):
                     MSLogger.make(category: .network).error("\(error): 업로드에 실패하였습니다.")

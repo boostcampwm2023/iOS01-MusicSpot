@@ -10,7 +10,7 @@ import UIKit
 import MSDesignSystem
 import MSUIKit
 
-public protocol RecordJourneyButtonViewDelegate: AnyObject {
+internal protocol RecordJourneyButtonViewDelegate: AnyObject {
     
     func backButtonDidTap(_ button: MSRectButton)
     func spotButtonDidTap(_ button: MSRectButton)
@@ -64,7 +64,7 @@ public final class RecordJourneyButtonStackView: UIView {
     
     // MARK: - Properties
     
-    public var delegate: RecordJourneyButtonViewDelegate?
+    internal var delegate: RecordJourneyButtonViewDelegate?
     
     // MARK: - Initializer
 
