@@ -93,7 +93,6 @@ extension HomeCoordinator: SpotCoordinatorFinishDelegate {
     
 }
 
-
 // MARK: - Home Navigation
 
 extension HomeCoordinator: HomeNavigationDelegate {

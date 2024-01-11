@@ -106,6 +106,8 @@ public final class SaveJourneyViewController: UIViewController {
         return button
     }()
     
+    private var alertView: MSAlertViewController?
+    
     // MARK: - Initializer
     
     public init(viewModel: SaveJourneyViewModel,
@@ -180,6 +182,14 @@ public final class SaveJourneyViewController: UIViewController {
                 } else {
                     self.musicPlayer.pause()
                 }
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.isDoneButtonLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isDoneButtonLoading in
+                guard let alertView = self?.alertView else { return }
+                alertView.updateDoneButtonLoadingState(to: isDoneButtonLoading)
             }
             .store(in: &self.cancellables)
         

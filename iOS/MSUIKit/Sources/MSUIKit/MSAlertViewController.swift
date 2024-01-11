@@ -319,4 +319,8 @@ open class MSAlertViewController: UIViewController {
         self.doneButton.isEnabled = isEnabled
     }
     
+    public func updateDoneButtonLoadingState(to isLoading: Bool) {
+        self.doneButton.configuration?.showsActivityIndicator = isLoading
+    }
+    
 }
