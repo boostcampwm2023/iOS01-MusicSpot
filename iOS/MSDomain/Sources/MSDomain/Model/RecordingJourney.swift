@@ -7,6 +7,7 @@
 
 import Foundation
 
+@dynamicMemberLookup
 public struct RecordingJourney: Identifiable {
     
     // MARK: - Properties
@@ -28,6 +29,19 @@ public struct RecordingJourney: Identifiable {
         self.coordinates = coordinates
     }
     
+    public init(_ journey: Journey) {
+        self.id = journey.id
+        self.startTimestamp = journey.date.start
+        self.spots = journey.spots
+        self.coordinates = journey.coordinates
+    }
+    
+    // MARK: - Subscript
+    
+    subscript<T>(dynamicMember keyPath: KeyPath<RecordingJourney, T>) -> T {
+        return self[keyPath: keyPath]
+    }
+    
 }
 
 // MARK: - Hashable
@@ -40,6 +54,21 @@ extension RecordingJourney: Hashable {
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.id)
+    }
+    
+}
+
+// MARK: - Custom String
+
+extension RecordingJourney: CustomStringConvertible {
+    
+    public var description: String {
+        return """
+        ID: \(self.id)
+        Starting Time: \(self.startTimestamp)
+        Number of Spots: \(self.spots.count)
+        Number of Coordinates: \(self.coordinates.count)
+        """
     }
     
 }

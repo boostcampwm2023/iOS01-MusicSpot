@@ -42,3 +42,18 @@ extension DeleteJourneyResponseDTO: Decodable {
     }
     
 }
+
+// MARK: - Domain Mapping
+
+import MSDomain
+
+extension DeleteJourneyResponseDTO {
+    
+    public func toDomain() -> RecordingJourney {
+        return RecordingJourney(id: self.id,
+                                startTimestamp: self.metadata.startTimestamp,
+                                spots: self.spots.map { $0.toDomain() },
+                                coordinates: self.coordinates.map { $0.toDomain() })
+    }
+    
+}

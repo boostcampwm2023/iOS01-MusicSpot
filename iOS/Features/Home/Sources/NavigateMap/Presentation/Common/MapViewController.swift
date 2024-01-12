@@ -45,12 +45,22 @@ public final class MapViewController: UIViewController {
         mapView.userTrackingMode = .follow
         mapView.showsCompass = false
         
-        mapView.register(CustomAnnotationView.self,
-                         forAnnotationViewWithReuseIdentifier: CustomAnnotationView.identifier)
+        mapView.register(SpotAnnotationView.self,
+                         forAnnotationViewWithReuseIdentifier: SpotAnnotationView.identifier)
         mapView.register(ClusterAnnotationView.self,
                          forAnnotationViewWithReuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
         
         return mapView
+    }()
+    
+    private let gradientLayer: MSGradientLayer = {
+        let gradientLayer = MSGradientLayer()
+        gradientLayer.gradientColors = [
+            .msColor(.primaryBackground).withAlphaComponent(.zero),
+            .msColor(.primaryBackground).withAlphaComponent(0.7)
+        ]
+        gradientLayer.locations = [0.55, 0.95]
+        return gradientLayer
     }()
     
     /// HomeMap 내 우상단 버튼 View
@@ -117,8 +127,21 @@ public final class MapViewController: UIViewController {
         super.viewDidLoad()
         
         self.configureLayout()
+        self.configureStyles()
         self.configureCoreLocation()
         self.bind(self.viewModel)
+    }
+    
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.gradientLayer.frame = self.view.bounds
+    }
+    
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        self.updateGradientColors()
     }
     
     // MARK: - Combine Binding
@@ -135,26 +158,27 @@ public final class MapViewController: UIViewController {
         
         if let navigateMapViewModel = viewModel as? NavigateMapViewModel {
             self.bind(navigateMapViewModel)
-            #if DEBUG
             MSLogger.make(category: .home).debug("Map에 NavigateMapViewModel을 바인딩 했습니다.")
-            #endif
+            return
         }
         
         if let recordJourneyViewModel = viewModel as? RecordJourneyViewModel {
             self.bind(recordJourneyViewModel)
-            #if DEBUG
             MSLogger.make(category: .home).debug("Map에 RecordJourneyViewModel을 바인딩 했습니다.")
-            #endif
+            return
         }
+        
+        MSLogger.make(category: .home).warning("Map에 ViewModel을 바인딩하지 못했습니다.")
     }
     
     private func bind(_ viewModel: NavigateMapViewModel) {
         viewModel.state.visibleJourneys
             .receive(on: DispatchQueue.main)
             .sink { [weak self] journeys in
+                self?.clearOverlays()
                 self?.clearAnnotations()
                 self?.addAnnotations(with: journeys)
-                self?.drawPolyLinesToMap(with: journeys)
+                self?.drawJourneyListPolylines(with: journeys)
             }
             .store(in: &self.cancellables)
     }
@@ -172,7 +196,7 @@ public final class MapViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] previousCoordinate, currentCoordinate in
                 let points = [previousCoordinate, currentCoordinate]
-                self?.drawPolylineToMap(using: points)
+                self?.drawPolyline(using: points)
             }
             .store(in: &self.cancellables)
     }
@@ -180,9 +204,9 @@ public final class MapViewController: UIViewController {
     // MARK: - Functions: Annotation
     
     /// 식별자를 갖고 Annotation view 생성
-    func addAnnotationView(using annotation: CustomAnnotation,
+    func addAnnotationView(using annotation: SpotAnnotation,
                            on mapView: MKMapView) -> MKAnnotationView {
-        return mapView.dequeueReusableAnnotationView(withIdentifier: CustomAnnotationView.identifier,
+        return mapView.dequeueReusableAnnotationView(withIdentifier: SpotAnnotationView.identifier,
                                                      for: annotation)
     }
     
@@ -213,36 +237,14 @@ public final class MapViewController: UIViewController {
         }
     }
     
-    private func addAnnotation(title: String,
-                               coordinate: CLLocationCoordinate2D,
-                               photoData: Data) {
-        let annotation = CustomAnnotation(title: title,
-                                          coordinate: coordinate,
-                                          photoData: photoData)
+    func addAnnotation(title: String, coordinate: CLLocationCoordinate2D, photoData: Data) {
+        let annotation = SpotAnnotation(title: title, coordinate: coordinate, photoData: photoData)
         self.mapView.addAnnotation(annotation)
-    }
-    
-    public func addSpotInRecording(spot: Spot) {
-        Task {
-            
-            let imageFetcher = MSImageFetcher.shared
-            guard let photoData = await imageFetcher.fetchImage(from: spot.photoURL,
-                                                                forKey: spot.photoURL.paath()) else {
-                throw ImageFetchError.imageFetchFailed
-            }
-            
-            let coordinate = CLLocationCoordinate2D(latitude: spot.coordinate.latitude,
-                                                    longitude: spot.coordinate.longitude)
-            
-            self.addAnnotation(title: "",
-                               coordinate: coordinate,
-                               photoData: photoData)
-        }
     }
     
     // MARK: - Functions: Polyline
     
-    private func drawPolyLinesToMap(with journeys: [Journey]) {
+    func drawJourneyListPolylines(with journeys: [Journey]) {
         Task {
             await withTaskGroup(of: Void.self) { group in
                 for journey in journeys {
@@ -251,29 +253,28 @@ public final class MapViewController: UIViewController {
                             CLLocationCoordinate2D(latitude: $0.latitude,
                                                    longitude: $0.longitude)
                         }
-                        await self.drawPolylineToMap(using: coordinates)
+                        await self.drawPolyline(using: coordinates)
                     }
                 }
             }
         }
     }
     
-    private func drawPolylineToMap(using coordinates: [CLLocationCoordinate2D]) {
-        let polyline = MKPolyline(coordinates: coordinates,
-                                  count: coordinates.count)
+    func drawPolyline(using coordinates: [CLLocationCoordinate2D]) {
+        let polyline = MKPolyline(coordinates: coordinates, count: coordinates.count)
         self.mapView.addOverlay(polyline)
     }
     
     // MARK: - Functions
     
-    public func clearOverlays() {
-        let overlays = self.mapView.overlays
-        self.mapView.removeOverlays(overlays)
-    }
-    
     public func clearAnnotations() {
         let annotations = self.mapView.annotations
         self.mapView.removeAnnotations(annotations)
+    }
+    
+    public func clearOverlays() {
+        let overlays = self.mapView.overlays
+        self.mapView.removeOverlays(overlays)
     }
     
 }
@@ -284,6 +285,7 @@ private extension MapViewController {
     
     func configureLayout() {
         self.view = self.mapView
+        self.mapView.layer.addSublayer(self.gradientLayer)
         
         self.view.addSubview(self.buttonStackView)
         self.buttonStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -293,6 +295,21 @@ private extension MapViewController {
             self.buttonStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,
                                                            constant: -Metric.buttonStackTrailingSpacing)
         ])
+    }
+    
+    func configureStyles() {
+        if #available(iOS 17.0, *) {
+            self.registerForTraitChanges([UITraitUserInterfaceStyle.self]) { [weak self] (_: Self, _) in
+                self?.updateGradientColors()
+            }
+        }
+    }
+    
+    private func updateGradientColors() {
+        self.gradientLayer.gradientColors = [
+            .msColor(.primaryBackground).withAlphaComponent(.zero),
+            .msColor(.primaryBackground).withAlphaComponent(0.7)
+        ]
     }
     
     private func configureCoreLocation() {
@@ -328,15 +345,6 @@ extension MapViewController: CLLocationManagerDelegate {
             return
         }
         
-        let previousCoordinate = (self.viewModel as? RecordJourneyViewModel)?.state.previousCoordinate.value
-        
-        if let previousCoordinate = previousCoordinate {
-            if !self.isDistanceOver5AndUnder50(coordinate1: previousCoordinate,
-                                               coordinate2: newCurrentLocation.coordinate) {
-                return
-            }
-        }
-        
         let coordinate2D = CLLocationCoordinate2D(latitude: newCurrentLocation.coordinate.latitude,
                                                   longitude: newCurrentLocation.coordinate.longitude)
         
@@ -367,14 +375,6 @@ extension MapViewController: CLLocationManagerDelegate {
         default:
             MSLogger.make(category: .home).error("잘못된 위치 정보 정확도에 대한 값입니다.")
         }
-    }
-    
-    private func isDistanceOver5AndUnder50(coordinate1: CLLocationCoordinate2D,
-                                           coordinate2: CLLocationCoordinate2D) -> Bool {
-        let location1 = CLLocation(latitude: coordinate1.latitude, longitude: coordinate1.longitude)
-        let location2 = CLLocation(latitude: coordinate2.latitude, longitude: coordinate2.longitude)
-        MSLogger.make(category: .navigateMap).log("이동한 거리: \(location1.distance(from: location2))")
-        return 5 <= location1.distance(from: location2) && location1.distance(from: location2) <= 50
     }
     
     private func presentLocationAuthorizationAlert() {
@@ -421,7 +421,7 @@ extension MapViewController: MKMapViewDelegate {
                                          reuseIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier)
         }
         
-        let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: CustomAnnotationView.identifier,
+        let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: SpotAnnotationView.identifier,
                                                                    for: annotation)
         return annotationView
     }

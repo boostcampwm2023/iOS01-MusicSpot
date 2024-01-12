@@ -28,6 +28,7 @@ public final class SaveJourneyViewModel {
         /// Apple Music 권한 상태
         var musicAuthorizatonStatus = CurrentValueSubject<MusicAuthorization.Status, Never>(.notDetermined)
         var buttonStateFactors = CurrentValueSubject<ButtonStateFactor, Never>(ButtonStateFactor())
+        var isDoneButtonLoading = CurrentValueSubject<Bool, Never>(false)
         
         var recordingJourney = CurrentValueSubject<RecordingJourney?, Never>(nil)
         var selectedSong: CurrentValueSubject<Song, Never>
@@ -75,7 +76,7 @@ public final class SaveJourneyViewModel {
                 self.state.buttonStateFactors.send(stateFactors)
             }
             
-            guard let recordingJourney = self.journeyRepository.loadJourneyFromLocal() else { return }
+            guard let recordingJourney = self.journeyRepository.fetchRecordingJourney() else { return }
             self.state.recordingJourney.send(recordingJourney)
         case .musicControlButtonDidTap:
             let stateFactors = self.state.buttonStateFactors.value
@@ -93,17 +94,22 @@ public final class SaveJourneyViewModel {
 private extension SaveJourneyViewModel {
     
     func endJourney(named title: String) {
-        guard let recordingJourney = self.state.recordingJourney.value else { return }
-        guard let journeyID = self.journeyRepository.fetchRecordingJourneyID() else { return }
+        self.state.isDoneButtonLoading.send(true)
+        defer { self.state.isDoneButtonLoading.send(false) }
+        
+        guard let recordingJourney = self.state.recordingJourney.value else {
+            return
+        }
         
         let selectedSong = self.state.selectedSong.value
         let coordinates = recordingJourney.coordinates + [self.lastCoordiante]
-        let journey = Journey(id: journeyID,
+        let journey = Journey(id: recordingJourney.id,
                               title: title,
                               date: (start: recordingJourney.startTimestamp, end: .now),
                               spots: recordingJourney.spots,
                               coordinates: coordinates,
                               music: Music(selectedSong))
+        
         Task {
             let result = await self.journeyRepository.endJourney(journey)
             switch result {

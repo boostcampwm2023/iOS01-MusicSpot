@@ -77,6 +77,36 @@ extension HomeCoordinator: CoordinatorFinishDelegate {
     
 }
 
+// MARK: - Finish Delegate: Spot
+
+extension HomeCoordinator: SpotCoordinatorFinishDelegate {
+    
+    func shouldFinish(childCoordinator: Coordinator, with spot: Spot?, photoData: Data?) {
+        guard let homeViewController = self.rootViewController as? HomeViewController else { return }
+        
+        if let spot = spot, let photoData = photoData {
+            homeViewController.spotDidAdded(spot, photoData: photoData)
+        }
+        
+        self.shouldFinish(childCoordinator: childCoordinator)
+    }
+    
+}
+
+// MARK: - Finish Delegate: SaveJourneyFlow
+
+extension HomeCoordinator: SaveJourneyFlowCoordinatorFinishDelegate {
+    
+    func shouldFinish(childCoordinator: Coordinator, with endedJourney: Journey) {
+        guard let homeViewController = self.rootViewController as? HomeViewController else { return }
+        
+        homeViewController.journeyDidEnded(endedJourney: endedJourney)
+        
+        self.shouldFinish(childCoordinator: childCoordinator)
+    }
+    
+}
+
 // MARK: - Home Navigation
 
 extension HomeCoordinator: HomeNavigationDelegate {
@@ -84,15 +114,17 @@ extension HomeCoordinator: HomeNavigationDelegate {
     func navigateToSpot(spotCoordinate coordinate: Coordinate) {
         let spotCoordinator = SpotCoordinator(navigationController: self.navigationController)
         spotCoordinator.finishDelegate = self
+        spotCoordinator.spotFinishDelegate = self
         self.childCoordinators.append(spotCoordinator)
         spotCoordinator.start(spotCoordinate: coordinate)
     }
     
-    func navigateToSelectSong(lastCoordinate: Coordinate) {
-        let selectSongCoordinator = SaveJourneyFlowCoordinator(navigationController: self.navigationController)
-        selectSongCoordinator.finishDelegate = self
-        self.childCoordinators.append(selectSongCoordinator)
-        selectSongCoordinator.start(lastCoordinate: lastCoordinate)
+    func navigateToSaveJourneyFlow(lastCoordinate: Coordinate) {
+        let saveJourneyFlowCoordinator = SaveJourneyFlowCoordinator(navigationController: self.navigationController)
+        saveJourneyFlowCoordinator.finishDelegate = self
+        saveJourneyFlowCoordinator.saveJourneyFinishDelegate = self
+        self.childCoordinators.append(saveJourneyFlowCoordinator)
+        saveJourneyFlowCoordinator.start(lastCoordinate: lastCoordinate)
     }
     
 }

@@ -106,6 +106,8 @@ public final class SaveJourneyViewController: UIViewController {
         return button
     }()
     
+    private var alertView: MSAlertViewController?
+    
     // MARK: - Initializer
     
     public init(viewModel: SaveJourneyViewModel,
@@ -183,6 +185,14 @@ public final class SaveJourneyViewController: UIViewController {
             }
             .store(in: &self.cancellables)
         
+        self.viewModel.state.isDoneButtonLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isDoneButtonLoading in
+                guard let alertView = self?.alertView else { return }
+                alertView.updateDoneButtonLoadingState(to: isDoneButtonLoading)
+            }
+            .store(in: &self.cancellables)
+        
         self.viewModel.state.recordingJourney
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
@@ -197,8 +207,8 @@ public final class SaveJourneyViewController: UIViewController {
         
         self.viewModel.state.endJourneySucceed
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.navigationDelegate?.popToHome()
+            .sink { [weak self] endedJourney in
+                self?.navigationDelegate?.popToHome(with: endedJourney)
             }
             .store(in: &self.cancellables)
     }
