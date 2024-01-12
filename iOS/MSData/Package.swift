@@ -33,6 +33,7 @@ private enum Dependency {
     static let msKeychainStorage = "MSKeychainStorage"
     static let msPersistentStorage = "MSPersistentStorage"
     static let msCoreKit = "MSCoreKit"
+    static let msExtension = "MSExtension"
     static let msLogger = "MSLogger"
     static let msUserDefaults = "MSUserDefaults"
     static let msFoundation = "MSFoundation"
@@ -69,6 +70,8 @@ let package = Package(
                              package: Dependency.msCoreKit),
                     .product(name: Dependency.msPersistentStorage,
                              package: Dependency.msCoreKit),
+                    .product(name: Dependency.msExtension,
+                             package: Dependency.msFoundation),
                     .product(name: Dependency.msLogger,
                              package: Dependency.msFoundation),
                     .product(name: Dependency.msUserDefaults,
