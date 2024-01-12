@@ -46,13 +46,6 @@ public final class RewindJourneyViewController: UIViewController {
     private let viewModel: RewindJourneyViewModel
     
     private var cancellables: Set<AnyCancellable> = []
-    private var presentingPhotoIndex: Int = .zero {
-        willSet {
-            self.updatePresentingPhoto(atIndex: newValue)
-            self.updateProgressViews(atIndex: newValue)
-            self.restartTimer()
-        }
-    }
     
     // MARK: - Properties: Gesture
     
@@ -126,7 +119,7 @@ public final class RewindJourneyViewController: UIViewController {
             .sink { [weak self] photoURLs, selectedSong in
                 guard let duration = selectedSong?.duration else { return }
                 self?.configureProgressViews(count: photoURLs.count, duration: duration)
-                self?.presentingPhotoIndex = .zero
+                self?.viewModel.trigger(.photoIndexDidChange(index: .zero))
             }
             .store(in: &self.cancellables)
         
@@ -165,6 +158,15 @@ public final class RewindJourneyViewController: UIViewController {
                     self.musicPlayer.pause()
                     self.musicPlayerView.pause()
                 }
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.presentingPhotoIndex
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] presentingPhotoIndex in
+                self?.updatePresentingPhoto(atIndex: presentingPhotoIndex)
+                self?.updateProgressViews(atIndex: presentingPhotoIndex)
+                self?.restartTimer()
             }
             .store(in: &self.cancellables)
         
@@ -218,16 +220,18 @@ public final class RewindJourneyViewController: UIViewController {
     // MARK: - Actions
     
     private func leftTouchViewDidTap() {
-        if self.presentingPhotoIndex > .zero {
-            let index = self.presentingPhotoIndex - 1
-            self.presentingPhotoIndex = index
+        let presentingPhotoIndex = self.viewModel.state.presentingPhotoIndex.value
+        if presentingPhotoIndex > .zero {
+            let index = presentingPhotoIndex - 1
+            self.viewModel.trigger(.photoIndexDidChange(index: index))
         }
     }
     
     private func rightTouchViewDidTap() {
-        if self.presentingPhotoIndex < self.viewModel.state.photoURLs.value.count - 1 {
-            let index = self.presentingPhotoIndex + 1
-            self.presentingPhotoIndex = index
+        let presentingPhotoIndex = self.viewModel.state.presentingPhotoIndex.value
+        if presentingPhotoIndex < self.viewModel.state.photoURLs.value.count - 1 {
+            let index = presentingPhotoIndex + 1
+            self.viewModel.trigger(.photoIndexDidChange(index: index))
         }
     }
 }

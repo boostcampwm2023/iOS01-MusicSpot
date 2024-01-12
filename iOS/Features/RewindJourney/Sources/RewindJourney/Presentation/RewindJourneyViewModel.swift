@@ -19,6 +19,7 @@ public final class RewindJourneyViewModel {
         case startAutoPlay
         case stopAutoPlay
         case toggleMusic(isPlaying: Bool)
+        case photoIndexDidChange(index: Int)
     }
     
     public struct State {
@@ -30,6 +31,8 @@ public final class RewindJourneyViewModel {
         let musicMetadata: CurrentValueSubject<Music, Never>
         let selectedSong = CurrentValueSubject<Song?, Never>(nil)
         let albumCoverImageData = CurrentValueSubject<Data?, Never>(nil)
+        
+        let presentingPhotoIndex = CurrentValueSubject<Int, Never>(.zero)
         let isSongPlaying = CurrentValueSubject<Bool, Never>(false)
     }
     
@@ -77,6 +80,8 @@ extension RewindJourneyViewModel {
             self.stopTimer()
         case .toggleMusic(let isPlaying):
             self.state.isSongPlaying.send(isPlaying)
+        case .photoIndexDidChange(let index):
+            self.state.presentingPhotoIndex.send(index)
         }
     }
 
