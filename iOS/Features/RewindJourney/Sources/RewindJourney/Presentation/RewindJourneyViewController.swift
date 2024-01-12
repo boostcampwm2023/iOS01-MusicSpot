@@ -99,6 +99,7 @@ public final class RewindJourneyViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.bind()
         self.timerBinding()
         self.configure()
@@ -106,10 +107,14 @@ public final class RewindJourneyViewController: UIViewController {
     }
     
     public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
         self.viewModel.trigger(.startAutoPlay)
     }
     
     public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
         self.viewModel.trigger(.stopAutoPlay)
         self.musicPlayer.stop()
     }
