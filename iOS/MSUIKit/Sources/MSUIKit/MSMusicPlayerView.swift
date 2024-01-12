@@ -14,7 +14,8 @@ import MSLogger
 
 public protocol MSMusicPlayerViewDelegate: AnyObject {
     
-    func musicPlayerView(_ musicPlayerView: MSMusicPlayerView, didToggleMedia isPlaying: Bool)
+    func musicPlayerView(_ musicPlayerView: MSMusicPlayerView,
+                         didChangeStatus playbackStatus: MSMusicPlayerView.PlaybackStatus)
     
 }
 
@@ -41,6 +42,14 @@ public final class MSMusicPlayerView: UIView {
         
     }
     
+    // MARK: - State
+    
+    public enum PlaybackStatus {
+        case playing
+        case paused
+        case stopped
+    }
+    
     // MARK: - Properties
     
     public weak var delegate: MSMusicPlayerViewDelegate?
@@ -57,7 +66,7 @@ public final class MSMusicPlayerView: UIView {
         willSet { self.updateAlbumArt(newValue) }
     }
     
-    public var isPlaying: Bool = false {
+    private var playbackStatus: PlaybackStatus = .stopped {
         willSet { self.updatePlayingStatus(to: newValue) }
     }
     
@@ -143,7 +152,6 @@ public final class MSMusicPlayerView: UIView {
     // MARK: - Initializer
     
     public override init(frame: CGRect) {
-        self.isPlaying = true
         super.init(frame: frame)
         
         self.configureStyles()
@@ -172,13 +180,19 @@ public final class MSMusicPlayerView: UIView {
         self.albumCoverView.image = UIImage(data: albumCoverData)
     }
     
-    private func updatePlayingStatus(to isPlaying: Bool) {
+    private func updatePlayingStatus(to playbackStatus: PlaybackStatus) {
         DispatchQueue.main.async {
-            self.progressView.backgroundColor = isPlaying ? .msColor(.musicSpot) : .msColor(.componentBackground)
+            switch playbackStatus {
+            case .playing:
+                self.progressView.backgroundColor = .msColor(.musicSpot)
+            case .paused, .stopped:
+                self.progressView.backgroundColor = .msColor(.componentBackground)
+            }
             
             if #available(iOS 17.0, *) {
-                if isPlaying {
-                    self.playTimeIconImageView.addSymbolEffect(.variableColor.cumulative.dimInactiveLayers.nonReversing)
+                if case .playing = playbackStatus {
+                    self.playTimeIconImageView
+                        .addSymbolEffect(.variableColor.cumulative.dimInactiveLayers.nonReversing)
                 } else {
                     self.playTimeIconImageView.removeAllSymbolEffects()
                 }
@@ -198,17 +212,25 @@ public final class MSMusicPlayerView: UIView {
             self.playbackTime = playbackTime
         }
         
-        self.isPlaying = true
+        self.playbackStatus = .playing
         self.timer = Timer.publish(every: Metric.progressingTimeInterval, on: .current, in: .common)
             .autoconnect()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.playbackTime += Metric.progressingTimeInterval
+                
+                if let playbackTime = self?.playbackTime,
+                   let duration = self?.duration,
+                   playbackTime >= duration,
+                   let self = self {
+                    self.pause()
+                    self.delegate?.musicPlayerView(self, didChangeStatus: .stopped)
+                }
             }
     }
     
     public func pause() {
-        self.isPlaying = false
+        self.playbackStatus = .paused
         self.timer?.cancel()
     }
     
@@ -333,8 +355,13 @@ private extension MSMusicPlayerView {
     func configureAction() {
         let action = UIAction { [weak self] _ in
             guard let self = self else { return }
-            self.isPlaying.toggle()
-            self.delegate?.musicPlayerView(self, didToggleMedia: self.isPlaying)
+            
+            switch self.playbackStatus {
+            case .paused: self.playbackStatus = .playing
+            case .playing: self.playbackStatus = .paused
+            default: break
+            }
+            self.delegate?.musicPlayerView(self, didChangeStatus: self.playbackStatus)
         }
         self.controlButton.addAction(action, for: .touchUpInside)
     }

@@ -240,8 +240,14 @@ public final class RewindJourneyViewController: UIViewController {
 
 extension RewindJourneyViewController: MSMusicPlayerViewDelegate {
     
-    public func musicPlayerView(_ musicPlayerView: MSMusicPlayerView, didToggleMedia isPlaying: Bool) {
-        self.viewModel.trigger(.toggleMusic(isPlaying: isPlaying))
+    public func musicPlayerView(_ musicPlayerView: MSMusicPlayerView,
+                                didChangeStatus playbackStatus: MSMusicPlayerView.PlaybackStatus) {
+        switch playbackStatus {
+        case .playing, .paused:
+            self.viewModel.trigger(.toggleMusic(isPlaying: playbackStatus == .playing))
+        case .stopped:
+            self.navigationDelegate?.popToHome()
+        }
     }
     
 }
