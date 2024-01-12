@@ -51,11 +51,11 @@ internal extension RewindJourneyViewController {
                                          height: height)
             }
         default:
-            UIView.animate(withDuration: Metric.animationDuration) {
-                self.view.frame = CGRect(x: .zero,
-                                         y: .zero,
-                                         width: width,
-                                         height: height)
+            UIView.animate(withDuration: Metric.animationDuration) { [weak self] in
+                self?.view.frame = CGRect(x: .zero,
+                                          y: .zero,
+                                          width: width,
+                                          height: height)
             }
         }
     }
