@@ -126,7 +126,7 @@ public final class HomeViewController: HomeBottomSheetViewController {
         super.viewDidAppear(animated)
         
         // 화면 시작 시 새로고침 버튼 기능 한번 실행
-        self.refreshButton.sendActions(for: .touchUpInside)
+        self.refreshButtonDidTap()
     }
     
     // MARK: - Combine Binding

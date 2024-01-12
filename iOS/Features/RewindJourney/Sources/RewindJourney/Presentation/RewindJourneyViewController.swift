@@ -9,11 +9,8 @@ import Combine
 import UIKit
 import MusicKit
 
-import MSData
-import MSDesignSystem
 import MSDomain
 import MSExtension
-import MSImageFetcher
 import MSLogger
 import MSUIKit
 
@@ -56,10 +53,6 @@ public final class RewindJourneyViewController: UIViewController {
         }
     }
     
-    // MARK: - Properties: Timer
-    
-    private var timerSubscriber: Set<AnyCancellable> = []
-    
     // MARK: - Properties: Gesture
     
     var initialTouchPoint = CGPoint(x: 0, y: 0)
@@ -68,7 +61,13 @@ public final class RewindJourneyViewController: UIViewController {
     
     private let musicPlayer = ApplicationMusicPlayer.shared
     
-    private let progressStackView = UIStackView()
+    private let progressStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = Metric.Progressbar.inset
+        stackView.distribution = .fillEqually
+        return stackView
+    }()
     private let presentImageView = UIImageView()
     
     private lazy var musicPlayerView: MSMusicPlayerView = {
@@ -77,7 +76,7 @@ public final class RewindJourneyViewController: UIViewController {
         return playerView
     }()
     
-    private var progressViews: [MSProgressView]?
+    private var progressViews: [MSProgressView] = []
     private var preHighlightenProgressView: MSProgressView?
     private let leftTouchView = UIButton()
     private let rightTouchView = UIButton()
@@ -101,7 +100,6 @@ public final class RewindJourneyViewController: UIViewController {
         super.viewDidLoad()
         
         self.bind()
-        self.timerBinding()
         self.configure()
         self.viewModel.trigger(.viewNeedsLoaded)
     }
@@ -115,25 +113,27 @@ public final class RewindJourneyViewController: UIViewController {
     public override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        self.viewModel.trigger(.stopAutoPlay)
         self.musicPlayer.stop()
+        self.viewModel.trigger(.stopAutoPlay)
     }
     
     // MARK: - Combine Binding
     
     private func bind() {
         self.viewModel.state.photoURLs
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] urls in
                 self?.configureProgressViewsLayout(urls: urls)
             }
             .store(in: &self.cancellables)
         
-        self.viewModel.state.prefetchedMusic
-            .first()
-            .append(self.viewModel.state.selectedSong.compactMap { $0 }.map { Music($0) })
+        self.viewModel.state.musicMetadata
+            .combineLatest(self.viewModel.state.albumCoverImageData)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] music in
-                self?.musicPlayerView.update(with: music)
+            .sink { [weak self] music, albumCover in
+                self?.musicPlayerView.title = music.title
+                self?.musicPlayerView.artist = music.artist
+                self?.musicPlayerView.albumArt = albumCover
             }
             .store(in: &self.cancellables)
         
@@ -141,39 +141,35 @@ public final class RewindJourneyViewController: UIViewController {
             .compactMap { $0 }
             .first()
             .sink { [weak self] song in
-                self?.musicPlayer.queue = ApplicationMusicPlayer.Queue(for: [song])
                 self?.musicPlayerView.duration = song.duration
-                Task {
-                    try await self?.musicPlayer.prepareToPlay()
-                }
+                self?.musicPlayer.queue = ApplicationMusicPlayer.Queue(for: [song])
             }
             .store(in: &self.cancellables)
         
         self.viewModel.state.isSongPlaying
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] isPlaying in
                 guard let self = self else { return }
-                Task {
-                    if isPlaying {
+                
+                if isPlaying {
+                    Task {
+                        try await self.musicPlayer.prepareToPlay()
                         try await self.musicPlayer.play()
-                        self.musicPlayerView.play()
-                    } else {
-                        self.musicPlayer.pause()
-                        self.musicPlayerView.pause(playbackTime: self.musicPlayer.playbackTime)
                     }
+                    self.musicPlayerView.play()
+                } else {
+                    self.musicPlayer.pause()
+                    self.musicPlayerView.pause()
                 }
-                self.musicPlayerView.togglePlayingStatus(to: isPlaying)
             }
             .store(in: &self.cancellables)
-    }
-    
-    // MARK: - Timer
-    
-    private func timerBinding() {
-        self.viewModel.state.timerPublisher
+        
+        self.viewModel.state.timerDidEnded
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.rightTouchViewDidTap()
             }
-            .store(in: &self.timerSubscriber)
+            .store(in: &self.cancellables)
     }
     
     private func restartTimer() {
@@ -186,7 +182,7 @@ public final class RewindJourneyViewController: UIViewController {
     private func leftTouchViewTapped() {
         guard let presentingImageIndex = self.presentingImageIndex else { return }
         
-        if presentingImageIndex > 0 {
+        if presentingImageIndex > .zero {
             let index = presentingImageIndex - 1
             self.presentingImageIndex = index
         }
@@ -206,7 +202,7 @@ public final class RewindJourneyViewController: UIViewController {
 
 extension RewindJourneyViewController: MSMusicPlayerViewDelegate {
     
-    func musicPlayerView(_ musicPlayerView: MSMusicPlayerView, didToggleMedia isPlaying: Bool) {
+    public func musicPlayerView(_ musicPlayerView: MSMusicPlayerView, didToggleMedia isPlaying: Bool) {
         self.viewModel.trigger(.toggleMusic(isPlaying: isPlaying))
     }
     
@@ -246,9 +242,6 @@ private extension RewindJourneyViewController {
     
     func configureStackViewLayout() {
         self.view.addSubview(self.progressStackView)
-        self.progressStackView.axis = .horizontal
-        self.progressStackView.spacing = Metric.Progressbar.inset
-        self.progressStackView.distribution = .fillEqually
         self.progressStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.progressStackView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
@@ -259,15 +252,13 @@ private extension RewindJourneyViewController {
                                                              constant: -Metric.StackView.inset)])
     }
     
-    @MainActor
     func configureProgressViewsLayout(urls: [URL]) {
-        self.progressViews?.forEach { $0.removeFromSuperview() }
-        self.progressViews?.removeAll()
+        self.progressViews.forEach { $0.removeFromSuperview() }
+        self.progressViews.removeAll()
         urls.forEach { _ in
             let progressView = MSProgressView()
             self.progressStackView.addArrangedSubview(progressView)
-            if self.progressViews == nil { self.progressViews = [] }
-            self.progressViews?.append(progressView)
+            self.progressViews.append(progressView)
         }
     }
     
@@ -294,11 +285,11 @@ private extension RewindJourneyViewController {
         self.musicPlayerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.musicPlayerView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor,
-                                                   constant: -Metric.MusicView.bottomInset),
+                                                         constant: -Metric.MusicView.bottomInset),
             self.musicPlayerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor,
-                                                    constant: Metric.MusicView.horizontalInset),
+                                                          constant: Metric.MusicView.horizontalInset),
             self.musicPlayerView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,
-                                                     constant: -Metric.MusicView.horizontalInset)
+                                                           constant: -Metric.MusicView.horizontalInset)
         ])
     }
     
@@ -348,15 +339,15 @@ private extension RewindJourneyViewController {
         
         let photoURL = photoURLs[presentingIndex]
         self.presentImageView.ms.setImage(with: photoURL, forKey: photoURL.paath())
-        self.preHighlightenProgressView = self.progressViews?[presentingIndex]
+        self.preHighlightenProgressView = self.progressViews[presentingIndex]
         self.preHighlightenProgressView?.isHighlighted = false
         
         let minIndex: Int = .zero
         let maxIndex = photoURLs.count - 1
         
         for index in minIndex...maxIndex {
-            self.progressViews?[index].isLeftOfCurrentHighlighting = index < presentingIndex ? true : false
-            self.progressViews?[index].isHighlighted = index <= presentingIndex ? true : false
+            self.progressViews[index].isLeftOfCurrentHighlighting = index < presentingIndex ? true : false
+            self.progressViews[index].isHighlighted = index <= presentingIndex ? true : false
         }
     }
     
@@ -365,7 +356,8 @@ private extension RewindJourneyViewController {
 // MARK: - Preview
 
 #if DEBUG
-import MSDomain
+import MSData
+import MSDesignSystem
 
 @available(iOS 17, *)
 #Preview {
