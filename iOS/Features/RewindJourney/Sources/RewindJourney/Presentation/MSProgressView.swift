@@ -12,13 +12,13 @@ public final class MSProgressView: UIProgressView {
     
     // MARK: - Properties
     
-    private let progressViewModel = MSProgressViewModel()
-    private var timerSubscriber: Set<AnyCancellable> = []
-    internal var percentage: Float = 0.0 {
-        didSet {
-            syncProgress(percentage: percentage)
-        }
+    private var progressViewModel: MSProgressViewModel!
+    private var timer: Set<AnyCancellable> = []
+    
+    internal var percentage: Double = 0.0 {
+        willSet { self.syncProgress(percentage: newValue) }
     }
+    
     internal var isHighlighted: Bool = false {
         didSet {
             if self.isHighlighted {
@@ -34,18 +34,24 @@ public final class MSProgressView: UIProgressView {
             }
         }
     }
+    
     internal var isLeftOfCurrentHighlighting: Bool = false
     
     // MARK: - Initializer
     
-    public override init(frame: CGRect) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
+    }
+    
+    convenience init(frame: CGRect = .zero, duration: TimeInterval) {
+        self.init(frame: frame)
         self.configureColor()
-        self.timerBinding()
+        self.progressViewModel = MSProgressViewModel(duration: duration)
+        self.bind()
     }
     
     required init?(coder: NSCoder) {
-        fatalError("MusicSpot은 code-based 로 개발되었습니다.")
+        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
     }
     
     // MARK: - Configure
@@ -57,18 +63,18 @@ public final class MSProgressView: UIProgressView {
     
     // MARK: - Functions: change progress
     
-    private func syncProgress(percentage: Float) {
-        DispatchQueue.main.async { self.progress = percentage }
+    private func syncProgress(percentage: Double) {
+        DispatchQueue.main.async { self.progress = Float(percentage) }
     }
     
     // MARK: - Timer
     
-    private func timerBinding() {
+    private func bind() {
         self.progressViewModel.timerPublisher
             .sink { [weak self] currentPercentage in
                 self?.percentage = currentPercentage
             }
-            .store(in: &timerSubscriber)
+            .store(in: &self.timer)
     }
 
 }

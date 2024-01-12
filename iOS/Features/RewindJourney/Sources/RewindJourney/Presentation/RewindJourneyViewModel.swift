@@ -40,11 +40,9 @@ public final class RewindJourneyViewModel {
     
     public var state: State
     
-    private var cancellables: Set<AnyCancellable> = []
-    
     // MARK: - Properties: Timer
     
-    private let timerTimeInterval: Double = 10.0
+    private var timerTimeInterval: TimeInterval = 10.0
     private var timer: AnyCancellable?
     
     // MARK: - Initializer
@@ -110,6 +108,10 @@ private extension RewindJourneyViewModel {
                 #if DEBUG
                 MSLogger.make(category: .rewindJourney).debug("음악을 찾았습니다: \(song)")
                 #endif
+                
+                if let duration = song.duration {
+                    self.timerTimeInterval = duration / Double(self.state.photoURLs.value.count)
+                }
                 self.state.selectedSong.send(song)
                 self.state.isSongPlaying.send(true)
             case .failure(let error):
@@ -134,7 +136,7 @@ private extension RewindJourneyViewModel {
 private extension RewindJourneyViewModel {
     
     func startTimer() {
-        self.timer = Timer.publish(every: self.timerTimeInterval, on: .main, in: .common)
+        self.timer = Timer.publish(every: self.timerTimeInterval, on: .current, in: .common)
             .autoconnect()
             .receive(on: DispatchQueue.global(qos: .background))
             .sink { [weak self] _ in
