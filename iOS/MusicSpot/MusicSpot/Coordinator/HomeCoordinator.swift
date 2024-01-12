@@ -13,6 +13,7 @@ import MSData
 import MSDomain
 import MSUIKit
 import NavigateMap
+import RewindJourney
 
 final class HomeCoordinator: Coordinator {
     
@@ -107,6 +108,21 @@ extension HomeCoordinator: SaveJourneyFlowCoordinatorFinishDelegate {
     
 }
 
+// MARK: - Finish Delegate: RewindJourney
+
+extension HomeCoordinator: RewindJourneyCoordinatorFinishDelegate {
+    
+    func rewindJourneyShouldFinish(childCooridnator: Coordinator) {
+        guard let presentedViewController = self.navigationController.presentedViewController else {
+            return
+        }
+        
+        self.childCoordinators.removeAll { $0 === childCooridnator }
+        presentedViewController.dismiss(animated: true)
+    }
+    
+}
+
 // MARK: - Home Navigation
 
 extension HomeCoordinator: HomeNavigationDelegate {
@@ -136,6 +152,7 @@ extension HomeCoordinator: JourneyListNavigationDelegate {
     func navigateToRewindJourney(with urls: [URL], music: Music) {
         let rewindJourneyCoordinator = RewindJourneyCoordinator(navigationController: self.navigationController)
         rewindJourneyCoordinator.finishDelegate = self
+        rewindJourneyCoordinator.rewindJourneyFinishDelegate = self
         self.childCoordinators.append(rewindJourneyCoordinator)
         rewindJourneyCoordinator.start(with: urls, music: music)
     }
