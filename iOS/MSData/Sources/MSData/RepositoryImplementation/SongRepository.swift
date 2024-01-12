@@ -9,6 +9,8 @@ import Foundation
 import MusicKit
 
 import MSDomain
+import MSExtension
+import MSImageFetcher
 import MSLogger
 import MSNetworking
 
@@ -66,6 +68,10 @@ public struct SongRepositoryImplementation: SongRepository {
             return .failure(error)
         }
         #endif
+    }
+    
+    public func fetchAlbumCoverImage(from photoURL: URL) async -> Data? {
+        return await MSImageFetcher.shared.fetchImage(from: photoURL, forKey: photoURL.paath())
     }
     
     @available(iOS 16.0, *)

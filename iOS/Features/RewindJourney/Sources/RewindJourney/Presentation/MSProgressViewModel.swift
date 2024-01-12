@@ -5,8 +5,8 @@
 //  Created by 전민건 on 12/4/23.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 final class MSProgressViewModel {
     

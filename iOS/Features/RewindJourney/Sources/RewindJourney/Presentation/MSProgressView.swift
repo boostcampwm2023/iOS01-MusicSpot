@@ -5,8 +5,8 @@
 //  Created by 전민건 on 11/22/23.
 //
 
-import UIKit
 import Combine
+import UIKit
 
 public final class MSProgressView: UIProgressView {
     

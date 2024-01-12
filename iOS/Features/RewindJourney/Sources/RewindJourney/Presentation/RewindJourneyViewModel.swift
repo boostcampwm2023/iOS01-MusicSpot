@@ -9,10 +9,7 @@ import Combine
 import Foundation
 import MusicKit
 
-import MSData
 import MSDomain
-import MSExtension
-import MSImageFetcher
 import MSLogger
 
 public final class RewindJourneyViewModel {
