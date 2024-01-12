@@ -12,7 +12,7 @@ import UIKit
 
 private enum Metric {
     
-    static let movedXPositionToBackScene: CGFloat = 50.0
+    static let movedYPositionToBackScene: CGFloat = 50.0
     static let animationDuration: Double = 0.3
     
 }
@@ -22,10 +22,10 @@ private enum Metric {
 internal extension RewindJourneyViewController {
     
     func configureLeftToRightSwipeGesture() {
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panGestureDismiss(_:)))
-            self.view.addGestureRecognizer(panGesture)
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.panGestureDismiss(_:)))
+        self.view.addGestureRecognizer(panGesture)
     }
-
+    
     @objc
     private func panGestureDismiss(_ sender: UIPanGestureRecognizer) {
         let touchPoint = sender.location(in: self.view.window)
@@ -35,14 +35,14 @@ internal extension RewindJourneyViewController {
         case .began:
             self.initialTouchPoint = touchPoint
         case .changed:
-            if touchPoint.x - self.initialTouchPoint.x > .zero {
-                self.view.frame = CGRect(x: touchPoint.x - self.initialTouchPoint.x,
-                                         y: .zero,
+            if touchPoint.y - self.initialTouchPoint.y > .zero {
+                self.view.frame = CGRect(x: .zero,
+                                         y: touchPoint.y - self.initialTouchPoint.y,
                                          width: width,
                                          height: height)
             }
         case .ended, .cancelled:
-            if touchPoint.x - self.initialTouchPoint.x > Metric.movedXPositionToBackScene {
+            if touchPoint.y - self.initialTouchPoint.y > Metric.movedYPositionToBackScene {
                 self.navigationDelegate?.popToHome()
             } else {
                 self.view.frame = CGRect(x: .zero,
