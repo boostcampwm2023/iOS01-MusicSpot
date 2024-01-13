@@ -152,8 +152,8 @@ public final class RewindJourneyViewController: UIViewController {
                     Task {
                         try await self.musicPlayer.prepareToPlay()
                         try await self.musicPlayer.play()
+                        self.musicPlayerView.play()
                     }
-                    self.musicPlayerView.play()
                 } else {
                     self.musicPlayer.pause()
                     self.musicPlayerView.pause()
