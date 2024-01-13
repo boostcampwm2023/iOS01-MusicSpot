@@ -223,7 +223,7 @@ public final class MSMusicPlayerView: UIView {
                    let duration = self?.duration,
                    playbackTime >= duration,
                    let self = self {
-                    self.pause()
+                    self.stop()
                     self.delegate?.musicPlayerView(self, didChangeStatus: .stopped)
                 }
             }
@@ -231,6 +231,11 @@ public final class MSMusicPlayerView: UIView {
     
     public func pause() {
         self.playbackStatus = .paused
+        self.timer?.cancel()
+    }
+    
+    public func stop() {
+        self.playbackStatus = .stopped
         self.timer?.cancel()
     }
     
