@@ -199,6 +199,15 @@ public final class MapViewController: UIViewController {
                 self?.drawPolyline(using: points)
             }
             .store(in: &self.cancellables)
+        
+        viewModel.state.filteredCoordinate
+            .receive(on: DispatchQueue.main)
+            .sink { coordinate in
+                guard let filteredCoordinate2D = coordinate else { return }
+                viewModel.trigger(.locationDidUpdated(filteredCoordinate2D))
+                viewModel.trigger(.locationsShouldRecorded([filteredCoordinate2D]))
+            }
+            .store(in: &self.cancellables)
     }
     
     // MARK: - Functions: Annotation
@@ -347,9 +356,7 @@ extension MapViewController: CLLocationManagerDelegate {
         
         let coordinate2D = CLLocationCoordinate2D(latitude: newCurrentLocation.coordinate.latitude,
                                                   longitude: newCurrentLocation.coordinate.longitude)
-        
-        recordJourneyViewModel.trigger(.locationDidUpdated(coordinate2D))
-        recordJourneyViewModel.trigger(.locationsShouldRecorded([coordinate2D]))
+        recordJourneyViewModel.trigger(.tenLocationsDidRecorded(coordinate2D))
     }
     
     private func handleAuthorizationChange(_ manager: CLLocationManager) {
