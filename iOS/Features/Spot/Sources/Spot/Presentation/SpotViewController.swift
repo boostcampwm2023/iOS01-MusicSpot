@@ -351,13 +351,7 @@ extension SpotViewController: UIImagePickerControllerDelegate {
         self.presentSpotSaveViewController(with: image, coordinate: self.viewModel.coordinate)
     }
     
-}
-
-// MARK: - Functions
-
-private extension SpotViewController {
-    
-    func presentSpotSaveViewController(with image: UIImage, coordinate: Coordinate) {
+    private func presentSpotSaveViewController(with image: UIImage, coordinate: Coordinate) {
         self.viewModel.stopCamera()
         self.navigationDelegate?.presentSaveSpot(using: image, coordinate: coordinate)
     }

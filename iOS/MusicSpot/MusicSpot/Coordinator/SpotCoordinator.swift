@@ -20,6 +20,7 @@ final class SpotCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     weak var finishDelegate: CoordinatorFinishDelegate?
+    weak var spotFinishDelegate: SpotCoordinatorFinishDelegate?
     
     // MARK: - Initializer
     
@@ -51,7 +52,7 @@ extension SpotCoordinator: SpotNavigationDelegate {
         picker.sourceType = .photoLibrary
         picker.allowsEditing = true
         picker.delegate = spotViewController
-        spotViewController.present(picker, animated: true)
+        self.navigationController.present(picker, animated: true)
     }
     
     func presentSaveSpot(using image: UIImage, coordinate: Coordinate) {
@@ -63,8 +64,14 @@ extension SpotCoordinator: SpotNavigationDelegate {
         let spotSaveViewController = SaveSpotViewController(image: image, viewModel: viewModel)
         spotSaveViewController.modalPresentationStyle = .fullScreen
         spotSaveViewController.navigationDelegate = self
-        self.navigationController.presentedViewController?.dismiss(animated: true)
-        self.navigationController.present(spotSaveViewController, animated: true)
+        
+        if let presentedViewController = self.navigationController.presentedViewController {
+            presentedViewController.dismiss(animated: true) { [weak self] in
+                self?.navigationController.present(spotSaveViewController, animated: true)
+            }
+        } else {
+            self.navigationController.present(spotSaveViewController, animated: true)
+        }
     }
     
     func dismissToSpot() {
@@ -76,8 +83,15 @@ extension SpotCoordinator: SpotNavigationDelegate {
         spotSaveViewController.dismiss(animated: true)
     }
     
-    func popToHome(spot: Spot? = nil) {
-        self.finish()
+    func popToHome(with spot: Spot?, photoData: Data?) {
+        if let presentedViewController = self.navigationController.presentedViewController {
+            presentedViewController.dismiss(animated: true) { [weak self] in
+                guard let self = self else { return }
+                self.spotFinishDelegate?.shouldFinish(childCoordinator: self, with: spot, photoData: photoData)
+            }
+        } else {
+            self.spotFinishDelegate?.shouldFinish(childCoordinator: self, with: spot, photoData: photoData)
+        }
     }
     
 }

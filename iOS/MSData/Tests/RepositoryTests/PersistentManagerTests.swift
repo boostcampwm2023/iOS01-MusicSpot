@@ -14,7 +14,12 @@ final class PersistentManagerTests: XCTestCase {
     
     // MARK: - Properties
     
-    let storage = FileManagerStorage()
+    private let storage = FileManagerStorage()
+    private var recordingJourney = RecordingJourneyStorage.shared
+    
+    override func tearDown() async throws {
+        try self.recordingJourney.finish()
+    }
     
     // MARK: - Tests
 
@@ -22,13 +27,13 @@ final class PersistentManagerTests: XCTestCase {
         let coordinate = Coordinate(latitude: 10, longitude: 10)
         let url = URL(string: "/../")!
         
-        let spot = Spot(coordinate: coordinate, timestamp: .now, photoURL: url)
+        self.recordingJourney.start(initialData: RecordingJourney(id: UUID().uuidString,
+                                                                  startTimestamp: .now,
+                                                                  spots: [],
+                                                                  coordinates: []))
         
-        XCTAssertTrue(LocalRecordingManager.shared.saveToLocal(SpotDTO(spot), at: self.storage))
-    }
-    
-    func test_RecordingJourney_하위요소가_아닌_것들_저장_실패() {
-        XCTAssertFalse(LocalRecordingManager.shared.saveToLocal(Int(), at: self.storage))
+        let spot = Spot(coordinate: coordinate, timestamp: .now, photoURL: url)
+        XCTAssertTrue(self.recordingJourney.record([SpotDTO(spot)], keyPath: \.spots))
     }
     
     func test_RecordingJourney_반환_성공() {
@@ -39,12 +44,14 @@ final class PersistentManagerTests: XCTestCase {
         let coordinate = Coordinate(latitude: 5, longitude: 5)
         let spot = Spot(coordinate: coordinate, timestamp: .now, photoURL: url)
         
-        LocalRecordingManager.shared.saveToLocal(id, at: self.storage)
-        LocalRecordingManager.shared.saveToLocal(Date.now, at: self.storage)
-        LocalRecordingManager.shared.saveToLocal(SpotDTO(spot), at: self.storage)
-        LocalRecordingManager.shared.saveToLocal(CoordinateDTO(coordinate), at: self.storage)
+        self.recordingJourney.start(initialData: RecordingJourney(id: id,
+                                                                  startTimestamp: startTimestamp,
+                                                                  spots: [],
+                                                                  coordinates: []))
+        self.recordingJourney.record([SpotDTO(spot)], keyPath: \.spots)
+        self.recordingJourney.record([CoordinateDTO(coordinate)], keyPath: \.coordinates)
         
-        guard let loadedJourney = LocalRecordingManager.shared.loadJourney(from: self.storage) else {
+        guard let loadedJourney = self.recordingJourney.currentState else {
             XCTFail("load 실패")
             return
         }

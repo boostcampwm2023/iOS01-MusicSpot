@@ -22,6 +22,7 @@ final class SaveJourneyFlowCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     weak var finishDelegate: CoordinatorFinishDelegate?
+    weak var saveJourneyFinishDelegate: SaveJourneyFlowCoordinatorFinishDelegate?
     
     // MARK: - Initializer
     
@@ -83,6 +84,10 @@ extension SaveJourneyFlowCoordinator: SelectSongNavigationDelegate {
 // MARK: - SaveJourney Navigation
 
 extension SaveJourneyFlowCoordinator: SaveJourneyNavigationDelegate {
+    
+    func popToHome(with endedJourney: Journey) {
+        self.saveJourneyFinishDelegate?.shouldFinish(childCoordinator: self, with: endedJourney)
+    }
     
     func popToSelectSong() {
         guard self.navigationController.topViewController is SaveJourneyViewController else { return }

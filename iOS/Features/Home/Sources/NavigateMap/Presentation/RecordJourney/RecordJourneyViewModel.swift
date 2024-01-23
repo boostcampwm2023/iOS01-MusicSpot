@@ -9,17 +9,14 @@ import Combine
 import CoreLocation
 import Foundation
 
-import MSData
 import MSDomain
 import MSLogger
 
 public final class RecordJourneyViewModel: MapViewModel {
     
     public enum Action {
-        case viewNeedsLoaded
         case locationDidUpdated(CLLocationCoordinate2D)
         case locationsShouldRecorded([CLLocationCoordinate2D])
-        case recordingDidCancelled
         case tenLocationsDidRecorded(CLLocationCoordinate2D)
     }
     
@@ -53,12 +50,6 @@ public final class RecordJourneyViewModel: MapViewModel {
     
     public func trigger(_ action: Action) {
         switch action {
-        case .viewNeedsLoaded:
-            #if DEBUG
-            MSLogger.make(category: .home).debug("View Did load.")
-            #endif
-            
-        /// 이전 currentCoordinate를 previousCoordinate에, 저장할 현재 위치를 currentCoordinate에 update
         case .locationDidUpdated(let coordinate):
             let previousCoordinate = self.state.currentCoordinate.value
             self.state.previousCoordinate.send(previousCoordinate)
@@ -76,23 +67,6 @@ public final class RecordJourneyViewModel: MapViewModel {
                 case .success(let recordingJourney):
                     self.state.recordingJourney.send(recordingJourney)
                     self.state.filteredCoordinate.send(nil)
-                case .failure(let error):
-                    MSLogger.make(category: .home).error("\(error)")
-                }
-            }
-        /// 기록 중에 여정 기록을 취소
-        case .recordingDidCancelled:
-            Task {
-                guard let userID = self.userRepository.fetchUUID() else { return }
-                
-                let recordingJourney = self.state.recordingJourney.value
-                let result = await self.journeyRepository.deleteJourney(recordingJourney,
-                                                                        userID: userID)
-                switch result {
-                case .success(let cancelledJourney):
-                    #if DEBUG
-                    MSLogger.make(category: .home).debug("여정이 취소 되었습니다: \(cancelledJourney)")
-                    #endif
                 case .failure(let error):
                     MSLogger.make(category: .home).error("\(error)")
                 }

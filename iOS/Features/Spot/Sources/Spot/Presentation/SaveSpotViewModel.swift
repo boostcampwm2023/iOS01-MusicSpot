@@ -15,11 +15,12 @@ import MSLogger
 public final class SaveSpotViewModel {
     
     public enum Action {
-        case startUploadSpot(Data)
+        case uploadSpot(Data)
     }
     
     public struct State {
-        public var spot = PassthroughSubject<Spot?, Never>()
+        // Passthrough
+        public var uploadedSpot = PassthroughSubject<(Spot, Data), Never>()
     }
     
     // MARK: - Properties
@@ -51,21 +52,21 @@ internal extension SaveSpotViewModel {
     
     func trigger(_ action: Action) {
         switch action {
-        case .startUploadSpot(let data):
+        case .uploadSpot(let data):
             Task {
-                guard let recordingJourneyID = self.journeyRepository.fetchRecordingJourneyID() else {
+                guard let recordingJourneyID = self.journeyRepository.recordingJourneyID else {
                     MSLogger.make(category: .spot).error("recoding 중인 journeyID를 찾지 못하였습니다.")
                     return
                 }
                 let spot = RequestableSpot(journeyID: recordingJourneyID,
-                                                coordinate: self.coordinate,
-                                                timestamp: .now,
-                                                photoData: data)
+                                           coordinate: self.coordinate,
+                                           timestamp: .now,
+                                           photoData: data)
                 
                 let result = await self.spotRepository.upload(spot: spot)
                 switch result {
                 case .success(let spot):
-                    self.state.spot.send(spot)
+                    self.state.uploadedSpot.send((spot, data))
                     MSLogger.make(category: .network).debug("성공적으로 업로드되었습니다: \(spot)")
                 case .failure(let error):
                     MSLogger.make(category: .network).error("\(error): 업로드에 실패하였습니다.")

@@ -134,11 +134,33 @@ public final class HomeViewController: HomeBottomSheetViewController {
     // MARK: - Combine Binding
     
     private func bind() {
-        self.viewModel.state.startedJourney
+        self.viewModel.state.journeyDidStarted
             .receive(on: DispatchQueue.main)
             .sink { [weak self] startedJourney in
-                self?.contentViewController.recordingShouldStart(startedJourney)
+                self?.contentViewController.clearOverlays()
+                self?.contentViewController.recordingDidStart(startedJourney)
             }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.journeyDidResumed
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] resumedJourney in
+                self?.contentViewController.clearOverlays()
+                self?.contentViewController.recordingDidResume(resumedJourney)
+            }
+            .store(in: &self.cancellables)
+        
+        self.viewModel.state.journeyDidCancelled
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure = completion {
+                    self?.contentViewController.clearOverlays()
+                    self?.contentViewController.recordingDidStop()
+                }
+            }, receiveValue: { [weak self] cancelledJourney in
+                self?.contentViewController.clearOverlays()
+                self?.contentViewController.recordingDidStop(cancelledJourney)
+            })
             .store(in: &self.cancellables)
         
         self.viewModel.state.visibleJourneys
@@ -157,7 +179,6 @@ public final class HomeViewController: HomeBottomSheetViewController {
                     self?.hideBottomSheet()
                 } else {
                     self?.showBottomSheet()
-                    self?.contentViewController.recordingShouldStop(isCancelling: false)
                 }
                 self?.updateButtonMode(isRecording: isRecording)
             }
@@ -171,18 +192,15 @@ public final class HomeViewController: HomeBottomSheetViewController {
             .store(in: &self.cancellables)
         
         self.viewModel.state.isRefreshButtonHidden
-            .removeDuplicates(by: { $0 == $1 })
+            .combineLatest(self.viewModel.state.isRecording)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isHidden in
-                self?.refreshButton.isHidden = isHidden
-            }
-            .store(in: &self.cancellables)
-        
-        self.viewModel.state.overlaysShouldBeCleared
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.contentViewController.clearOverlays()
-                self?.contentViewController.clearAnnotations()
+            .sink { [weak self] isHidden, isRecording in
+                guard let self = self else { return }
+                UIView.transition(with: self.refreshButton,
+                                  duration: 0.2,
+                                  options: .transitionCrossDissolve) { [weak self] in
+                    self?.refreshButton.isHidden = (isHidden || isRecording)
+                }
             }
             .store(in: &self.cancellables)
     }
@@ -190,16 +208,21 @@ public final class HomeViewController: HomeBottomSheetViewController {
     // MARK: - Functions
     
     private func updateButtonMode(isRecording: Bool) {
-        UIView.transition(with: startButton, duration: 0.5,
+        UIView.transition(with: self.view,
+                          duration: 0.34,
                           options: .transitionCrossDissolve,
                           animations: { [weak self] in
             self?.startButton.isHidden = isRecording
-        })
-        UIView.transition(with: recordJourneyButtonStackView, duration: 0.5,
-                          options: .transitionCrossDissolve,
-                          animations: { [weak self] in
             self?.recordJourneyButtonStackView.isHidden = !isRecording
         })
+    }
+    
+    public func spotDidAdded(_ spot: Spot, photoData: Data) {
+        self.contentViewController.spotDidAdded(spot, photoData: photoData)
+    }
+    
+    public func journeyDidEnded(endedJourney: Journey) {
+        self.contentViewController.recordingDidStop(RecordingJourney(endedJourney))
     }
     
 }
@@ -233,14 +256,13 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
         self.viewModel.trigger(.refreshButtonDidTap(visibleCoordinates: coordinates))
     }
     
-    public func backButtonDidTap(_ button: MSRectButton) {
+    func backButtonDidTap(_ button: MSRectButton) {
         guard self.viewModel.state.isRecording.value == true else { return }
         
         self.viewModel.trigger(.backButtonDidTap)
-        self.contentViewController.recordingShouldStop(isCancelling: true)
     }
     
-    public func spotButtonDidTap(_ button: MSRectButton) {
+    func spotButtonDidTap(_ button: MSRectButton) {
         guard self.viewModel.state.isRecording.value == true else { return }
         
         guard let currentUserCoordiante = self.contentViewController.currentUserCoordinate else {
@@ -250,14 +272,14 @@ extension HomeViewController: RecordJourneyButtonViewDelegate {
         self.navigationDelegate?.navigateToSpot(spotCoordinate: currentUserCoordiante)
     }
     
-    public func nextButtonDidTap(_ button: MSRectButton) {
+    func nextButtonDidTap(_ button: MSRectButton) {
         guard self.viewModel.state.isRecording.value == true else { return }
         
         guard let currentUserCoordiante = self.contentViewController.currentUserCoordinate else {
             return
         }
         
-        self.navigationDelegate?.navigateToSelectSong(lastCoordinate: currentUserCoordiante)
+        self.navigationDelegate?.navigateToSaveJourneyFlow(lastCoordinate: currentUserCoordiante)
     }
     
 }

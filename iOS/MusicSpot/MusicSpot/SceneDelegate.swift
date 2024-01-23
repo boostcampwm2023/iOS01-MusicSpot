@@ -8,11 +8,8 @@
 import UIKit
 
 import JourneyList
-import MSConstants
-import MSData
 import MSDesignSystem
 import MSLogger
-import MSUserDefaults
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -20,17 +17,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
     private var appCoordinator: Coordinator!
-    
-    @UserDefaultsWrapped(UserDefaultsKey.recordingJourneyID, defaultValue: nil)
-    var recordingJourneyID: String?
-    @UserDefaultsWrapped(UserDefaultsKey.isFirstLaunch, defaultValue: false)
-    var isFirstLaunch: Bool
-    @UserDefaultsWrapped(UserDefaultsKey.isRecording, defaultValue: false)
-    var isRecording: Bool
-    
-    #if DEBUG
-    var keychain = MSKeychainStorage()
-    #endif
     
     // MARK: - Functions
     
@@ -41,13 +27,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         defer { self.window = window }
         
-        MSLogger.make(category: .userDefaults).info("isFirstLaunch: \(self.isFirstLaunch.description)")
-        MSLogger.make(category: .userDefaults).info("isRecording: \(self.isRecording.description)")
-        MSLogger.make(category: .userDefaults).info("recordingJourneyID: \(self.recordingJourneyID ?? "No Recording")")
-        
-        #if DEBUG
-        self.prepareToDebug()
-        #endif
         MSFont.registerFonts()
         
         let musicSpotNavigationController = self.makeNavigationController()
@@ -72,25 +51,3 @@ private extension SceneDelegate {
     }
     
 }
-
-// MARK: - Debug
-
-#if DEBUG
-import MSKeychainStorage
-
-private extension SceneDelegate {
-    
-    func prepareToDebug() {
-        self.isFirstLaunch = true
-        self.recordingJourneyID = nil
-        self.isRecording = false
-        
-        do {
-            try self.keychain.deleteAll()
-        } catch {
-            MSLogger.make(category: .keychain).error("키체인 초기화 실패")
-        }
-    }
-    
-}
-#endif

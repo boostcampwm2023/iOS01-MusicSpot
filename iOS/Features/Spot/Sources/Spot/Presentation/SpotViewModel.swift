@@ -50,9 +50,7 @@ public final class SpotViewModel: NSObject {
     
     weak var delegate: ShotDelegate?
     var swapMode: SwapMode = .back {
-        didSet {
-            self.configureSwapMode()
-        }
+        didSet { self.configureSwapMode() }
     }
     
     private let session = AVCaptureSession()

@@ -7,14 +7,16 @@
 
 import MapKit
 
+import MSDesignSystem
+
 final class ClusterAnnotationView: MKAnnotationView {
     
     // MARK: - Constants
     
     private enum Metric {
         
-        static let markerWidth: CGFloat = 43.0
-        static let markerHeight: CGFloat = 53.0
+        static let markerWidth: CGFloat = 60.0
+        static let markerHeight: CGFloat = 60.0
         static let inset: CGFloat = 4
         static let thumbnailImageViewSize: CGFloat = Metric.markerWidth - Metric.inset * 2
         
@@ -62,7 +64,7 @@ final class ClusterAnnotationView: MKAnnotationView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        bounds.size = self.markerImageView.bounds.size
+        self.bounds.size = self.markerImageView.bounds.size
     }
     
     // MARK: - UI Configuration
