@@ -1,31 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsString } from 'class-validator';
+import { IsNumber} from 'class-validator';
 import {
-  IsCoordinate,
   IsCoordinates,
 } from '../../../common/decorator/coordinate.decorator';
-import { IsObjectId } from 'src/common/decorator/objectId.decorator';
-export class RecordJourneyResDTO {
-  @ApiProperty({
-    example: [
-      [37.555946, 126.972384],
-      [37.555946, 126.972384],
-    ],
-    description: '저장된 위치 좌표',
-    required: true,
-  })
-  @IsCoordinates()
-  readonly coordinates: number[][];
-}
 
 export class RecordJourneyReqDTO {
   @ApiProperty({
-    example: '655efda2fdc81cae36d20650',
+    example: 20,
     description: '여정 id',
     required: true,
   })
-  @IsObjectId({ message: 'ObjectId 형식만 유효합니다.' })
-  readonly journeyId: string;
+  @IsNumber()
+  readonly journeyId: number;
 
   @ApiProperty({
     example: [
@@ -41,3 +27,19 @@ export class RecordJourneyReqDTO {
   })
   readonly coordinates: number[][];
 }
+
+
+export class RecordJourneyResDTO {
+  @ApiProperty({
+    example: [
+      [37.555946, 126.972384],
+      [37.555946, 126.972384],
+    ],
+    description: '저장된 위치 좌표',
+    required: true,
+  })
+  @IsCoordinates()
+  readonly coordinates: number[][];
+}
+
+

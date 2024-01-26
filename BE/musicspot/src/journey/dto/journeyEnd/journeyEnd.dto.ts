@@ -6,6 +6,7 @@ import {
   IsDefined,
   IsNumber,
   IsArray,
+  IsObject,
 } from 'class-validator';
 import {
   IsCoordinate,
@@ -13,16 +14,18 @@ import {
 } from '../../../common/decorator/coordinate.decorator';
 import { Type } from 'class-transformer';
 import { SongDTO } from '../song/song.dto';
-import { IsObjectId } from 'src/common/decorator/objectId.decorator';
+
+
 
 export class EndJourneyReqDTO {
   @ApiProperty({
-    example: '655efda2fdc81cae36d20650',
+    example: 20,
     description: '여정 id',
     required: true,
   })
-  @IsObjectId({ message: 'ObjectId 형식만 유효합니다.' })
-  readonly journeyId: string;
+  // @IsObjectId({ message: 'ObjectId 형식만 유효합니다.' })
+  @IsNumber()
+  readonly journeyId: number;
 
   @ApiProperty({
     example: [
@@ -31,6 +34,7 @@ export class EndJourneyReqDTO {
     ],
     description: '위치 좌표',
     required: true,
+
   })
   @IsCoordinates({
     message:
@@ -54,25 +58,22 @@ export class EndJourneyReqDTO {
   @IsString()
   readonly title: string;
 
+  @IsObject()
   @ApiProperty({
-    type: SongDTO,
     description: '노래 정보',
     required: true,
   })
-  @ValidateNested()
-  @Type(() => SongDTO)
-  @IsDefined()
-  readonly song: SongDTO;
+  readonly song: object;
 }
 
 export class EndJourneyResDTO {
   @ApiProperty({
-    example: '655efda2fdc81cae36d20650',
+    example: 20,
     description: '여정 id',
     required: true,
   })
   @IsString()
-  readonly journeyId: string;
+  readonly journeyId: number;
 
   @ApiProperty({
     example: [
@@ -102,12 +103,8 @@ export class EndJourneyResDTO {
   readonly numberOfCoordinates: number;
 
   @ApiProperty({
-    type: SongDTO,
     description: '노래 정보',
     required: true,
   })
-  @ValidateNested({ each: true })
-  @Type(() => SongDTO)
-  @IsDefined()
-  readonly song: SongDTO;
+  readonly song: Object;
 }

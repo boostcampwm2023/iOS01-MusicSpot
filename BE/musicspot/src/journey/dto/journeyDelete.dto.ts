@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsDateString } from 'class-validator';
+import { IsString, IsDateString, IsNumber } from 'class-validator';
 import { UUID } from 'crypto';
 export class DeleteJourneyReqDTO {
   @ApiProperty({
@@ -15,8 +15,8 @@ export class DeleteJourneyReqDTO {
     description: '여정 id',
     required: true,
   })
-  @IsString()
-  readonly journeyId: string;
+  @IsNumber()
+  readonly journeyId: number;
 }
 
 export class DeleteJourneyResDTO {
@@ -42,12 +42,4 @@ export class DeleteJourneyResDTO {
   })
   @IsString()
   readonly journeyId: string;
-
-  // @ApiProperty({
-  //   example: 'hello@gmail.com',
-  //   description: '이메일',
-  //   required: true,
-  // })
-  // @IsString()
-  // readonly email: string;
 }
