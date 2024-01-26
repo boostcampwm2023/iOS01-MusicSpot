@@ -36,3 +36,31 @@ export const isInCoordinateRange = (pos) => {
   }
   return true;
 };
+
+
+
+export const parseCoordinateFromDtoToGeo = (coordinate: [number, number])=>{
+  // coordinate = [1, 2]
+  return `${coordinate.join(' ')}`
+
+}
+
+export const parseCoordinateFromGeoToDto = (coordinate: string) =>{
+  // coordinate = 'POINT(1 2)'
+
+  const pointLen = 'POINT('.length;
+  const numberOfCoordinate = coordinate.slice(pointLen, -1);
+  return numberOfCoordinate.split(' ').map(pos=>Number(pos));
+
+}
+
+export const parseCoordinatesFromDtoToGeo = (coordinates: number[][]) =>{
+  // coordinates = [[1,2], [3,4]]
+  return `${coordinates.map(coordinate=>`${coordinate[0]} ${coordinate[1]}`).join(',')}`
+}
+
+export const parseCoordinatesFromGeoToDto = (coordinates: string) :number[][]=>{
+  const lineStringLen = 'LINESTRING('.length;
+  const numberOfCoordinates = coordinates.slice(lineStringLen, -1);
+  return numberOfCoordinates.split(',').map(coordinate=>coordinate.split(' ').map(num=>Number(num.trim())))
+}
