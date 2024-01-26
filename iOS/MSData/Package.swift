@@ -29,10 +29,12 @@ private enum Target {
 private enum Dependency {
     
     static let msDomain = "MSDomain"
+    static let msImageFetcher = "MSImageFetcher"
     static let msNetworking = "MSNetworking"
     static let msKeychainStorage = "MSKeychainStorage"
     static let msPersistentStorage = "MSPersistentStorage"
     static let msCoreKit = "MSCoreKit"
+    static let msExtension = "MSExtension"
     static let msLogger = "MSLogger"
     static let msUserDefaults = "MSUserDefaults"
     static let msFoundation = "MSFoundation"
@@ -63,12 +65,16 @@ let package = Package(
                 dependencies: [
                     .product(name: Dependency.msDomain,
                              package: Dependency.msDomain),
+                    .product(name: Dependency.msImageFetcher,
+                             package: Dependency.msCoreKit),
                     .product(name: Dependency.msNetworking,
                              package: Dependency.msCoreKit),
                     .product(name: Dependency.msKeychainStorage,
                              package: Dependency.msCoreKit),
                     .product(name: Dependency.msPersistentStorage,
                              package: Dependency.msCoreKit),
+                    .product(name: Dependency.msExtension,
+                             package: Dependency.msFoundation),
                     .product(name: Dependency.msLogger,
                              package: Dependency.msFoundation),
                     .product(name: Dependency.msUserDefaults,

@@ -8,6 +8,8 @@
 import Foundation
 
 import MSDomain
+import MSExtension
+import MSImageFetcher
 import MSNetworking
 import MSLogger
 import MSPersistentStorage
@@ -60,7 +62,6 @@ public struct SpotRepositoryImplementation: SpotRepository {
     }
     
     public func upload(spot: RequestableSpot) async -> Result<Spot, Error> {
-        
         let spot = CreateSpotRequestDTO(journeyId: spot.journeyID,
                                         coordinate: CoordinateDTO(spot.coordinate),
                                         timestamp: spot.timestamp,
@@ -79,6 +80,11 @@ public struct SpotRepositoryImplementation: SpotRepository {
             MSLogger.make(category: .network).error("\(error): 업로드에 실패하였습니다.")
             return .failure(error)
         }
+    }
+    
+    @discardableResult
+    public func fetchSpotPhoto(from photoURL: URL) async -> Data? {
+        return await MSImageFetcher.shared.fetchImage(from: photoURL, forKey: photoURL.paath())
     }
             
 }

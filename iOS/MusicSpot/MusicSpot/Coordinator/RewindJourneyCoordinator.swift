@@ -20,6 +20,7 @@ final class RewindJourneyCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     weak var finishDelegate: CoordinatorFinishDelegate?
+    weak var rewindJourneyFinishDelegate: RewindJourneyCoordinatorFinishDelegate?
     
     // MARK: - Initializer
     
@@ -37,10 +38,11 @@ final class RewindJourneyCoordinator: Coordinator {
                                                spotRepository: spotRepository,
                                                songRepository: songRepository)
         let rewindJourneyViewController = RewindJourneyViewController(viewModel: viewModel)
+        rewindJourneyViewController.modalPresentationStyle = .overFullScreen
         rewindJourneyViewController.navigationDelegate = self
         self.rootViewController = rewindJourneyViewController
         
-        self.navigationController.pushViewController(rewindJourneyViewController, animated: true)
+        self.navigationController.present(rewindJourneyViewController, animated: true)
     }
     
 }
@@ -50,7 +52,7 @@ final class RewindJourneyCoordinator: Coordinator {
 extension RewindJourneyCoordinator: RewindJourneyNavigationDelegate {
     
     func popToHome() {
-        self.finish()
+        self.rewindJourneyFinishDelegate?.rewindJourneyShouldFinish(childCooridnator: self)
     }
     
 }

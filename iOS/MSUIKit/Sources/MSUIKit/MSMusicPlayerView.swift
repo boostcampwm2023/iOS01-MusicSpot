@@ -1,26 +1,25 @@
 //
 //  MSMusicPlayerView.swift
-//  RewindJourney
+//  MSUIKit
 //
-//  Created by 전민건 on 11/22/23.
+//  Created by 이창준 on 2024.01.12.
 //
 
 import Combine
 import UIKit
 
 import MSDesignSystem
-import MSDomain
 import MSExtension
-import MSImageFetcher
 import MSLogger
 
-protocol MSMusicPlayerViewDelegate: AnyObject {
+public protocol MSMusicPlayerViewDelegate: AnyObject {
     
-    func musicPlayerView(_ musicPlayerView: MSMusicPlayerView, didToggleMedia isPlaying: Bool)
+    func musicPlayerView(_ musicPlayerView: MSMusicPlayerView,
+                         didChangeStatus playbackStatus: MSMusicPlayerView.PlaybackStatus)
     
 }
 
-final class MSMusicPlayerView: UIView {
+public final class MSMusicPlayerView: UIView {
     
     // MARK: - Constants
     
@@ -29,14 +28,13 @@ final class MSMusicPlayerView: UIView {
         static let horizonalInset: CGFloat = 12.0
         static let cornerRadius: CGFloat = 8.0
         static let height: CGFloat = 68.0
+        static let progressingTimeInterval: TimeInterval = 0.1
         
-        // albumart view
         enum AlbumArtView {
             static let size: CGFloat = 52.0
             static let cornerRadius: CGFloat = 5.0
         }
         
-        // playtime view
         enum PlayTimeView {
             static let spacing: CGFloat = 4.0
             static let iconSize: CGFloat = 24.0
@@ -44,38 +42,48 @@ final class MSMusicPlayerView: UIView {
         
     }
     
-    private enum Default {
-        
-        // titleView
-        enum TitleView {
-            static let title: String = "Attention"
-            static let subTitle: String = "NewJeans"
-        }
-        
-        // stackView
-        enum PlayTime {
-            static let time: String = "00 : 00"
-        }
-        
+    // MARK: - State
+    
+    public enum PlaybackStatus {
+        case playing
+        case paused
+        case stopped
     }
     
     // MARK: - Properties
     
-    weak var delegate: MSMusicPlayerViewDelegate?
+    public weak var delegate: MSMusicPlayerViewDelegate?
     
-    let playbackPublisher = PassthroughSubject<TimeInterval, Never>()
-    var timer: AnyCancellable?
+    public var title: String = "알 수 없는 음악" {
+        willSet { self.updateTitle(newValue) }
+    }
     
-    private var isPlaying: Bool = false
-    var playbackTime: TimeInterval = .zero
-    var duration: TimeInterval?
+    public var artist: String = "" {
+        willSet { self.updateArtist(newValue) }
+    }
+    
+    public var albumArt: Data? {
+        willSet { self.updateAlbumArt(newValue) }
+    }
+    
+    private var playbackStatus: PlaybackStatus = .stopped {
+        willSet { self.updatePlayingStatus(to: newValue) }
+    }
+    
+    public var duration: TimeInterval?
+    
+    private var timer: AnyCancellable?
+    
+    private var playbackTime: TimeInterval = .zero {
+        willSet { self.updatePlaybackTime(to: newValue) }
+    }
     
     // MARK: - UI Components
     
     private let progressView = UIView()
     private var progressViewWidthConstraint: NSLayoutConstraint?
     
-    private let albumArtView: UIImageView = {
+    private let albumCoverView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = Metric.AlbumArtView.cornerRadius
@@ -95,7 +103,6 @@ final class MSMusicPlayerView: UIView {
         let label = UILabel()
         label.font = .msFont(.paragraph)
         label.textColor = .msColor(.componentTypo)
-        label.text = Default.TitleView.title
         return label
     }()
     
@@ -103,7 +110,6 @@ final class MSMusicPlayerView: UIView {
         let label = UILabel()
         label.font = .msFont(.caption)
         label.textColor = .msColor(.componentTypo)
-        label.text = Default.TitleView.subTitle
         return label
     }()
     
@@ -119,15 +125,14 @@ final class MSMusicPlayerView: UIView {
         let label = UILabel()
         label.font = .msFont(.caption)
         label.textColor = .msColor(.componentTypo)
-        label.text = Default.PlayTime.time
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return label
     }()
     
-    private let playTimeIconView: UIImageView = {
+    private let playTimeIconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.tintColor = .msColor(.componentTypo)
-
+        
         if #available(iOS 17.0, *) {
             imageView.image = UIImage(systemName: "waveform")
         } else {
@@ -147,10 +152,9 @@ final class MSMusicPlayerView: UIView {
     // MARK: - Initializer
     
     public override init(frame: CGRect) {
-        self.isPlaying = true
         super.init(frame: frame)
         
-        self.configureStyle()
+        self.configureStyles()
         self.configureLayout()
         self.configureAction()
     }
@@ -159,71 +163,98 @@ final class MSMusicPlayerView: UIView {
         fatalError("MusicSpot은 code-based 로 개발되었습니다.")
     }
     
-    deinit {
-        self.pause(playbackTime: .zero)
-    }
+    deinit { self.timer?.cancel() }
     
     // MARK: - Functions
     
-    public func update(with music: Music) {
-        self.titleLabel.text = music.title
-        self.artistLabel.text = music.artist
-        if let albumCover = music.albumCover,
-           let coverURL = albumCover.url {
-            self.albumArtView.ms.setImage(with: coverURL, forKey: coverURL.paath())
-        }
+    private func updateTitle(_ title: String) {
+        self.titleLabel.text = title
     }
     
-    public func togglePlayingStatus(to isPlaying: Bool) {
+    private func updateArtist(_ artist: String) {
+        self.artistLabel.text = artist
+    }
+    
+    private func updateAlbumArt(_ albumCoverData: Data?) {
+        guard let albumCoverData = albumCoverData else { return }
+        self.albumCoverView.image = UIImage(data: albumCoverData)
+    }
+    
+    private func updatePlayingStatus(to playbackStatus: PlaybackStatus) {
         DispatchQueue.main.async {
-            self.progressView.backgroundColor = isPlaying ? .msColor(.musicSpot) : .msColor(.componentBackground)
+            switch playbackStatus {
+            case .playing:
+                self.progressView.backgroundColor = .msColor(.musicSpot)
+            case .paused, .stopped:
+                self.progressView.backgroundColor = .msColor(.componentBackground)
+            }
             
             if #available(iOS 17.0, *) {
-                if isPlaying {
-                    self.playTimeIconView.addSymbolEffect(.variableColor.cumulative.dimInactiveLayers.nonReversing)
+                if case .playing = playbackStatus {
+                    self.playTimeIconImageView
+                        .addSymbolEffect(.variableColor.cumulative.dimInactiveLayers.nonReversing)
                 } else {
-                    self.playTimeIconView.removeAllSymbolEffects()
+                    self.playTimeIconImageView.removeAllSymbolEffects()
                 }
             }
         }
     }
     
-    public func play(progressingTimeInterval: TimeInterval = 0.1) {
-        self.timer = Timer.publish(every: progressingTimeInterval, on: .current, in: .common)
+    private func updatePlaybackTime(to playbackTime: TimeInterval) {
+        self.setProgress(to: playbackTime)
+        let minute = Int(self.playbackTime / 60.0)
+        let second = Int(self.playbackTime.truncatingRemainder(dividingBy: 60.0))
+        self.playTimeLabel.text = String(format: "%02d : %02d", minute, second)
+    }
+    
+    public func play(playbackTime: TimeInterval? = nil) {
+        if let playbackTime = playbackTime {
+            self.playbackTime = playbackTime
+        }
+        
+        self.playbackStatus = .playing
+        self.timer = Timer.publish(every: Metric.progressingTimeInterval, on: .current, in: .common)
             .autoconnect()
-            .receive(on: DispatchQueue.global(qos: .background))
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                guard let self = self else { return }
+                self?.playbackTime += Metric.progressingTimeInterval
                 
-                self.playbackTime += progressingTimeInterval
-                DispatchQueue.main.async {
-                    self.setProgress(to: self.playbackTime)
-                    let minute = Int(self.playbackTime / 60.0)
-                    let second = Int(self.playbackTime.truncatingRemainder(dividingBy: 60.0))
-                    self.playTimeLabel.text = String(format: "%02d : %02d", minute, second)
+                if let playbackTime = self?.playbackTime,
+                   let duration = self?.duration,
+                   playbackTime >= duration,
+                   let self = self {
+                    self.stop()
+                    self.delegate?.musicPlayerView(self, didChangeStatus: .stopped)
                 }
             }
-        self.isPlaying = true
     }
     
-    public func pause(playbackTime: TimeInterval) {
+    public func pause() {
+        self.playbackStatus = .paused
         self.timer?.cancel()
-        self.playbackTime = playbackTime
-        self.isPlaying = false
     }
     
-    private func setProgress(to time: TimeInterval, animted: Bool = true) {
+    public func stop() {
+        self.playbackStatus = .stopped
+        self.timer?.cancel()
+    }
+    
+    private func setProgress(to time: TimeInterval, animated: Bool = true) {
         guard let duration = self.duration else { return }
         
         let desiredWidth = (time * self.frame.width) / duration
         
-        UIView.animate(withDuration: 0.1,
-                       delay: .zero,
-                       usingSpringWithDamping: 0.5,
-                       initialSpringVelocity: 0.2,
-                       options: [.curveEaseInOut]) {
+        if animated {
+            UIView.animate(withDuration: 0.1,
+                           delay: .zero,
+                           usingSpringWithDamping: 0.5,
+                           initialSpringVelocity: 0.2,
+                           options: [.curveEaseInOut]) {
+                self.progressViewWidthConstraint?.constant = desiredWidth
+                self.layoutIfNeeded()
+            }
+        } else {
             self.progressViewWidthConstraint?.constant = desiredWidth
-            self.layoutIfNeeded()
         }
     }
     
@@ -259,14 +290,14 @@ private extension MSMusicPlayerView {
     }
     
     func configureAlbumArtViewLayout() {
-        self.addSubview(self.albumArtView)
-        self.albumArtView.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(self.albumCoverView)
+        self.albumCoverView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.albumArtView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            self.albumArtView.leadingAnchor.constraint(equalTo: self.leadingAnchor,
+            self.albumCoverView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            self.albumCoverView.leadingAnchor.constraint(equalTo: self.leadingAnchor,
                                                        constant: Metric.horizonalInset),
-            self.albumArtView.widthAnchor.constraint(equalToConstant: Metric.AlbumArtView.size),
-            self.albumArtView.heightAnchor.constraint(equalToConstant: Metric.AlbumArtView.size)
+            self.albumCoverView.widthAnchor.constraint(equalToConstant: Metric.AlbumArtView.size),
+            self.albumCoverView.heightAnchor.constraint(equalToConstant: Metric.AlbumArtView.size)
         ])
     }
     
@@ -275,7 +306,7 @@ private extension MSMusicPlayerView {
         self.titleStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.titleStackView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            self.titleStackView.leadingAnchor.constraint(equalTo: self.albumArtView.trailingAnchor,
+            self.titleStackView.leadingAnchor.constraint(equalTo: self.albumCoverView.trailingAnchor,
                                                          constant: Metric.horizonalInset),
             self.titleStackView.trailingAnchor.constraint(equalTo: self.playTimeStackView.leadingAnchor,
                                                           constant: -Metric.horizonalInset)
@@ -300,21 +331,21 @@ private extension MSMusicPlayerView {
         ])
         
         [
-            self.playTimeIconView,
+            self.playTimeIconImageView,
             self.playTimeLabel
         ].forEach {
             self.playTimeStackView.addArrangedSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         NSLayoutConstraint.activate([
-            self.playTimeIconView.widthAnchor.constraint(equalToConstant: Metric.PlayTimeView.iconSize),
-            self.playTimeIconView.heightAnchor.constraint(equalToConstant: Metric.PlayTimeView.iconSize)
+            self.playTimeIconImageView.widthAnchor.constraint(equalToConstant: Metric.PlayTimeView.iconSize),
+            self.playTimeIconImageView.heightAnchor.constraint(equalToConstant: Metric.PlayTimeView.iconSize)
         ])
     }
     
     // MARK: - UI Configuration: Style
     
-    func configureStyle() {
+    func configureStyles() {
         self.clipsToBounds = true
         self.layer.cornerRadius = Metric.cornerRadius
         self.backgroundColor = .msColor(.componentBackground).withAlphaComponent(0.7)
@@ -329,8 +360,13 @@ private extension MSMusicPlayerView {
     func configureAction() {
         let action = UIAction { [weak self] _ in
             guard let self = self else { return }
-            self.isPlaying.toggle()
-            self.delegate?.musicPlayerView(self, didToggleMedia: self.isPlaying)
+            
+            switch self.playbackStatus {
+            case .paused: self.playbackStatus = .playing
+            case .playing: self.playbackStatus = .paused
+            default: break
+            }
+            self.delegate?.musicPlayerView(self, didChangeStatus: self.playbackStatus)
         }
         self.controlButton.addAction(action, for: .touchUpInside)
     }
