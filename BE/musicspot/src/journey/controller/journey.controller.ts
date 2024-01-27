@@ -10,16 +10,13 @@ import {
   Delete,
 } from '@nestjs/common';
 import { JourneyService } from '../service/journey.service';
-
 import { StartJourneyReqDTO } from '../dto/journeyStart/journeyStart.dto';
-
 import {
   ApiCreatedResponse,
   ApiOperation,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { Journey } from '../schema/journey.schema';
 import {
   CheckJourneyResDTO,
   CheckJourneyReqDTO,
@@ -35,6 +32,7 @@ import {
 } from '../dto/journeyRecord/journeyRecord.dto';
 import { StartJourneyResDTO } from '../dto/journeyStart/journeyStart.dto';
 import { DeleteJourneyReqDTO } from '../dto/journeyDelete.dto';
+import { Journey } from '../entities/journey.entity';
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
@@ -51,7 +49,7 @@ export class JourneyController {
   })
   @Post('start')
   async create(@Body() startJourneyDTO: StartJourneyReqDTO) {
-    return await this.journeyService.create(startJourneyDTO);
+    return await this.journeyService.insertJourneyData(startJourneyDTO);
   }
 
   @ApiOperation({
@@ -81,6 +79,8 @@ export class JourneyController {
       await this.journeyService.pushCoordianteToJourney(recordJourneyDTO);
     return returnData;
   }
+
+
   @ApiOperation({
     summary: '여정 조회 API',
     description: '해당 범위 내의 여정들을 반환합니다.',
@@ -124,7 +124,7 @@ export class JourneyController {
       minCoordinate,
       maxCoordinate,
     };
-    return await this.journeyService.checkJourney(checkJourneyDTO);
+    return await this.journeyService.getJourneyByCoordinationRange(checkJourneyDTO);
   }
 
   @ApiOperation({
@@ -135,9 +135,9 @@ export class JourneyController {
     description: '사용자가 진행중이었던 여정 정보',
     type: Journey,
   })
-  @Get(':userId/last')
-  async loadLastData(@Param('userId') userId: string) {
-    return await this.journeyService.loadLastJourney(userId);
+  @Get('last')
+  async loadLastData(@Body('userId') userId) {
+    return await this.journeyService.getLastJourneyByUserId(userId);
   }
 
   @ApiOperation({
@@ -167,16 +167,3 @@ export class JourneyController {
   }
 }
 
-// @ApiOperation({
-//   summary: '여정 조회 API',
-//   description: '해당 범위 내의 여정들을 반환합니다.',
-// })
-// @ApiCreatedResponse({
-//   description: '범위에 있는 여정의 기록들을 반환',
-//   type: CheckJourneyResDTO,
-// })
-// @Post('check')
-// @UsePipes(ValidationPipe) //유효성 체크
-// async checkPost(@Body() checkJourneyDTO: CheckJourneyReqDTO) {
-//   return await this.journeyService.checkJourney(checkJourneyDTO);
-// }

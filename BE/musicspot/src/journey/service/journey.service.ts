@@ -1,283 +1,190 @@
-import mongoose, { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import { Injectable } from '@nestjs/common';
-
-import { StartJourneyReqDTO } from '../dto/journeyStart/journeyStart.dto';
-import { Journey } from '../schema/journey.schema';
-
-import { User } from '../../user/schema/user.schema';
+import { Injectable } from "@nestjs/common";
+import { JourneyRepository } from "../repository/journey.repository";
+import { StartJourneyReqDTO, StartJourneyResDTO } from '../dto/journeyStart/journeyStart.dto';
 import {
   JourneyNotFoundException,
   coordinateNotCorrectException,
 } from '../../filters/journey.exception';
-import { UserNotFoundException } from '../../filters/user.exception';
-import * as turf from '@turf/turf';
-import { LoadJourneyDTO } from '../dto/journeyLoad.dto';
-import {
-  S3,
-  bucketName,
-  makePresignedUrl,
-} from '../../common/s3/objectStorage';
-import { EndJourneyReqDTO } from '../dto/journeyEnd/journeyEnd.dto';
-import { CheckJourneyReqDTO } from '../dto/journeyCheck/journeyCheck.dto';
-import { RecordJourneyReqDTO } from '../dto/journeyRecord/journeyRecord.dto';
-import { is1DArray } from 'src/common/util/coordinate.util';
+import { EndJourneyReqDTO, EndJourneyResDTO } from '../dto/journeyEnd/journeyEnd.dto';
+import { RecordJourneyReqDTO, RecordJourneyResDTO } from '../dto/journeyRecord/journeyRecord.dto';
+import { is1DArray, parseCoordinateFromGeoToDto, parseCoordinatesFromGeoToDto } from 'src/common/util/coordinate.util';
 import { DeleteJourneyReqDTO } from '../dto/journeyDelete.dto';
-import { checkPrimeSync } from 'crypto';
+import { UserRepository } from 'src/user/repository/user.repository';
+
+import { Journey } from '../entities/journey.entity';
+import { makePresignedUrl } from "src/common/s3/objectStorage";
+import { parse } from "path";
 
 @Injectable()
-export class JourneyService {
-  constructor(
-    @InjectModel(Journey.name) private journeyModel: Model<Journey>,
-    @InjectModel(User.name) private userModel: Model<User>,
-  ) {}
-  async insertJourneyData(startJourneyDTO: StartJourneyReqDTO) {
-    const journeyData: Journey = {
-      ...startJourneyDTO,
-      coordinates: [startJourneyDTO.coordinate],
-      spots: [],
-      journeyMetadata: {
-        startTimestamp: startJourneyDTO.startTimestamp,
-        endTimestamp: '',
-      },
-    };
-    const createdJourneyData = new this.journeyModel(journeyData);
-    return await createdJourneyData.save();
-  }
-  async pushJourneyIdToUser(journeyId, userId) {
-    const result = await this.userModel
-      .findOneAndUpdate(
-        { userId },
-        { $push: { journeys: journeyId } },
-        { new: true },
-      )
-      .lean();
-    if (!result) {
-      new UserNotFoundException();
-    }
-    return result;
-  }
+export class JourneyService{
+    constructor(private journeyRepository: JourneyRepository, private userRepository: UserRepository){}
 
-  async create(startJourneyDTO: StartJourneyReqDTO) {
-    const createdJourneyData = await this.insertJourneyData(startJourneyDTO);
-    const updateUserInfo = await this.pushJourneyIdToUser(
-      createdJourneyData._id,
-      startJourneyDTO.userId,
-    );
-    const { coordinates, journeyMetadata, _id } = createdJourneyData;
-    const [coordinate] = coordinates;
-    const { startTimestamp } = journeyMetadata;
-    return { coordinate, startTimestamp, journeyId: _id };
-  }
+    async insertJourneyData(startJourneyDTO:StartJourneyReqDTO){
+      const startPoint = startJourneyDTO.coordinate.join(' ');
 
-  async end(endJourneyDTO: EndJourneyReqDTO) {
-    const { journeyId, title, coordinates, endTimestamp, song } = endJourneyDTO;
-    // const coordinateToAdd = Array.isArray(coordinate[0])
-    //   ? coordinate
-    //   : [coordinate];
-    const coordinatesLen = coordinates.length;
+      const lineStringOfCoordinates = `LINESTRING(${startPoint}, ${startPoint})`
 
-    const updatedJourney = await this.journeyModel
-      .findOneAndUpdate(
-        { _id: journeyId },
-        {
-          $set: { title, song, 'journeyMetadata.endTimestamp': endTimestamp },
-          $push: { coordinates: { $each: coordinates } },
-        },
-        { new: true },
-      )
-      .lean();
+      const returnedData = await this.journeyRepository.save({...startJourneyDTO, coordinates: lineStringOfCoordinates})
 
-    if (!updatedJourney) {
-      throw new JourneyNotFoundException();
+      const [parsedCoordinate] = parseCoordinatesFromGeoToDto(returnedData.coordinates)
+      
+      const returnData:StartJourneyResDTO = {
+        journeyId : returnedData.journeyId,
+        coordinate : parsedCoordinate,
+        startTimestamp : returnedData.startTimestamp,
+      }
+
+      return returnData;
     }
 
-    const updatedCoordinates = updatedJourney.coordinates;
-    const updatedEndTimestamp = updatedJourney.journeyMetadata.endTimestamp;
-    const updatedId = updatedJourney._id;
-    const updatedSong = updatedJourney.song;
-    const updatedCoordinatesLen = coordinates.length;
-    const totalCoordinatesLen = updatedCoordinates.length;
-    const slicedCoordinates = updatedCoordinates.slice(-updatedCoordinatesLen);
-    return {
-      id: updatedId,
-      coordinates: slicedCoordinates,
-      endTimestamp: updatedEndTimestamp,
-      song: updatedSong,
-      numberOfCoordinates: totalCoordinatesLen,
-    };
-  }
-
-  async pushCoordianteToJourney(recordJourneyDTO: RecordJourneyReqDTO) {
-    const { journeyId, coordinates } = recordJourneyDTO;
-    const coordinatesLen = coordinates.length;
-    // coordinate가 단일 배열인 경우 이를 이중 배열로 감싸서 처리
-
-    // const coordinateToAdd = Array.isArray(coordinate[0])
-    //   ? coordinate
-    //   : [coordinate];
-    const updatedJourney = await this.journeyModel
-      .findOneAndUpdate(
-        { _id: journeyId },
-        { $push: { coordinates: { $each: coordinates } } },
-        { new: true },
-      )
-      .lean();
-    if (!updatedJourney) {
-      throw new JourneyNotFoundException();
-    }
-    const updatedCoordinates = updatedJourney.coordinates;
-    return { coordinates: updatedCoordinates.slice(-coordinatesLen) };
-    // const { coordinates } = updatedJourney;
-    // const len = coordinates.length;
-    // return { coordinate: coordinates[len - 1] };
-  }
-
-  async checkJourney(checkJourneyDTO) {
-    let { userId, minCoordinate, maxCoordinate } = checkJourneyDTO;
-    if (!(Array.isArray(minCoordinate) && Array.isArray(maxCoordinate))) {
-      throw new coordinateNotCorrectException();
-    }
-    minCoordinate = minCoordinate.map((item) => Number(item));
-    maxCoordinate = maxCoordinate.map((item) => Number(item));
-
-    if (!(is1DArray(minCoordinate) && is1DArray(maxCoordinate))) {
-      throw new coordinateNotCorrectException();
-    }
-    const user = await this.userModel.findOne({ userId }).lean();
-    if (!user) {
-      throw new UserNotFoundException();
-    }
-    const journeys = user.journeys;
-
-    const boundingBox = turf.bboxPolygon([
-      minCoordinate[0],
-      minCoordinate[1],
-      maxCoordinate[0],
-      maxCoordinate[1],
-    ]);
-    // console.log(boundingBox);
-    const journeyList = await this.findMinMaxCoordinates(boundingBox, journeys);
-    return journeyList;
-  }
-  async findMinMaxCoordinates(boundingBox, journeys) {
-    let journeyList = [];
-
-    for (let i = 0; i < journeys.length; i++) {
-      let journey = await this.findByIdWithPopulate(
-        journeys[i],
-        'spots',
-        'Spot',
-        {
-          transform: (spot) => {
-            return {
-              coordinate: spot.coordinate,
-              timestamp: spot.timestamp,
-              photoUrl: makePresignedUrl(spot.photoKey),
-            };
-          },
-        },
-      );
-      if (!journey) {
+    async end(endJourneyDTO: EndJourneyReqDTO){
+      const {coordinates, journeyId, song, title, endTimestamp} = endJourneyDTO;
+      const coordinatesLen = coordinates.length;
+      const originData = await this.journeyRepository.findOne({where:{journeyId}})
+      if(!originData){
         throw new JourneyNotFoundException();
       }
-      if (journey.coordinates.length < 2) {
-        continue;
+
+      const originCoordinates =originData.coordinates;
+      const newCoordinates = originData.coordinates = originCoordinates.slice(0, -1) + ',' +endJourneyDTO.coordinates.map((item)=> `${item[0]} ${item[1]}`).join(',') + ')'
+      const newJourneyData = {...originData, ...endJourneyDTO, song : JSON.stringify(song), coordinates: newCoordinates};
+      
+      const returnedDate = await this.journeyRepository.save(newJourneyData);
+
+      const parsedCoordinates = parseCoordinatesFromGeoToDto(returnedDate.coordinates)
+      const returnData:EndJourneyResDTO = {
+        journeyId : returnedDate.journeyId,
+        coordinates : parsedCoordinates.slice(parsedCoordinates.length-coordinatesLen),
+        endTimestamp : returnedDate.endTimestamp,
+        numberOfCoordinates : parsedCoordinates.length,
+        song : JSON.parse(returnedDate.song)
       }
-      let journeyLine = turf.lineString(journey.coordinates);
-      if (!turf.booleanDisjoint(journeyLine, boundingBox)) {
-        journeyList.push(journey);
+
+      return returnData
+    }
+
+
+    async pushCoordianteToJourney(recordJourneyDTO: RecordJourneyReqDTO) {
+      
+        const {journeyId, coordinates} = recordJourneyDTO;
+        const coordinateLen = coordinates.length;
+        const originData = await this.journeyRepository.findOne({where:{journeyId}});
+        if(!originData){
+          throw new JourneyNotFoundException();
+        }
+        const originCoordinates =originData.coordinates;
+
+        
+        originData.coordinates = originCoordinates.slice(0, -1) + ',' +recordJourneyDTO.coordinates.map((item)=> `${item[0]} ${item[1]}`).join(',') + ')'
+        const returnedData =  await this.journeyRepository.save(originData)
+
+        const updatedCoordinate = parseCoordinatesFromGeoToDto(returnedData.coordinates);
+        const len = updatedCoordinate.length;
+
+  
+        return {coordinates:updatedCoordinate.slice(len-coordinateLen)}
+        
+    }
+
+
+    async getJourneyByCoordinationRange(checkJourneyDTO) {
+      let { userId, minCoordinate, maxCoordinate } = checkJourneyDTO;
+      if (!(Array.isArray(minCoordinate) && Array.isArray(maxCoordinate))) {
+        throw new coordinateNotCorrectException();
       }
-    }
-    return journeyList;
-  }
 
-  async loadLastJourney(userId) {
-    const user = await this.userModel.findOne({userId}).lean();
-    if(!user){
-      throw new UserNotFoundException();
-    }
+      minCoordinate = minCoordinate.map((item) => Number(item));
+      maxCoordinate = maxCoordinate.map((item) => Number(item));
 
-    const journeys = user.journeys;
-
-    const len = journeys.length;
-    const lastJourneyId = journeys[len-1];
-    
-    const lastJourney = await this.journeyModel
-      .findById(lastJourneyId)
-      .populate({
-        path: 'spots',
-        model: 'Spot',
-        options: {
-          transform: (spot) => {
-            return {
-              coordinate: spot.coordinate,
-              timestamp: spot.timestamp,
-              photoUrl: makePresignedUrl(spot.photoKey),
-            };
-          },
-        },
+      if (!(is1DArray(minCoordinate) && is1DArray(maxCoordinate))) {
+        throw new coordinateNotCorrectException();
+      }
+      const coordinatesRange = {
+        xMinCoordinate : minCoordinate[0],
+        yMinCoordinate : minCoordinate[1],
+        xMaxCoordinate : maxCoordinate[0],
+        yMaxCoordinate : maxCoordinate[1]
+      }
+      const returnedData = await this.journeyRepository.manager
+          .createQueryBuilder(Journey, "journey")
+          .leftJoinAndSelect("journey.spots", "spot")
+          .where(`st_within(coordinates, ST_PolygonFromText('POLYGON((:xMinCoordinate :yMinCoordinate, :xMaxCoordinate :yMinCoordinate, :xMaxCoordinate :yMaxCoordinate, :xMinCoordinate :yMaxCoordinate, :xMinCoordinate :yMinCoordinate))'))`, coordinatesRange)
+          .where('userId = :userId', {userId})
+          .getMany();
+      
+      return returnedData.map(data =>{
+        return this.parseJourneyFromEntityToDto(data)
       })
-      .lean();
+    }
 
-      if (!lastJourney) {
+    async getLastJourneyByUserId(userId){
+      const journeys = await this.journeyRepository.manager
+      .createQueryBuilder(Journey, "journey")
+      .where({userId})
+      .leftJoinAndSelect("journey.spots", "spot")
+      .getMany()
+
+      if(!journeys){
         return {
-          journey: null,
-          isRecording: false,
+          journey : null,
+          isRecording: false
         };
       }
 
+      const journeyLen = journeys.length;
+      const lastJourneyData = journeys[journeyLen-1];
+
+      if(lastJourneyData.title){
+        return {journey:null, isRecording : false}
+      }
+
+      
       return {
-        journey: lastJourney.title ? null : lastJourney,
-        isRecording: lastJourney.title ? false : true,
-      };
-  }
+        journey : this.parseJourneyFromEntityToDto(lastJourneyData),
+        isRecording : true
+        
+    
+      }
+    
+      
+    }
+    
+      async getJourneyById(journeyId) {
+        const returnedData =  await this.journeyRepository.manager
+          .createQueryBuilder(Journey, "journey")
+          .where({journeyId})
+          .leftJoinAndSelect("journey.spots", "spot")
+          .getOne()
+          return this.parseJourneyFromEntityToDto(returnedData);
+  
+          
+      }
 
-  async getJourneyById(journeyId) {
-    return await this.findByIdWithPopulate(journeyId, 'spots', 'Spot', {
-      transform: (spot) => {
+      parseJourneyFromEntityToDto(journey){
+        const {journeyId, coordinates, startTimestamp, endTimestamp, song, title, spots} = journey;
         return {
-          coordinate: spot.coordinate,
-          timestamp: spot.timestamp,
-          photoUrl: makePresignedUrl(spot.photoKey),
-        };
-      },
-    });
-  }
+          journeyId,
+          coordinates : parseCoordinatesFromGeoToDto(coordinates),
+          title,
+          journeyMetadata : {startTimestamp : journey.startTimestamp, endTimestamp : journey.endTimestamp},
+          song : JSON.parse(song),
+          spots : journey.spots.map(spot =>{
+            return {
+              ...spot,
+              coordinate : parseCoordinateFromGeoToDto(spot.coordinate),
+              photoUrl : makePresignedUrl(spot.photoKey)
+            }
+          })
 
-  async findByIdWithPopulate(id, path, model, options?) {
-    return await this.journeyModel
-      .findById(id)
-      .populate({
-        path,
-        model,
-        options,
-      })
-      .lean();
-  }
+        }
+      }
 
-  async deleteJourneyById(deletedJourneyDto: DeleteJourneyReqDTO) {
-    const { userId, journeyId } = deletedJourneyDto;
+      async deleteJourneyById(deletedJourneyDto: DeleteJourneyReqDTO){
+        const {journeyId} = deletedJourneyDto;
+        return await this.journeyRepository.delete({journeyId})
+      }
 
-    const deletedJourney = await this.journeyModel
-      .findOneAndDelete({
-        _id: journeyId,
-      })
-      .lean();
-    if (!deletedJourney) {
-      throw new JourneyNotFoundException();
-    }
-
-    const deletedUserData = await this.userModel.findOneAndUpdate(
-      { userId },
-      { $pull: { journeys: new mongoose.Types.ObjectId(journeyId) } },
-      { new: true },
-    );
-
-    if (!deletedUserData) {
-      throw new UserNotFoundException();
-    }
-
-    return deletedJourney;
-  }
 }
+
+    
+
