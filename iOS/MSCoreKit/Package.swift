@@ -88,6 +88,7 @@ let package = Package(
                 ]),
         .target(name: Target.keychainStorage,
                dependencies: [
+                .target(name: Target.msPersistentStorage),
                 .product(name: Dependency.msLogger,
                          package: Dependency.msFoundation),
                 .product(name: Dependency.msConstants,
