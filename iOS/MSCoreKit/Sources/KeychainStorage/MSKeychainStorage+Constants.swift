@@ -1,5 +1,5 @@
 //
-//  MSKeychainStorage+Constants.swift
+//  KeychainStorage+Constants.swift
 //  MSCoreKit
 //
 //  Created by 이창준 on 2023.12.06.
@@ -7,7 +7,7 @@
 
 import MSConstants
 
-extension MSKeychainStorage {
+extension KeychainStorage {
     
     enum KeychainConstants {
         

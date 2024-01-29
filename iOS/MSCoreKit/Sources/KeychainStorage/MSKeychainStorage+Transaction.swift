@@ -1,5 +1,5 @@
 //
-//  MSKeychainStorage+Transaction.swift
+//  KeychainStorage+Transaction.swift
 //  MSCoreKit
 //
 //  Created by 이창준 on 2023.12.06.
@@ -9,7 +9,7 @@ import Foundation
 
 import MSLogger
 
-extension MSKeychainStorage {
+extension KeychainStorage {
     
     /// Keychain으로부터 데이터를 불러옵니다.
     /// - Parameters:

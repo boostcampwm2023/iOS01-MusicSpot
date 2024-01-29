@@ -1,5 +1,5 @@
 //
-//  MSKeychainStorage.swift
+//  KeychainStorage.swift
 //  MSCoreKit
 //
 //  Created by 이창준 on 2023.12.06.
@@ -7,7 +7,9 @@
 
 import Foundation
 
-public struct MSKeychainStorage {
+import MSPersistentStorage
+
+public struct KeychainStorage: MSPersistentStorage {
     
     // MARK: - Properties
     

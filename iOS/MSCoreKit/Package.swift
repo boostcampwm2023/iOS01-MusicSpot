@@ -22,10 +22,10 @@ private extension String {
 private enum Target {
     
     static let msImageFetcher = "MSImageFetcher"
+    static let keychainStorage = "KeychainStorage"
     static let msPersistentStorage = "MSPersistentStorage"
     static let msNetworking = "MSNetworking"
     static let msCacheStorage = "MSCacheStorage"
-    static let msKeychainStorage = "MSKeychainStorage"
     static let msMapKit = "MSMapKit"
     
 }
@@ -54,8 +54,8 @@ let package = Package(
                  targets: [Target.msNetworking]),
         .library(name: Target.msCacheStorage,
                  targets: [Target.msCacheStorage]),
-        .library(name: Target.msKeychainStorage,
-                 targets: [Target.msKeychainStorage])
+        .library(name: Target.keychainStorage,
+                 targets: [Target.keychainStorage])
     ],
     dependencies: [
         .package(name: Dependency.msFoundation,
@@ -86,7 +86,7 @@ let package = Package(
                     .product(name: Dependency.msConstants,
                              package: Dependency.msFoundation)
                 ]),
-        .target(name: Target.msKeychainStorage,
+        .target(name: Target.keychainStorage,
                dependencies: [
                 .product(name: Dependency.msLogger,
                          package: Dependency.msFoundation),
