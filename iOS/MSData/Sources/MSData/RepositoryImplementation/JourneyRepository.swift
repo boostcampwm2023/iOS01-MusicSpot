@@ -20,7 +20,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
     private let networking: MSNetworking
     private let storage: MSPersistentStorage
     
-    private var recordingJourney: RecordingJourneyStorage
+    private var recordingJourney: RecordingJourneyService
     
     public var isRecording: Bool {
         return self.recordingJourney.isRecording
@@ -36,7 +36,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
                 persistentStorage: MSPersistentStorage = FileManagerStorage()) {
         self.networking = MSNetworking(session: session)
         self.storage = persistentStorage
-        self.recordingJourney = RecordingJourneyStorage.shared
+        self.recordingJourney = RecordingJourneyService.shared
     }
     
     // MARK: - Functions

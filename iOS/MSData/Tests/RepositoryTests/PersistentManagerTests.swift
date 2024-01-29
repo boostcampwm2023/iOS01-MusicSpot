@@ -15,7 +15,7 @@ final class PersistentManagerTests: XCTestCase {
     // MARK: - Properties
     
     private let storage = FileManagerStorage()
-    private var recordingJourney = RecordingJourneyStorage.shared
+    private var recordingJourney = RecordingJourneyService.shared
     
     override func tearDown() async throws {
         try self.recordingJourney.finish()

@@ -1,5 +1,5 @@
 //
-//  RecordingJourneyStorage.swift
+//  RecordingJourneyService.swift
 //  MSData
 //
 //  Created by 전민건 on 2023.12.10.
@@ -15,7 +15,7 @@ import MSUserDefaults
 
 // MARK: - Default Implementations
 
-public struct RecordingJourneyStorage {
+public struct RecordingJourneyService {
     
     // MARK: - Properties
     
@@ -45,7 +45,7 @@ public struct RecordingJourneyStorage {
     
     // MARK: - Shared
     
-    public static let shared = RecordingJourneyStorage()
+    public static let shared = RecordingJourneyService()
     
     // MARK: - Functions
     
@@ -57,7 +57,7 @@ public struct RecordingJourneyStorage {
             do {
                 try self.finish()
             } catch {
-                MSLogger.make(category: .recordingJourneyStorage)
+                MSLogger.make(category: .recordingJourneyService)
                     .warning("삭제되지 않은 이전 여정 기록 초기화에 실패했습니다.")
             }
         }
@@ -71,11 +71,11 @@ public struct RecordingJourneyStorage {
                                      forKey: startTimestampKey,
                                      subpath: recordingJourney.id)
             } catch {
-                MSLogger.make(category: .recordingJourneyStorage)
+                MSLogger.make(category: .recordingJourneyService)
                     .error("여정 기록 시작 Timestamp를 기록할 수 없습니다: \(recordingJourney.startTimestamp)")
             }
         } else {
-            MSLogger.make(category: .recordingJourneyStorage)
+            MSLogger.make(category: .recordingJourneyService)
                 .warning("Start Timestamp에 대한 기록이 실패했습니다.")
         }
     }
@@ -83,7 +83,7 @@ public struct RecordingJourneyStorage {
     @discardableResult
     public func record<T: Codable>(_ values: [T], keyPath: KeyPath<RecordingJourneyDTO, [T]>) -> Bool {
         guard let recordingJourneyID = self.recordingJourneyID else {
-            MSLogger.make(category: .recordingJourneyStorage)
+            MSLogger.make(category: .recordingJourneyService)
                 .error("recordingJourneyID를 조회할 수 없습니다. 여정이 기록 중인지 확인해주세요.")
             return false
         }
@@ -97,7 +97,7 @@ public struct RecordingJourneyStorage {
                                      forKey: key,
                                      subpath: recordingJourneyID)
             } catch {
-                MSLogger.make(category: .recordingJourneyStorage)
+                MSLogger.make(category: .recordingJourneyService)
                     .error("여정 좌표를 기록할 수 없습니다: \(recordingValues)")
             }
             return true
@@ -114,7 +114,7 @@ public struct RecordingJourneyStorage {
         self.recordingJourneyID = nil
         
 #if DEBUG
-        MSLogger.make(category: .recordingJourneyStorage).debug("여정 기록을 종료합니다: \(recordingJourneyID)")
+        MSLogger.make(category: .recordingJourneyService).debug("여정 기록을 종료합니다: \(recordingJourneyID)")
 #endif
     }
     
@@ -122,7 +122,7 @@ public struct RecordingJourneyStorage {
 
 // MARK: - Private Functions
 
-private extension RecordingJourneyStorage {
+private extension RecordingJourneyService {
     
     private enum Prefix {
         static let idKey = "id"
@@ -158,7 +158,7 @@ private extension RecordingJourneyStorage {
               let startTimestamp = try? self.storage.get(Date.self,
                                                          forKey: startTimestampKey,
                                                          subpath: recordingJourneyID) else {
-            MSLogger.make(category: .recordingJourneyStorage)
+            MSLogger.make(category: .recordingJourneyService)
                 .warning("기록중인 여정에서 StartTimestamp를 불러오지 못했습니다.")
             return nil
         }
@@ -171,7 +171,7 @@ private extension RecordingJourneyStorage {
               let spots = try? self.storage.get([SpotDTO].self,
                                                 forKey: spotKey,
                                                 subpath: recordingJourneyID) else {
-            MSLogger.make(category: .recordingJourneyStorage)
+            MSLogger.make(category: .recordingJourneyService)
                 .warning("기록중인 여정에서 Spot 목록을 불러오지 못했습니다.")
             return []
         }
@@ -185,7 +185,7 @@ private extension RecordingJourneyStorage {
               let coordinates = try? self.storage.get([CoordinateDTO].self,
                                                       forKey: coordinateKey,
                                                       subpath: recordingJourneyID) else {
-            MSLogger.make(category: .recordingJourneyStorage)
+            MSLogger.make(category: .recordingJourneyService)
                 .warning("기록중인 여정에서 Coordinate 목록을 불러오지 못했습니다.")
             return []
         }
