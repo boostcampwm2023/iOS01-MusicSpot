@@ -9,7 +9,6 @@ import UIKit
 
 import JourneyList
 import MSDesignSystem
-import MSLogger
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     

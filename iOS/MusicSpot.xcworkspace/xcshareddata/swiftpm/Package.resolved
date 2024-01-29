@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "nmapsmap-spm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SwiftyJunnos/NMapsMap-SPM",
+      "state" : {
+        "revision" : "181060557bf93c6c5e71fd17edccda86674e39dd",
+        "version" : "3.17.0"
+      }
+    }
+  ],
+  "version" : 2
+}

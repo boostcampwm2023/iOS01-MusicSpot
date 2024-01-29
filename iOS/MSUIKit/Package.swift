@@ -31,6 +31,9 @@ private enum Dependency {
     static let msLogger = "MSLogger"
     static let msFoundation = "MSFoundation"
     
+    static let naverMap = "NMapsMap"
+    static let naverMapSPM = "NMapsMap-SPM"
+    
 }
 
 // MARK: - Package
@@ -48,7 +51,9 @@ let package = Package(
         .package(name: Dependency.msCoreKit,
                  path: Dependency.msCoreKit.fromRootPath),
         .package(name: Dependency.msFoundation,
-                 path: Dependency.msFoundation.fromRootPath)
+                 path: Dependency.msFoundation.fromRootPath),
+        .package(url: "https://github.com/SwiftyJunnos/NMapsMap-SPM",
+                 .upToNextMajor(from: "3.17.0"))
     ],
     targets: [
         .target(name: Target.msDesignSystem,
@@ -65,7 +70,9 @@ let package = Package(
                     .product(name: Dependency.msExtension,
                              package: Dependency.msFoundation),
                     .product(name: Dependency.msLogger,
-                             package: Dependency.msFoundation)
+                             package: Dependency.msFoundation),
+                    .product(name: Dependency.naverMap,
+                             package: Dependency.naverMapSPM)
                 ])
     ],
     swiftLanguageVersions: [.v5]
