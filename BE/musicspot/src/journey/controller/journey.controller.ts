@@ -10,16 +10,13 @@ import {
   Delete,
 } from '@nestjs/common';
 import { JourneyService } from '../service/journey.service';
-
 import { StartJourneyReqDTO } from '../dto/journeyStart/journeyStart.dto';
-
 import {
   ApiCreatedResponse,
   ApiOperation,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { Journey } from '../schema/journey.schema';
 import {
   CheckJourneyResDTO,
   CheckJourneyReqDTO,
@@ -35,7 +32,9 @@ import {
 } from '../dto/journeyRecord/journeyRecord.dto';
 import { StartJourneyResDTO } from '../dto/journeyStart/journeyStart.dto';
 import { DeleteJourneyReqDTO } from '../dto/journeyDelete.dto';
-import { LastJourneyResDTO } from '../dto/journeyLast.dto';
+
+import { Journey } from '../entities/journey.entity';
+
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
@@ -52,7 +51,7 @@ export class JourneyController {
   })
   @Post('start')
   async create(@Body() startJourneyDTO: StartJourneyReqDTO) {
-    return await this.journeyService.create(startJourneyDTO);
+    return await this.journeyService.insertJourneyData(startJourneyDTO);
   }
 
   @ApiOperation({
@@ -82,6 +81,8 @@ export class JourneyController {
       await this.journeyService.pushCoordianteToJourney(recordJourneyDTO);
     return returnData;
   }
+
+
   @ApiOperation({
     summary: '여정 조회 API',
     description: '해당 범위 내의 여정들을 반환합니다.',
@@ -125,7 +126,7 @@ export class JourneyController {
       minCoordinate,
       maxCoordinate,
     };
-    return await this.journeyService.checkJourney(checkJourneyDTO);
+    return await this.journeyService.getJourneyByCoordinationRange(checkJourneyDTO);
   }
 
   @ApiOperation({
@@ -137,8 +138,9 @@ export class JourneyController {
     type: LastJourneyResDTO,
   })
   @Get('last')
-  async loadLastData(@Query('userId') userId: string) {
-    return await this.journeyService.loadLastJourney(userId);
+  async loadLastData(@Body('userId') userId) {
+    return await this.journeyService.getLastJourneyByUserId(userId);
+
   }
 
   @ApiOperation({
@@ -167,3 +169,4 @@ export class JourneyController {
     return await this.journeyService.deleteJourneyById(deleteJourneyDto);
   }
 }
+
