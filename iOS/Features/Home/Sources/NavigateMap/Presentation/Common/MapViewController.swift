@@ -38,6 +38,11 @@ public final class MapViewController: UIViewController {
     
     // MARK: - UI Components
     
+    private lazy var abstractedMapView: MSMapView = {
+        let mapView = MSMapView(using: .apple)
+        return mapView
+    }()
+    
     private lazy var mapView: MKMapView = {
         let mapView = MKMapView()
         mapView.delegate = self
@@ -129,7 +134,8 @@ public final class MapViewController: UIViewController {
         self.configureLayout()
         self.configureStyles()
         self.configureCoreLocation()
-        self.bind(self.viewModel)
+        let viewModel = self.viewModel
+        self.bind(viewModel)
     }
     
     public override func viewDidLayoutSubviews() {
