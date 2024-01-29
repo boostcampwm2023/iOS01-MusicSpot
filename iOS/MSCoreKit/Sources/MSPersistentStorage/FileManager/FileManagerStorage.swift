@@ -59,9 +59,7 @@ public final class FileManagerStorage: NSObject, MSPersistentStorage {
     ///   - type: 불러올 값의 타입
     ///   - key: 불러올 값에 대응되는 Key 값
     /// - Returns: `FileManager`에서 불러온 뒤 지정된 타입으로 디코딩 된 값
-    public func get<T: Codable>(_ type: T.Type,
-                                forKey key: String,
-                                subpath: String? = nil) -> T? {
+    public func get<T: Codable>(_ type: T.Type, forKey key: String, subpath: String? = nil) throws -> T? {
         guard let fileURL = self.fileURL(forKey: key, subpath: subpath),
               let data = try? Data(contentsOf: fileURL) else {
             return nil
@@ -106,9 +104,7 @@ public final class FileManagerStorage: NSObject, MSPersistentStorage {
     /// `FileManager`를 사용한 저장에 성공했을 경우 요청한 데이터를 반환합니다. \
     /// 저장에 실패했거나 이미 존재한다면 `nil`을 반환합니다.
     @discardableResult
-    public func set<T: Codable>(value: T,
-                                forKey key: String,
-                                subpath: String? = nil) -> T? {
+    public func set<T: Codable>(value: T, forKey key: String, subpath: String? = nil) throws -> T? {
         guard let fileURL = self.fileURL(forKey: key, subpath: subpath) else {
             return nil
         }

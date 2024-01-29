@@ -7,9 +7,9 @@
 
 public protocol MSPersistentStorage {
     
-    func get<T: Codable>(_ type: T.Type, forKey key: String, subpath: String?) -> T?
+    func get<T: Codable>(_ type: T.Type, forKey key: String, subpath: String?) throws -> T?
     @discardableResult
-    func set<T: Codable>(value: T, forKey key: String, subpath: String?) -> T?
+    func set<T: Codable>(value: T, forKey key: String, subpath: String?) throws -> T?
     func delete(forKey key: String, subpath: String?) throws
     func deleteAll(subpath: String?) throws
 
@@ -17,13 +17,13 @@ public protocol MSPersistentStorage {
 
 extension MSPersistentStorage {
     
-    public func get<T: Codable>(_ type: T.Type, forKey key: String, subpath: String? = nil) -> T? {
-        return self.get(type, forKey: key, subpath: nil)
+    public func get<T: Codable>(_ type: T.Type, forKey key: String, subpath: String? = nil) throws -> T? {
+        return try self.get(type, forKey: key, subpath: nil)
     }
     
     @discardableResult
-    public func set<T: Codable>(value: T, forKey key: String, subpath: String? = nil) -> T? {
-        return self.set(value: value, forKey: key, subpath: subpath)
+    public func set<T: Codable>(value: T, forKey key: String, subpath: String? = nil) throws -> T? {
+        return try self.set(value: value, forKey: key, subpath: subpath)
     }
     
     public func delete(forKey key: String, subpath: String? = nil) throws {

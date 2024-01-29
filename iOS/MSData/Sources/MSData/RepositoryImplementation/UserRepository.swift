@@ -11,13 +11,14 @@ import KeychainStorage
 import MSDomain
 import MSLogger
 import MSNetworking
+import MSPersistentStorage
 
 public struct UserRepositoryImplementation: UserRepository {
     
     // MARK: - Properties
     
     private let networking: MSNetworking
-    private let keychain: KeychainStorage
+    private let keychain: MSPersistentStorage
     
     // MARK: - Initializer
     
@@ -69,7 +70,7 @@ public struct UserRepositoryImplementation: UserRepository {
         let account = KeychainStorage.Accounts.userID.rawValue
         
         do {
-            try self.keychain.set(value: userID, account: account)
+            try self.keychain.set(value: userID, forKey: account)
             #if DEBUG
             MSLogger.make(category: .keychain).debug("Keychain에 서버 정보를 저장했습니다.")
             #endif
@@ -82,7 +83,7 @@ public struct UserRepositoryImplementation: UserRepository {
     /// UUID가 이미 키체인에 등록되어 있다면 가져옵니다.
     public func fetchUUID() -> UUID? {
         let account = KeychainStorage.Accounts.userID.rawValue
-        guard let userID = try? self.keychain.get(UUID.self, account: account) else {
+        guard let userID = try? self.keychain.get(UUID.self, forKey: account) else {
             MSLogger.make(category: .keychain).error("Keychain에서 UserID를 조회하는 것에 실패했습니다.")
             return nil
         }

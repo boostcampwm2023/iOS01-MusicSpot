@@ -29,12 +29,19 @@ public struct KeychainStorage: MSPersistentStorage {
     /// - Parameters:
     ///   - value: Keychain에 저장할 데이터 (`Data`)
     ///   - account: Keychain에 저장할 데이터에 대응되는 Key (`String`)
-    public func set<T: Codable>(value: T, account: String) throws {
+    @discardableResult
+    public func set<T: Codable>(value: T, forKey key: String, subpath: String? = nil) throws -> T? {
         let encodedValue = try self.encoder.encode(value)
-        if try self.exists(account: account) {
-            try self.update(value: encodedValue, account: account)
-        } else {
-            try self.add(value: encodedValue, account: account)
+        
+        do {
+            if try self.exists(account: key) {
+                try self.update(value: encodedValue, account: key)
+            } else {
+                try self.add(value: encodedValue, account: key)
+            }
+            return value
+        } catch {
+            return nil
         }
     }
     
@@ -45,9 +52,9 @@ public struct KeychainStorage: MSPersistentStorage {
     /// - Parameters:
     ///   - account: Keychain에서 조회할 데이터에 대응되는 Key (`String`)
     /// - Returns: Keychain에 저장된 데이터
-    public func get<T: Codable>(_ type: T.Type, account: String) throws -> T? {
-        if try self.exists(account: account) {
-            guard let value = try self.fetch(account: account) else {
+    public func get<T: Codable>(_ type: T.Type, forKey key: String, subpath: String?) throws -> T? {
+        if try self.exists(account: key) {
+            guard let value = try self.fetch(account: key) else {
                 return nil
             }
             return try self.decoder.decode(T.self, from: value)
@@ -60,18 +67,18 @@ public struct KeychainStorage: MSPersistentStorage {
     ///
     /// - Parameters:
     ///   - account: Keychain에서 삭제할 값에 대응되는 Key (`String`)
-    public func delete(account: String) throws {
-        if try self.exists(account: account) {
-            return try self.remove(account: account)
+    public func delete(forKey key: String, subpath: String? = nil) throws {
+        if try self.exists(account: key) {
+            return try self.remove(account: key)
         } else {
             throw KeychainError.transactionError
         }
     }
     
     /// Keychain에 저장된 모든 데이터를 삭제합니다.
-    public func deleteAll() throws {
+    public func deleteAll(subpath: String? = nil) throws {
         for account in Accounts.allCases where try self.exists(account: account.rawValue) {
-            try self.delete(account: account.rawValue)
+            try self.delete(forKey: account.rawValue)
         }
     }
     
