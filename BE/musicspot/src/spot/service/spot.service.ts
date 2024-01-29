@@ -9,13 +9,12 @@ import {
   bucketName,
   makePresignedUrl,
 } from '../../common/s3/objectStorage';
+
 import { JourneyNotFoundException, coordinateNotCorrectException } from 'src/filters/journey.exception';
 import { is1DArray, parseCoordinateFromDtoToGeo } from 'src/common/util/coordinate.util';
 import { SpotRepository } from '../repository/spot.repository';
 import { RecordSpotResDTO } from '../dto/recordSpot.dto';
 import { JourneyRepository } from 'src/journey/repository/journey.repository';
-
-
 
 @Injectable()
 export class SpotService {
@@ -37,6 +36,7 @@ export class SpotService {
         throw new SpotRecordFail();
       }
     }
+
     
     async insertToSpot(spotData){
       const point = `POINT(${parseCoordinateFromDtoToGeo(spotData.coordinate)})`;
@@ -101,6 +101,7 @@ export class SpotService {
       }
     
       return spot.photoKey;
+
     }
 }
 

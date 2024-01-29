@@ -21,7 +21,6 @@ export class JourneyService{
 
     async insertJourneyData(startJourneyDTO:StartJourneyReqDTO){
       const startPoint = startJourneyDTO.coordinate.join(' ');
-
       const lineStringOfCoordinates = `LINESTRING(${startPoint}, ${startPoint})`
 
       const returnedData = await this.journeyRepository.save({...startJourneyDTO, coordinates: lineStringOfCoordinates})
@@ -44,6 +43,7 @@ export class JourneyService{
       if(!originData){
         throw new JourneyNotFoundException();
       }
+
 
       const originCoordinates =originData.coordinates;
       const newCoordinates = originData.coordinates = originCoordinates.slice(0, -1) + ',' +endJourneyDTO.coordinates.map((item)=> `${item[0]} ${item[1]}`).join(',') + ')'
@@ -85,6 +85,7 @@ export class JourneyService{
         return {coordinates:updatedCoordinate.slice(len-coordinateLen)}
         
     }
+
 
 
     async getJourneyByCoordinationRange(checkJourneyDTO) {

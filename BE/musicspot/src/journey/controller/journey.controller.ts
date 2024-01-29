@@ -32,7 +32,9 @@ import {
 } from '../dto/journeyRecord/journeyRecord.dto';
 import { StartJourneyResDTO } from '../dto/journeyStart/journeyStart.dto';
 import { DeleteJourneyReqDTO } from '../dto/journeyDelete.dto';
+
 import { Journey } from '../entities/journey.entity';
+
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
@@ -133,11 +135,12 @@ export class JourneyController {
   })
   @ApiCreatedResponse({
     description: '사용자가 진행중이었던 여정 정보',
-    type: Journey,
+    type: LastJourneyResDTO,
   })
   @Get('last')
   async loadLastData(@Body('userId') userId) {
     return await this.journeyService.getLastJourneyByUserId(userId);
+
   }
 
   @ApiOperation({

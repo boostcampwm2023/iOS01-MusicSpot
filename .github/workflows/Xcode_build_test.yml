@@ -1,0 +1,136 @@
+name: Xcode_build_test
+
+env:
+  WORKSPACE: iOS/MusicSpot.xcworkspace
+
+on:
+  pull_request:
+    branches:
+      - 'iOS/release'
+      - 'iOS/epic/**'
+    types: [assigned, labeled, opened, synchronize, reopened]
+
+jobs:
+  prepare-matrix:
+    runs-on: macos-13
+    outputs:
+      matrix: ${{ steps.generate-matrix.outputs.matrix }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Xcode
+      if: ${{ !env.ACT }}
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.0.1'
+
+    - name: Generate matrix
+      id: generate-matrix
+      run: |
+        matrix="{\"include\":["
+        first_entry=true
+        for scheme in $(xcodebuild -workspace ${{ env.WORKSPACE }} -list | grep -A 100 "Schemes:" | grep -v "Schemes:" | sed '/^$/d' | sed 's/^[ \t]*//'); do
+          if [[ $scheme != *"-Package" ]] && [[ $scheme != *"Tests" ]]; then
+            if [ "$first_entry" = true ]; then
+              first_entry=false
+            else
+              matrix+=","
+            fi
+            matrix+="{\"scheme\":\"$scheme\"}"
+          fi
+        done
+        matrix+="]}"
+        echo "matrix=$matrix" >> $GITHUB_OUTPUT
+
+  xcode-build:
+    needs: prepare-matrix
+    runs-on: macos-13
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.prepare-matrix.outputs.matrix)}}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Create secret file
+      env:
+        API_SECRET: ${{ secrets.API_SECRET }}
+      run: |
+        echo $API_SECRET | base64 -D -o iOS/MSData/Sources/MSData/Resources/APIInfo.plist
+    
+    - name: Setup Xcode
+      if: ${{ !env.ACT }}
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.0.1'
+    
+    - name: 🛠️ Build ${{ matrix.scheme }}
+      run: |
+        echo "🛠️  Building ${{ matrix.scheme }}"
+        xcodebuild \
+          -workspace ${{ env.WORKSPACE }} \
+          -scheme ${{ matrix.scheme }} \
+          -sdk 'iphonesimulator' \
+          -destination 'platform=iOS Simulator,OS=17.0.1,name=iPhone 15 Pro' \
+          clean build
+
+  prepare-test-matrix:
+    runs-on: macos-13
+    outputs:
+      matrix: ${{ steps.generate-test-matrix.outputs.matrix }}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Xcode
+      if: ${{ !env.ACT }}
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.0.1'
+
+    - name: Generate test matrix
+      id: generate-test-matrix
+      run: |
+        matrix="{\"include\":["
+        first_entry=true
+        for scheme in $(xcodebuild -workspace ${{ env.WORKSPACE }} -list | grep -A 100 "Schemes:" | grep -v "Schemes:" | sed '/^$/d' | sed 's/^[ \t]*//'); do
+          if [[ $scheme == *"Tests" ]]; then
+            if [ "$first_entry" = true ]; then
+              first_entry=false
+            else
+              matrix+=","
+            fi
+            matrix+="{\"scheme\":\"$scheme\"}"
+          fi
+        done
+        matrix+="]}"
+        echo "matrix=$matrix" >> $GITHUB_OUTPUT
+
+  xcode-test:
+    needs: prepare-test-matrix
+    runs-on: macos-13
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.prepare-test-matrix.outputs.matrix)}}
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Create secret file
+      env:
+        API_SECRET: ${{ secrets.API_SECRET }}
+      run: |
+        echo $API_SECRET | base64 -D -o iOS/MSData/Sources/MSData/Resources/APIInfo.plist
+
+    - name: Setup Xcode
+      if: ${{ !env.ACT }}
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.0.1'
+
+    - name: 🧪 Test ${{ matrix.scheme }}
+      run: |
+        echo "🧪  Testing ${{ matrix.scheme }}"
+        xcodebuild \
+          -workspace ${{ env.WORKSPACE }} \
+          -scheme ${{ matrix.scheme }} \
+          -sdk 'iphonesimulator' \
+          -destination 'platform=iOS Simulator,OS=17.0.1,name=iPhone 15 Pro' \
+          test

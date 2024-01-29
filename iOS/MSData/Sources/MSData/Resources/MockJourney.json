@@ -1,0 +1,546 @@
+[
+    {
+        "id": "20008aad-362f-4e43-b4e4-4adfee08a30d",
+        "location": "서울시 강남구",
+        "metaData": {
+            "date": "2023-10-28T00:00:00"
+        },
+        "spots": [
+            {
+                "journeyId": "389354bc-7c14-402b-90ce-ff9b1e6aec13",
+                "coordinate": [
+                    74.34012768689522,
+                    -20.0591261579182
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "ede775e3-7ec4-4b92-a314-a8682d00c3f6",
+                "coordinate": [
+                    39.79236622936409,
+                    -20.288943745440292
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "82fff66b-538b-4c4d-9f0c-cf0b10098374",
+                "coordinate": [
+                    -61.2994089681573,
+                    147.81682997676376
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            }
+        ],
+        "coordinates": [
+            {
+                "latitude": 57.465627107728835,
+                "longitude": 21.259425432982624
+            },
+            {
+                "latitude": -53.09543651781735,
+                "longitude": -127.7430923166473
+            },
+            {
+                "latitude": -77.73569106610123,
+                "longitude": 175.41162341151937
+            },
+            {
+                "latitude": 5.183073888694608,
+                "longitude": -97.39973919319664
+            }
+        ],
+        "song": {
+            "id": "421a73d5-64b5-4907-9726-fc263da4e34b",
+            "title": "Super Shy",
+            "artwork": "Artwork URL",
+            "artist": "NewJeans"
+        },
+        "lineColor": "Color 0"
+    },
+    {
+        "id": "8f98238a-3dec-458d-9a03-984e8cae332d",
+        "location": "부천시 원미구",
+        "metaData": {
+            "date": "2022-04-04T00:00:00"
+        },
+        "spots": [
+            {
+                "journeyId": "8e4fd5a5-d5bc-4fe7-aaf5-e0de9da96685",
+                "coordinate": [
+                    31.52421333174138,
+                    -43.89463635754254
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "272fdb4c-6aca-45dc-b00c-528e6204e294",
+                "coordinate": [
+                    -68.4588807563729,
+                    43.959766770510186
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "d210ee40-8895-46d5-8f5b-85c31b441d8a",
+                "coordinate": [
+                    -34.28043419715898,
+                    -164.73303980456268
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "e330d5f1-45e4-4dfa-a2a6-291e6be56f35",
+                "coordinate": [
+                    -66.19095010133054,
+                    -8.569810942887017
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "68140671-237f-48d1-9888-4eb2d0d02b2c",
+                "coordinate": [
+                    -55.72402145238744,
+                    -18.60154681858242
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            }
+        ],
+        "coordinates": [
+            {
+                "latitude": 43.82013766554985,
+                "longitude": 173.00171490769134
+            },
+            {
+                "latitude": -29.320190959438754,
+                "longitude": -28.21501987990979
+            },
+            {
+                "latitude": 87.99211291043426,
+                "longitude": 50.670604577768586
+            },
+            {
+                "latitude": 28.003576208636588,
+                "longitude": -164.59912441639696
+            }
+        ],
+        "song": {
+            "id": "f4ec694c-c577-4e1b-a7f8-c5d984537881",
+            "title": "OMG",
+            "artwork": "Artwork URL",
+            "artist": "NewJeans"
+        },
+        "lineColor": "Color 1"
+    },
+    {
+        "id": "2367bcf6-972f-432d-837a-0cc4d434eb9a",
+        "location": "수원시 팔달구",
+        "metaData": {
+            "date": "2023-11-07T00:00:00"
+        },
+        "spots": [
+            {
+                "journeyId": "d76c335b-e410-4fea-9270-e417c4f57c0f",
+                "coordinate": [
+                    -64.81468160689631,
+                    -76.60199610190303
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "dc7436fc-58d2-422e-85ea-f7542198c0d5",
+                "coordinate": [
+                    73.79998313510268,
+                    68.35171492227144
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "6732642e-1972-4c85-8697-3d3ddc2eb1c0",
+                "coordinate": [
+                    8.909582214448818,
+                    -151.7541955219229
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            }
+        ],
+        "coordinates": [
+            {
+                "latitude": 33.314649021558964,
+                "longitude": -144.60966101329134
+            },
+            {
+                "latitude": -17.28334467846844,
+                "longitude": 96.71348559491207
+            }
+        ],
+        "song": {
+            "id": "c7ffc956-fd68-45fa-9523-0a365b379d90",
+            "title": "Either Way",
+            "artwork": "Artwork URL",
+            "artist": "IVE"
+        },
+        "lineColor": "Color 2"
+    },
+    {
+        "id": "d2765c97-f216-4ab2-80e2-0f947145aaf0",
+        "location": "서울시 마포구",
+        "metaData": {
+            "date": "2023-11-03T00:00:00"
+        },
+        "spots": [
+            {
+                "journeyId": "6d3ee7b2-32af-4d64-8704-a8b0fd2254cb",
+                "coordinate": [
+                    37.496598,
+                    126.958120
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            }
+        ],
+        "coordinates": [
+            {
+                "latitude": 37.496598,
+                "longitude": 126.958120
+            },
+            {
+                "latitude": -65.0654246205996,
+                "longitude": 82.56458972940237
+            }
+        ],
+        "song": {
+            "id": "0fe57f3a-4623-4064-88ac-a1fe09ecf7e9",
+            "title": "이브, 프시케 그리고 푸른 수염의 아내",
+            "artwork": "Artwork URL",
+            "artist": "LE SSERAFIM"
+        },
+        "lineColor": "Color 3"
+    },
+    {
+        "id": "53c0e005-c721-44ca-9765-ee4b742cd675",
+        "location": "고양시 덕양구",
+        "metaData": {
+            "date": "2023-02-13T00:00:00"
+        },
+        "spots": [
+            {
+                "journeyId": "1f25a310-5e5d-42c7-918f-a61a0187db68",
+                "coordinate": [
+                    37.495976,
+                    126.956837
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "833719bd-7b54-489b-b3e7-9bc6b667dc5e",
+                "coordinate": [
+                    36.495973,
+                    125.956837
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            }
+        ],
+        "coordinates": [
+            {
+                "latitude": -67.51343427177022,
+                "longitude": 17.431624937453194
+            },
+            {
+                "latitude": 17.539925914331036,
+                "longitude": 127.209259846463
+            },
+            {
+                "latitude": -19.192151423397974,
+                "longitude": -94.047267104666
+            }
+        ],
+        "song": {
+            "id": "35c87451-46ea-4bce-96ac-57604530994d",
+            "title": "Attention",
+            "artwork": "Artwork URL",
+            "artist": "NewJeans"
+        },
+        "lineColor": "Color 4"
+    },
+    {
+        "id": "a4a00895-0afc-43fd-9ad9-b215dddbe816",
+        "location": "서울시 영등포구",
+        "metaData": {
+            "date": "2023-01-19T00:00:00"
+        },
+        "spots": [
+            {
+                "journeyId": "24ca84aa-6a80-47c0-8302-6a0924791c80",
+                "coordinate": [
+                    37.16742284659284,
+                    126.225978927134577
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "2f812435-5d79-4e49-bee1-51a541b7e2bc",
+                "coordinate": [
+                    37.537466139282714,
+                    126.92574821724574
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "b52aa54e-8ca2-4581-aa03-b3b50fc9e031",
+                "coordinate": [
+                    37.68755334180694,
+                    126.4740708009648
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "0a416cf3-f957-4372-9cae-5a1997161c3b",
+                "coordinate": [
+                    37.38993174770837,
+                    126.94575572765291
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "3a3869bf-a149-4ae2-8936-61ef4025921f",
+                "coordinate": [
+                    26.00204566583929,
+                    -38.88354925355324
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            }
+        ],
+        "coordinates": [
+            {
+                "latitude": 37.42509,
+                "longitude": 124.9565
+            },
+            {
+                "latitude": 37.39509,
+                "longitude": 125.9565
+            },
+            {
+                "latitude": 37.49539,
+                "longitude": 126.9565
+            },
+            {
+                "latitude": 37.49509,
+                "longitude": 127.9565
+            }
+        ],
+        "song": {
+            "id": "d1488750-4120-4a9a-999b-a87a45953ca5",
+            "title": "Drama",
+            "artwork": "Artwork URL",
+            "artist": "aespa"
+        },
+        "lineColor": "Color 5"
+    },
+    {
+        "id": "93260b82-153a-4f5a-a5d8-ec58f1a7ad71",
+        "location": "인천시 연수구",
+        "metaData": {
+            "date": "2020-12-07T00:00:00"
+        },
+        "spots": [
+            {
+                "journeyId": "5ee04c1e-d914-4fe0-bafc-6410415323a0",
+                "coordinate": [
+                    -72.15636930638713,
+                    -136.0116257911593
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "e4445b1a-d4b8-4215-a50e-c3088d18d7d8",
+                "coordinate": [
+                    86.14073588308193,
+                    71.3073252728758
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "d8af22f2-e004-4d37-a6ca-6ad99c6c7d89",
+                "coordinate": [
+                    77.87222808724792,
+                    -3.792694490590094
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            }
+        ],
+        "coordinates": [
+            {
+                "latitude": 8.80229997752501,
+                "longitude": 47.63625800444882
+            },
+            {
+                "latitude": -35.63401796013899,
+                "longitude": 118.02930151637929
+            },
+            {
+                "latitude": 4.774969630280225,
+                "longitude": -38.19033863439523
+            },
+            {
+                "latitude": 17.40994536703667,
+                "longitude": -123.27816118997819
+            }
+        ],
+        "song": {
+            "id": "87e57ea4-ea53-405b-9631-c4d10f6dc4fc",
+            "title": "Chill Kill",
+            "artwork": "Artwork URL",
+            "artist": "Red Velvet"
+        },
+        "lineColor": "Color 6"
+    },
+    {
+        "id": "d26426b1-aec5-4f51-8a23-6f1401fffb52",
+        "location": "인천시 중구",
+        "metaData": {
+            "date": "2022-10-14T00:00:00"
+        },
+        "spots": [
+            {
+                "journeyId": "70a868dc-52d4-4a6c-aefa-8f4d2db72bbd",
+                "coordinate": [
+                    -67.2052661143819,
+                    -103.79187685194488
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            }
+        ],
+        "coordinates": [
+            {
+                "latitude": -17.049476729920784,
+                "longitude": -95.60934011188559
+            },
+            {
+                "latitude": -86.08561003130464,
+                "longitude": -3.220089719655789
+            },
+            {
+                "latitude": -4.114875686387336,
+                "longitude": 89.03707513766813
+            }
+        ],
+        "song": {
+            "id": "99955ba8-a619-468a-8d82-5f49b7494c56",
+            "title": "DIE 4 YOU",
+            "artwork": "Artwork URL",
+            "artist": "DEAN"
+        },
+        "lineColor": "Color 7"
+    },
+    {
+        "id": "7311e698-f313-4acc-bf18-a080233b78ae",
+        "location": "천안시 서북구",
+        "metaData": {
+            "date": "2023-12-25T00:00:00"
+        },
+        "spots": [
+            {
+                "journeyId": "ce8fb5a9-cf2e-44bb-a695-07ef19df8684",
+                "coordinate": [
+                    26.754371020802807,
+                    -136.87790951732427
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "2a5bcf5d-ff5c-458f-ad3d-1f3560a01f05",
+                "coordinate": [
+                    -31.05255299691919,
+                    109.12110052412726
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "b8736196-293e-4674-9b49-882419739bc2",
+                "coordinate": [
+                    44.11921868914504,
+                    -1.3713120422063696
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "4fac5c54-a3d3-4a2e-b7bc-b9a24f6f716f",
+                "coordinate": [
+                    -9.650099854349605,
+                    63.87852947086256
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            },
+            {
+                "journeyId": "24f129a0-fdef-41e3-8590-a70de1568f09",
+                "coordinate": [
+                    -54.74979632677334,
+                    165.518236994507
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            }
+        ],
+        "coordinates": [
+            {
+                "latitude": 14.132893106998878,
+                "longitude": -22.231429270383558
+            },
+            {
+                "latitude": 1.7423769434293916,
+                "longitude": -35.145660538473976
+            },
+            {
+                "latitude": 55.22007564767648,
+                "longitude": 44.828484292139535
+            }
+        ],
+        "song": {
+            "id": "d9698b7c-20ad-4af5-97d9-42f83a1654c5",
+            "title": "All I Want for Christmas Is You",
+            "artwork": "Artwork URL",
+            "artist": "Mariah Carey"
+        },
+        "lineColor": "Color 8"
+    },
+    {
+        "id": "bec2b75d-7782-47b6-a67e-0067e49bbca8",
+        "location": "전주시 완산구",
+        "metaData": {
+            "date": "2023-07-14T00:00:00"
+        },
+        "spots": [
+            {
+                "journeyId": "25ac53b9-86d2-4935-99a7-1cf2f362f6e1",
+                "coordinate": [
+                    -12.855147544861794,
+                    -44.31218853533764
+                ],
+                "photoUrl": "https://source.unsplash.com/random/200x300"
+            }
+        ],
+        "coordinates": [
+            {
+                "latitude": 23.29047112271624,
+                "longitude": -120.86503806882197
+            },
+            {
+                "latitude": 6.1062416592369715,
+                "longitude": -116.13348365253415
+            },
+            {
+                "latitude": -4.550860523478789,
+                "longitude": -168.32578052239512
+            },
+            {
+                "latitude": -61.40086403396403,
+                "longitude": 101.95422471280716
+            }
+        ],
+        "song": {
+            "id": "d21f4f50-6fee-4584-ab23-3a5a73879156",
+            "title": "ETA",
+            "artwork": "Artwork URL",
+            "artist": "NewJeans"
+        },
+        "lineColor": "Color 9"
+    }
+]
