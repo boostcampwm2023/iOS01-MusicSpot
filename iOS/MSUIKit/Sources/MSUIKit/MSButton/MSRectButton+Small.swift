@@ -12,6 +12,7 @@ extension MSRectButton {
     public static func small(isBrandColored: Bool = false) -> MSRectButton {
         let button = MSRectButton()
         button.style = .small
+        button.configuration?.baseForegroundColor = .msColor(.secondaryButtonTypo)
         button.configuration?.baseBackgroundColor = isBrandColored
         ? .msColor(.musicSpot)
         : .msColor(.secondaryButtonBackground).withAlphaComponent(0.8)

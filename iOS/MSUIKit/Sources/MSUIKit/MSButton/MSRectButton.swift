@@ -73,7 +73,6 @@ public final class MSRectButton: UIButton {
     
     private func configureStyles() {
         var configuration = UIButton.Configuration.filled()
-        configuration.baseForegroundColor = .msColor(.primaryTypo)
         configuration.contentInsets = NSDirectionalEdgeInsets(top: Metric.edgeInsets,
                                                               leading: Metric.edgeInsets,
                                                               bottom: Metric.edgeInsets,
