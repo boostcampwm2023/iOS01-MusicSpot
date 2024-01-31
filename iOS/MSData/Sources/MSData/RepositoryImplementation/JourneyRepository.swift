@@ -95,7 +95,7 @@ public struct JourneyRepositoryImplementation: JourneyRepository {
         let result = await self.networking.request(StartJourneyResponseDTO.self, router: router)
         switch result {
         case .success(let responseDTO):
-            let recordingJourney = RecordingJourney(id: responseDTO.journeyID,
+            let recordingJourney = RecordingJourney(id: String(responseDTO.journeyID),
                                                     startTimestamp: responseDTO.startTimestamp,
                                                     spots: [],
                                                     coordinates: [responseDTO.coordinate.toDomain()])

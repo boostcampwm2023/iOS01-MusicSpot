@@ -14,13 +14,13 @@ public struct StartJourneyResponseDTO {
     public let coordinate: CoordinateDTO
     public let startTimestamp: Date
     /// 시작된 여정에 대한 ID 값
-    public let journeyID: String
+    public let journeyID: Int
     
     // MARK: - Initializer
     
     public init(coordinate: CoordinateDTO,
                 startTimestamp: Date,
-                journeyID: String) {
+                journeyID: Int) {
         self.coordinate = coordinate
         self.startTimestamp = startTimestamp
         self.journeyID = journeyID
