@@ -27,10 +27,6 @@ open class MSMapView: UIView {
     
     private let gradientLayer: MSGradientLayer = {
         let gradientLayer = MSGradientLayer()
-        gradientLayer.gradientColors = [
-            .msColor(.primaryBackground).withAlphaComponent(.zero),
-            .msColor(.primaryBackground).withAlphaComponent(Metric.GradientLayer.alpha)
-        ]
         gradientLayer.locations = [
             Metric.GradientLayer.startingPoint,
             Metric.GradientLayer.endPoint
@@ -42,6 +38,8 @@ open class MSMapView: UIView {
     
     private override init(frame: CGRect) {
         super.init(frame: frame)
+        self.configureLayout()
+        self.configureStyles()
     }
     
     public convenience init(using provider: MapProvider) {
@@ -56,6 +54,8 @@ open class MSMapView: UIView {
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
+        
+        self.updateGradientColors()
     }
     
 }
@@ -63,5 +63,31 @@ open class MSMapView: UIView {
 // MARK: - Functions: Interface
 
 extension MSMapView {
+    
+}
+
+// MARK: - UI Configuration
+
+private extension MSMapView {
+    
+    func configureLayout() {
+        let gradientLayer = self.gradientLayer
+        self.layer.addSublayer(gradientLayer)
+    }
+    
+    func configureStyles() {
+        if #available(iOS 17.0, *) {
+            self.registerForTraitChanges([UITraitUserInterfaceStyle.self]) { [weak self] (_: Self, _) in
+                self?.updateGradientColors()
+            }
+        }
+    }
+    
+    func updateGradientColors() {
+        gradientLayer.gradientColors = [
+            .msColor(.primaryBackground).withAlphaComponent(.zero),
+            .msColor(.primaryBackground).withAlphaComponent(Metric.GradientLayer.alpha)
+        ]
+    }
     
 }
