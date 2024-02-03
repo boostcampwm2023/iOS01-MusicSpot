@@ -19,15 +19,6 @@ public final class MapViewController: UIViewController {
     
     // MARK: - Constants
     
-    private enum Typo {
-        
-        static let locationAlertTitle = "위치 권한이 허용되지 않음"
-        static let locationAlertMessage = "MusicSpot은 위치 권한을 필요합니다. 설정에서 \"앱을 사용하는 동안\" 이상의 권한을 허용해주세요."
-        static let locationAlertCancel = "취소"
-        static let locationAlertSettings = "설정"
-        
-    }
-    
     private enum Metric {
         
         static let buttonStackTopSpacing: CGFloat = 50.0
@@ -80,9 +71,14 @@ public final class MapViewController: UIViewController {
     public weak var delegate: MapViewControllerDelegate?
     var viewModel: (any MapViewModel)?
     
-    internal let locationManager = CLLocationManager()
-    
     private var cancellables: Set<AnyCancellable> = []
+    
+    private(set) lazy var locationManager: CLLocationManager = {
+        let locationManager = CLLocationManager()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        locationManager.delegate = self
+        return locationManager
+    }()
     
     private var journeyPathRenderer: JourneyPathRenderer?
     
@@ -135,7 +131,6 @@ public final class MapViewController: UIViewController {
         
         self.configureLayout()
         self.configureStyles()
-        self.configureCoreLocation()
         let viewModel = self.viewModel
         self.bind(viewModel)
     }
@@ -329,85 +324,6 @@ private extension MapViewController {
         ]
     }
     
-    private func configureCoreLocation() {
-        self.locationManager.delegate = self
-        switch self.locationManager.authorizationStatus {
-        case .restricted, .denied:
-            self.presentLocationAuthorizationAlert()
-        case .notDetermined:
-            self.locationManager.requestWhenInUseAuthorization()
-        default:
-            return
-        }
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-    }
-    
-}
-
-// MARK: - CLLocationManager
-
-extension MapViewController: CLLocationManagerDelegate {
-    
-    public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        Task.detached {
-            await self.handleAuthorizationChange(manager)
-        }
-    }
-    
-    public func locationManager(_ manager: CLLocationManager,
-                                didUpdateLocations locations: [CLLocation]) {
-        guard self.timeRemaining == .zero,
-              let newCurrentLocation = locations.last,
-              let recordJourneyViewModel = self.viewModel as? RecordJourneyViewModel else {
-            return
-        }
-        
-        let coordinate2D = CLLocationCoordinate2D(latitude: newCurrentLocation.coordinate.latitude,
-                                                  longitude: newCurrentLocation.coordinate.longitude)
-        recordJourneyViewModel.trigger(.tenLocationsDidRecorded(coordinate2D))
-    }
-    
-    private func handleAuthorizationChange(_ manager: CLLocationManager) {
-        switch manager.authorizationStatus {
-        case .notDetermined:
-            manager.requestWhenInUseAuthorization()
-        case .restricted, .denied:
-            self.presentLocationAuthorizationAlert()
-        case .authorizedAlways, .authorizedWhenInUse:
-            self.checkAccuracyAuthorizationStatus(manager)
-        @unknown default:
-            MSLogger.make(category: .home).error("잘못된 위치 권한입니다.")
-        }
-    }
-    
-    /// 제공되는 위치 정보의 정확도에 따른 동작을 수행합니다.
-    private func checkAccuracyAuthorizationStatus(_ manager: CLLocationManager) {
-        switch manager.accuracyAuthorization {
-        case .fullAccuracy:
-            MSLogger.make(category: .home).log("위치 정보 정확도가 높습니다.")
-        case .reducedAccuracy:
-            MSLogger.make(category: .home).log("위치 정보 정확도가 낮습니다.")
-        default:
-            MSLogger.make(category: .home).error("잘못된 위치 정보 정확도에 대한 값입니다.")
-        }
-    }
-    
-    private func presentLocationAuthorizationAlert() {
-        let sheet = UIAlertController(title: Typo.locationAlertTitle,
-                                      message: Typo.locationAlertMessage,
-                                      preferredStyle: .alert)
-        let cancelAction = UIAlertAction(title: Typo.locationAlertCancel, style: .cancel)
-        let settingsAction = UIAlertAction(title: Typo.locationAlertSettings, style: .default) { _ in
-            guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
-            UIApplication.shared.open(url)
-        }
-        sheet.addAction(cancelAction)
-        sheet.addAction(settingsAction)
-        DispatchQueue.main.async {
-            self.present(sheet, animated: true)
-        }
-    }
-    
 }
 
 // MARK: - MKMapView
@@ -415,20 +331,21 @@ extension MapViewController: CLLocationManagerDelegate {
 extension MapViewController: MKMapViewDelegate {
     
     /// 현재까지의 polyline들을 지도 위에 그림
-    public func mapView(_ mapView: MKMapView,
-                        rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        guard let polyLine = overlay as? MKPolyline else { return MKOverlayRenderer() }
+    public func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        guard let overlay = overlay as? JourneyPath else {
+            MSLogger.make(category: .navigateMap)
+                .error("알 수 없는 Overlay \(overlay.description)가 지도에 추가되고자 합니다.")
+            return MKOverlayRenderer()
+        }
         
-        let renderer = MKPolylineRenderer(polyline: polyLine)
-        renderer.strokeColor = .msColor(.musicSpot)
-        renderer.lineWidth = Metric.lineWidth
-        renderer.alpha = 1.0
-        
-        return renderer
+        return self.journeyPathRenderer ?? {
+            let journeyPathRenderer = JourneyPathRenderer(journeyPath: overlay)
+            self.journeyPathRenderer = journeyPathRenderer
+            return journeyPathRenderer
+        }()
     }
     
-    public func mapView(_ mapView: MKMapView,
-                        viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+    public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         guard !(annotation is MKUserLocation) else { return nil }
         
         if annotation is MKClusterAnnotation {
