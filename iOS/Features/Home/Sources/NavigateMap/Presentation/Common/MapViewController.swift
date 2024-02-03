@@ -84,7 +84,9 @@ public final class MapViewController: UIViewController {
     
     private var cancellables: Set<AnyCancellable> = []
     
-    private var timeRemaining: Int {
+    private var journeyPathRenderer: JourneyPathRenderer?
+    
+    internal var timeRemaining: Int {
         let calendar = Calendar.current
         return calendar.component(.second, from: .now) % 5
     }
