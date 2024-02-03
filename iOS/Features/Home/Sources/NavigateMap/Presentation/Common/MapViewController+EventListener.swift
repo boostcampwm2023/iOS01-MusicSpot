@@ -28,7 +28,7 @@ extension MapViewController {
 
 extension MapViewController {
     
-    public func recordingDidStart(_ startedJourney: RecordingJourney) {
+    public func startJourney(_ initialData: RecordingJourney) {
         guard self.viewModel is NavigateMapViewModel else {
             MSLogger.make(category: .home).error("여정이 시작되어야 하지만 이미 Map에서 RecordJourneyViewModel을 사용하고 있습니다.")
             return
@@ -36,20 +36,22 @@ extension MapViewController {
         
         let userRepository = UserRepositoryImplementation()
         let journeyRepository = JourneyRepositoryImplementation()
-        let recordJourneyViewModel = RecordJourneyViewModel(startedJourney: startedJourney,
+        let recordJourneyViewModel = RecordJourneyViewModel(startedJourney: initialData,
                                                             userRepository: userRepository,
                                                             journeyRepository: journeyRepository)
         self.swapViewModel(to: recordJourneyViewModel)
         
-        self.locationManager.startUpdatingLocation()
         self.locationManager.allowsBackgroundLocationUpdates = true
+        self.locationManager.pausesLocationUpdatesAutomatically = false
+        
+        self.locationManager.startUpdatingLocation()
         
         #if DEBUG
-        MSLogger.make(category: .home).debug("여정 기록이 시작되었습니다: \(startedJourney)")
+        MSLogger.make(category: .home).debug("여정 기록이 시작되었습니다: \(initialData)")
         #endif
     }
     
-    public func recordingDidResume(_ recordedJourney: RecordingJourney) {
+    public func resumeJourney(_ recordedJourney: RecordingJourney) {
         let userRepository = UserRepositoryImplementation()
         let journeyRepository = JourneyRepositoryImplementation()
         let recordJourneyViewModel = RecordJourneyViewModel(startedJourney: recordedJourney,
@@ -71,7 +73,7 @@ extension MapViewController {
         #endif
     }
     
-    public func recordingDidStop(_ stoppedJourney: RecordingJourney? = nil) {
+    public func stopJourney(_ stoppedJourney: RecordingJourney? = nil) {
         guard self.viewModel is RecordJourneyViewModel else {
             MSLogger.make(category: .home).error("여정이 종료되어야 하지만 이미 Map에서 NavigateMapViewModel을 사용하고 있습니다.")
             return
@@ -82,7 +84,6 @@ extension MapViewController {
         self.swapViewModel(to: navigateMapViewModel)
         
         self.locationManager.stopUpdatingLocation()
-        self.locationManager.allowsBackgroundLocationUpdates = false
         
         #if DEBUG
         if let stoppedJourney {

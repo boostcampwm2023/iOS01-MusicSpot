@@ -144,7 +144,7 @@ public final class HomeViewController: HomeBottomSheetViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] resumedJourney in
                 self?.contentViewController.clearOverlays()
-                self?.contentViewController.recordingDidResume(resumedJourney)
+                self?.contentViewController.resumeJourney(resumedJourney)
             }
             .store(in: &self.cancellables)
         
@@ -153,11 +153,11 @@ public final class HomeViewController: HomeBottomSheetViewController {
             .sink(receiveCompletion: { [weak self] completion in
                 if case .failure = completion {
                     self?.contentViewController.clearOverlays()
-                    self?.contentViewController.recordingDidStop()
+                    self?.contentViewController.stopJourney()
                 }
             }, receiveValue: { [weak self] cancelledJourney in
                 self?.contentViewController.clearOverlays()
-                self?.contentViewController.recordingDidStop(cancelledJourney)
+                self?.contentViewController.stopJourney(cancelledJourney)
             })
             .store(in: &self.cancellables)
         
@@ -220,7 +220,7 @@ public final class HomeViewController: HomeBottomSheetViewController {
     }
     
     public func journeyDidEnded(endedJourney: Journey) {
-        self.contentViewController.recordingDidStop(RecordingJourney(endedJourney))
+        self.contentViewController.stopJourney(RecordingJourney(endedJourney))
     }
     
 }
