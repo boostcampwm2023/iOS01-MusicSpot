@@ -30,9 +30,19 @@ public final class JourneyPath: NSObject, MKOverlay {
     
     private var journeyPathData = JourneyPathData()
     
+    /// 기록된 경로를 포함하는 사각형
+    var pathBounds: MKMapRect {
+        return self.journeyPathData.bounds
+    }
+    
+    /// 기록된 경로의 `CLLocation` 목록
+    var pathLocations: [CLLocation] {
+        return self.journeyPathData.locations
+    }
+    
     // MARK: - Functions
     
-    func addLocation(_ newLocation: CLLocation) -> (isLocationAdded: Bool, isBoundingRectChanged: Bool) {
+    public func addLocation(_ newLocation: CLLocation) -> (isLocationAdded: Bool, isBoundingRectChanged: Bool) {
         var journeyPathData = self.journeyPathData
         
         guard self.isNewLocationViable(newLocation, journeyPathData: journeyPathData) else {

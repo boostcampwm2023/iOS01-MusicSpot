@@ -62,6 +62,8 @@ public final class JourneyPathRenderer: MKOverlayRenderer {
         
         guard var lastPoint = points.first else { return nil }
         for (index, point) in points.enumerated() {
+            if index == .zero { continue }
+            
             let aSquared = pow(point.x - lastPoint.x, 2)
             let bSquared = pow(point.y - lastPoint.y, 2)
             if aSquared + bSquared >= cSquared {
