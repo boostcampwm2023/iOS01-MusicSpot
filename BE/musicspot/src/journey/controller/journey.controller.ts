@@ -34,6 +34,7 @@ import { StartJourneyResDTO } from '../dto/journeyStart/journeyStart.dto';
 import { DeleteJourneyReqDTO } from '../dto/journeyDelete.dto';
 
 import { Journey } from '../entities/journey.entity';
+import { LastJourneyResDTO } from '../dto/journeyLast.dto';
 
 
 @Controller('journey')
