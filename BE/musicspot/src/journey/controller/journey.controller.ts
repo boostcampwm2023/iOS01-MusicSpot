@@ -8,6 +8,7 @@ import {
   Query,
   Param,
   Delete,
+  Version,
 } from '@nestjs/common';
 import { JourneyService } from '../service/journey.service';
 import { StartJourneyReqDTO } from '../dto/journeyStart/journeyStart.dto';
@@ -36,7 +37,6 @@ import { DeleteJourneyReqDTO } from '../dto/journeyDelete.dto';
 import { Journey } from '../entities/journey.entity';
 import { LastJourneyResDTO } from '../dto/journeyLast.dto';
 
-
 @Controller('journey')
 @ApiTags('journey 관련 API')
 export class JourneyController {
@@ -54,7 +54,14 @@ export class JourneyController {
   async create(@Body() startJourneyDTO: StartJourneyReqDTO) {
     return await this.journeyService.insertJourneyData(startJourneyDTO);
   }
-
+  @ApiOperation({
+    summary: '여정 시작 API',
+    description: '여정 기록을 시작합니다.',
+  })
+  @ApiCreatedResponse({
+    description: '생성된 여정 데이터를 반환',
+    type: StartJourneyResDTO,
+  })
   @ApiOperation({
     summary: '여정 종료 API',
     description: '여정을 종료합니다.',
@@ -82,7 +89,6 @@ export class JourneyController {
       await this.journeyService.pushCoordianteToJourney(recordJourneyDTO);
     return returnData;
   }
-
 
   @ApiOperation({
     summary: '여정 조회 API',
@@ -127,7 +133,9 @@ export class JourneyController {
       minCoordinate,
       maxCoordinate,
     };
-    return await this.journeyService.getJourneyByCoordinationRange(checkJourneyDTO);
+    return await this.journeyService.getJourneyByCoordinationRange(
+      checkJourneyDTO,
+    );
   }
 
   @ApiOperation({
@@ -141,7 +149,6 @@ export class JourneyController {
   @Get('last')
   async loadLastData(@Body('userId') userId) {
     return await this.journeyService.getLastJourneyByUserId(userId);
-
   }
 
   @ApiOperation({
@@ -170,4 +177,3 @@ export class JourneyController {
     return await this.journeyService.deleteJourneyById(deleteJourneyDto);
   }
 }
-
