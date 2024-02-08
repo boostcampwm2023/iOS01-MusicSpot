@@ -36,6 +36,14 @@ import { DeleteJourneyReqDTO } from '../dto/journeyDelete.dto';
 
 import { Journey } from '../entities/journey.entity';
 import { LastJourneyResDTO } from '../dto/journeyLast.dto';
+import {
+  StartJourneyReqDTOV2,
+  StartJourneyResDTOV2,
+} from '../dto/v2/startJourney.v2.dto';
+import {
+  EndJourneyReqDTOV2,
+  EndJourneyResDTOV2,
+} from '../dto/v2/endJourney.v2.dto';
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
@@ -50,18 +58,25 @@ export class JourneyController {
     description: '생성된 여정 데이터를 반환',
     type: StartJourneyResDTO,
   })
-  @Post('start')
+  @Post('/start')
   async create(@Body() startJourneyDTO: StartJourneyReqDTO) {
     return await this.journeyService.insertJourneyData(startJourneyDTO);
   }
+
+  @Version('2')
   @ApiOperation({
-    summary: '여정 시작 API',
+    summary: '여정 시작 API(V2)',
     description: '여정 기록을 시작합니다.',
   })
   @ApiCreatedResponse({
     description: '생성된 여정 데이터를 반환',
-    type: StartJourneyResDTO,
+    type: StartJourneyResDTOV2,
   })
+  @Post('start')
+  async createV2(@Body() startJourneyDTO: StartJourneyReqDTOV2) {
+    return await this.journeyService.insertJourneyDataV2(startJourneyDTO);
+  }
+
   @ApiOperation({
     summary: '여정 종료 API',
     description: '여정을 종료합니다.',
@@ -73,6 +88,20 @@ export class JourneyController {
   @Post('end')
   async end(@Body() endJourneyReqDTO: EndJourneyReqDTO) {
     return await this.journeyService.end(endJourneyReqDTO);
+  }
+
+  @Version('2')
+  @ApiOperation({
+    summary: '여정 종료 API(V2)',
+    description: '여정을 종료합니다.',
+  })
+  @ApiCreatedResponse({
+    description: '여정 종료 정보 반환',
+    type: EndJourneyResDTOV2,
+  })
+  @Post('end')
+  async endV2(@Body() endJourneyReqDTO: EndJourneyReqDTOV2) {
+    return await this.journeyService.endV2(endJourneyReqDTO);
   }
 
   @ApiOperation({
