@@ -12,7 +12,6 @@ export const isPointString = (pointString: string): boolean => {
 export const isLinestring = (lineString: string): boolean => {
   const regex: RegExp =
     /^\d+.\d+\s\d+.\d+,(\d+.\d+\s\d+.\d+,)*\d+.\d+\s\d+.\d+$/;
-  console.log(':ASD');
   if (!lineString.match(regex)) {
     return false;
   }
@@ -57,6 +56,6 @@ export const parseCoordinatesFromDtoToGeoV2 = (coordinates: string): string => {
 
 export const parseCoordinatesFromGeoToDtoV2 = (coordinates: string): string => {
   // coordinates = 'LINESTRING(1 2,3 4)'
-  const pointLen = 'LINESTRING'.length;
+  const pointLen = 'LINESTRING('.length;
   return coordinates.slice(pointLen, -1);
 };
