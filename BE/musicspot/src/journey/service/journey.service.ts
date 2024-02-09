@@ -32,6 +32,12 @@ import {
   StartJourneyResDTOV2,
 } from '../dto/v2/startJourney.v2.dto';
 import { EndJourneyReqDTOV2 } from '../dto/v2/endJourney.v2.dto';
+import {
+  isPointString,
+  parseCoordinateFromGeoToDtoV2,
+  parseCoordinatesFromGeoToDtoV2,
+} from '../../common/util/coordinate.v2.util';
+import { UserNotFoundException } from '../../filters/user.exception';
 
 @Injectable()
 export class JourneyService {
@@ -117,7 +123,6 @@ export class JourneyService {
   }
   async endV2(endJourneyDTO: EndJourneyReqDTOV2) {
     const { coordinates, journeyId, song } = endJourneyDTO;
-    const coordinatesLen: number = coordinates.split(',').length;
     const originalData = await this.journeyRepository.findOne({
       where: { journeyId },
     });
@@ -135,14 +140,12 @@ export class JourneyService {
 
     const returnedDate = await this.journeyRepository.save(newJourneyData);
 
-    const parsedCoordinates = parseCoordinatesFromGeoToDto(
+    const parsedCoordinates = parseCoordinatesFromGeoToDtoV2(
       returnedDate.coordinates,
     );
-    const returnData: EndJourneyResDTO = {
+    const returnData = {
       journeyId: returnedDate.journeyId,
-      coordinates: parsedCoordinates.slice(
-        parsedCoordinates.length - coordinatesLen,
-      ),
+      coordinates: parsedCoordinates,
       endTimestamp: returnedDate.endTimestamp,
       numberOfCoordinates: parsedCoordinates.length,
       song: JSON.parse(returnedDate.song),
@@ -178,6 +181,43 @@ export class JourneyService {
     return { coordinates: updatedCoordinate.slice(len - coordinateLen) };
   }
 
+  async getJourneyByCoordinationRangeV2(checkJourneyDTO) {
+    const { userId, minCoordinate, maxCoordinate } = checkJourneyDTO;
+    if (!(await this.userRepository.findOne({ where: { userId } }))) {
+      throw new UserNotFoundException();
+    }
+
+    if (!(isPointString(minCoordinate) && isPointString(maxCoordinate))) {
+      throw new coordinateNotCorrectException();
+    }
+
+    const [xMinCoordinate, yMinCoordinate] = minCoordinate
+      .split(' ')
+      .map((str) => Number(str));
+    const [xMaxCoordinate, yMaxCoordinate] = maxCoordinate
+      .split(' ')
+      .map((str) => Number(str));
+    console.log(xMinCoordinate, yMinCoordinate, xMaxCoordinate, yMaxCoordinate);
+    const coordinatesRange = {
+      xMinCoordinate,
+      yMinCoordinate,
+      xMaxCoordinate,
+      yMaxCoordinate,
+    };
+    const returnedData = await this.journeyRepository.manager
+      .createQueryBuilder(Journey, 'journey')
+      .leftJoinAndSelect('journey.spots', 'spot')
+      .where(
+        `st_within(coordinates, ST_PolygonFromText('POLYGON((:xMinCoordinate :yMinCoordinate, :xMaxCoordinate :yMinCoordinate, :xMaxCoordinate :yMaxCoordinate, :xMinCoordinate :yMaxCoordinate, :xMinCoordinate :yMinCoordinate))'))`,
+        coordinatesRange,
+      )
+      .where('userId = :userId', { userId })
+      .getMany();
+    console.log(returnedData);
+    return returnedData.map((data) => {
+      return this.parseJourneyFromEntityToDtoV2(data);
+    });
+  }
   async getJourneyByCoordinationRange(checkJourneyDTO) {
     let { userId, minCoordinate, maxCoordinate } = checkJourneyDTO;
     if (!(Array.isArray(minCoordinate) && Array.isArray(maxCoordinate))) {
@@ -210,7 +250,32 @@ export class JourneyService {
       return this.parseJourneyFromEntityToDto(data);
     });
   }
+  async getLastJourneyByUserIdV2(userId) {
+    const journeys = await this.journeyRepository.manager
+      .createQueryBuilder(Journey, 'journey')
+      .where({ userId })
+      .leftJoinAndSelect('journey.spots', 'spot')
+      .getMany();
 
+    if (!journeys) {
+      return {
+        journey: null,
+        isRecording: false,
+      };
+    }
+
+    const journeyLen = journeys.length;
+    const lastJourneyData = journeys[journeyLen - 1];
+
+    if (lastJourneyData.title) {
+      return { journey: null, isRecording: false };
+    }
+
+    return {
+      journey: this.parseJourneyFromEntityToDtoV2(lastJourneyData),
+      isRecording: true,
+    };
+  }
   async getLastJourneyByUserId(userId) {
     const journeys = await this.journeyRepository.manager
       .createQueryBuilder(Journey, 'journey')
@@ -237,7 +302,14 @@ export class JourneyService {
       isRecording: true,
     };
   }
-
+  async getJourneyByIdV2(journeyId) {
+    const returnedData = await this.journeyRepository.manager
+      .createQueryBuilder(Journey, 'journey')
+      .where({ journeyId })
+      .leftJoinAndSelect('journey.spots', 'spot')
+      .getOne();
+    return this.parseJourneyFromEntityToDtoV2(returnedData);
+  }
   async getJourneyById(journeyId) {
     const returnedData = await this.journeyRepository.manager
       .createQueryBuilder(Journey, 'journey')
@@ -246,7 +318,34 @@ export class JourneyService {
       .getOne();
     return this.parseJourneyFromEntityToDto(returnedData);
   }
-
+  parseJourneyFromEntityToDtoV2(journey) {
+    const {
+      journeyId,
+      coordinates,
+      startTimestamp,
+      endTimestamp,
+      song,
+      title,
+      spots,
+    } = journey;
+    return {
+      journeyId,
+      coordinates: parseCoordinatesFromGeoToDtoV2(coordinates),
+      title,
+      journeyMetadata: {
+        startTimestamp,
+        endTimestamp,
+      },
+      song: JSON.parse(song),
+      spots: spots.map((spot) => {
+        return {
+          ...spot,
+          coordinate: parseCoordinateFromGeoToDtoV2(spot.coordinate),
+          photoUrl: makePresignedUrl(spot.photoKey),
+        };
+      }),
+    };
+  }
   parseJourneyFromEntityToDto(journey) {
     const {
       journeyId,
@@ -262,11 +361,11 @@ export class JourneyService {
       coordinates: parseCoordinatesFromGeoToDto(coordinates),
       title,
       journeyMetadata: {
-        startTimestamp: journey.startTimestamp,
-        endTimestamp: journey.endTimestamp,
+        startTimestamp,
+        endTimestamp,
       },
       song: JSON.parse(song),
-      spots: journey.spots.map((spot) => {
+      spots: spots.map((spot) => {
         return {
           ...spot,
           coordinate: parseCoordinateFromGeoToDto(spot.coordinate),
