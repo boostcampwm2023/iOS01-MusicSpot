@@ -272,7 +272,7 @@ export class JourneyService {
     }
 
     return {
-      journey: this.parseJourneyFromEntityToDtoV2(lastJourneyData),
+      journey: lastJourneyData,
       isRecording: true,
     };
   }
