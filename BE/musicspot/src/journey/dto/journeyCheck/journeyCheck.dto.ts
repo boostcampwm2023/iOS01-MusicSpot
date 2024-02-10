@@ -42,7 +42,7 @@ export class SpotDTO {
   @ApiProperty({ description: '여정 ID', example: '65649c91380cafcab8869ed2' })
   readonly journeyId: string;
 
-  @ApiProperty({ description: 'spot 위치', example: [37.555913, 126.972313] })
+  @ApiProperty({ description: 'spot 위치', example: '37.555913 126.972313' })
   readonly coordinate: number[];
 
   @ApiProperty({ description: '기록 시간', example: '2023-11-22T12:00:00Z' })
