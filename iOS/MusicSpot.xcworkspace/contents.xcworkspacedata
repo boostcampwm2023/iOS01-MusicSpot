@@ -8,6 +8,9 @@
       location = "container:"
       name = "Features">
       <FileRef
+         location = "group:Features/Version">
+      </FileRef>
+      <FileRef
          location = "group:Features/Home">
       </FileRef>
       <FileRef
