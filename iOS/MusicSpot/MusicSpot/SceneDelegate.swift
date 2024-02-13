@@ -7,7 +7,6 @@
 
 import UIKit
 
-import JourneyList
 import MSDesignSystem
 import MSLogger
 

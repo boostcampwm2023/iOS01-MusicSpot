@@ -8,7 +8,7 @@ import PackageDescription
 private extension String {
     
     static let package = "MSCoreKit"
-
+    
     var testTarget: String {
         return self + "Tests"
     }
@@ -66,11 +66,11 @@ let package = Package(
     targets: [
         // Codes
         .target(name: Target.msImageFetcher,
-               dependencies: [
+                dependencies: [
                     .target(name: Target.msCacheStorage),
                     .product(name: Dependency.msLogger,
                              package: Dependency.msFoundation)
-               ]),
+                ]),
         .target(name: Target.msPersistentStorage,
                 dependencies: [
                     .product(name: Dependency.msLogger,
@@ -79,24 +79,28 @@ let package = Package(
                              package: Dependency.msFoundation)
                 ]),
         .target(name: Target.msNetworking,
-               dependencies: [
-                .product(name: Dependency.msLogger,
-                         package: Dependency.msFoundation)
-               ]),
+                dependencies: [
+                    .product(name: Dependency.msLogger,
+                             package: Dependency.msFoundation)
+                ]),
         .target(name: Target.msCacheStorage,
                 dependencies: [
                     .product(name: Dependency.msConstants,
                              package: Dependency.msFoundation)
                 ]),
         .target(name: Target.msKeychainStorage,
-               dependencies: [
-                .product(name: Dependency.msLogger,
-                         package: Dependency.msFoundation),
-                .product(name: Dependency.msConstants,
-                         package: Dependency.msFoundation)
-               ]),
-        .target(name: Target.versionManager),
-
+                dependencies: [
+                    .product(name: Dependency.msLogger,
+                             package: Dependency.msFoundation),
+                    .product(name: Dependency.msConstants,
+                             package: Dependency.msFoundation)
+                ]),
+        .target(name: Target.versionManager,
+                dependencies: [
+                    .product(name: Dependency.msLogger,
+                             package: Dependency.msFoundation)
+                ]),
+        
         // Tests
         .testTarget(name: Target.msPersistentStorage.testTarget,
                     dependencies: [
@@ -109,6 +113,10 @@ let package = Package(
         .testTarget(name: Target.msCacheStorage.testTarget,
                     dependencies: [
                         .target(name: Target.msCacheStorage)
+                    ]),
+        .testTarget(name: Target.versionManager.testTarget,
+                    dependencies: [
+                        .target(name: Target.versionManager)
                     ])
     ],
     swiftLanguageVersions: [.v5]
