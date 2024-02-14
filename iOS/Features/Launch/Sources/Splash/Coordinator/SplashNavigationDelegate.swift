@@ -9,4 +9,7 @@ import Foundation
 
 public protocol SplashNavigationDelegate: AnyObject {
     
+    func navigateToHome()
+    func navigateToUpdate()
+    
 }

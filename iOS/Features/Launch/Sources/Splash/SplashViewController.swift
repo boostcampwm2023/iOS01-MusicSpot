@@ -5,6 +5,7 @@
 //  Created by 이창준 on 2024.02.14.
 //
 
+import Combine
 import UIKit
 
 public final class SplashViewController: UIViewController {
@@ -22,7 +23,9 @@ public final class SplashViewController: UIViewController {
     
     public let viewModel: SplashViewModel
     
-    public weak var delegate: SplashNavigationDelegate?
+    public weak var navigationDelegate: SplashNavigationDelegate?
+    
+    private var cancellables: Set<AnyCancellable> = []
     
     // MARK: - Initializer
     
@@ -36,7 +39,6 @@ public final class SplashViewController: UIViewController {
     public init?(viewModel: SplashViewModel, coder: NSCoder) {
         self.viewModel = viewModel
         super.init(coder: coder)
-        print("SplashVC initialized")
     }
     
     required init?(coder: NSCoder) {
@@ -56,7 +58,11 @@ public final class SplashViewController: UIViewController {
     // MARK: - Binding
     
     private func bind(_ viewModel: SplashViewModel) {
-        
+        viewModel.currentState.goodToGo
+            .sink { [weak self] _ in
+                self?.navigationDelegate?.navigateToHome()
+            }
+            .store(in: &self.cancellables)
     }
     
 }

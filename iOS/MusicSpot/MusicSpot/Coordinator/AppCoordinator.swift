@@ -10,7 +10,6 @@ import UIKit
 import MSLogger
 import Splash
 import Version
-import VersionManager
 
 final class AppCoordinator: Coordinator {
     
@@ -21,8 +20,6 @@ final class AppCoordinator: Coordinator {
     
     var childCoordinators: [Coordinator] = []
     weak var finishDelegate: CoordinatorFinishDelegate?
-    
-    private let versionManager = VersionManager()
     
     // MARK: - Initializer
     
@@ -36,42 +33,32 @@ final class AppCoordinator: Coordinator {
         let storyboard = UIStoryboard(name: SplashViewController.storyboardName,
                                       bundle: Bundle.splash)
         let splashViewController = storyboard.instantiateViewController(identifier: SplashViewController.storyboardID,
-                                                                        creator: { coder -> SplashViewController in
+                                                                        creator: {
+            [weak self] coder -> SplashViewController in
             let viewModel = SplashViewModel()
-            return .init(viewModel: viewModel, coder: coder) ?? .init(viewModel: viewModel)
+            let viewController = SplashViewController(viewModel: viewModel, coder: coder)
+            viewController?.navigationDelegate = self
+            return viewController ?? SplashViewController(viewModel: viewModel)
         })
         
         self.navigationController.pushViewController(splashViewController, animated: false)
-//        Task {
-//            let isUpdateNeeded = await self.checkIfAppNeedsUpdate()
-//            
-//            if isUpdateNeeded,
-//               let appStoreURL = self.versionManager.appStoreURL,
-//               UIApplication.shared.canOpenURL(appStoreURL) {
-//                await UIApplication.shared.open(appStoreURL)
-//            } else {
-//                let navigationController = self.navigationController
-//                let homeCoordinator = HomeCoordinator(navigationController: navigationController)
-//                self.childCoordinators.append(homeCoordinator)
-//                homeCoordinator.start()
-//            }
-//        }
     }
     
 }
 
-// MARK: - Version Check
+// MARK: - Splash Navigation
 
-private extension AppCoordinator {
+extension AppCoordinator: SplashNavigationDelegate {
     
-    func checkIfAppNeedsUpdate() async -> Bool {
-        switch await self.versionManager.checkIfUpdateNeeded() {
-        case .success(let isUpdateNeeded):
-            return isUpdateNeeded
-        case .failure(let error):
-            MSLogger.make(category: .version).error("\(error.localizedDescription)")
-            return false
-        }
+    func navigateToHome() {
+        let navigationController = self.navigationController
+        let homeCoordinator = HomeCoordinator(navigationController: navigationController)
+        homeCoordinator.start()
+    }
+    
+    func navigateToUpdate() {
+        let versionViewController = VersionViewController()
+        self.navigationController.pushViewController(versionViewController, animated: true)
     }
     
 }

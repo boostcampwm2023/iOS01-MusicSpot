@@ -9,6 +9,8 @@ import SwiftUI
 
 public struct VersionView: View {
     
+    public init() { }
+    
     public var body: some View {
         Button("업데이트") {
             print("업데이트")
