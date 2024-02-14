@@ -23,6 +23,7 @@
 		DD3A97492B52416900BA2800 /* SelectSong in Frameworks */ = {isa = PBXBuildFile; productRef = DD3A97482B52416900BA2800 /* SelectSong */; };
 		DD3A974C2B52417100BA2800 /* Spot in Frameworks */ = {isa = PBXBuildFile; productRef = DD3A974B2B52417100BA2800 /* Spot */; };
 		DD4F6F382B7B9355004F0AEB /* Version in Frameworks */ = {isa = PBXBuildFile; productRef = DD4F6F372B7B9355004F0AEB /* Version */; };
+		DD4F6F3B2B7CD564004F0AEB /* Version in Frameworks */ = {isa = PBXBuildFile; productRef = DD4F6F3A2B7CD564004F0AEB /* Version */; };
 		DD612FB92B50080600E681CC /* SaveJourneyFlowCoordinatorFinishDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD612FB82B50080600E681CC /* SaveJourneyFlowCoordinatorFinishDelegate.swift */; };
 		DD612FBB2B50DA0600E681CC /* RewindJourneyCoordinatorFinishDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD612FBA2B50DA0600E681CC /* RewindJourneyCoordinatorFinishDelegate.swift */; };
 		DD72AF642B4B89E700EB4E81 /* CoordinatorFinishDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB22F742B433EC300F83D84 /* CoordinatorFinishDelegate.swift */; };
@@ -83,6 +84,7 @@
 				DD92FEAD2B35EE0700A672F5 /* NavigateMap in Frameworks */,
 				DD3A973E2B52414200BA2800 /* JourneyList in Frameworks */,
 				DD3A97492B52416900BA2800 /* SelectSong in Frameworks */,
+				DD4F6F3B2B7CD564004F0AEB /* Version in Frameworks */,
 				DD92FEAB2B35EDFF00A672F5 /* Home in Frameworks */,
 				DD92FEB52B35EE0700A672F5 /* Spot in Frameworks */,
 				DD3A97432B52415800BA2800 /* RewindJourney in Frameworks */,
@@ -202,6 +204,7 @@
 				DD3A97482B52416900BA2800 /* SelectSong */,
 				DD3A974B2B52417100BA2800 /* Spot */,
 				DD4F6F372B7B9355004F0AEB /* Version */,
+				DD4F6F3A2B7CD564004F0AEB /* Version */,
 			);
 			productName = MusicSpot;
 			productReference = DD73F8552B024C4900EE9BF2 /* MusicSpot.app */;
@@ -239,7 +242,7 @@
 				DD3A97442B52416100BA2800 /* XCLocalSwiftPackageReference "../Features/SaveJourney" */,
 				DD3A97472B52416900BA2800 /* XCLocalSwiftPackageReference "../Features/SelectSong" */,
 				DD3A974A2B52417100BA2800 /* XCLocalSwiftPackageReference "../Features/Spot" */,
-				DD4F6F362B7B9355004F0AEB /* XCLocalSwiftPackageReference "../Features/Version" */,
+				DD4F6F392B7CD564004F0AEB /* XCLocalSwiftPackageReference "../Features/Launch" */,
 			);
 			productRefGroup = DD73F8562B024C4900EE9BF2 /* Products */;
 			projectDirPath = "";
@@ -675,9 +678,9 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Features/Spot;
 		};
-		DD4F6F362B7B9355004F0AEB /* XCLocalSwiftPackageReference "../Features/Version" */ = {
+		DD4F6F392B7CD564004F0AEB /* XCLocalSwiftPackageReference "../Features/Launch" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Features/Version;
+			relativePath = ../Features/Launch;
 		};
 /* End XCLocalSwiftPackageReference section */
 
@@ -719,6 +722,10 @@
 			productName = Spot;
 		};
 		DD4F6F372B7B9355004F0AEB /* Version */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Version;
+		};
+		DD4F6F3A2B7CD564004F0AEB /* Version */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Version;
 		};

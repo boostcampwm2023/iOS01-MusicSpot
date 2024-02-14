@@ -8,7 +8,7 @@
       location = "container:"
       name = "Features">
       <FileRef
-         location = "group:Features/Version">
+         location = "group:Features/Launch">
       </FileRef>
       <FileRef
          location = "group:Features/Home">

@@ -7,7 +7,7 @@ import PackageDescription
 
 private extension String {
     
-    static let package = "FeatureVersion"
+    static let package = "FeatureLaunch"
     
     var fromRootPath: String {
         return "../../" + self
@@ -22,6 +22,7 @@ private extension String {
 private enum Target {
     
     static let version = "Version"
+    static let splash = "Splash"
     
 }
 
@@ -44,6 +45,8 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
+        .library(name: Target.splash,
+                 targets: [Target.splash]),
         .library(name: Target.version,
                  targets: [Target.version])
     ],
@@ -56,6 +59,11 @@ let package = Package(
                  path: Dependency.msFoundation.fromRootPath)
     ],
     targets: [
+        .target(name: Target.splash,
+                dependencies: [
+                    .product(name: Dependency.msUIKit,
+                             package: Dependency.msUIKit)
+                ]),
         .target(name: Target.version,
                 dependencies: [
                     .product(name: Dependency.msUIKit,
