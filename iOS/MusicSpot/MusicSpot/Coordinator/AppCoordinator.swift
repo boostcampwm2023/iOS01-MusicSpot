@@ -8,6 +8,7 @@
 import UIKit
 
 import MSLogger
+import Splash
 import Version
 import VersionManager
 
@@ -31,22 +32,30 @@ final class AppCoordinator: Coordinator {
     
     // MARK: - Functions
     
-    @MainActor
     func start() {
-        Task {
-            let isUpdateNeeded = await self.checkIfAppNeedsUpdate()
-            
-            if isUpdateNeeded,
-               let appStoreURL = self.versionManager.appStoreURL,
-               UIApplication.shared.canOpenURL(appStoreURL) {
-                await UIApplication.shared.open(appStoreURL)
-            } else {
-                let navigationController = self.navigationController
-                let homeCoordinator = HomeCoordinator(navigationController: navigationController)
-                self.childCoordinators.append(homeCoordinator)
-                homeCoordinator.start()
-            }
-        }
+        let storyboard = UIStoryboard(name: SplashViewController.storyboardName,
+                                      bundle: Bundle.splash)
+        let splashViewController = storyboard.instantiateViewController(identifier: SplashViewController.storyboardID,
+                                                                        creator: { coder -> SplashViewController in
+            let viewModel = SplashViewModel()
+            return .init(viewModel: viewModel, coder: coder) ?? .init(viewModel: viewModel)
+        })
+        
+        self.navigationController.pushViewController(splashViewController, animated: false)
+//        Task {
+//            let isUpdateNeeded = await self.checkIfAppNeedsUpdate()
+//            
+//            if isUpdateNeeded,
+//               let appStoreURL = self.versionManager.appStoreURL,
+//               UIApplication.shared.canOpenURL(appStoreURL) {
+//                await UIApplication.shared.open(appStoreURL)
+//            } else {
+//                let navigationController = self.navigationController
+//                let homeCoordinator = HomeCoordinator(navigationController: navigationController)
+//                self.childCoordinators.append(homeCoordinator)
+//                homeCoordinator.start()
+//            }
+//        }
     }
     
 }
