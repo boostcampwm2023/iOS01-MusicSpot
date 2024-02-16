@@ -1,162 +1,142 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JourneyService } from './journey.service';
-import { User } from '../../user/schema/user.schema';
-import { Journey } from '../schema/journey.schema';
-import { getModelToken } from '@nestjs/mongoose';
 
-import { StartJourneyDTO } from '../dto/journeyStart/journeyStartReq.dto';
 import { UserService } from '../../user/serivce/user.service';
-import { EndJourneyDTO } from '../dto/journeyEnd/journeyEndReq.dto';
-import { UserNotFoundException } from '../../filters/user.exception';
+import * as fs from 'fs';
+import { JourneyRepository } from '../repository/journey.repository';
+import { UserRepository } from '../../user/repository/user.repository';
+import { SpotRepository } from '../../spot/repository/spot.repository';
+import { RecordSpotReqDTO, RecordSpotResDTO } from '../dto/spot/recordSpot.dto';
+import { makePresignedUrl } from '../../common/s3/objectStorage';
+import { PhotoRepository } from '../../photo/photo.repository';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Photo } from '../../photo/entity/photo.entity';
+import { Journey } from '../entities/journey.entity';
+import { User } from '../../user/entities/user.entity';
+import { Spot } from '../../spot/entities/spot.v2.entity';
 
 let service: JourneyService;
-let userModel;
-let journeyModel;
-beforeAll(async () => {
-  const MockUserModel = {
-    findOneAndUpdate: jest.fn(),
+jest.mock('aws-sdk', () => {
+  return {
+    S3: jest.fn(() => ({
+      putObject: jest.fn(() => ({
+        promise: jest.fn().mockResolvedValue('fake'),
+      })),
+      getSignedUrl: jest.fn().mockResolvedValue('presigned url'),
+    })),
   };
-  const MockJourneyModel = {
-    findOneAndUpdate: jest.fn(),
-    save: jest.fn(),
-    lean: jest.fn(),
-  };
+});
 
+const mockPhotoRepository = {
+  save: jest.fn(),
+};
+const mockSpotRepository = {
+  save: jest.fn(),
+};
+beforeAll(async () => {
   const module: TestingModule = await Test.createTestingModule({
     providers: [
       JourneyService,
       UserService,
+      // JourneyRepository,
+      // UserRepository,
+      // SpotRepository,
       {
-        provide: getModelToken(Journey.name),
-        useValue: MockJourneyModel,
+        provide: getRepositoryToken(Photo),
+        useValue: mockPhotoRepository,
       },
       {
-        provide: getModelToken(User.name),
-        useValue: MockUserModel,
+        provide: getRepositoryToken(Journey),
+        useValue: mockPhotoRepository,
       },
+      {
+        provide: getRepositoryToken(User),
+        useValue: mockPhotoRepository,
+      },
+      {
+        provide: getRepositoryToken(Spot),
+        useValue: mockSpotRepository,
+      },
+      JourneyRepository,
     ],
   }).compile();
-
   service = module.get<JourneyService>(JourneyService);
-  userModel = module.get(getModelToken(User.name));
-  journeyModel = module.get(getModelToken(Journey.name));
 });
 
-describe('여정 시작 관련 service 테스트', () => {
-  it('insertJourneyData 성공 테스트', async () => {
-    const data: StartJourneyDTO = {
-      coordinate: [37.555946, 126.972384],
-      startTime: '2023-11-22T12:00:00Z',
-      userId: 'ab4068ef-95ed-40c3-be6d-3db35df866b9',
+describe('test', () => {
+  it('spot 저장 테스트', async () => {
+    // given
+    const song = {
+      id: '655efda2fdc81cae36d20650',
+      name: 'super shy',
+      artistName: 'newjeans',
+      artwork: {
+        width: 3000,
+        height: 3000,
+        url: 'https://is3-ssl.mzstatic.com/image/thumb/Music125/v4/0b/b2/52/0bb2524d-ecfc-1bae-9c1e-218c978d7072/Honeymoon_3K.jpg/{w}x{h}bb.jpg',
+        bgColor: '3000',
+      },
     };
-
-    journeyModel.save.mockResolvedValue({
-      title: '',
-      spots: [],
-      coordinates: [[37.555946, 126.972384]],
-      startTime: '2023-11-22T12:00:00Z',
-      endTime: '',
-      _id: '65673e666b2fb1462684b2c7',
-      __v: 0,
-    });
-
-    try {
-      const returnData = await service.insertJourneyData(data);
-      const { title, spots, coordinates, startTime, endTime } = returnData;
-      expect(title).toEqual('');
-      expect(spots).toEqual([]);
-      expect(coordinates[0]).toEqual(data.coordinate);
-      expect(startTime).toEqual(data.startTime);
-      expect(endTime).toEqual('');
-    } catch (err) {
-      console.log(err);
-    }
-  });
-
-  it('pushJourneyIdToUser 실패 테스트', async () => {
-    userModel.findOneAndUpdate.mockReturnValue({
-      lean: jest.fn().mockResolvedValue(false),
-    });
-    try {
-      service.pushJourneyIdToUser(
-        '655efda2fdc81cae36d20650',
-        'ab4068ef-95ed-40c3-be6d-3db35df866b9',
-      );
-      expect(1).toEqual(1);
-    } catch (err) {
-      expect(err).toThrow(UserNotFoundException);
-    }
-  });
-});
-
-describe('여정 마무리 관련 service 테스트', () => {
-  it('end 성공 테스트', async () => {
-    journeyModel.findOneAndUpdate.mockReturnValue({
-      lean: jest.fn().mockResolvedValue({
-        _id: '655efda2fdc81cae36d20650',
-        title: 'title',
-        spots: [],
-        coordinates: [[37.555946, 126.972384]],
-        startTime: '2023-11-22T12:00:00Z',
-        endTime: '2023-11-22T12:30:00Z',
-        __v: 0,
-      }),
-    });
-    const endData: EndJourneyDTO = {
-      journeyId: '655efda2fdc81cae36d20650',
-      coordinate: [37.555946, 126.972384],
-      endTime: '2023-11-22T12:30:00Z',
-      title: 'title',
+    const journeyId = 20;
+    const recordSpotDto: RecordSpotReqDTO = {
+      coordinate: '37.555946 126.972384',
+      timestamp: '2023-11-22T12:12:11Z',
+      spotSong: song,
     };
+    const files = [
+      {
+        buffer: fs.readFileSync(`${__dirname}/test-image/test.png`),
+      },
+      { buffer: fs.readFileSync(`${__dirname}/test-image/test1.png`) },
+    ];
+    // when
+    // 1. 이미지 s3 업로드 (key 반환)
+    // savePhotoToS3(files, journeyId)
+    const keys = await service.savePhotoToS3(files, journeyId);
+    console.log(keys);
+    expect(keys.length).toEqual(2);
+    // const reuturnedData: RecordSpotResDTO = {
+    //   journeyId: journeyId,
+    //   ...recordSpotDto,
+    //   photoUrls: keys.map((key) => makePresignedUrl(key)),
+    // };
+    // // 2. spot 저장(저장된 spot 반환)
+    // // saveSpot(keys, dto)
+    mockSpotRepository.save.mockResolvedValue({
+      spotId: 2,
+    });
+    const result = await service.saveSpotDtoToSpot(
+      keys,
+      journeyId,
+      recordSpotDto,
+    );
+    console.log(result);
+    const { spotId } = result;
+    expect(spotId).toEqual(2);
 
-    const returnData = await service.end(endData);
-    const { title, endTime } = returnData;
-    expect(title).toEqual(endData.title);
-    expect(endTime).toEqual(endData.endTime);
+    mockPhotoRepository.save.mockResolvedValue([
+      { spotId, photoKey: keys[0] },
+      { spotId, photoKey: keys[1] },
+    ]);
+
+    const result2 = await service.savePhotoKeysToPhoto(result.spotId, keys);
+
+    console.log(result2);
+    expect(result2.length).toEqual(2);
+
+    // then
+  });
+
+  it('photo 저장 테스트', async () => {
+    const spotId = 20;
+    const keys = ['20/315131', '20/313651365'];
+    mockPhotoRepository.save.mockResolvedValue([
+      { spotId: spotId, photoKey: keys[0], photoId: 0 },
+      { spotId: spotId, photoKey: keys[1], photoId: 1 },
+    ]);
+
+    const result = await service.savePhotoKeysToPhoto(spotId, keys);
+
+    expect(result.length).toEqual(2);
   });
 });
-
-// describe.skip('여정 기록 관련 service 테스트', () => {
-//   it('pushCoordianteToJourney 성공 테스트', async () => {
-//     const data: RecordJourneyDTO = {
-//       journeyId: '655f8bd2ceab803bb2d566bc',
-//       coordinate: [37.555947, 126.972385],
-//     };
-//     journeyModel.findOneAndUpdate.mockReturnValue({
-//       lean: jest.fn().mockResolvedValue({
-//         _id: '65673e666b2fb1462684b2c7',
-//         title: '',
-//         spots: [],
-//         coordinates: [[37.555947, 126.972385]],
-//         timestamp: '2023-11-22T12:00:00Z',
-//         __v: 0,
-//       }),
-//     });
-//     try {
-//       const returnData = await service.pushCoordianteToJourney(data);
-//       const { coordinates } = returnData;
-//       const lastCoorinate = coordinates[coordinates.length - 1];
-//       expect(lastCoorinate).toEqual(data.coordinate);
-//     } catch (err) {
-//       expect(err.status).toEqual(404);
-//       expect(err.message).toEqual(JourneyExceptionMessageEnum.JourneyNotFound);
-//     }
-//   });
-
-//   it('pushCoordianteToJourney 실패 테스트(journeyId 없는 경우)', async () => {
-//     journeyModel.findOneAndUpdate.mockReturnValue({
-//       lean: jest.fn().mockResolvedValue(null),
-//     });
-//     const data: RecordJourneyDTO = {
-//       journeyId: '655f8bd2ceab803bb2d566bc',
-//       coordinate: [37.555947, 126.972385],
-//     };
-//     try {
-//       const returnData = await service.pushCoordianteToJourney(data);
-//       expect(returnData).toBeDefined();
-//     } catch (err) {
-//       expect(err.status).toEqual(404);
-//       expect(err.message).toEqual(JourneyExceptionMessageEnum.JourneyNotFound);
-//     }
-//   });
-// });
