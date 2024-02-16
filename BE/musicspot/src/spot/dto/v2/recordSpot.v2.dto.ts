@@ -1,16 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNumber } from 'class-validator';
+import {IsDateString, IsNumber, IsObject, IsString} from 'class-validator';
 import { IsCoordinateV2 } from '../../../common/decorator/coordinate.v2.decorator';
 
 export class RecordSpotReqDTOV2 {
-  @ApiProperty({
-    example: '20',
-    description: '여정 id',
-    required: true,
-  })
-  @IsNumber()
-  readonly journeyId: number;
-
   @ApiProperty({
     example: '37.555946 126.972384',
     description: '위치 좌표',
@@ -29,6 +21,9 @@ export class RecordSpotReqDTOV2 {
   })
   @IsDateString()
   readonly timestamp: string;
+
+  @IsString()
+  readonly spotSong: string;
 }
 
 export class RecordSpotResDTOV2 {

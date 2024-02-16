@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { JourneyRepository } from '../repository/journey.repository';
 import {
   StartJourneyReqDTO,
   StartJourneyResDTO,
@@ -20,13 +19,15 @@ import {
   is1DArray,
   parseCoordinateFromGeoToDto,
   parseCoordinatesFromGeoToDto,
-} from 'src/common/util/coordinate.util';
+} from '../../common/util/coordinate.util';
 import { DeleteJourneyReqDTO } from '../dto/journeyDelete.dto';
-import { UserRepository } from 'src/user/repository/user.repository';
 
 import { Journey } from '../entities/journey.entity';
-import { makePresignedUrl } from 'src/common/s3/objectStorage';
-import { parse } from 'path';
+import {
+  bucketName,
+  makePresignedUrl,
+  S3,
+} from '../../common/s3/objectStorage';
 import {
   StartJourneyReqDTOV2,
   StartJourneyResDTOV2,
@@ -34,16 +35,29 @@ import {
 import { EndJourneyReqDTOV2 } from '../dto/v2/endJourney.v2.dto';
 import {
   isPointString,
+  parseCoordinateFromDtoToGeoV2,
   parseCoordinateFromGeoToDtoV2,
   parseCoordinatesFromGeoToDtoV2,
 } from '../../common/util/coordinate.v2.util';
 import { UserNotFoundException } from '../../filters/user.exception';
+import { Photo } from '../../photo/entity/photo.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Spot } from '../../spot/entities/spot.entity';
+import { User } from '../../user/entities/user.entity';
+import { SpotV2 } from '../../spot/entities/spot.v2.entity';
+import { JourneyV2 } from '../entities/journey.v2.entity';
 
 @Injectable()
 export class JourneyService {
   constructor(
-    private journeyRepository: JourneyRepository,
-    private userRepository: UserRepository,
+    @InjectRepository(Journey) private journeyRepository: Repository<Journey>,
+    @InjectRepository(Spot) private spotRepository: Repository<Spot>,
+    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Photo) private photoRepository: Repository<Photo>,
+    @InjectRepository(SpotV2) private spotRepositoryV2: Repository<SpotV2>,
+    @InjectRepository(JourneyV2)
+    private journeyRepositoryV2: Repository<JourneyV2>,
   ) {}
 
   async insertJourneyData(startJourneyDTO: StartJourneyReqDTO) {
@@ -69,7 +83,7 @@ export class JourneyService {
   }
 
   async insertJourneyDataV2(startJourneyDTO: StartJourneyReqDTOV2) {
-    const returnedData = await this.journeyRepository.save(startJourneyDTO);
+    const returnedData = await this.journeyRepositoryV2.save(startJourneyDTO);
 
     const returnData: StartJourneyResDTOV2 = {
       journeyId: returnedData.journeyId,
@@ -123,7 +137,7 @@ export class JourneyService {
   }
   async endV2(endJourneyDTO: EndJourneyReqDTOV2) {
     const { coordinates, journeyId, song } = endJourneyDTO;
-    const originalData = await this.journeyRepository.findOne({
+    const originalData = await this.journeyRepositoryV2.findOne({
       where: { journeyId },
     });
     if (!originalData) {
@@ -138,7 +152,7 @@ export class JourneyService {
       coordinates: newCoordinates,
     };
 
-    const returnedDate = await this.journeyRepository.save(newJourneyData);
+    const returnedDate = await this.journeyRepositoryV2.save(newJourneyData);
 
     const parsedCoordinates = parseCoordinatesFromGeoToDtoV2(
       returnedDate.coordinates,
@@ -204,7 +218,7 @@ export class JourneyService {
       xMaxCoordinate,
       yMaxCoordinate,
     };
-    const returnedData = await this.journeyRepository.manager
+    const returnedData = await this.journeyRepositoryV2.manager
       .createQueryBuilder(Journey, 'journey')
       .leftJoinAndSelect('journey.spots', 'spot')
       .where(
@@ -251,7 +265,7 @@ export class JourneyService {
     });
   }
   async getLastJourneyByUserIdV2(userId) {
-    const journeys = await this.journeyRepository.manager
+    const journeys = await this.journeyRepositoryV2.manager
       .createQueryBuilder(Journey, 'journey')
       .where({ userId })
       .leftJoinAndSelect('journey.spots', 'spot')
@@ -303,7 +317,7 @@ export class JourneyService {
     };
   }
   async getJourneyByIdV2(journeyId) {
-    const returnedData = await this.journeyRepository.manager
+    const returnedData = await this.journeyRepositoryV2.manager
       .createQueryBuilder(Journey, 'journey')
       .where({ journeyId })
       .leftJoinAndSelect('journey.spots', 'spot')
@@ -378,5 +392,73 @@ export class JourneyService {
   async deleteJourneyById(deletedJourneyDto: DeleteJourneyReqDTO) {
     const { journeyId } = deletedJourneyDto;
     return await this.journeyRepository.delete({ journeyId });
+  }
+
+  async savePhotoToS3(files, journeyId) {
+    const keys: string[] = [];
+    const promises = files.map(async (file, idx) => {
+      const key: string = `${journeyId}/${Date.now()}${idx}`;
+      keys.push(key);
+      const reusult = await S3.putObject({
+        Bucket: bucketName,
+        Key: key,
+        Body: file.buffer,
+      }).promise();
+    });
+    await Promise.all(promises);
+    return keys;
+  }
+
+  async saveSpotDtoToSpot(keys, journeyId, recordSpotDto) {
+    try {
+      const data = {
+        ...recordSpotDto,
+        journeyId: Number(journeyId),
+        coordinate: parseCoordinateFromDtoToGeoV2(recordSpotDto.coordinate),
+      };
+
+      return await this.spotRepositoryV2.save(data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async savePhotoKeysToPhoto(spotId, keys) {
+    const data = keys.map((key) => {
+      return {
+        spotId,
+        photoKey: key,
+      };
+    });
+    return await this.photoRepository.save(data);
+  }
+  parseToSaveSpotResDtoFormat(spotResult, photoResult): RecordJourneyResDTO {
+    console.log(typeof JSON.parse(spotResult.spotSong));
+    return {
+      ...spotResult,
+      spotSong: JSON.parse(spotResult.spotSong),
+      photoKeys: photoResult.map((result) => {
+        return {
+          photoId: result.photoId,
+          photoKey: makePresignedUrl(result.photoKey),
+        };
+      }),
+    };
+  }
+
+  async saveSpot(files, journeyId, recordSpotDto) {
+    const keys: string[] = await this.savePhotoToS3(files, journeyId);
+    const saveSpotResult = await this.saveSpotDtoToSpot(
+      keys,
+      journeyId,
+      recordSpotDto,
+    );
+    console.log(saveSpotResult);
+    const photoSaveReuslt = await this.savePhotoKeysToPhoto(
+      saveSpotResult.spotId,
+      keys,
+    );
+
+    return this.parseToSaveSpotResDtoFormat(saveSpotResult, photoSaveReuslt);
   }
 }
