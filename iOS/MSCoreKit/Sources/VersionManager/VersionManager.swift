@@ -50,17 +50,17 @@ public struct VersionManager {
         }
     }
     
-    public func checkIfUpdateNeeded() async -> Result<Bool, Error> {
+    public func checkIfUpdateNeeded() async throws -> Bool {
         guard let currentVersion = self.appVersion else {
-            return .failure(VersionManagerError.unknownAppVersion)
+            throw VersionManagerError.unknownAppVersion
         }
         
         switch await self.appStoreVersion() {
         case .success(let appStoreVersion):
             let compareResult = currentVersion.compare(appStoreVersion, options: .numeric)
-            return compareResult == .orderedAscending ? .success(true) : .success(false)
+            return compareResult == .orderedAscending
         case .failure(let error):
-            return .failure(error)
+            throw error
         }
     }
     

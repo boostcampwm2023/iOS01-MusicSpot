@@ -9,6 +9,7 @@ import Combine
 import Foundation
 
 import MSLogger
+import VersionManager
 
 public final class SplashViewModel {
     
@@ -17,7 +18,7 @@ public final class SplashViewModel {
     }
     
     public struct State {
-        let goodToGo = PassthroughSubject<Void, Never>()
+        let isUpdateNeeded = PassthroughSubject<Bool, Never>()
     }
     
     // MARK: - Properties
@@ -28,30 +29,35 @@ public final class SplashViewModel {
         return self.state
     }
     
+    private let version: VersionManager
+    
     // MARK: - Initializer
     
-    public init() { }
+    public init(versionManager: VersionManager = VersionManager()) {
+        self.version = versionManager
+    }
     
     // MARK: - Functions
     
     public func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
-            self.state.goodToGo.send()
-            //        Task {
-            //            let isUpdateNeeded = await self.checkIfAppNeedsUpdate()
-            //
-            //            if isUpdateNeeded,
-            //               let appStoreURL = self.versionManager.appStoreURL,
-            //               UIApplication.shared.canOpenURL(appStoreURL) {
-            //                await UIApplication.shared.open(appStoreURL)
-            //            } else {
-            //                let navigationController = self.navigationController
-            //                let homeCoordinator = HomeCoordinator(navigationController: navigationController)
-            //                self.childCoordinators.append(homeCoordinator)
-            //                homeCoordinator.start()
-            //            }
-            //        }
+            self.checkIfUpdateNeeded()
+        }
+    }
+    
+}
+
+private extension SplashViewModel {
+    
+    func checkIfUpdateNeeded() {
+        Task {
+            do {
+                let isUpdateNeeded = try await self.version.checkIfUpdateNeeded()
+                self.state.isUpdateNeeded.send(isUpdateNeeded)
+            } catch {
+                MSLogger.make(category: .version).error("\(error)")
+            }
         }
     }
     

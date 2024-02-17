@@ -36,9 +36,9 @@ final class AppCoordinator: Coordinator {
                                                                         creator: {
             [weak self] coder -> SplashViewController in
             let viewModel = SplashViewModel()
-            let viewController = SplashViewController(viewModel: viewModel, coder: coder)
-            viewController?.navigationDelegate = self
-            return viewController ?? SplashViewController(viewModel: viewModel)
+            let splashViewController = SplashViewController(viewModel: viewModel, coder: coder)
+            splashViewController?.navigationDelegate = self
+            return splashViewController ?? SplashViewController(viewModel: viewModel)
         })
         
         self.navigationController.pushViewController(splashViewController, animated: false)

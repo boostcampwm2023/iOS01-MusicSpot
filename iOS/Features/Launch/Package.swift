@@ -62,7 +62,9 @@ let package = Package(
         .target(name: Target.splash,
                 dependencies: [
                     .product(name: Dependency.msUIKit,
-                             package: Dependency.msUIKit)
+                             package: Dependency.msUIKit),
+                    .product(name: Dependency.versionManager,
+                             package: Dependency.msCoreKit)
                 ],
                 resources: [
                     .process("../\(Target.splash)/Resources")

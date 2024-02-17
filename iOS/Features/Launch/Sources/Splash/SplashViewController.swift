@@ -58,9 +58,14 @@ public final class SplashViewController: UIViewController {
     // MARK: - Binding
     
     private func bind(_ viewModel: SplashViewModel) {
-        viewModel.currentState.goodToGo
-            .sink { [weak self] _ in
-                self?.navigationDelegate?.navigateToHome()
+        viewModel.currentState.isUpdateNeeded
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isUpdateNeeded in
+                if isUpdateNeeded {
+                    self?.navigationDelegate?.navigateToUpdate()
+                } else {
+                    self?.navigationDelegate?.navigateToHome()
+                }
             }
             .store(in: &self.cancellables)
     }
