@@ -161,7 +161,7 @@ export class JourneyService {
       journeyId: returnedDate.journeyId,
       coordinates: parsedCoordinates,
       endTimestamp: returnedDate.endTimestamp,
-      numberOfCoordinates: parsedCoordinates.length,
+      numberOfCoordinates: parsedCoordinates.split(',').length,
       song: JSON.parse(returnedDate.song),
     };
 
