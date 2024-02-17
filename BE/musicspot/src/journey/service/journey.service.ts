@@ -218,9 +218,10 @@ export class JourneyService {
       xMaxCoordinate,
       yMaxCoordinate,
     };
-    const returnedData = await this.journeyRepositoryV2.manager
-      .createQueryBuilder(Journey, 'journey')
+    const returnedData = await this.journeyRepositoryV2
+      .createQueryBuilder('journey')
       .leftJoinAndSelect('journey.spots', 'spot')
+      .leftJoinAndSelect('spot.photos', 'photo')
       .where(
         `st_within(coordinates, ST_PolygonFromText('POLYGON((:xMinCoordinate :yMinCoordinate, :xMaxCoordinate :yMinCoordinate, :xMaxCoordinate :yMaxCoordinate, :xMinCoordinate :yMaxCoordinate, :xMinCoordinate :yMinCoordinate))'))`,
         coordinatesRange,
@@ -342,7 +343,7 @@ export class JourneyService {
       title,
       spots,
     } = journey;
-
+    console.log(journey);
     return {
       journeyId,
       coordinates: parseCoordinatesFromGeoToDtoV2(coordinates),
