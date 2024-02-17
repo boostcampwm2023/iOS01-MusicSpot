@@ -263,7 +263,7 @@ export class JourneyController {
     type: [Journey],
   })
   @Get(':journeyId')
-  async getJourneyByIdV2(@Param('journeyId') journeyId: string) {
+  async getJourneyByIdV2(@Param('journeyId') journeyId: number) {
     try {
       return await this.journeyService.getJourneyByIdV2(journeyId);
     } catch (err) {

@@ -317,11 +317,11 @@ export class JourneyService {
     };
   }
   async getJourneyByIdV2(journeyId) {
-    const returnedData = await this.journeyRepositoryV2.manager
-      .createQueryBuilder(Journey, 'journey')
-      .where({ journeyId })
-      .leftJoinAndSelect('journey.spots', 'spot')
-      .getOne();
+    const returnedData = await this.journeyRepositoryV2.findOne({
+      where: { journeyId: journeyId },
+      relations: ['spots', 'spots.photos'],
+    });
+    console.log(returnedData);
     return this.parseJourneyFromEntityToDtoV2(returnedData);
   }
   async getJourneyById(journeyId) {
@@ -342,6 +342,7 @@ export class JourneyService {
       title,
       spots,
     } = journey;
+
     return {
       journeyId,
       coordinates: parseCoordinatesFromGeoToDtoV2(coordinates),
@@ -355,7 +356,13 @@ export class JourneyService {
         return {
           ...spot,
           coordinate: parseCoordinateFromGeoToDtoV2(spot.coordinate),
-          photoUrl: makePresignedUrl(spot.photoKey),
+          spotSong: JSON.parse(spot.spotSong),
+          photos: spot.photos.map((photo) => {
+            return {
+              ...photo,
+              photoUrl: makePresignedUrl(photo.photoKey),
+            };
+          }),
         };
       }),
     };
