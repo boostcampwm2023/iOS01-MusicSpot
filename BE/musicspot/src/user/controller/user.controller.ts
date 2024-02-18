@@ -34,7 +34,7 @@ export class UserController {
     description: '생성된 여정 데이터를 반환',
     type: Journey,
   })
-  @Post(':userId/journey')
+  @Post(':userId/journey/start')
   async startJourney(@Param('userId') userId:string, @Body() startJourneyDto: StartJourneyRequestDTOV2) {
     return await this.userService.startJourney(userId, startJourneyDto);
   }
