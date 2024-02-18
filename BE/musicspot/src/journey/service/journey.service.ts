@@ -399,10 +399,10 @@ export class JourneyService {
     return await this.journeyRepository.delete({ journeyId });
   }
 
-  async savePhotoToS3(files, journeyId) {
+  async savePhotoToS3(files, spotId) {
     const keys: string[] = [];
     const promises = files.map(async (file, idx) => {
-      const key: string = `${journeyId}/${Date.now()}${idx}`;
+      const key: string = `${spotId}/${Date.now()}${idx}`;
       keys.push(key);
       const reusult = await S3.putObject({
         Bucket: bucketName,
@@ -414,7 +414,7 @@ export class JourneyService {
     return keys;
   }
 
-  async saveSpotDtoToSpot(keys, journeyId, recordSpotDto) {
+  async saveSpotDtoToSpot(journeyId, recordSpotDto) {
     try {
       const data = {
         ...recordSpotDto,
@@ -451,11 +451,13 @@ export class JourneyService {
   }
 
   async saveSpot(files, journeyId, recordSpotDto) {
-    const keys: string[] = await this.savePhotoToS3(files, journeyId);
     const saveSpotResult = await this.saveSpotDtoToSpot(
-      keys,
       journeyId,
       recordSpotDto,
+    );
+    const keys: string[] = await this.savePhotoToS3(
+      files,
+      saveSpotResult.spotId,
     );
     const photoSaveReuslt = await this.savePhotoKeysToPhoto(
       saveSpotResult.spotId,

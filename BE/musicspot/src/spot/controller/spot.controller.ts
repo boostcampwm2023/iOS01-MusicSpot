@@ -13,10 +13,11 @@ import {
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RecordSpotReqDTO } from '../dto/recordSpot.dto';
 import { SpotService } from '../service/spot.service';
-import {FileInterceptor, FilesInterceptor} from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { Spot } from '../schema/spot.schema';
 import { SpotDTO } from 'src/journey/dto/journeyCheck/journeyCheck.dto';
 import { RecordSpotReqDTOV2 } from '../dto/v2/recordSpot.v2.dto';
+import { Photo } from '../../photo/entity/photo.entity';
 @Controller('spot')
 @ApiTags('spot 관련 API')
 export class SpotController {
@@ -41,20 +42,24 @@ export class SpotController {
 
   @Version('2')
   @ApiOperation({
-    summary: 'spot 기록 API',
-    description: 'spot을 기록합니다.',
+    summary: 'photo 저장 api',
+    description: 'photo를 기록합니다.',
   })
   @ApiCreatedResponse({
-    description: 'spot 생성 데이터 반환',
-    type: SpotDTO,
+    description: 'photo 생성 데이터 반환',
+    type: Photo,
   })
   @UseInterceptors(FilesInterceptor('images'))
-  @Post('')
-  async createV2(
+  @Post(':spotId/photo')
+  async savePhoto(
     @UploadedFiles() images: Array<Express.Multer.File>,
-    @Body() recordSpotDTO,
+    @Param('spotId') spotId: number,
   ) {
-    return await this.spotService.createV2(images, recordSpotDTO);
+    try {
+      return this.spotService.savePhoto(images, spotId);
+    } catch (err) {
+      console.log(err);
+    }
   }
   @ApiOperation({
     summary: 'spot 조회 API',
