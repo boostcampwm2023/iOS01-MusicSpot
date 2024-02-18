@@ -157,4 +157,35 @@ export class UserService {
       }),
     };
   }
+  async getLastJourneyByUserIdV2(userId) {
+    // const journeys = await this.journeyRepositoryV2
+    //   .createQueryBuilder('journey')
+    //   .where({ userId })
+    //   .leftJoinAndSelect('journey.spots', 'spot')
+    //   .leftJoinAndSelect('spot.photos', 'photo')
+    //   .getMany();
+    const journey = await this.journeyRepositoryV2.findOne({
+      order: { journeyId: 'DESC' },
+      where: { userId },
+      relations: ['spots', 'spots.photos'],
+    });
+    if (!journey) {
+      return {
+        journey: null,
+        isRecording: false,
+      };
+    }
+
+    // const journeyLen = journeys.length;
+    // const lastJourneyData = journeys[journeyLen - 1];
+
+    if (journey.title) {
+      return { journey: null, isRecording: false };
+    }
+
+    return {
+      journey,
+      isRecording: true,
+    };
+  }
 }

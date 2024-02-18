@@ -22,6 +22,7 @@ import { StartJourneyRequestDTOV2 } from '../dto/startJourney.dto';
 import { Journey } from '../../journey/entities/journey.entity';
 import { CheckJourneyResDTO } from '../../journey/dto/journeyCheck/journeyCheck.dto';
 import { UUID } from 'crypto';
+import { LastJourneyResDTO } from '../../journey/dto/journeyLast.dto';
 
 @Controller('user')
 @ApiTags('user 관련 API')
@@ -101,5 +102,22 @@ export class UserController {
     return await this.userService.getJourneyByCoordinationRangeV2(
       checkJourneyDTO,
     );
+  }
+  @Version('2')
+  @ApiOperation({
+    summary: '최근 여정 조회 API',
+    description: '진행 중인 여정이 있었는 지 확인',
+  })
+  @ApiCreatedResponse({
+    description: '사용자가 진행중이었던 여정 정보',
+    type: LastJourneyResDTO,
+  })
+  @Get(':userId/journey/last')
+  async loadLastDataV2(@Param('userId') userId: UUID) {
+    try {
+      return await this.userService.getLastJourneyByUserIdV2(userId);
+    } catch (err) {
+      console.log(err);
+    }
   }
 }
