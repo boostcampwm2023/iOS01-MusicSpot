@@ -8,13 +8,13 @@ import {
 import { IsCoordinatesV2 } from '../../../common/decorator/coordinate.v2.decorator';
 
 export class EndJourneyReqDTOV2 {
-  @ApiProperty({
-    example: 20,
-    description: '여정 id',
-    required: true,
-  })
-  @IsNumber()
-  readonly journeyId: number;
+  // @ApiProperty({
+  //   example: 20,
+  //   description: '여정 id',
+  //   required: true,
+  // })
+  // @IsNumber()
+  // readonly journeyId: number;
 
   @ApiProperty({
     example: '37.555946 126.972384,37.555946 126.972384',

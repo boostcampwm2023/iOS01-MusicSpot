@@ -135,8 +135,8 @@ export class JourneyService {
 
     return returnData;
   }
-  async endV2(endJourneyDTO: EndJourneyReqDTOV2) {
-    const { coordinates, journeyId, song } = endJourneyDTO;
+  async endV2(journeyId, endJourneyDTO: EndJourneyReqDTOV2) {
+    const { coordinates, song } = endJourneyDTO;
     const originalData = await this.journeyRepositoryV2.findOne({
       where: { journeyId },
     });
@@ -146,6 +146,7 @@ export class JourneyService {
 
     const newCoordinates = `LINESTRING(${coordinates})`;
     const newJourneyData = {
+      journeyId,
       ...originalData,
       ...endJourneyDTO,
       song: JSON.stringify(song),

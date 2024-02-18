@@ -107,10 +107,10 @@ export class JourneyController {
     description: '여정 종료 정보 반환',
     type: EndJourneyResDTOV2,
   })
-  @Post('end')
-  async endV2(@Body() endJourneyReqDTO: EndJourneyReqDTOV2) {
+  @Post(':journeyId/end')
+  async endV2(@Param('journeyId') journeyId:number, @Body() endJourneyReqDTO: EndJourneyReqDTOV2) {
     try {
-      return await this.journeyService.endV2(endJourneyReqDTO);
+      return await this.journeyService.endV2(journeyId, endJourneyReqDTO);
     } catch (err) {
       console.log(err);
     }
