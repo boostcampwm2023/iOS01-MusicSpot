@@ -67,23 +67,23 @@ export class JourneyController {
     return await this.journeyService.insertJourneyData(startJourneyDTO);
   }
 
-  @Version('2')
-  @ApiOperation({
-    summary: '여정 시작 API(V2)',
-    description: '여정 기록을 시작합니다.',
-  })
-  @ApiCreatedResponse({
-    description: '생성된 여정 데이터를 반환',
-    type: StartJourneyResDTOV2,
-  })
-  @Post('start')
-  async createV2(@Body() startJourneyDTO: StartJourneyReqDTOV2) {
-    try {
-      return await this.journeyService.insertJourneyDataV2(startJourneyDTO);
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  // @Version('2')
+  // @ApiOperation({
+  //   summary: '여정 시작 API(V2)',
+  //   description: '여정 기록을 시작합니다.',
+  // })
+  // @ApiCreatedResponse({
+  //   description: '생성된 여정 데이터를 반환',
+  //   type: StartJourneyResDTOV2,
+  // })
+  // @Post('start')
+  // async createV2(@Body() startJourneyDTO: StartJourneyReqDTOV2) {
+  //   try {
+  //     return await this.journeyService.insertJourneyDataV2(startJourneyDTO);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
 
   @ApiOperation({
     summary: '여정 종료 API',

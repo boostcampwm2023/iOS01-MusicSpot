@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, Version} from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 // import { User } from '../schema/user.schema';
@@ -9,6 +9,9 @@ import { UserRepository } from '../repository/user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
+import {Journey} from "../../journey/entities/journey.entity";
+import {JourneyV2} from "../../journey/entities/journey.v2.entity";
+import {StartJourneyRequestDTOV2, StartJourneyResponseDTOV2} from "../dto/startJourney.dto";
 // @Injectable()
 // export class UserService {
 //   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
@@ -45,6 +48,7 @@ export class UserService {
   // constructor(private userRepository: UserRepository){}
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(JourneyV2) private journeyRepository: Repository<JourneyV2>
   ) {}
   async create(
     createUserDto: CreateUserDTO,
@@ -54,5 +58,14 @@ export class UserService {
       throw new UserAlreadyExistException();
     }
     return await this.userRepository.save(createUserDto);
+  }
+
+
+  async startJourney(userId, startJourneyDto:StartJourneyRequestDTOV2) {
+    const journeyData = {
+      userId,
+      ...startJourneyDto
+    }
+    return await this.journeyRepository.save(journeyData);
   }
 }
