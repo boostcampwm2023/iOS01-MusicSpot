@@ -1,10 +1,27 @@
-import {Controller, Body, Post, Param, Version} from '@nestjs/common';
+import {
+  Controller,
+  Body,
+  Post,
+  Param,
+  Version,
+  Get,
+  UsePipes,
+  ValidationPipe,
+  Query,
+} from '@nestjs/common';
 import { UserService } from '../serivce/user.service';
 import { CreateUserDTO } from '../dto/createUser.dto';
-import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { User } from '../entities/user.entity';
-import {StartJourneyRequestDTOV2} from "../dto/startJourney.dto";
-import {Journey} from "../../journey/entities/journey.entity";
+import { StartJourneyRequestDTOV2 } from '../dto/startJourney.dto';
+import { Journey } from '../../journey/entities/journey.entity';
+import { CheckJourneyResDTO } from '../../journey/dto/journeyCheck/journeyCheck.dto';
+import { UUID } from 'crypto';
 
 @Controller('user')
 @ApiTags('user 관련 API')
@@ -24,7 +41,6 @@ export class UserController {
     return await this.userService.create(createUserDto);
   }
 
-
   @Version('2')
   @ApiOperation({
     summary: '여정 시작 API',
@@ -35,7 +51,55 @@ export class UserController {
     type: Journey,
   })
   @Post(':userId/journey/start')
-  async startJourney(@Param('userId') userId:string, @Body() startJourneyDto: StartJourneyRequestDTOV2) {
+  async startJourney(
+    @Param('userId') userId: string,
+    @Body() startJourneyDto: StartJourneyRequestDTOV2,
+  ) {
     return await this.userService.startJourney(userId, startJourneyDto);
+  }
+
+  @Version('2')
+  @ApiOperation({
+    summary: '여정 조회 API',
+    description: '해당 범위 내의 여정들을 반환합니다.',
+  })
+  @ApiQuery({
+    name: 'userId',
+    description: '유저 ID',
+    required: true,
+    example: 'yourUserId',
+  })
+  @ApiQuery({
+    name: 'minCoordinate',
+    description: '최소 좌표',
+    required: true,
+    example: '37.5 127.0',
+  })
+  @ApiQuery({
+    name: 'maxCoordinate',
+    description: '최대 좌표',
+    required: true,
+    example: '38.0 128.0',
+  })
+  @ApiCreatedResponse({
+    description: '범위에 있는 여정의 기록들을 반환',
+    type: CheckJourneyResDTO,
+  })
+  @Get(':userId/journey')
+  @UsePipes(ValidationPipe)
+  async getJourneyByCoordinate(
+    @Param('userId') userId: UUID,
+    @Query('minCoordinate') minCoordinate: string,
+    @Query('maxCoordinate') maxCoordinate: string,
+  ) {
+    console.log('min:', minCoordinate, 'max:', maxCoordinate);
+    const checkJourneyDTO = {
+      userId,
+      minCoordinate,
+      maxCoordinate,
+    };
+    return await this.userService.getJourneyByCoordinationRangeV2(
+      checkJourneyDTO,
+    );
   }
 }
