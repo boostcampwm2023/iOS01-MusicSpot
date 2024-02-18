@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 // import { User } from '../schema/user.schema';
 import { UUID } from 'crypto';
 import { CreateUserDTO } from '../dto/createUser.dto';
-import { UserAlreadyExistException } from '../../filters/user.exception';
+import {UserAlreadyExistException, UserNotFoundException} from '../../filters/user.exception';
 import { UserRepository } from '../repository/user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
@@ -62,6 +62,10 @@ export class UserService {
 
 
   async startJourney(userId, startJourneyDto:StartJourneyRequestDTOV2) {
+    if(!await this.userRepository.findOne({where: {userId}})){
+      throw new UserNotFoundException();
+    }
+
     const journeyData = {
       userId,
       ...startJourneyDto
