@@ -1,5 +1,5 @@
 import { UUID } from 'crypto';
-import { Spot } from '../../spot/entities/spot.entity';
+import { SpotV2 } from '../../spot/entities/spot.v2.entity';
 import {
   Entity,
   Column,
@@ -7,8 +7,8 @@ import {
   OneToMany,
   JoinColumn,
 } from 'typeorm';
-@Entity()
-export class Journey {
+@Entity({ name: 'journey' })
+export class JourneyV2 {
   @PrimaryGeneratedColumn()
   journeyId: number;
 
@@ -31,6 +31,6 @@ export class Journey {
   coordinates: string;
 
   // @OneToMany(()=> Spot, spot => spot.journeyId)
-  @OneToMany(() => Spot, (spot) => spot.journey)
-  spots: Spot[];
+  @OneToMany(() => SpotV2, (spot) => spot.journey)
+  spots: SpotV2[];
 }

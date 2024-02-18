@@ -6,6 +6,9 @@ import { UUID } from 'crypto';
 import { CreateUserDTO } from '../dto/createUser.dto';
 import { UserAlreadyExistException } from '../../filters/user.exception';
 import { UserRepository } from '../repository/user.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '../entities/user.entity';
+import { Repository } from 'typeorm';
 // @Injectable()
 // export class UserService {
 //   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
@@ -37,17 +40,19 @@ import { UserRepository } from '../repository/user.repository';
 //   // }
 // }
 
-
 @Injectable()
-export class UserService{
-  constructor(private userRepository: UserRepository){}
-
-  async create(createUserDto: CreateUserDTO):Promise<CreateUserDTO|undefined>{
-    const {userId} = createUserDto
-    if(await this.userRepository.findOne({where:{userId}})){
+export class UserService {
+  // constructor(private userRepository: UserRepository){}
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+  ) {}
+  async create(
+    createUserDto: CreateUserDTO,
+  ): Promise<CreateUserDTO | undefined> {
+    const { userId } = createUserDto;
+    if (await this.userRepository.findOne({ where: { userId } })) {
       throw new UserAlreadyExistException();
     }
     return await this.userRepository.save(createUserDto);
   }
-
 }

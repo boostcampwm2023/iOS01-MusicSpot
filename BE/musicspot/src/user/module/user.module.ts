@@ -6,11 +6,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository } from '../repository/user.repository';
 import { TypeOrmExModule } from 'src/dynamic.module';
+import { User } from '../entities/user.entity';
 
 @Module({
   imports: [
-    TypeOrmExModule.forFeature([UserRepository])
+    // TypeOrmExModule.forFeature([UserRepository])
     // MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    TypeOrmModule.forFeature([User]),
   ],
   controllers: [UserController],
   providers: [UserService],

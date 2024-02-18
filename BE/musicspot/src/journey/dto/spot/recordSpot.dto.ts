@@ -1,32 +1,34 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {IsDateString, IsNumber, IsObject, IsString} from 'class-validator';
+import { IsString, IsDateString, IsNumber, IsObject } from 'class-validator';
+import { UUID } from 'crypto';
 import { IsCoordinateV2 } from '../../../common/decorator/coordinate.v2.decorator';
-
-export class RecordSpotReqDTOV2 {
+export class RecordSpotReqDTO {
   @ApiProperty({
-    example: '37.555946 126.972384',
-    description: '위치 좌표',
+    example: '37.555941 126.972381',
+    description: 'spot 위치',
     required: true,
   })
-  @IsCoordinateV2({
-    message:
-      '위치 좌표는 2개의 숫자와 각각의 범위를 만족해야합니다.(-90~90 , -180~180)',
-  })
+  @IsCoordinateV2()
   readonly coordinate: string;
 
   @ApiProperty({
-    example: '2023-11-22T12:00:00Z',
-    description: 'timestamp',
+    example: '2023-11-22T12:00:56Z',
+    description: 'spot 기록 시간',
     required: true,
   })
-  @IsDateString()
+  @IsString()
   readonly timestamp: string;
 
-  @IsString()
-  readonly spotSong: string;
+
+  @ApiProperty({
+    example: 'song object',
+    description: 'spot 기록 시간',
+  })
+  @IsObject()
+  readonly spotSong: object;
 }
 
-export class RecordSpotResDTOV2 {
+export class RecordSpotResDTO {
   @ApiProperty({
     example: 20,
     description: '여정 id',
@@ -54,5 +56,5 @@ export class RecordSpotResDTOV2 {
     description: 'presigned url',
     required: true,
   })
-  readonly photoUrl: string;
+  readonly photoUrls: string[];
 }

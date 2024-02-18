@@ -12,12 +12,26 @@ import { UserRepository } from 'src/user/repository/user.repository';
 import { TypeOrmExModule } from 'src/dynamic.module';
 import { SpotRepository } from 'src/spot/repository/spot.repository';
 import { Spot } from '../../spot/entities/spot.entity';
+import { PhotoRepository } from '../../photo/photo.repository';
+import { Photo } from '../../photo/entity/photo.entity';
+import { Journey } from '../entities/journey.entity';
+import { User } from '../../user/entities/user.entity';
+import { JourneyV2 } from '../entities/journey.v2.entity';
+import { SpotV2 } from '../../spot/entities/spot.v2.entity';
 
 @Module({
   imports: [
-    TypeOrmExModule.forFeature([JourneyRepository, UserRepository, SpotRepository, Spot]),
+    // TypeOrmExModule.forFeature([
+    //   JourneyRepository,
+    //   UserRepository,
+    //   SpotRepository,
+    //   Spot,
+    //   Photo,
+    //   PhotoRepository,
+    // ]),
     // MongooseModule.forFeature([{ name: Journey.name, schema: JourneySchema }]),
     // MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    TypeOrmModule.forFeature([Journey, User, Spot, Photo, JourneyV2, SpotV2]),
     UserModule,
   ],
   controllers: [JourneyController],

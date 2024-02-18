@@ -9,6 +9,8 @@ import {
   Param,
   Delete,
   Version,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { JourneyService } from '../service/journey.service';
 import { StartJourneyReqDTO } from '../dto/journeyStart/journeyStart.dto';
@@ -44,6 +46,8 @@ import {
   EndJourneyReqDTOV2,
   EndJourneyResDTOV2,
 } from '../dto/v2/endJourney.v2.dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { RecordSpotReqDTOV2 } from '../../spot/dto/v2/recordSpot.v2.dto';
 
 @Controller('journey')
 @ApiTags('journey 관련 API')
@@ -74,7 +78,11 @@ export class JourneyController {
   })
   @Post('start')
   async createV2(@Body() startJourneyDTO: StartJourneyReqDTOV2) {
-    return await this.journeyService.insertJourneyDataV2(startJourneyDTO);
+    try {
+      return await this.journeyService.insertJourneyDataV2(startJourneyDTO);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   @ApiOperation({
@@ -101,7 +109,11 @@ export class JourneyController {
   })
   @Post('end')
   async endV2(@Body() endJourneyReqDTO: EndJourneyReqDTOV2) {
-    return await this.journeyService.endV2(endJourneyReqDTO);
+    try {
+      return await this.journeyService.endV2(endJourneyReqDTO);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   @ApiOperation({
@@ -222,7 +234,11 @@ export class JourneyController {
   })
   @Get('last')
   async loadLastDataV2(@Body('userId') userId) {
-    return await this.journeyService.getLastJourneyByUserIdV2(userId);
+    try {
+      return await this.journeyService.getLastJourneyByUserIdV2(userId);
+    } catch (err) {
+      console.log(err);
+    }
   }
   @ApiOperation({
     summary: '최근 여정 조회 API',
@@ -247,8 +263,12 @@ export class JourneyController {
     type: [Journey],
   })
   @Get(':journeyId')
-  async getJourneyByIdV2(@Param('journeyId') journeyId: string) {
-    return await this.journeyService.getJourneyByIdV2(journeyId);
+  async getJourneyByIdV2(@Param('journeyId') journeyId: number) {
+    try {
+      return await this.journeyService.getJourneyByIdV2(journeyId);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   @ApiOperation({
@@ -275,5 +295,31 @@ export class JourneyController {
   @Delete('')
   async deleteJourneyById(@Body() deleteJourneyDto: DeleteJourneyReqDTO) {
     return await this.journeyService.deleteJourneyById(deleteJourneyDto);
+  }
+
+  @Version('2')
+  @ApiOperation({
+    summary: 'spot 저장 api(V2)',
+    description: '복수개의 사진을 가지는 spot을 저장',
+  })
+  @ApiCreatedResponse({
+    description: '저장된 spot을 반환(presigned url)',
+  })
+  @UseInterceptors(FilesInterceptor('images'))
+  @Post(':journeyId/spot')
+  async saveSpotToJourney(
+    @UploadedFiles() images: Array<Express.Multer.File>,
+    @Param('journeyId') journeyId: string,
+    @Body() recordSpotDto: RecordSpotReqDTOV2,
+  ) {
+    try {
+      return await this.journeyService.saveSpot(
+        images,
+        journeyId,
+        recordSpotDto,
+      );
+    } catch (err) {
+      console.log(err);
+    }
   }
 }
