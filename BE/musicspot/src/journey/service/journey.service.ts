@@ -228,7 +228,6 @@ export class JourneyService {
       )
       .where('userId = :userId', { userId })
       .getMany();
-    console.log(returnedData);
     return returnedData.map((data) => {
       return this.parseJourneyFromEntityToDtoV2(data);
     });
@@ -322,7 +321,6 @@ export class JourneyService {
       where: { journeyId: journeyId },
       relations: ['spots', 'spots.photos'],
     });
-    console.log(returnedData);
     return this.parseJourneyFromEntityToDtoV2(returnedData);
   }
   async getJourneyById(journeyId) {
@@ -343,7 +341,6 @@ export class JourneyService {
       title,
       spots,
     } = journey;
-    console.log(journey);
     return {
       journeyId,
       coordinates: parseCoordinatesFromGeoToDtoV2(coordinates),
@@ -441,7 +438,6 @@ export class JourneyService {
     return await this.photoRepository.save(data);
   }
   parseToSaveSpotResDtoFormat(spotResult, photoResult): RecordJourneyResDTO {
-    console.log(typeof JSON.parse(spotResult.spotSong));
     return {
       ...spotResult,
       spotSong: JSON.parse(spotResult.spotSong),
@@ -461,7 +457,6 @@ export class JourneyService {
       journeyId,
       recordSpotDto,
     );
-    console.log(saveSpotResult);
     const photoSaveReuslt = await this.savePhotoKeysToPhoto(
       saveSpotResult.spotId,
       keys,
