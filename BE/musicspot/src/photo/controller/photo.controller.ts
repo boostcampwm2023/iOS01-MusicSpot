@@ -1,4 +1,23 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Delete, Param, Version } from '@nestjs/common';
+import { PhotoService } from '../service/photo.service';
+import { ApiCreatedResponse, ApiOperation } from '@nestjs/swagger';
+import { StartJourneyResDTO } from '../../journey/dto/journeyStart/journeyStart.dto';
 
 @Controller('photo')
-export class PhotoController {}
+export class PhotoController {
+  constructor(private photoService: PhotoService) {}
+
+  @Version('2')
+  @ApiOperation({
+    summary: '여정 시작 API',
+    description: '여정 기록을 시작합니다.',
+  })
+  @ApiCreatedResponse({
+    description: '생성된 여정 데이터를 반환',
+    type: StartJourneyResDTO,
+  })
+  @Delete(':photoId')
+  async deletePhoto(@Param('photoId') photoId) {
+    return await this.photoService.deletePhoto(photoId);
+  }
+}
