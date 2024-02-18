@@ -34,6 +34,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Journey } from '../../journey/entities/journey.entity';
 import { Repository } from 'typeorm';
+import { Photo } from '../../photo/entity/photo.entity';
 
 @Injectable()
 export class SpotService {
@@ -42,6 +43,7 @@ export class SpotService {
     // private journeyRepository: JourneyRepository,
     @InjectRepository(Journey) private journeyRepository: Repository<Journey>,
     @InjectRepository(Spot) private spotRepository: Repository<Spot>,
+    @InjectRepository(Photo) private photoRepository: Repository<Photo>,
   ) {}
 
   async uploadPhotoToStorage(journeyId, file) {
@@ -185,5 +187,34 @@ export class SpotService {
     }
 
     return spot.photoKey;
+  }
+
+  async savePhotoToS3(files, spotId: number) {
+    const keys: string[] = [];
+    const promises = files.map(async (file, idx) => {
+      const key: string = `${spotId}/${Date.now()}${idx}`;
+      keys.push(key);
+      const reusult = await S3.putObject({
+        Bucket: bucketName,
+        Key: key,
+        Body: file.buffer,
+      }).promise();
+    });
+    await Promise.all(promises);
+    return keys;
+  }
+  async savePhotoKeysToPhoto(spotId, keys) {
+    const data = keys.map((key) => {
+      return {
+        spotId,
+        photoKey: key,
+      };
+    });
+    return await this.photoRepository.save(data);
+  }
+
+  async savePhoto(files, spotId) {
+    const keys = await this.savePhotoToS3(files, spotId);
+    return await this.savePhotoKeysToPhoto(spotId, keys);
   }
 }

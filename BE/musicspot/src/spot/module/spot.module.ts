@@ -8,6 +8,7 @@ import { SpotRepository } from '../repository/spot.repository';
 import { TypeOrmExModule } from 'src/dynamic.module';
 import { JourneyRepository } from 'src/journey/repository/journey.repository';
 import { Journey } from '../../journey/entities/journey.entity';
+import {Photo} from "../../photo/entity/photo.entity";
 // import { Journey, JourneySchema } from 'src/journey/schema/journey.schema';
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { Journey } from '../../journey/entities/journey.entity';
     //   { name: Spot.name, schema: SpotSchema },
     //   { name: Journey.name, schema: JourneySchema },
     // ]),
-    TypeOrmModule.forFeature([Spot, Journey]),
+    TypeOrmModule.forFeature([Spot, Journey, Photo]),
   ],
   controllers: [SpotController],
   providers: [SpotService],
