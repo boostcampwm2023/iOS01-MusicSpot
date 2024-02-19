@@ -23,7 +23,6 @@ public class MSButton: UIButton {
             case .custom(let cornerRadius): return cornerRadius
             }
         }
-        
     }
     
     // MARK: - Constants
