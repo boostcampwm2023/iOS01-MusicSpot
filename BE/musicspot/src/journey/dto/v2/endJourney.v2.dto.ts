@@ -1,11 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  IsDateString,
-  IsNumber,
-  IsObject,
-} from 'class-validator';
+import { IsString, IsDateString, IsNumber, IsObject } from 'class-validator';
 import { IsCoordinatesV2 } from '../../../common/decorator/coordinate.v2.decorator';
+import { SongDTO } from '../song/song.dto';
 
 export class EndJourneyReqDTOV2 {
   // @ApiProperty({
@@ -47,6 +43,7 @@ export class EndJourneyReqDTOV2 {
   @ApiProperty({
     description: '노래 정보',
     required: true,
+    type: SongDTO,
   })
   readonly song: object;
 }
@@ -83,6 +80,7 @@ export class EndJourneyResDTOV2 {
   @ApiProperty({
     description: '노래 정보',
     required: true,
+    type: SongDTO,
   })
   readonly song: object;
 }

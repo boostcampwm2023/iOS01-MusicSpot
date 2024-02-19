@@ -118,6 +118,7 @@ export class UserService {
       )
       .where('userId = :userId', { userId })
       .getMany();
+    console.log(returnedData);
     return returnedData.map((data) => {
       return this.parseJourneyFromEntityToDtoV2(data);
     });

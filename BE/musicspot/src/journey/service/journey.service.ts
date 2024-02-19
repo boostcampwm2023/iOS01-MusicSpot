@@ -440,12 +440,13 @@ export class JourneyService {
   }
   parseToSaveSpotResDtoFormat(spotResult, photoResult): RecordJourneyResDTO {
     return {
+      spotId: spotResult.spotId,
       ...spotResult,
       spotSong: JSON.parse(spotResult.spotSong),
-      photoKeys: photoResult.map((result) => {
+      photos: photoResult.map((result) => {
         return {
           photoId: result.photoId,
-          photoKey: makePresignedUrl(result.photoKey),
+          photoUrl: makePresignedUrl(result.photoKey),
         };
       }),
     };

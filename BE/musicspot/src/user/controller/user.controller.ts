@@ -18,17 +18,23 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { User } from '../entities/user.entity';
-import { StartJourneyRequestDTOV2 } from '../dto/startJourney.dto';
+import {
+  StartJourneyRequestDTOV2,
+  StartJourneyResponseDTOV2,
+} from '../dto/startJourney.dto';
 import { Journey } from '../../journey/entities/journey.entity';
 import { CheckJourneyResDTO } from '../../journey/dto/journeyCheck/journeyCheck.dto';
 import { UUID } from 'crypto';
 import { LastJourneyResDTO } from '../../journey/dto/journeyLast.dto';
+import { StartJourneyResDTO } from '../../journey/dto/journeyStart/journeyStart.dto';
+import { JourneyV2DTO } from '../../journey/dto/v2/jounrey.dto';
+import {LastJourneyResV2DTO} from "../../journey/dto/v2/lastJourney.dto.v2";
 
 @Controller('user')
-@ApiTags('user 관련 API')
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @ApiTags('User V1')
   @ApiOperation({
     summary: '유저 생성 API',
     description: '첫 시작 시 유저를 생성합니다.',
@@ -41,7 +47,7 @@ export class UserController {
   async create(@Body() createUserDto: CreateUserDTO): Promise<User> {
     return await this.userService.create(createUserDto);
   }
-
+  @ApiTags('Journey V2')
   @Version('2')
   @ApiOperation({
     summary: '여정 시작 API',
@@ -49,7 +55,7 @@ export class UserController {
   })
   @ApiCreatedResponse({
     description: '생성된 여정 데이터를 반환',
-    type: Journey,
+    type: StartJourneyResponseDTOV2,
   })
   @Post(':userId/journey/start')
   async startJourney(
@@ -59,9 +65,10 @@ export class UserController {
     return await this.userService.startJourney(userId, startJourneyDto);
   }
 
+  @ApiTags('Journey V2')
   @Version('2')
   @ApiOperation({
-    summary: '여정 조회 API',
+    summary: '여정 조회 API(Coordiante 범위)',
     description: '해당 범위 내의 여정들을 반환합니다.',
   })
   @ApiQuery({
@@ -84,7 +91,7 @@ export class UserController {
   })
   @ApiCreatedResponse({
     description: '범위에 있는 여정의 기록들을 반환',
-    type: CheckJourneyResDTO,
+    type: JourneyV2DTO,
   })
   @Get(':userId/journey')
   @UsePipes(ValidationPipe)
@@ -94,23 +101,28 @@ export class UserController {
     @Query('maxCoordinate') maxCoordinate: string,
   ) {
     console.log('min:', minCoordinate, 'max:', maxCoordinate);
-    const checkJourneyDTO = {
-      userId,
-      minCoordinate,
-      maxCoordinate,
-    };
-    return await this.userService.getJourneyByCoordinationRangeV2(
-      checkJourneyDTO,
-    );
+    try {
+      const checkJourneyDTO = {
+        userId,
+        minCoordinate,
+        maxCoordinate,
+      };
+      return await this.userService.getJourneyByCoordinationRangeV2(
+        checkJourneyDTO,
+      );
+    } catch (err) {
+      console.log(err);
+    }
   }
+  @ApiTags('Journey V2')
   @Version('2')
   @ApiOperation({
-    summary: '최근 여정 조회 API',
+    summary: '마지막 여정 진행 중 여부 확인 API',
     description: '진행 중인 여정이 있었는 지 확인',
   })
   @ApiCreatedResponse({
     description: '사용자가 진행중이었던 여정 정보',
-    type: LastJourneyResDTO,
+    type: LastJourneyResV2DTO,
   })
   @Get(':userId/journey/last')
   async loadLastDataV2(@Param('userId') userId: UUID) {
