@@ -17,7 +17,7 @@ export class Photo {
   @Column()
   photoKey: string;
 
-  @ManyToOne(() => SpotV2, (spot) => spot.photos)
+  @ManyToOne(() => SpotV2, (spot) => spot.photos, {onDelete: 'CASCADE'})
   @JoinColumn({ name: 'spotId' })
   spot: SpotV2;
 }

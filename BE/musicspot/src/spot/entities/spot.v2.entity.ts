@@ -32,8 +32,8 @@ export class SpotV2 {
   @Column()
   spotSong: string;
 
-  @ManyToOne(() => JourneyV2, (journey) => journey.spots)
-  @JoinColumn({ name: 'journeyId' })
+  @ManyToOne(() => JourneyV2, (journey) => journey.spots, { onDelete: 'CASCADE'})
+  @JoinColumn({ name: 'journeyId', referencedColumnName:'journeyId' })
   journey: JourneyV2;
 
   @OneToMany(() => Photo, (photo) => photo.spot)

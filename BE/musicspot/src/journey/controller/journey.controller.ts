@@ -341,4 +341,23 @@ export class JourneyController {
       console.log(err);
     }
   }
+
+  @ApiTags('Journey V2')
+  @Version('2')
+  @ApiOperation({
+    summary: 'journey 삭제 API',
+    description: 'journey id를 통해 journey 데이터 삭제'
+  })
+  @ApiCreatedResponse({
+    description: '여정 삭제'
+  })
+  @Delete(':journeyId')
+  async deleteJourney(@Param('journeyId') journeyId:number){
+    try{
+      return this.journeyService.deleteJourney(journeyId);
+    } catch (err){
+      console.log(err)
+    }
+  }
+
 }

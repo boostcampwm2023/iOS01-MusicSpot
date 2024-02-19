@@ -468,4 +468,8 @@ export class JourneyService {
 
     return this.parseToSaveSpotResDtoFormat(saveSpotResult, photoSaveReuslt);
   }
+  async deleteJourney(journeyId: number){
+    return this.journeyRepositoryV2.delete(journeyId);
+  }
+
 }
