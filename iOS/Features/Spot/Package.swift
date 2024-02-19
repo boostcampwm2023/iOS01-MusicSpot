@@ -30,11 +30,12 @@ private enum Dependency {
     // package
     static let msData = "MSData"
     static let msDomain = "MSDomain"
-    static let msUIKit = "MSUIKit"
+    static let msFusion = "MSFusion"
     static let msFoundation = "MSFoundation"
     
     // library
     static let msLogger = "MSLogger"
+    static let msUIKit = "MSUIKit"
     
 }
 
@@ -54,8 +55,8 @@ let package = Package(
                  path: Dependency.msDomain.fromRootPath),
         .package(name: Dependency.msData,
                  path: Dependency.msData.fromRootPath),
-        .package(name: Dependency.msUIKit,
-                 path: Dependency.msUIKit.fromRootPath),
+        .package(name: Dependency.msFusion,
+                 path: Dependency.msFusion.fromRootPath),
         .package(name: Dependency.msFoundation,
                  path: Dependency.msFoundation.fromRootPath)
     ],
@@ -67,7 +68,7 @@ let package = Package(
                     .product(name: Dependency.msData,
                              package: Dependency.msData),
                     .product(name: Dependency.msUIKit,
-                             package: Dependency.msUIKit),
+                             package: Dependency.msFusion),
                     .product(name: Dependency.msLogger,
                              package: Dependency.msFoundation)
                 ])

@@ -36,9 +36,9 @@
       location = "group:MSDomain">
    </FileRef>
    <FileRef
-      location = "group:MSFoundation">
+      location = "group:MSFusion">
    </FileRef>
    <FileRef
-      location = "group:MSUIKit">
+      location = "group:MSFoundation">
    </FileRef>
 </Workspace>
