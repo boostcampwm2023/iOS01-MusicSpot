@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+import MSDesignSystem
+
 fileprivate struct MSButtonSecondaryModifier: ViewModifier {
     
     // MARK: - Properties
