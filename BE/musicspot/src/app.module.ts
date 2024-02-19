@@ -13,7 +13,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
 import { User } from './user/entities/user.entity';
 import { Journey } from './journey/entities/journey.entity';
-import {Spot} from './spot/entities/spot.entity'
+import { Spot } from './spot/entities/spot.entity';
+import { PhotoModule } from './photo/module/photo.module';
+import { Photo } from './photo/entity/photo.entity';
+import { DataSource } from 'typeorm';
+import { SpotV2 } from './spot/entities/spot.v2.entity';
+import { JourneyV2 } from './journey/entities/journey.v2.entity';
 dotenv.config();
 
 @Module({
@@ -25,9 +30,7 @@ dotenv.config();
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [
-        User, Journey, Spot,
-     ],
+      entities: [User, Journey, Spot, Photo, SpotV2, JourneyV2],
       synchronize: false,
       legacySpatialSupport: false,
     }),
@@ -38,11 +41,13 @@ dotenv.config();
     JourneyModule,
     UserModule,
     SpotModule,
+    PhotoModule,
   ],
   controllers: [AppController, ReleaseController],
   providers: [AppService],
 })
 export class AppModule {
+  constructor(private dataSource: DataSource) {}
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('/*');
   }

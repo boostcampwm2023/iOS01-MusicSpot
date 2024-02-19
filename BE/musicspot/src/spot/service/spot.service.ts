@@ -16,7 +16,8 @@ import {
 } from 'src/filters/journey.exception';
 import {
   is1DArray,
-  parseCoordinateFromDtoToGeo, parseCoordinateFromGeoToDto,
+  parseCoordinateFromDtoToGeo,
+  parseCoordinateFromGeoToDto,
 } from 'src/common/util/coordinate.util';
 import { SpotRepository } from '../repository/spot.repository';
 import { RecordSpotResDTO } from '../dto/recordSpot.dto';
@@ -27,14 +28,22 @@ import {
 } from '../dto/v2/recordSpot.v2.dto';
 import {
   isPointString,
-  parseCoordinateFromDtoToGeoV2, parseCoordinateFromGeoToDtoV2,
+  parseCoordinateFromDtoToGeoV2,
+  parseCoordinateFromGeoToDtoV2,
 } from '../../common/util/coordinate.v2.util';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Journey } from '../../journey/entities/journey.entity';
+import { Repository } from 'typeorm';
+import { Photo } from '../../photo/entity/photo.entity';
 
 @Injectable()
 export class SpotService {
   constructor(
-    private spotRepository: SpotRepository,
-    private journeyRepository: JourneyRepository,
+    // private spotRepository: SpotRepository,
+    // private journeyRepository: JourneyRepository,
+    @InjectRepository(Journey) private journeyRepository: Repository<Journey>,
+    @InjectRepository(Spot) private spotRepository: Repository<Spot>,
+    @InjectRepository(Photo) private photoRepository: Repository<Photo>,
   ) {}
 
   async uploadPhotoToStorage(journeyId, file) {
@@ -51,7 +60,25 @@ export class SpotService {
       throw new SpotRecordFail();
     }
   }
-
+  async uploadPhotoToStorageV2(journeyId, files) {
+    const keys: string[] = [];
+    try {
+      const promises = files.map(async (file, idx) => {
+        const key = `${journeyId}/${Date.now()}${idx}`;
+        keys.push(key);
+        const result = await S3.putObject({
+          Bucket: bucketName,
+          Key: key,
+          Body: file.buffer,
+        }).promise();
+      });
+      await Promise.all(promises);
+      // return key;
+      return keys;
+    } catch (err) {
+      throw new SpotRecordFail();
+    }
+  }
   async insertToSpotV2(spotData) {
     const data = {
       ...spotData,
@@ -89,31 +116,32 @@ export class SpotService {
     return await this.journeyRepository.save(originalJourney);
   }
 
-  async createV2(file, recordSpotDto) {
+  async createV2(files, recordSpotDto) {
     const { coordinate } = recordSpotDto;
     if (!isPointString(coordinate)) {
       throw new coordinateNotCorrectException();
     }
-
-    const photoKey: string = await this.uploadPhotoToStorage(
+    const keys: string[] = await this.uploadPhotoToStorageV2(
       recordSpotDto.journeyId,
-      file,
+      files,
     );
-    const presignedUrl: string = makePresignedUrl(photoKey);
-    const createdSpotData = await this.insertToSpotV2({
-      ...recordSpotDto,
-      photoKey,
-      coordinate: parseCoordinateFromDtoToGeoV2(coordinate),
-    });
 
-    const returnData: RecordSpotResDTOV2 = {
-      journeyId: createdSpotData.journeyId,
-      coordinate: parseCoordinateFromGeoToDtoV2(createdSpotData.coordinate),
-      timestamp: createdSpotData.timestamp,
-      photoUrl: presignedUrl,
-    };
+    // const presignedUrls:string[] = keys.map(key=> makePresignedUrl(key))
 
-    return returnData;
+    // const createdSpotData = await this.insertToSpotV2({
+    //   ...recordSpotDto,
+    //   photoKey,
+    //   coordinate: parseCoordinateFromDtoToGeoV2(coordinate),
+    // });
+    //
+    // // const returnData: RecordSpotResDTOV2 = {
+    ``; // //   journeyId: createdSpotData.journeyId,
+    // //   coordinate: parseCoordinateFromGeoToDtoV2(createdSpotData.coordinate),
+    // //   timestamp: createdSpotData.timestamp,
+    // //   photoUrl: presignedUrl,
+    // // };
+    //
+    // return returnData;
   }
   async create(file, recordSpotDto) {
     let parsedCoordinate;
@@ -159,5 +187,34 @@ export class SpotService {
     }
 
     return spot.photoKey;
+  }
+
+  async savePhotoToS3(files, spotId: number) {
+    const keys: string[] = [];
+    const promises = files.map(async (file, idx) => {
+      const key: string = `${spotId}/${Date.now()}${idx}`;
+      keys.push(key);
+      const reusult = await S3.putObject({
+        Bucket: bucketName,
+        Key: key,
+        Body: file.buffer,
+      }).promise();
+    });
+    await Promise.all(promises);
+    return keys;
+  }
+  async savePhotoKeysToPhoto(spotId, keys) {
+    const data = keys.map((key) => {
+      return {
+        spotId,
+        photoKey: key,
+      };
+    });
+    return await this.photoRepository.save(data);
+  }
+
+  async savePhoto(files, spotId) {
+    const keys = await this.savePhotoToS3(files, spotId);
+    return await this.savePhotoKeysToPhoto(spotId, keys);
   }
 }

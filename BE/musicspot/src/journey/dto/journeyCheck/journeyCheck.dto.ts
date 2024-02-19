@@ -56,7 +56,7 @@ export class SpotDTO {
   readonly photoUrl: string;
 }
 
-class journeyMetadataDto {
+export class journeyMetadataDto {
   @ApiProperty({
     description: '여정 시작 시간',
     example: '2023-11-22T15:30:00.000+09:00',
