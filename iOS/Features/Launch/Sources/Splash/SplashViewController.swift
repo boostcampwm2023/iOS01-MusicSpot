@@ -60,9 +60,9 @@ public final class SplashViewController: UIViewController {
     private func bind(_ viewModel: SplashViewModel) {
         viewModel.currentState.isUpdateNeeded
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isUpdateNeeded in
+            .sink { [weak self] (isUpdateNeeded, releaseNote) in
                 if isUpdateNeeded {
-                    self?.navigationDelegate?.navigateToUpdate()
+                    self?.navigationDelegate?.navigateToUpdate(releaseNote: releaseNote)
                 } else {
                     self?.navigationDelegate?.navigateToHome()
                 }

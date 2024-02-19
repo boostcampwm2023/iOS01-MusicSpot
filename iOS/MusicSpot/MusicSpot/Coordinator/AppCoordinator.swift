@@ -53,12 +53,14 @@ extension AppCoordinator: SplashNavigationDelegate {
     func navigateToHome() {
         let navigationController = self.navigationController
         let homeCoordinator = HomeCoordinator(navigationController: navigationController)
+        self.navigationController.viewControllers.removeAll { $0 is SplashViewController }
         homeCoordinator.start()
     }
     
-    func navigateToUpdate() {
-        let versionViewController = VersionViewController()
-        self.navigationController.pushViewController(versionViewController, animated: true)
+    func navigateToUpdate(releaseNote: String?) {
+        let versionViewController = VersionViewController(releaseNote: releaseNote)
+        self.navigationController.viewControllers.removeAll { $0 is VersionViewController }
+        self.navigationController.pushViewController(versionViewController, animated: false)
     }
     
 }

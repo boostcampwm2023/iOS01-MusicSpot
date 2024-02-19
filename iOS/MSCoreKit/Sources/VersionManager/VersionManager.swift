@@ -14,7 +14,11 @@ public struct VersionManager {
     
     // MARK: - Properties
     
-    private let decoder = JSONDecoder()
+    private let decoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        return decoder
+    }()
     
     private let appleID = "6474530486"
     
@@ -30,29 +34,6 @@ public struct VersionManager {
     public init() { }
     
     // MARK: - Functions
-    
-    public func fetchAppStoreLookUp() async -> Result<AppStoreLookUp, Error> {
-        let urlString = "http://itunes.apple.com/lookup?id=\(self.appleID)&country=kr"
-        guard let url = URL(string: urlString) else {
-            return .failure(VersionManagerError.invalidURL(urlString))
-        }
-        
-        do {
-            let (data, response) = try await URLSession.shared.data(from: url)
-            guard (response as? HTTPURLResponse)?.statusCode == 200 else {
-                throw URLError(.badServerResponse)
-            }
-            
-            let appStoreResponse = try self.decoder.decode(AppStoreResponse.self, from: data)
-            guard appStoreResponse.numberOfResults ?? .zero >= 1,
-                  let lookUp = appStoreResponse.results.first else {
-                throw VersionManagerError.emptyResults
-            }
-            return .success(lookUp)
-        } catch {
-            return .failure(error)
-        }
-    }
     
     /// 앱스토어에서 새로운 버전으로 업데이트할 수 있는 지 확인합니다.
     /// - Returns: **[Tuple]** (`isUpdateNeeded`: Bool, `releaseNote`: String?) \
@@ -74,6 +55,29 @@ public struct VersionManager {
             return (isUpdateNeeded, releaseNote)
         case .failure(let error):
             throw error
+        }
+    }
+    
+    private func fetchAppStoreLookUp() async -> Result<AppStoreLookUp, Error> {
+        let urlString = "http://itunes.apple.com/lookup?id=\(self.appleID)&country=kr"
+        guard let url = URL(string: urlString) else {
+            return .failure(VersionManagerError.invalidURL(urlString))
+        }
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+                throw URLError(.badServerResponse)
+            }
+            
+            let appStoreResponse = try self.decoder.decode(AppStoreResponse.self, from: data)
+            guard appStoreResponse.numberOfResults ?? .zero >= 1,
+                  let lookUp = appStoreResponse.results.first else {
+                throw VersionManagerError.emptyResults
+            }
+            return .success(lookUp)
+        } catch {
+            return .failure(error)
         }
     }
     

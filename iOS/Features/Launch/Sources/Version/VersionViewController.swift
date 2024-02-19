@@ -15,6 +15,11 @@ public final class VersionViewController: UIHostingController<VersionView> {
         super.init(rootView: rootView)
     }
     
+    public convenience init(releaseNote: String?) {
+        let versionView = VersionView(releaseNote: releaseNote)
+        self.init(rootView: versionView)
+    }
+    
     @MainActor
     required dynamic init?(coder aDecoder: NSCoder) {
         fatalError("MusicSpot은 code-based로만 작업 중입니다.")
