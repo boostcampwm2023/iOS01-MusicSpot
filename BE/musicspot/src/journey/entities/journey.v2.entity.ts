@@ -7,7 +7,7 @@ import {
   OneToMany,
   JoinColumn,
 } from 'typeorm';
-@Entity({ name: 'journey' })
+@Entity({ name: 'journey'})
 export class JourneyV2 {
   @PrimaryGeneratedColumn()
   journeyId: number;
