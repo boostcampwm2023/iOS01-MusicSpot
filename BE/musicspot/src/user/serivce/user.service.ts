@@ -11,7 +11,7 @@ import {
 import { UserRepository } from '../repository/user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
-import { Repository } from 'typeorm';
+import {Not, Repository, IsNull} from 'typeorm';
 import { Journey } from '../../journey/entities/journey.entity';
 import { JourneyV2 } from '../../journey/entities/journey.v2.entity';
 import {
@@ -117,6 +117,7 @@ export class UserService {
         coordinatesRange,
       )
       .where('userId = :userId', { userId })
+        .andWhere('journey.title is not null')
       .getMany();
     console.log(returnedData);
     return returnedData.map((data) => {
