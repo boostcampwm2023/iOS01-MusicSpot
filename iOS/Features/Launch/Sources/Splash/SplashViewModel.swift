@@ -18,7 +18,7 @@ public final class SplashViewModel {
     }
     
     public struct State {
-        let isUpdateNeeded = PassthroughSubject<Bool, Never>()
+        let isUpdateNeeded = PassthroughSubject<(Bool, String?), Never>()
     }
     
     // MARK: - Properties
@@ -53,7 +53,7 @@ private extension SplashViewModel {
     func checkIfUpdateNeeded() {
         Task {
             do {
-                let isUpdateNeeded = try await self.version.checkIfUpdateNeeded()
+                let isUpdateNeeded = try await self.version.isUpdateAvailable()
                 self.state.isUpdateNeeded.send(isUpdateNeeded)
             } catch {
                 MSLogger.make(category: .version).error("\(error)")
