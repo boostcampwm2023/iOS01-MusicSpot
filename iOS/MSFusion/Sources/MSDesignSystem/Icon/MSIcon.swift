@@ -1,11 +1,9 @@
 //
 //  MSIcon.swift
-//  MSUIKit
+//  MSDesignSystem
 //
 //  Created by 이창준 on 11/19/23.
 //
-
-import UIKit
 
 public enum MSIcon: String {
     case check = "Check"
@@ -31,12 +29,4 @@ public enum MSIcon: String {
     case voice = "Voice"
     case volumeHigh = "Volume High"
     case volumeOff = "Volume Off"
-}
-
-extension UIImage {
-    
-    public static func msIcon(_ icon: MSIcon) -> UIImage? {
-        return UIImage(named: icon.rawValue, in: .module, compatibleWith: .current)?.withRenderingMode(.alwaysTemplate)
-    }
-    
 }

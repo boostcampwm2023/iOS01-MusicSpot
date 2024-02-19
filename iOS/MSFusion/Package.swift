@@ -59,7 +59,10 @@ let package = Package(
                     .process("../\(Target.msDesignSystem)/Resources")
                 ]),
         .target(name: Target.combineCocoa),
-        .target(name: Target.msSwiftUI),
+        .target(name: Target.msSwiftUI,
+                dependencies: [
+                    .target(name: Target.msDesignSystem)
+                ]),
         .target(name: Target.msUIKit,
                 dependencies: [
                     .target(name: Target.msDesignSystem),
