@@ -1,11 +1,13 @@
 //
 //  MSFont.swift
-//  MSUIKit
+//  MSDesignSystem
 //
 //  Created by 이창준 on 11/19/23.
 //
 
-import UIKit
+import CoreGraphics
+import CoreText
+import Foundation
 
 public enum MSFont {
     case superTitle
@@ -19,7 +21,7 @@ public enum MSFont {
     
     // MARK: - Functions
     
-    private var fontDetails: (fontName: String, size: CGFloat) {
+    package var fontDetails: (fontName: String, size: CGFloat) {
         switch self {
         case .superTitle: return ("Pretendard-Bold", 34.0)
         case .duperTitle: return ("Pretendard-Bold", 28.0)
@@ -30,11 +32,6 @@ public enum MSFont {
         case .boldCaption: return ("Pretendard-SemiBold", 13.0)
         case .caption: return ("Pretendard-Regular", 13.0)
         }
-    }
-    
-    internal func font() -> UIFont? {
-        let details = self.fontDetails
-        return UIFont(name: details.fontName, size: details.size)
     }
     
     fileprivate static func registerFont(bundle: Bundle, fontName: String, fontExtension: String) {
@@ -54,19 +51,7 @@ public enum MSFont {
             "Pretendard-SemiBold",
             "Pretendard-Bold"
         ].forEach {
-            registerFont(bundle: .module, fontName: $0, fontExtension: "otf")
-        }
-    }
-    
-}
-
-public extension UIFont {
-    
-    static func msFont(_ font: MSFont) -> UIFont? {
-        if let font = font.font() {
-            return font
-        } else {
-            return nil
+            self.registerFont(bundle: .msDesignSystem, fontName: $0, fontExtension: "otf")
         }
     }
     

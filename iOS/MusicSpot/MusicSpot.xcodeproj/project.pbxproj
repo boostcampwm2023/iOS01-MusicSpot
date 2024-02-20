@@ -32,14 +32,15 @@
 		DD73F85B2B024C4900EE9BF2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD73F85A2B024C4900EE9BF2 /* SceneDelegate.swift */; };
 		DD73F8622B024C4B00EE9BF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8612B024C4B00EE9BF2 /* Assets.xcassets */; };
 		DD73F8652B024C4B00EE9BF2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD73F8632B024C4B00EE9BF2 /* LaunchScreen.storyboard */; };
-		DD92FEAB2B35EDFF00A672F5 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = DD92FEAA2B35EDFF00A672F5 /* Home */; };
-		DD92FEAD2B35EE0700A672F5 /* NavigateMap in Frameworks */ = {isa = PBXBuildFile; productRef = DD92FEAC2B35EE0700A672F5 /* NavigateMap */; };
-		DD92FEAF2B35EE0700A672F5 /* JourneyList in Frameworks */ = {isa = PBXBuildFile; productRef = DD92FEAE2B35EE0700A672F5 /* JourneyList */; };
-		DD92FEB12B35EE0700A672F5 /* RewindJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD92FEB02B35EE0700A672F5 /* RewindJourney */; };
-		DD92FEB32B35EE0700A672F5 /* SelectSong in Frameworks */ = {isa = PBXBuildFile; productRef = DD92FEB22B35EE0700A672F5 /* SelectSong */; };
-		DD92FEB52B35EE0700A672F5 /* Spot in Frameworks */ = {isa = PBXBuildFile; productRef = DD92FEB42B35EE0700A672F5 /* Spot */; };
-		DD92FEBA2B35EEAF00A672F5 /* SaveJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DD92FEB92B35EEAF00A672F5 /* SaveJourney */; };
+		DD9182E12B838AA2009B7D21 /* MSUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = DD9182E02B838AA2009B7D21 /* MSUIKit */; };
 		DDB3B9F22B4F6DF60024C6BF /* SpotCoordinatorFinishDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDB3B9F12B4F6DF60024C6BF /* SpotCoordinatorFinishDelegate.swift */; };
+		DDEED6D42B8389CE00141E01 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = DDEED6D32B8389CE00141E01 /* Home */; };
+		DDEED6D62B8389CE00141E01 /* NavigateMap in Frameworks */ = {isa = PBXBuildFile; productRef = DDEED6D52B8389CE00141E01 /* NavigateMap */; };
+		DDEED6D92B8389D600141E01 /* JourneyList in Frameworks */ = {isa = PBXBuildFile; productRef = DDEED6D82B8389D600141E01 /* JourneyList */; };
+		DDEED6DC2B8389E300141E01 /* RewindJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DDEED6DB2B8389E300141E01 /* RewindJourney */; };
+		DDEED6E12B8389F000141E01 /* SaveJourney in Frameworks */ = {isa = PBXBuildFile; productRef = DDEED6E02B8389F000141E01 /* SaveJourney */; };
+		DDEED6E62B8389FF00141E01 /* SelectSong in Frameworks */ = {isa = PBXBuildFile; productRef = DDEED6E52B8389FF00141E01 /* SelectSong */; };
+		DDEED6E92B838A0600141E01 /* Spot in Frameworks */ = {isa = PBXBuildFile; productRef = DDEED6E82B838A0600141E01 /* Spot */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -433,7 +434,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = XW996HTK32;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -455,7 +456,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.0;
+				MARKETING_VERSION = 0.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.overheat.boostcamp8.MusicSpot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -479,7 +480,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = XW996HTK32;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -501,7 +502,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.0;
+				MARKETING_VERSION = 0.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.overheat.boostcamp8.MusicSpot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -589,7 +590,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = XW996HTK32;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -611,7 +612,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.7.0;
+				MARKETING_VERSION = 0.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.overheat.boostcamp8.MusicSpot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -653,31 +654,27 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		DD3A97342B52411000BA2800 /* XCLocalSwiftPackageReference "../MSUIKit" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../MSUIKit;
-		};
-		DD3A97372B52413300BA2800 /* XCLocalSwiftPackageReference "../Features/Home" */ = {
+		DDEED6D22B8389CE00141E01 /* XCLocalSwiftPackageReference "../Features/Home" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Features/Home;
 		};
-		DD3A973C2B52414200BA2800 /* XCLocalSwiftPackageReference "../Features/JourneyList" */ = {
+		DDEED6D72B8389D600141E01 /* XCLocalSwiftPackageReference "../Features/JourneyList" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Features/JourneyList;
 		};
-		DD3A973F2B52414B00BA2800 /* XCLocalSwiftPackageReference "../Features/RewindJourney" */ = {
+		DDEED6DA2B8389E300141E01 /* XCLocalSwiftPackageReference "../Features/RewindJourney" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Features/RewindJourney;
 		};
-		DD3A97442B52416100BA2800 /* XCLocalSwiftPackageReference "../Features/SaveJourney" */ = {
+		DDEED6DF2B8389F000141E01 /* XCLocalSwiftPackageReference "../Features/SaveJourney" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Features/SaveJourney;
 		};
-		DD3A97472B52416900BA2800 /* XCLocalSwiftPackageReference "../Features/SelectSong" */ = {
+		DDEED6E42B8389FF00141E01 /* XCLocalSwiftPackageReference "../Features/SelectSong" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Features/SelectSong;
 		};
-		DD3A974A2B52417100BA2800 /* XCLocalSwiftPackageReference "../Features/Spot" */ = {
+		DDEED6E72B838A0600141E01 /* XCLocalSwiftPackageReference "../Features/Spot" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Features/Spot;
 		};
@@ -688,39 +685,35 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		DD3A97352B52411000BA2800 /* MSUIKit */ = {
+		DD9182E02B838AA2009B7D21 /* MSUIKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MSUIKit;
 		};
-		DD3A97382B52413300BA2800 /* Home */ = {
+		DDEED6D32B8389CE00141E01 /* Home */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Home;
 		};
-		DD3A973A2B52413300BA2800 /* NavigateMap */ = {
+		DDEED6D52B8389CE00141E01 /* NavigateMap */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = NavigateMap;
 		};
-		DD3A973D2B52414200BA2800 /* JourneyList */ = {
+		DDEED6D82B8389D600141E01 /* JourneyList */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = JourneyList;
 		};
-		DD3A97402B52414B00BA2800 /* RewindJourney */ = {
+		DDEED6DB2B8389E300141E01 /* RewindJourney */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = RewindJourney;
 		};
-		DD3A97422B52415800BA2800 /* RewindJourney */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = RewindJourney;
-		};
-		DD3A97452B52416100BA2800 /* SaveJourney */ = {
+		DDEED6E02B8389F000141E01 /* SaveJourney */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SaveJourney;
 		};
-		DD3A97482B52416900BA2800 /* SelectSong */ = {
+		DDEED6E52B8389FF00141E01 /* SelectSong */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SelectSong;
 		};
-		DD3A974B2B52417100BA2800 /* Spot */ = {
+		DDEED6E82B838A0600141E01 /* Spot */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Spot;
 		};

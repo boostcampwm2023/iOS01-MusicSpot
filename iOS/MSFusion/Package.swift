@@ -7,7 +7,7 @@ import PackageDescription
 
 extension String {
     
-    static let package = "MSUIKit"
+    static let package = "MSFusion"
     
     var fromRootPath: String {
         return "../" + self
@@ -18,6 +18,7 @@ extension String {
 private enum Target {
     
     static let msDesignSystem = "MSDesignSystem"
+    static let msSwiftUI = "MSSwiftUI"
     static let msUIKit = "MSUIKit"
     static let combineCocoa = "CombineCocoa"
     
@@ -41,6 +42,8 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
+        .library(name: Target.msSwiftUI,
+                 targets: [Target.msSwiftUI]),
         .library(name: Target.msUIKit,
                  targets: [Target.msUIKit])
     ],
@@ -56,6 +59,10 @@ let package = Package(
                     .process("../\(Target.msDesignSystem)/Resources")
                 ]),
         .target(name: Target.combineCocoa),
+        .target(name: Target.msSwiftUI,
+                dependencies: [
+                    .target(name: Target.msDesignSystem)
+                ]),
         .target(name: Target.msUIKit,
                 dependencies: [
                     .target(name: Target.msDesignSystem),
