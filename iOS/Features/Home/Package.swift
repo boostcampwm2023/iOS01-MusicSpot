@@ -31,8 +31,10 @@ private enum Dependency {
     static let journeyList = "JourneyList"
     static let msDomain = "MSDomain"
     static let msData = "MSData"
+    
     static let msUIKit = "MSUIKit"
     static let msFusion = "MSFusion"
+    
     static let msUserDefaults = "MSUserDefaults"
     static let msLogger = "MSLogger"
     static let msFoundation = "MSFoundation"
@@ -74,6 +76,8 @@ let package = Package(
                              package: Dependency.msDomain),
                     .product(name: Dependency.msData,
                              package: Dependency.msData),
+                    .product(name: Dependency.msUIKit,
+                             package: Dependency.msFusion),
                     .product(name: Dependency.msUserDefaults,
                              package: Dependency.msFoundation),
                     .product(name: Dependency.msLogger,

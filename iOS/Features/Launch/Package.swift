@@ -29,8 +29,11 @@ private enum Target {
 private enum Dependency {
     
     static let msUIKit = "MSUIKit"
+    static let msFusion = "MSFusion"
+    
     static let versionManager = "VersionManager"
     static let msCoreKit = "MSCoreKit"
+    
     static let msUserDefaults = "MSUserDefaults"
     static let msLogger = "MSLogger"
     static let msFoundation = "MSFoundation"
@@ -51,8 +54,8 @@ let package = Package(
                  targets: [Target.version])
     ],
     dependencies: [
-        .package(name: Dependency.msUIKit,
-                 path: Dependency.msUIKit.fromRootPath),
+        .package(name: Dependency.msFusion,
+                 path: Dependency.msFusion.fromRootPath),
         .package(name: Dependency.msCoreKit,
                  path: Dependency.msCoreKit.fromRootPath),
         .package(name: Dependency.msFoundation,
@@ -62,7 +65,7 @@ let package = Package(
         .target(name: Target.splash,
                 dependencies: [
                     .product(name: Dependency.msUIKit,
-                             package: Dependency.msUIKit),
+                             package: Dependency.msFusion),
                     .product(name: Dependency.versionManager,
                              package: Dependency.msCoreKit)
                 ],
@@ -72,7 +75,7 @@ let package = Package(
         .target(name: Target.version,
                 dependencies: [
                     .product(name: Dependency.msUIKit,
-                             package: Dependency.msUIKit),
+                             package: Dependency.msFusion),
                     .product(name: Dependency.versionManager,
                              package: Dependency.msCoreKit),
                     .product(name: Dependency.msUserDefaults,
