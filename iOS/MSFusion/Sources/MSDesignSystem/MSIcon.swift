@@ -6,7 +6,8 @@
 //
 
 public enum MSIcon: String {
-    case musicSpotLogo = "MusicSpot Logo"
+    case logoWithBackground = "Logo Background"
+    case logoWithTransparent = "Logo Transparent"
     
     case check = "Check"
     case close = "Close"
