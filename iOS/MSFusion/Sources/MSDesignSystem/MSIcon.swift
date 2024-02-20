@@ -6,6 +6,8 @@
 //
 
 public enum MSIcon: String {
+    case musicSpotLogo = "MusicSpot Logo"
+    
     case check = "Check"
     case close = "Close"
     

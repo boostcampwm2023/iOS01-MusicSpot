@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+import MSSwiftUI
 import VersionManager
 
 public struct VersionView: View {
@@ -42,7 +43,7 @@ public struct VersionView: View {
     public var body: some View {
         VStack {
             VStack(alignment: .leading, spacing: 16.0) {
-                Image(systemName: "apple.logo")
+                Image("logo", bundle: .msDesignSystem)
                     .resizable()
                     .frame(width: 50, height: 60, alignment: .leading)
                     .padding(.vertical, 60.0)

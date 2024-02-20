@@ -28,6 +28,7 @@ private enum Target {
 
 private enum Dependency {
     
+    static let msSwiftUI = "MSSwiftUI"
     static let msUIKit = "MSUIKit"
     static let msFusion = "MSFusion"
     
@@ -75,6 +76,8 @@ let package = Package(
         .target(name: Target.version,
                 dependencies: [
                     .product(name: Dependency.msUIKit,
+                             package: Dependency.msFusion),
+                    .product(name: Dependency.msSwiftUI,
                              package: Dependency.msFusion),
                     .product(name: Dependency.versionManager,
                              package: Dependency.msCoreKit),
