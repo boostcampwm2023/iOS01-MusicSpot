@@ -21,7 +21,7 @@ public enum MSFont {
     
     // MARK: - Functions
     
-    internal var fontDetails: (fontName: String, size: CGFloat) {
+    package var fontDetails: (fontName: String, size: CGFloat) {
         switch self {
         case .superTitle: return ("Pretendard-Bold", 34.0)
         case .duperTitle: return ("Pretendard-Bold", 28.0)

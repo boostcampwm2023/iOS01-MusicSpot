@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+import MSDesignSystem
+
 extension Color {
     
     public static func msColor(_ color: MSColor) -> Color {

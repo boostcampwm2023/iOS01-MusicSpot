@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+import MSDesignSystem
+
 extension MSFont {
     
     fileprivate func font() -> Font? {

@@ -7,6 +7,8 @@
 
 import UIKit
 
+import MSDesignSystem
+
 extension UIColor {
     
     public static func msColor(_ color: MSColor) -> UIColor {
