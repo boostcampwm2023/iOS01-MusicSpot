@@ -7,8 +7,6 @@
 
 import UIKit
 
-import MSDesignSystem
-
 extension MSFont {
     
     fileprivate func font() -> UIFont? {

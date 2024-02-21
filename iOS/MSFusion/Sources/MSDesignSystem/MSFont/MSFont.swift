@@ -15,6 +15,7 @@ public enum MSFont {
     case headerTitle
     case subtitle
     case buttonTitle
+    case boldParagraph
     case paragraph
     case boldCaption
     case caption
@@ -28,6 +29,7 @@ public enum MSFont {
         case .headerTitle: return ("Pretendard-Bold", 22.0)
         case .subtitle: return ("Pretendard-Bold", 20.0)
         case .buttonTitle: return ("Pretendard-SemiBold", 20.0)
+        case .boldParagraph: return ("Pretendard-SemiBold", 17.0)
         case .paragraph: return ("Pretendard-Regular", 17.0)
         case .boldCaption: return ("Pretendard-SemiBold", 13.0)
         case .caption: return ("Pretendard-Regular", 13.0)
