@@ -55,10 +55,10 @@ let package = Package(
     targets: [
         .target(name: Target.journeyList,
                 dependencies: [
-                    .product(name: Dependency.msUIKit,
-                             package: Dependency.msFusion),
                     .product(name: Dependency.msData,
                              package: Dependency.msData),
+                    .product(name: Dependency.msUIKit,
+                             package: Dependency.msFusion),
                     .product(name: Dependency.msLogger,
                              package: Dependency.msFoundation)
                 ])

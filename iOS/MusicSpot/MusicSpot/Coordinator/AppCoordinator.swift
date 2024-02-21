@@ -7,6 +7,10 @@
 
 import UIKit
 
+import MSLogger
+import Splash
+import Version
+
 final class AppCoordinator: Coordinator {
     
     // MARK: - Properties
@@ -23,12 +27,40 @@ final class AppCoordinator: Coordinator {
         self.navigationController = navigationController
     }
     
-    // MARK: - From: HomeMap
+    // MARK: - Functions
     
     func start() {
-        let homeCoordinator = HomeCoordinator(navigationController: self.navigationController)
-        self.childCoordinators.append(homeCoordinator)
+        let storyboard = UIStoryboard(name: SplashViewController.storyboardName,
+                                      bundle: Bundle.splash)
+        let splashViewController = storyboard.instantiateViewController(identifier: SplashViewController.storyboardID,
+                                                                        creator: {
+            [weak self] coder -> SplashViewController in
+            let viewModel = SplashViewModel()
+            let splashViewController = SplashViewController(viewModel: viewModel, coder: coder)
+            splashViewController?.navigationDelegate = self
+            return splashViewController ?? SplashViewController(viewModel: viewModel)
+        })
+        
+        self.navigationController.pushViewController(splashViewController, animated: false)
+    }
+    
+}
+
+// MARK: - Splash Navigation
+
+extension AppCoordinator: SplashNavigationDelegate {
+    
+    func navigateToHome() {
+        let navigationController = self.navigationController
+        let homeCoordinator = HomeCoordinator(navigationController: navigationController)
+        self.navigationController.viewControllers.removeAll { $0 is SplashViewController }
         homeCoordinator.start()
+    }
+    
+    func navigateToUpdate(releaseNote: String?) {
+        let versionViewController = VersionViewController(releaseNote: releaseNote)
+        self.navigationController.viewControllers.removeAll { $0 is VersionViewController }
+        self.navigationController.pushViewController(versionViewController, animated: false)
     }
     
 }

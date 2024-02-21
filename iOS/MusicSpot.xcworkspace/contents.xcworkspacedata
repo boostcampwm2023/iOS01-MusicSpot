@@ -11,6 +11,9 @@
       location = "container:"
       name = "Features">
       <FileRef
+         location = "group:Features/Launch">
+      </FileRef>
+      <FileRef
          location = "group:Features/Home">
       </FileRef>
       <FileRef

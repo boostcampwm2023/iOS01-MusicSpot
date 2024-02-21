@@ -6,6 +6,9 @@
 //
 
 public enum MSIcon: String {
+    case logoWithBackground = "Logo Background"
+    case logoWithTransparent = "Logo Transparent"
+    
     case check = "Check"
     case close = "Close"
     

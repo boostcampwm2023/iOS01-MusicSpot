@@ -27,15 +27,14 @@ private enum Target {
 
 private enum Dependency {
     
-    // package
     static let msData = "MSData"
     static let msDomain = "MSDomain"
-    static let msFusion = "MSFusion"
-    static let msFoundation = "MSFoundation"
     
-    // library
-    static let msLogger = "MSLogger"
     static let msUIKit = "MSUIKit"
+    static let msFusion = "MSFusion"
+    
+    static let msLogger = "MSLogger"
+    static let msFoundation = "MSFoundation"
     
 }
 

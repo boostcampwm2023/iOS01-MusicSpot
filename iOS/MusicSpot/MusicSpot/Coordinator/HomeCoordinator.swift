@@ -60,7 +60,7 @@ final class HomeCoordinator: Coordinator {
         homeViewController.configuration = configuration
         
         navigateMapViewController.delegate = homeViewController
-        self.navigationController.pushViewController(homeViewController, animated: true)
+        self.navigationController.pushViewController(homeViewController, animated: false)
     }
     
 }

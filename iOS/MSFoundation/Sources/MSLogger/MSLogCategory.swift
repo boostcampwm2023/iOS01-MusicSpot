@@ -17,6 +17,7 @@ public enum MSLogCategory: String {
     case fileManager = "FileManager"
     case recordingJourneyStorage = "RecordingJourneyStorage"
     case music = "MusicKit"
+    case version = "VersionManager"
     
     case home
     case navigateMap

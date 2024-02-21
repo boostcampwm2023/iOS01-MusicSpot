@@ -9,7 +9,7 @@ import SwiftUI
 
 import MSDesignSystem
 
-struct MSButton: View {
+public struct MSButton: View {
     
     // MARK: - Constants
     
@@ -38,7 +38,7 @@ struct MSButton: View {
     
     // MARK: - Body
     
-    var body: some View {
+    public var body: some View {
         Button {
             self.action?()
         } label: {
