@@ -7,7 +7,25 @@
 
 import SwiftUI
 
-/// SwiftUI에서 Navigation 로직을 담당하는 클래스입니다.
+/**
+ SwiftUI에서 Navigation 로직을 담당하는 클래스입니다.
+ 
+ *Example :*
+ ```swift
+ struct ContentView: View {
+ 
+    @EnvironmentObject var router: Router
+ 
+    var body: some View {
+        Button {
+            self.router.navigate(to: .home)
+        } label: {
+            Text("Home")
+        }
+    }
+ }
+ ```
+*/
 @MainActor
 @Observable
 public final class Router {
