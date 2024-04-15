@@ -11,7 +11,6 @@
 		FD40A5082BCD55D300518B9F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD40A5072BCD55D300518B9F /* ContentView.swift */; };
 		FD40A50A2BCD55D400518B9F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD40A5092BCD55D400518B9F /* Assets.xcassets */; };
 		FD40A50E2BCD55D400518B9F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD40A50D2BCD55D400518B9F /* Preview Assets.xcassets */; };
-		FD40A5162BCD566600518B9F /* MSDesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = FD40A5152BCD566600518B9F /* MSDesignSystem */; };
 		FDD0C7ED2BCD583F004FB9C0 /* MSSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = FDD0C7EC2BCD583F004FB9C0 /* MSSwiftUI */; };
 		FDD0C7EF2BCD5858004FB9C0 /* MSFusion in Resources */ = {isa = PBXBuildFile; fileRef = FDD0C7EE2BCD5858004FB9C0 /* MSFusion */; };
 /* End PBXBuildFile section */
@@ -32,7 +31,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FDD0C7ED2BCD583F004FB9C0 /* MSSwiftUI in Frameworks */,
-				FD40A5162BCD566600518B9F /* MSDesignSystem in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,7 +91,6 @@
 			);
 			name = MusicSpot;
 			packageProductDependencies = (
-				FD40A5152BCD566600518B9F /* MSDesignSystem */,
 				FDD0C7EC2BCD583F004FB9C0 /* MSSwiftUI */,
 			);
 			productName = MusicSpot;
@@ -381,10 +378,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		FD40A5152BCD566600518B9F /* MSDesignSystem */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MSDesignSystem;
-		};
 		FDD0C7EC2BCD583F004FB9C0 /* MSSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MSSwiftUI;
