@@ -46,7 +46,7 @@ private enum Dependency {
 let package = Package(
     name: .package,
     platforms: [
-        .iOS(.v15)
+        .iOS(.v17)
     ],
     products: [
         .library(name: Target.msData,

@@ -9,7 +9,7 @@ private extension String {
     
     static let package = "FeatureJourneyList"
 
-	var fromRootPath: String {
+    var fromRootPath: String {
         return "../../" + self
     }
     
