@@ -7,51 +7,37 @@
 
 import SwiftUI
 
+public typealias MSSecondaryButton = MSButton<Secondary>
+
+extension MSSecondaryButton {
+    
+    public init(
+        title: String = "",
+        image: Image? = nil,
+        cornerStyle: MSButtonStyle.CornerStyle = .squared,
+        colorStyle: ColorStyle = .default,
+        action: @escaping () -> Void
+    ) {
+        self.title = title
+        self.image = image
+        self.cornerStyle = cornerStyle
+        self.colorStyle = colorStyle
+        self.action = action
+    }
+    
+}
+
+#if targetEnvironment(simulator)
 import MSDesignSystem
 
-fileprivate struct MSButtonSecondaryModifier: ViewModifier {
-    
-    // MARK: - Properties
-    
-    private let cornerStyle: MSButton.CornerStyle
-    private let isBrandColored: Bool
-    
-    // MARK: - Initializer
-    
-    init(cornerStyle: MSButton.CornerStyle, isBrandColored: Bool) {
-        self.cornerStyle = cornerStyle
-        self.isBrandColored = isBrandColored
+#Preview {
+    MSFont.registerFonts()
+    return MSSecondaryButton(
+        title: "재생",
+        image: .msIcon(.play),
+        cornerStyle: .rounded
+    ) {
+        print("Play")
     }
-    
-    // MARK: - Body
-    
-    public func body(content: Content) -> some View {
-        content
-            .foregroundStyle(Color.msColor(.secondaryButtonTypo))
-            .background(
-                RoundedRectangle(cornerRadius: self.cornerStyle.cornerRadius, style: .continuous)
-                    .fill(Color.msColor(.secondaryButtonBackground))
-            )
-    }
-    
 }
-
-extension MSButton {
-    
-    public func secondary(_ cornerStyle: CornerStyle = .squared,
-                          isBrandColored: Bool = true) -> some View {
-        self.modifier(MSButtonSecondaryModifier(cornerStyle: cornerStyle,
-                                                isBrandColored: isBrandColored))
-    }
-    
-}
-
-#Preview("Rounded") {
-    MSButton(title: "버튼", image: .msIcon(.check))
-        .secondary(.rounded)
-}
-
-#Preview("Squared") {
-    MSButton(title: "버튼", image: .msIcon(.check))
-        .secondary(.squared)
-}
+#endif

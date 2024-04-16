@@ -61,7 +61,9 @@ let package = Package(
         .target(name: Target.combineCocoa),
         .target(name: Target.msSwiftUI,
                 dependencies: [
-                    .target(name: Target.msDesignSystem)
+                    .target(name: Target.msDesignSystem),
+                    .product(name: Dependency.msExtension,
+                             package: Dependency.msFoundation)
                 ]),
         .target(name: Target.msUIKit,
                 dependencies: [

@@ -1,38 +1,44 @@
 //
-//  SwiftUIView.swift
+//  MSButton.swift
 //  MSSwiftUI
 //
-//  Created by 이창준 on 2024.02.19.
+//  Created by 이창준 on 4/15/24.
 //
 
 import SwiftUI
 
-import MSDesignSystem
+import MSExtension
 
-public struct MSButton: View {
+@MainActor
+public struct MSButton<ColorStyle: ColorSet>: View {
     
     // MARK: - Constants
     
     private enum Metric {
-        static let height: CGFloat = 60.0
-        static let horizontalEdgeInsets: CGFloat = 58.0
-        static let verticalEdgeInsets: CGFloat = 10.0
-        static let imagePadding: CGFloat = 8.0
+        static var imagePadding: CGFloat { 8.0 }
     }
     
     // MARK: - Properties
     
-    private var title: String?
-    private var image: Image?
-    private let action: (() -> Void)?
+    internal let title: String
+    internal let image: Image?
+    internal let cornerStyle: MSButtonStyle.CornerStyle
+    internal let colorStyle: ColorStyle
+    internal let action: () -> Void
     
     // MARK: - Initializer
     
-    public init(title: String? = nil,
-                image: Image? = nil,
-                action: (() -> Void)? = nil) {
+    public init(
+        title: String = "",
+        image: Image? = nil,
+        cornerStyle: MSButtonStyle.CornerStyle = .squared,
+        colorStyle: ColorStyle,
+        action: @escaping () -> Void
+    ) {
         self.title = title
         self.image = image
+        self.cornerStyle = cornerStyle
+        self.colorStyle = colorStyle
         self.action = action
     }
     
@@ -40,29 +46,24 @@ public struct MSButton: View {
     
     public var body: some View {
         Button {
-            self.action?()
+            self.action()
         } label: {
             HStack(spacing: Metric.imagePadding) {
                 if let image = self.image {
                     image
                 }
-                if let title = self.title {
-                    Text(title)
+                
+                if self.title.isNotEmpty {
+                    Text(self.title)
                 }
             }
-            .padding(.horizontal, Metric.horizontalEdgeInsets)
-            .padding(.vertical, Metric.verticalEdgeInsets)
         }
-        .font(.msFont(.buttonTitle))
-        .frame(height: Metric.height)
+        .buttonStyle(
+            MSButtonStyle(
+                cornerStyle: self.cornerStyle,
+                colorStyle: self.colorStyle
+            )
+        )
     }
     
-}
-
-#Preview {
-    let button = MSButton(title: "버튼",
-                          image: .msIcon(.check)) {
-        print("Hello World!")
-    }
-    return button
 }

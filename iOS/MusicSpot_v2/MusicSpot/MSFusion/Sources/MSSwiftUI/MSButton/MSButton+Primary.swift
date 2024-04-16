@@ -1,61 +1,43 @@
 //
-//  MSButton+Primary.swift
-//  MSSwiftUI
+//  File.swift
+//  
 //
-//  Created by 이창준 on 2024.02.19.
+//  Created by 이창준 on 4/16/24.
 //
 
 import SwiftUI
 
+public typealias MSPrimaryButton = MSButton<Primary>
+
+extension MSPrimaryButton {
+    
+    public init(
+        title: String = "",
+        image: Image? = nil,
+        cornerStyle: MSButtonStyle.CornerStyle = .squared,
+        colorStyle: ColorStyle = .brand,
+        action: @escaping () -> Void
+    ) {
+        self.title = title
+        self.image = image
+        self.cornerStyle = cornerStyle
+        self.colorStyle = colorStyle
+        self.action = action
+    }
+    
+}
+
+#if targetEnvironment(simulator)
 import MSDesignSystem
 
-fileprivate struct MSButtonPrimaryModifier: ViewModifier {
-    
-    // MARK: - Properties
-    
-    private let cornerStyle: MSButton.CornerStyle
-    private let isBrandColored: Bool
-    
-    // MARK: - Initializer
-    
-    init(cornerStyle: MSButton.CornerStyle, isBrandColored: Bool) {
-        self.cornerStyle = cornerStyle
-        self.isBrandColored = isBrandColored
+#Preview {
+    MSFont.registerFonts()
+    return MSPrimaryButton(
+        title: "재생",
+        image: .msIcon(.play),
+        cornerStyle: .rounded
+    ) {
+        print("Play")
     }
-    
-    // MARK: - Body
-    
-    public func body(content: Content) -> some View {
-        let backgroundColor: Color = self.isBrandColored
-        ? .msColor(.musicSpot)
-        : .msColor(.primaryButtonBackground)
-        
-        content
-            .foregroundStyle(Color.msColor(.primaryButtonTypo))
-            .background(
-                RoundedRectangle(cornerRadius: self.cornerStyle.cornerRadius, style: .continuous)
-                    .fill(backgroundColor)
-            )
-    }
-    
 }
-
-extension MSButton {
-    
-    public func primary(_ cornerStyle: CornerStyle = .squared,
-                        isBrandColored: Bool = true) -> some View {
-        self.modifier(MSButtonPrimaryModifier(cornerStyle: cornerStyle,
-                                              isBrandColored: isBrandColored))
-    }
-    
-}
-
-#Preview("Rounded") {
-    MSButton(title: "버튼", image: .msIcon(.check))
-        .primary(.rounded)
-}
-
-#Preview("Squared") {
-    MSButton(title: "버튼", image: .msIcon(.check))
-        .primary(.squared)
-}
+#endif
