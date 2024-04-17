@@ -13,11 +13,17 @@ import StateStore
 @Observable
 final class HomeStore: StateStore {
     
+    // MARK: - Action
+    
     enum Action {
         case increaseCounter
     }
     
+    // MARK: - State
+    
     private(set) var counter: Int = .zero
+    
+    // MARK: - Process
     
     func process(_ action: Action) async {
         switch action {
