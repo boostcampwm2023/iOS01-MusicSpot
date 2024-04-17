@@ -26,6 +26,7 @@ private enum Target {
     static let msNetworking = "MSNetworking"
     static let msCacheStorage = "MSCacheStorage"
     static let msKeychainStorage = "MSKeychainStorage"
+    static let stateStore = "StateStore"
     static let versionManager = "VersionManager"
     
 }
@@ -56,6 +57,8 @@ let package = Package(
                  targets: [Target.msCacheStorage]),
         .library(name: Target.msKeychainStorage,
                  targets: [Target.msKeychainStorage]),
+        .library(name: Target.stateStore,
+                 targets: [Target.stateStore]),
         .library(name: Target.versionManager,
                  targets: [Target.versionManager])
     ],
@@ -95,6 +98,7 @@ let package = Package(
                     .product(name: Dependency.msConstants,
                              package: Dependency.msFoundation)
                 ]),
+        .target(name: Target.stateStore),
         .target(name: Target.versionManager,
                 dependencies: [
                     .product(name: Dependency.msLogger,
