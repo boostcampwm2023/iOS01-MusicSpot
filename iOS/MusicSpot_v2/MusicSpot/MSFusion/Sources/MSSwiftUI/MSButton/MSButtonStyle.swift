@@ -14,7 +14,6 @@ public struct MSButtonStyle: ButtonStyle {
     private enum Metric {
         static let height: CGFloat = 60.0
         static let horizontalEdgeInsets: CGFloat = 58.0
-        static let verticalEdgeInsets: CGFloat = 10.0
         static let scaleRatio: CGFloat = 0.87
     }
     
@@ -40,7 +39,6 @@ public struct MSButtonStyle: ButtonStyle {
             .font(.msFont(.buttonTitle))
             .frame(height: Metric.height)
             .padding(.horizontal, Metric.horizontalEdgeInsets)
-            .padding(.vertical, Metric.verticalEdgeInsets)
             .background(
                 configuration.isPressed
                 ? self.colorStyle.backgroundColor.opacity(0.5)
