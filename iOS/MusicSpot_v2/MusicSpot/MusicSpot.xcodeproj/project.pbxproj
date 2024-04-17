@@ -3,14 +3,16 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		FD40A5062BCD55D300518B9F /* MusicSpotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD40A5052BCD55D300518B9F /* MusicSpotApp.swift */; };
-		FD40A5082BCD55D300518B9F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD40A5072BCD55D300518B9F /* ContentView.swift */; };
 		FD40A50A2BCD55D400518B9F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD40A5092BCD55D400518B9F /* Assets.xcassets */; };
 		FD40A50E2BCD55D400518B9F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD40A50D2BCD55D400518B9F /* Preview Assets.xcassets */; };
+		FDA692222BD0122700069E2E /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = FDA692212BD0122700069E2E /* Home */; };
+		FDA692252BD0126900069E2E /* MSSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = FDA692242BD0126900069E2E /* MSSwiftUI */; };
+		FDA692272BD0126900069E2E /* MSUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = FDA692262BD0126900069E2E /* MSUIKit */; };
 		FDDF38852BCD5D76007D1CD2 /* MSFusion in Resources */ = {isa = PBXBuildFile; fileRef = FDDF38842BCD5D76007D1CD2 /* MSFusion */; };
 		FDDF38872BCD5FB0007D1CD2 /* MSCoreKit in Resources */ = {isa = PBXBuildFile; fileRef = FDDF38862BCD5FB0007D1CD2 /* MSCoreKit */; };
 		FDDF388B2BCD5FBC007D1CD2 /* MSDomain in Resources */ = {isa = PBXBuildFile; fileRef = FDDF38882BCD5FBC007D1CD2 /* MSDomain */; };
@@ -21,10 +23,10 @@
 /* Begin PBXFileReference section */
 		FD40A5022BCD55D300518B9F /* MusicSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD40A5052BCD55D300518B9F /* MusicSpotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicSpotApp.swift; sourceTree = "<group>"; };
-		FD40A5072BCD55D300518B9F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FD40A5092BCD55D400518B9F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FD40A50B2BCD55D400518B9F /* MusicSpot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MusicSpot.entitlements; sourceTree = "<group>"; };
 		FD40A50D2BCD55D400518B9F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FDA692282BD0163300069E2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FDDF38832BCD5D23007D1CD2 /* FeatureHome */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FeatureHome; sourceTree = "<group>"; };
 		FDDF38842BCD5D76007D1CD2 /* MSFusion */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MSFusion; sourceTree = "<group>"; };
 		FDDF38862BCD5FB0007D1CD2 /* MSCoreKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MSCoreKit; sourceTree = "<group>"; };
@@ -38,6 +40,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FDA692272BD0126900069E2E /* MSUIKit in Frameworks */,
+				FDA692252BD0126900069E2E /* MSSwiftUI in Frameworks */,
+				FDA692222BD0122700069E2E /* Home in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,8 +74,8 @@
 		FD40A5042BCD55D300518B9F /* MusicSpot */ = {
 			isa = PBXGroup;
 			children = (
+				FDA692282BD0163300069E2E /* Info.plist */,
 				FD40A5052BCD55D300518B9F /* MusicSpotApp.swift */,
-				FD40A5072BCD55D300518B9F /* ContentView.swift */,
 				FD40A5092BCD55D400518B9F /* Assets.xcassets */,
 				FD40A50B2BCD55D400518B9F /* MusicSpot.entitlements */,
 				FD40A50C2BCD55D400518B9F /* Preview Content */,
@@ -111,6 +116,9 @@
 			);
 			name = MusicSpot;
 			packageProductDependencies = (
+				FDA692212BD0122700069E2E /* Home */,
+				FDA692242BD0126900069E2E /* MSSwiftUI */,
+				FDA692262BD0126900069E2E /* MSUIKit */,
 			);
 			productName = MusicSpot;
 			productReference = FD40A5022BCD55D300518B9F /* MusicSpot.app */;
@@ -141,6 +149,8 @@
 			);
 			mainGroup = FD40A4F92BCD55D300518B9F;
 			packageReferences = (
+				FDA692202BD0122700069E2E /* XCLocalSwiftPackageReference "Features/FeatureHome" */,
+				FDA692232BD0126900069E2E /* XCLocalSwiftPackageReference "MSFusion" */,
 			);
 			productRefGroup = FD40A5032BCD55D300518B9F /* Products */;
 			projectDirPath = "";
@@ -173,7 +183,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FD40A5082BCD55D300518B9F /* ContentView.swift in Sources */,
 				FD40A5062BCD55D300518B9F /* MusicSpotApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -308,6 +317,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MusicSpot/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MusicSpot;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -349,6 +359,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MusicSpot/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MusicSpot;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -399,6 +410,32 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		FDA692202BD0122700069E2E /* XCLocalSwiftPackageReference "Features/FeatureHome" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Features/FeatureHome;
+		};
+		FDA692232BD0126900069E2E /* XCLocalSwiftPackageReference "MSFusion" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = MSFusion;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FDA692212BD0122700069E2E /* Home */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Home;
+		};
+		FDA692242BD0126900069E2E /* MSSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSSwiftUI;
+		};
+		FDA692262BD0126900069E2E /* MSUIKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSUIKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FD40A4FA2BCD55D300518B9F /* Project object */;
 }
