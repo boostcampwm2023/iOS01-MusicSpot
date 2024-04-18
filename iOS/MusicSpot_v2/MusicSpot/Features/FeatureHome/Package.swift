@@ -28,11 +28,6 @@ private enum Dependency {
         static let msSwiftUI = "MSSwiftUI"
     }
     
-    enum MSCoreKit {
-        static let package = "MSCoreKit"
-        static let stateStore = "StateStore"
-    }
-    
 }
 
 // MARK: - Package
@@ -52,10 +47,6 @@ let package = Package(
         .package(
             name: Dependency.MSFusion.package,
             path: Dependency.MSFusion.package.fromRootPath
-        ),
-        .package(
-            name: Dependency.MSCoreKit.package,
-            path: Dependency.MSCoreKit.package.fromRootPath
         )
     ],
     targets: [
@@ -65,10 +56,6 @@ let package = Package(
                 .product(
                     name: Dependency.MSFusion.msSwiftUI,
                     package: Dependency.MSFusion.package
-                ),
-                .product(
-                    name: Dependency.MSCoreKit.stateStore,
-                    package: Dependency.MSCoreKit.package
                 )
             ]
         )

@@ -11,8 +11,10 @@
 		FD40A50A2BCD55D400518B9F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD40A5092BCD55D400518B9F /* Assets.xcassets */; };
 		FD40A50E2BCD55D400518B9F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD40A50D2BCD55D400518B9F /* Preview Assets.xcassets */; };
 		FDA692222BD0122700069E2E /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = FDA692212BD0122700069E2E /* Home */; };
-		FDA692252BD0126900069E2E /* MSSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = FDA692242BD0126900069E2E /* MSSwiftUI */; };
-		FDA692272BD0126900069E2E /* MSUIKit in Frameworks */ = {isa = PBXBuildFile; productRef = FDA692262BD0126900069E2E /* MSUIKit */; };
+		FDA692742BD1655700069E2E /* MSSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = FDA692732BD1655700069E2E /* MSSwiftUI */; };
+		FDA692772BD1663A00069E2E /* MSSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = FDA692762BD1663A00069E2E /* MSSwiftUI */; };
+		FDA6927A2BD1667600069E2E /* MSSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = FDA692792BD1667600069E2E /* MSSwiftUI */; };
+		FDA6927D2BD166A100069E2E /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = FDA6927C2BD166A100069E2E /* Home */; };
 		FDDF38852BCD5D76007D1CD2 /* MSFusion in Resources */ = {isa = PBXBuildFile; fileRef = FDDF38842BCD5D76007D1CD2 /* MSFusion */; };
 		FDDF38872BCD5FB0007D1CD2 /* MSCoreKit in Resources */ = {isa = PBXBuildFile; fileRef = FDDF38862BCD5FB0007D1CD2 /* MSCoreKit */; };
 		FDDF388B2BCD5FBC007D1CD2 /* MSDomain in Resources */ = {isa = PBXBuildFile; fileRef = FDDF38882BCD5FBC007D1CD2 /* MSDomain */; };
@@ -40,8 +42,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FDA692272BD0126900069E2E /* MSUIKit in Frameworks */,
-				FDA692252BD0126900069E2E /* MSSwiftUI in Frameworks */,
+				FDA6927A2BD1667600069E2E /* MSSwiftUI in Frameworks */,
+				FDA692742BD1655700069E2E /* MSSwiftUI in Frameworks */,
+				FDA692772BD1663A00069E2E /* MSSwiftUI in Frameworks */,
+				FDA6927D2BD166A100069E2E /* Home in Frameworks */,
 				FDA692222BD0122700069E2E /* Home in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -117,8 +121,10 @@
 			name = MusicSpot;
 			packageProductDependencies = (
 				FDA692212BD0122700069E2E /* Home */,
-				FDA692242BD0126900069E2E /* MSSwiftUI */,
-				FDA692262BD0126900069E2E /* MSUIKit */,
+				FDA692732BD1655700069E2E /* MSSwiftUI */,
+				FDA692762BD1663A00069E2E /* MSSwiftUI */,
+				FDA692792BD1667600069E2E /* MSSwiftUI */,
+				FDA6927C2BD166A100069E2E /* Home */,
 			);
 			productName = MusicSpot;
 			productReference = FD40A5022BCD55D300518B9F /* MusicSpot.app */;
@@ -149,8 +155,8 @@
 			);
 			mainGroup = FD40A4F92BCD55D300518B9F;
 			packageReferences = (
-				FDA692202BD0122700069E2E /* XCLocalSwiftPackageReference "Features/FeatureHome" */,
-				FDA692232BD0126900069E2E /* XCLocalSwiftPackageReference "MSFusion" */,
+				FDA692782BD1667600069E2E /* XCLocalSwiftPackageReference "MSFusion" */,
+				FDA6927B2BD166A100069E2E /* XCLocalSwiftPackageReference "Features/FeatureHome" */,
 			);
 			productRefGroup = FD40A5032BCD55D300518B9F /* Products */;
 			projectDirPath = "";
@@ -224,6 +230,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -285,6 +292,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -312,6 +320,7 @@
 				CODE_SIGN_ENTITLEMENTS = MusicSpot/MusicSpot.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"MusicSpot/Preview Content\"";
 				DEVELOPMENT_TEAM = XW996HTK32;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -354,6 +363,7 @@
 				CODE_SIGN_ENTITLEMENTS = MusicSpot/MusicSpot.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"MusicSpot/Preview Content\"";
 				DEVELOPMENT_TEAM = XW996HTK32;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -412,13 +422,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		FDA692202BD0122700069E2E /* XCLocalSwiftPackageReference "Features/FeatureHome" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = Features/FeatureHome;
-		};
-		FDA692232BD0126900069E2E /* XCLocalSwiftPackageReference "MSFusion" */ = {
+		FDA692782BD1667600069E2E /* XCLocalSwiftPackageReference "MSFusion" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = MSFusion;
+		};
+		FDA6927B2BD166A100069E2E /* XCLocalSwiftPackageReference "Features/FeatureHome" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Features/FeatureHome;
 		};
 /* End XCLocalSwiftPackageReference section */
 
@@ -427,13 +437,21 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = Home;
 		};
-		FDA692242BD0126900069E2E /* MSSwiftUI */ = {
+		FDA692732BD1655700069E2E /* MSSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MSSwiftUI;
 		};
-		FDA692262BD0126900069E2E /* MSUIKit */ = {
+		FDA692762BD1663A00069E2E /* MSSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = MSUIKit;
+			productName = MSSwiftUI;
+		};
+		FDA692792BD1667600069E2E /* MSSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSSwiftUI;
+		};
+		FDA6927C2BD166A100069E2E /* Home */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Home;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
