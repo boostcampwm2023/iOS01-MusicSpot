@@ -7,13 +7,16 @@
 
 import SwiftUI
 
-public enum Secondary: ColorSet {
+public enum SecondaryColors: ColorSet {
     case `default`
+    case brand
     
     public var backgroundColor: Color {
         switch self {
         case .default:
             return .msColor(.primaryButtonBackground)
+        case .brand:
+            return .msColor(.musicSpot)
         }
     }
     
@@ -22,4 +25,3 @@ public enum Secondary: ColorSet {
     }
     
 }
-
