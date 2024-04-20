@@ -21,11 +21,12 @@ private extension String {
 
 private enum Target {
     
-    static let msImageFetcher = "MSImageFetcher"
-    static let msPersistentStorage = "MSPersistentStorage"
-    static let msNetworking = "MSNetworking"
     static let msCacheStorage = "MSCacheStorage"
+    static let msImageFetcher = "MSImageFetcher"
     static let msKeychainStorage = "MSKeychainStorage"
+    static let msLocationManager = "MSLocationManager"
+    static let msNetworking = "MSNetworking"
+    static let msPersistentStorage = "MSPersistentStorage"
     static let versionManager = "VersionManager"
     
 }
@@ -46,6 +47,8 @@ let package = Package(
         .iOS(.v17)
     ],
     products: [
+        .library(name: Target.msLocationManager,
+                 targets: [Target.msLocationManager]),
         .library(name: Target.msImageFetcher,
                  targets: [Target.msImageFetcher]),
         .library(name: Target.msPersistentStorage,
@@ -65,6 +68,11 @@ let package = Package(
     ],
     targets: [
         // Codes
+        .target(name: Target.msLocationManager,
+                dependencies: [
+                    .product(name: Dependency.msLogger,
+                             package: Dependency.msFoundation)
+                ]),
         .target(name: Target.msImageFetcher,
                 dependencies: [
                     .target(name: Target.msCacheStorage),

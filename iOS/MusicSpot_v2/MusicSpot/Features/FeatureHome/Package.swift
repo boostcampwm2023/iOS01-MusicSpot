@@ -28,6 +28,11 @@ private enum Dependency {
         static let msSwiftUI = "MSSwiftUI"
     }
     
+    enum MSCoreKit {
+        static let package = "MSCoreKit"
+        static let msLocationManager = "MSLocationManager"
+    }
+    
 }
 
 // MARK: - Package
@@ -44,20 +49,18 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(
-            name: Dependency.MSFusion.package,
-            path: Dependency.MSFusion.package.fromRootPath
-        )
+        .package(name: Dependency.MSFusion.package,
+                 path: Dependency.MSFusion.package.fromRootPath),
+        .package(name: Dependency.MSCoreKit.package,
+                 path: Dependency.MSCoreKit.package.fromRootPath)
     ],
     targets: [
-        .target(
-            name: Target.home,
-            dependencies: [
-                .product(
-                    name: Dependency.MSFusion.msSwiftUI,
-                    package: Dependency.MSFusion.package
-                )
-            ]
-        )
+        .target(name: Target.home,
+                dependencies: [
+                    .product(name: Dependency.MSFusion.msSwiftUI,
+                             package: Dependency.MSFusion.package),
+                    .product(name: Dependency.MSCoreKit.msLocationManager,
+                             package: Dependency.MSCoreKit.package)
+                ])
     ]
 )
