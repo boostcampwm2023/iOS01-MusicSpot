@@ -14,7 +14,7 @@ public enum SecondaryColors: ColorSet {
     public var backgroundColor: Color {
         switch self {
         case .default:
-            return .msColor(.primaryButtonBackground)
+            return .msColor(.secondaryButtonBackground)
         case .brand:
             return .msColor(.musicSpot)
         }
