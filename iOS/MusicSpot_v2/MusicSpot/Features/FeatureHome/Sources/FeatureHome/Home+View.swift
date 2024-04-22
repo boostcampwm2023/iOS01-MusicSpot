@@ -75,7 +75,7 @@ extension Home: View {
                     .interactiveDismissDisabled()
                 }
             }
-            .ignoresSafeArea(.all, edges: [.bottom, .horizontal])
+            .ignoresSafeArea(.all, edges: .bottom)
         }
     }
     

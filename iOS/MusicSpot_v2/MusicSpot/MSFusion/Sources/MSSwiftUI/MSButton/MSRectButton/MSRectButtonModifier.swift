@@ -40,8 +40,8 @@ internal struct MSRectButtonModifier: ViewModifier {
                     self.isPressed ? 0.5 : 1.0
                 )
             )
-            .clipShape(RoundedRectangle(cornerRadius: self.scale.cornerRadius))
             .foregroundStyle(self.colorStyle.foregroundColor)
+            .clipShape(RoundedRectangle(cornerRadius: self.scale.cornerRadius))
             .scaleEffect(self.isPressed ? Metric.scaleRatio : 1.0)
             .shadow(
                 color: self.colorStyle.foregroundColor.opacity(0.3),
