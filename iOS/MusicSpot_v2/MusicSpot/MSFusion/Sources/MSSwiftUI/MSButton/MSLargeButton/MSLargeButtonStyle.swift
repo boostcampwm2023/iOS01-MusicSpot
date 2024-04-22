@@ -11,10 +11,10 @@ public struct MSLargeButtonStyle: ButtonStyle {
     
     // MARK: - Constants
     
-    private enum Metric {
-        static let height: CGFloat = 60.0
-        static let horizontalEdgeInsets: CGFloat = 58.0
-        static let scaleRatio: CGFloat = 0.94
+    public enum Metric {
+        public static let height: CGFloat = 60.0
+        fileprivate static let horizontalEdgeInsets: CGFloat = 58.0
+        fileprivate static let scaleRatio: CGFloat = 0.94
     }
     
     // MARK: - Properties

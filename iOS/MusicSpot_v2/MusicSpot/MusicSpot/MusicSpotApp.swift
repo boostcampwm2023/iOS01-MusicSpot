@@ -16,7 +16,7 @@ struct MusicSpotApp: App {
     
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            Home()
         }
     }
     
