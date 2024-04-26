@@ -28,20 +28,26 @@ extension Home: View {
     public var body: some View {
         GeometryReader { proxy in
             ZStack(alignment: .topTrailing) {
-                Map(
-                    position: self.$locationManager.position,
-                    bounds: MapCameraBounds(maximumDistance: 2_000)
-                ) {
+                Map(position: self.$locationManager.position, scope: self.mapScope) {
                     UserAnnotation()
                 }
+                .mapControls {
+                    MapScaleView()
+                }
+                .mapStyle(self.selectedMapStyle)
                 
                 VStack {
                     MSRectSecondaryButton(image: .msIcon(.map)) {
                         self.perform(.mapButtonDidTap)
                     }
-                    MSRectSecondaryButton(image: .msIcon(.location)) {
-                        self.perform(.locationButtonDidTap)
-                    }
+                    MapUserLocationButton(scope: self.mapScope)
+                        .tint(.msColor(.secondaryButtonTypo))
+                        .background(Color.msColor(.secondaryButtonBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 8.0))
+                        .shadow(
+                            color: .msColor(.secondaryButtonTypo).opacity(0.3),
+                            radius: 2.5, x: .zero, y: 2.0
+                        )
                 }
                 .padding()
                 
@@ -62,6 +68,7 @@ extension Home: View {
                 }
                 .frame(maxWidth: .infinity)
             }
+            .mapScope(self.mapScope)
             .sheet(isPresented: self.$isPresentingSheet) {
                 GeometryReader { sheetProxy in
                     self.sheetHeight = sheetProxy.size.height

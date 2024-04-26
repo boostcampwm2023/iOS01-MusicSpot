@@ -12,7 +12,6 @@ extension Home {
     enum Action {
         case startButtonDidTap
         case mapButtonDidTap
-        case locationButtonDidTap
     }
     
     func perform(_ action: Action) {
@@ -20,9 +19,7 @@ extension Home {
         case .startButtonDidTap:
             self.handleStartButtonTap()
         case .mapButtonDidTap:
-            print("Map")
-        case .locationButtonDidTap:
-            print("Location")
+            self.isUsingStandardMap.toggle()
         }
     }
     
