@@ -1,5 +1,5 @@
 //
-//  MSButton+Secondary.swift
+//  MSLargeButton+Secondary.swift
 //  MSSwiftUI
 //
 //  Created by 이창준 on 2024.02.20.
@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-public typealias MSSecondaryButton = MSButton<Secondary>
+public typealias MSSecondaryButton = MSLargeButton<SecondaryColors>
 
 extension MSSecondaryButton {
     
     public init(
         title: String = "",
         image: Image? = nil,
-        cornerStyle: MSButtonStyle.CornerStyle = .squared,
+        cornerStyle: MSLargeButtonStyle.CornerStyle = .squared,
         colorStyle: ColorStyle = .default,
         action: @escaping () -> Void
     ) {
@@ -35,7 +35,8 @@ import MSDesignSystem
     return MSSecondaryButton(
         title: "재생",
         image: .msIcon(.play),
-        cornerStyle: .rounded
+        cornerStyle: .rounded,
+        colorStyle: .default
     ) {
         print("Play")
     }

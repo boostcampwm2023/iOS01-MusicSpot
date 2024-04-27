@@ -1,20 +1,20 @@
 //
-//  File.swift
-//  
+//  MSLargeButton+Primary.swift
+//  MSSwiftUI
 //
 //  Created by 이창준 on 4/16/24.
 //
 
 import SwiftUI
 
-public typealias MSPrimaryButton = MSButton<Primary>
+public typealias MSPrimaryButton = MSLargeButton<PrimaryColors>
 
 extension MSPrimaryButton {
     
     public init(
         title: String = "",
         image: Image? = nil,
-        cornerStyle: MSButtonStyle.CornerStyle = .squared,
+        cornerStyle: MSLargeButtonStyle.CornerStyle = .squared,
         colorStyle: ColorStyle = .brand,
         action: @escaping () -> Void
     ) {

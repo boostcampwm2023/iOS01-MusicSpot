@@ -1,5 +1,5 @@
 //
-//  MSButtonStyle.swift
+//  MSLargeButtonStyle.swift
 //  MSSwiftUI
 //
 //  Created by 이창준 on 4/16/24.
@@ -7,15 +7,14 @@
 
 import SwiftUI
 
-public struct MSButtonStyle: ButtonStyle {
+public struct MSLargeButtonStyle: ButtonStyle {
     
     // MARK: - Constants
     
-    private enum Metric {
-        static let height: CGFloat = 60.0
-        static let horizontalEdgeInsets: CGFloat = 58.0
-        static let verticalEdgeInsets: CGFloat = 10.0
-        static let scaleRatio: CGFloat = 0.87
+    public enum Metric {
+        public static let height: CGFloat = 60.0
+        fileprivate static let horizontalEdgeInsets: CGFloat = 58.0
+        fileprivate static let scaleRatio: CGFloat = 0.94
     }
     
     // MARK: - Properties
@@ -40,20 +39,18 @@ public struct MSButtonStyle: ButtonStyle {
             .font(.msFont(.buttonTitle))
             .frame(height: Metric.height)
             .padding(.horizontal, Metric.horizontalEdgeInsets)
-            .padding(.vertical, Metric.verticalEdgeInsets)
             .background(
-                configuration.isPressed
-                ? self.colorStyle.backgroundColor.opacity(0.5)
-                : self.colorStyle.backgroundColor
+                self.colorStyle.backgroundColor.opacity(
+                    configuration.isPressed ? 0.5 : 1.0
+                )
             )
             .clipShape(RoundedRectangle(cornerRadius: self.cornerStyle.cornerRadius))
             .foregroundStyle(self.colorStyle.foregroundColor)
             .scaleEffect(configuration.isPressed ? Metric.scaleRatio : 1.0)
-            .opacity(configuration.isPressed ? 0.9 : 1.0)
-            .shadow(
-                color: self.colorStyle.backgroundColor.opacity(0.3),
-                radius: 10.0, x: .zero, y: 10.0
-            )
+            .sensoryFeedback(.impact, trigger: configuration.isPressed) {
+                oldValue, newValue in
+                oldValue == false
+            }
     }
     
 }

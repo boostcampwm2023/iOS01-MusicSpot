@@ -7,7 +7,7 @@ import PackageDescription
 
 extension String {
     
-    static let package = "FeatureHome"
+    static let package = "Journey"
     
     var fromRootPath: String {
         return "../" + self
@@ -17,20 +17,29 @@ extension String {
 
 private enum Target {
     
-    static let home = "Home"
+    static let journey = "Journey"
     
 }
 
 private enum Dependency {
     
+    enum MSDomain {
+        static let package = "MSDomain"
+    }
+    
+    enum MSData {
+        static let package = "MSData"
+    }
+    
     enum MSFusion {
         static let package = "MSFusion"
         static let msSwiftUI = "MSSwiftUI"
+        static let msUIKit = "MSUIKit"
     }
     
     enum MSCoreKit {
         static let package = "MSCoreKit"
-        static let stateStore = "StateStore"
+        static let msLocationManager = "MSLocationManager"
     }
     
 }
@@ -44,31 +53,41 @@ let package = Package(
     ],
     products: [
         .library(
-            name: Target.home,
-            targets: [Target.home]
+            name: Target.journey,
+            targets: [
+                Target.journey
+            ]
         ),
     ],
     dependencies: [
+        .package(
+            name: Dependency.MSDomain.package,
+            path: Dependency.MSDomain.package.fromRootPath
+        ),
         .package(
             name: Dependency.MSFusion.package,
             path: Dependency.MSFusion.package.fromRootPath
         ),
         .package(
-            name: Dependency.MSCoreKit.package,
-            path: Dependency.MSCoreKit.package.fromRootPath
+            name: Dependency.MSData.package,
+            path: Dependency.MSData.package.fromRootPath
         )
     ],
     targets: [
         .target(
-            name: Target.home,
+            name: Target.journey,
             dependencies: [
                 .product(
-                    name: Dependency.MSFusion.msSwiftUI,
-                    package: Dependency.MSFusion.package
+                    name: Dependency.MSDomain.package,
+                    package: Dependency.MSDomain.package
                 ),
                 .product(
-                    name: Dependency.MSCoreKit.stateStore,
-                    package: Dependency.MSCoreKit.package
+                    name: Dependency.MSData.package,
+                    package: Dependency.MSData.package
+                ),
+                .product(
+                    name: Dependency.MSFusion.msUIKit,
+                    package: Dependency.MSFusion.package
                 )
             ]
         )

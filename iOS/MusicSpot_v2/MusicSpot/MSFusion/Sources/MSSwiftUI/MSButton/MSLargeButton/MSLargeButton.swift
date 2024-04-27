@@ -1,5 +1,5 @@
 //
-//  MSButton.swift
+//  MSLargeButton.swift
 //  MSSwiftUI
 //
 //  Created by 이창준 on 4/15/24.
@@ -10,7 +10,7 @@ import SwiftUI
 import MSExtension
 
 @MainActor
-public struct MSButton<ColorStyle: ColorSet>: View {
+public struct MSLargeButton<ColorStyle: ColorSet>: View {
     
     // MARK: - Constants
     
@@ -22,25 +22,9 @@ public struct MSButton<ColorStyle: ColorSet>: View {
     
     internal let title: String
     internal let image: Image?
-    internal let cornerStyle: MSButtonStyle.CornerStyle
+    internal let cornerStyle: MSLargeButtonStyle.CornerStyle
     internal let colorStyle: ColorStyle
     internal let action: () -> Void
-    
-    // MARK: - Initializer
-    
-    public init(
-        title: String = "",
-        image: Image? = nil,
-        cornerStyle: MSButtonStyle.CornerStyle = .squared,
-        colorStyle: ColorStyle,
-        action: @escaping () -> Void
-    ) {
-        self.title = title
-        self.image = image
-        self.cornerStyle = cornerStyle
-        self.colorStyle = colorStyle
-        self.action = action
-    }
     
     // MARK: - Body
     
@@ -59,7 +43,7 @@ public struct MSButton<ColorStyle: ColorSet>: View {
             }
         }
         .buttonStyle(
-            MSButtonStyle(
+            MSLargeButtonStyle(
                 cornerStyle: self.cornerStyle,
                 colorStyle: self.colorStyle
             )

@@ -1,13 +1,13 @@
 //
-//  MSButtonStyle+CornerStyle.swift
+//  MSLargeButtonStyle+CornerStyle.swift
 //  MSSwiftUI
 //
 //  Created by 이창준 on 4/16/24.
 //
 
-import Foundation
+import CoreGraphics
 
-extension MSButtonStyle {
+extension MSLargeButtonStyle {
     
     public enum CornerStyle {
         case squared
