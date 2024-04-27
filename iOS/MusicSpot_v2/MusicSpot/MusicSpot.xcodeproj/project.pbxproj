@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FD09AF242BDC997C00DDB283 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = FD09AF232BDC997C00DDB283 /* Home */; };
 		FD40A5062BCD55D300518B9F /* MusicSpotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD40A5052BCD55D300518B9F /* MusicSpotApp.swift */; };
 		FD40A50A2BCD55D400518B9F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD40A5092BCD55D400518B9F /* Assets.xcassets */; };
 		FD40A50E2BCD55D400518B9F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD40A50D2BCD55D400518B9F /* Preview Assets.xcassets */; };
@@ -23,13 +24,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FD09AF202BDC98EF00DDB283 /* JourneyList */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = JourneyList; sourceTree = "<group>"; };
+		FD09AF212BDC996100DDB283 /* Home */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Home; sourceTree = "<group>"; };
 		FD40A5022BCD55D300518B9F /* MusicSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD40A5052BCD55D300518B9F /* MusicSpotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicSpotApp.swift; sourceTree = "<group>"; };
 		FD40A5092BCD55D400518B9F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FD40A50B2BCD55D400518B9F /* MusicSpot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MusicSpot.entitlements; sourceTree = "<group>"; };
 		FD40A50D2BCD55D400518B9F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		FDA692282BD0163300069E2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		FDDF38832BCD5D23007D1CD2 /* FeatureHome */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FeatureHome; sourceTree = "<group>"; };
 		FDDF38842BCD5D76007D1CD2 /* MSFusion */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MSFusion; sourceTree = "<group>"; };
 		FDDF38862BCD5FB0007D1CD2 /* MSCoreKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MSCoreKit; sourceTree = "<group>"; };
 		FDDF38882BCD5FBC007D1CD2 /* MSDomain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MSDomain; sourceTree = "<group>"; };
@@ -47,6 +49,7 @@
 				FDA692772BD1663A00069E2E /* MSSwiftUI in Frameworks */,
 				FDA6927D2BD166A100069E2E /* Home in Frameworks */,
 				FDA692222BD0122700069E2E /* Home in Frameworks */,
+				FD09AF242BDC997C00DDB283 /* Home in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,7 +101,8 @@
 		FDD0C7FE2BCD5B73004FB9C0 /* Features */ = {
 			isa = PBXGroup;
 			children = (
-				FDDF38832BCD5D23007D1CD2 /* FeatureHome */,
+				FD09AF212BDC996100DDB283 /* Home */,
+				FD09AF202BDC98EF00DDB283 /* JourneyList */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -125,6 +129,7 @@
 				FDA692762BD1663A00069E2E /* MSSwiftUI */,
 				FDA692792BD1667600069E2E /* MSSwiftUI */,
 				FDA6927C2BD166A100069E2E /* Home */,
+				FD09AF232BDC997C00DDB283 /* Home */,
 			);
 			productName = MusicSpot;
 			productReference = FD40A5022BCD55D300518B9F /* MusicSpot.app */;
@@ -156,7 +161,7 @@
 			mainGroup = FD40A4F92BCD55D300518B9F;
 			packageReferences = (
 				FDA692782BD1667600069E2E /* XCLocalSwiftPackageReference "MSFusion" */,
-				FDA6927B2BD166A100069E2E /* XCLocalSwiftPackageReference "Features/FeatureHome" */,
+				FD09AF222BDC997C00DDB283 /* XCLocalSwiftPackageReference "Features/Home" */,
 			);
 			productRefGroup = FD40A5032BCD55D300518B9F /* Products */;
 			projectDirPath = "";
@@ -424,17 +429,21 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
+		FD09AF222BDC997C00DDB283 /* XCLocalSwiftPackageReference "Features/Home" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Features/Home;
+		};
 		FDA692782BD1667600069E2E /* XCLocalSwiftPackageReference "MSFusion" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = MSFusion;
 		};
-		FDA6927B2BD166A100069E2E /* XCLocalSwiftPackageReference "Features/FeatureHome" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = Features/FeatureHome;
-		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		FD09AF232BDC997C00DDB283 /* Home */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Home;
+		};
 		FDA692212BD0122700069E2E /* Home */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Home;

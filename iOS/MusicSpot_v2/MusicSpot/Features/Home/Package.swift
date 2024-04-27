@@ -7,7 +7,7 @@ import PackageDescription
 
 extension String {
     
-    static let package = "FeatureHome"
+    static let package = "Home"
     
     var fromRootPath: String {
         return "../" + self
