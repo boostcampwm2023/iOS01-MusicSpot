@@ -24,8 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		FD09AF202BDC98EF00DDB283 /* JourneyList */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = JourneyList; sourceTree = "<group>"; };
 		FD09AF212BDC996100DDB283 /* Home */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Home; sourceTree = "<group>"; };
+		FD09AF252BDC9A8000DDB283 /* Journey */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Journey; sourceTree = "<group>"; };
 		FD40A5022BCD55D300518B9F /* MusicSpot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicSpot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD40A5052BCD55D300518B9F /* MusicSpotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicSpotApp.swift; sourceTree = "<group>"; };
 		FD40A5092BCD55D400518B9F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -101,8 +101,8 @@
 		FDD0C7FE2BCD5B73004FB9C0 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				FD09AF252BDC9A8000DDB283 /* Journey */,
 				FD09AF212BDC996100DDB283 /* Home */,
-				FD09AF202BDC98EF00DDB283 /* JourneyList */,
 			);
 			path = Features;
 			sourceTree = "<group>";
