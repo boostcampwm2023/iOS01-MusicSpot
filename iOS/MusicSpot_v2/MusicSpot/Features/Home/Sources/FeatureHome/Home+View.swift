@@ -8,6 +8,7 @@
 import MapKit
 import SwiftUI
 
+import Journey
 import MSSwiftUI
 
 @MainActor
@@ -72,14 +73,13 @@ extension Home: View {
             .sheet(isPresented: self.$isPresentingSheet) {
                 GeometryReader { sheetProxy in
                     self.sheetHeight = sheetProxy.size.height
-                    return VStack {
-                        
-                    }
-                    .presentationDetents([.height(60.0), .medium, .fraction(0.99)])
-                    .presentationCornerRadius(20.0)
-                    .presentationBackground(Color.msColor(.primaryBackground))
-                    .presentationBackgroundInteraction(.enabled(upThrough: .medium))
-                    .interactiveDismissDisabled()
+                    return JourneyList()
+                        // FIXME: 최소화 모드 폰트 크기 조정에 따라 동적 조정 필요
+                        .presentationDetents([.height(90.0), .medium, .fraction(0.99)])
+                        .presentationCornerRadius(20.0)
+                        .presentationBackground(Color.msColor(.primaryBackground))
+                        .presentationBackgroundInteraction(.enabled(upThrough: .medium))
+                        .interactiveDismissDisabled()
                 }
             }
             .ignoresSafeArea(.all, edges: .bottom)

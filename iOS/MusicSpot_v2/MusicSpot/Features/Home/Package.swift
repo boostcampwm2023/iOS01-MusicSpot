@@ -13,6 +13,10 @@ extension String {
         return "../" + self
     }
     
+    var fromFeaturePath: String {
+        return "../Features/" + self
+    }
+    
 }
 
 private enum Target {
@@ -22,6 +26,10 @@ private enum Target {
 }
 
 private enum Dependency {
+    
+    enum Feature {
+        static let journey = "Journey"
+    }
     
     enum MSFusion {
         static let package = "MSFusion"
@@ -49,18 +57,36 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(name: Dependency.MSFusion.package,
-                 path: Dependency.MSFusion.package.fromRootPath),
-        .package(name: Dependency.MSCoreKit.package,
-                 path: Dependency.MSCoreKit.package.fromRootPath)
+        .package(
+            name: Dependency.Feature.journey,
+            path: Dependency.Feature.journey.fromFeaturePath
+        ),
+        .package(
+            name: Dependency.MSFusion.package,
+            path: Dependency.MSFusion.package.fromRootPath
+        ),
+        .package(
+            name: Dependency.MSCoreKit.package,
+            path: Dependency.MSCoreKit.package.fromRootPath
+        )
     ],
     targets: [
-        .target(name: Target.home,
-                dependencies: [
-                    .product(name: Dependency.MSFusion.msSwiftUI,
-                             package: Dependency.MSFusion.package),
-                    .product(name: Dependency.MSCoreKit.msLocationManager,
-                             package: Dependency.MSCoreKit.package)
-                ])
+        .target(
+            name: Target.home,
+            dependencies: [
+                .product(
+                    name: Dependency.Feature.journey,
+                    package: Dependency.Feature.journey
+                ),
+                .product(
+                    name: Dependency.MSFusion.msSwiftUI,
+                    package: Dependency.MSFusion.package
+                ),
+                .product(
+                    name: Dependency.MSCoreKit.msLocationManager,
+                    package: Dependency.MSCoreKit.package
+                )
+            ]
+        )
     ]
 )
