@@ -18,6 +18,8 @@ extension String {
 private enum Target {
     
     static let msDomain = "MSDomain"
+    static let entity = "Entity"
+    static let usecase = "UseCase"
     
 }
 
@@ -29,11 +31,25 @@ let package = Package(
         .iOS(.v17)
     ],
     products: [
-        .library(name: Target.msDomain,
-                 targets: [Target.msDomain])
+        .library(
+            name: Target.msDomain,
+            targets: [
+                Target.entity,
+                Target.msDomain,
+                Target.usecase
+            ]
+        )
     ],
     targets: [
-        .target(name: Target.msDomain)
-    ],
-    swiftLanguageVersions: [.v5]
+        .target(name: Target.entity),
+        .target(name: Target.msDomain),
+        .target(
+            name: Target.usecase,
+            dependencies: [
+                .target(
+                    name: Target.entity
+                )
+            ]
+        )
+    ]
 )
