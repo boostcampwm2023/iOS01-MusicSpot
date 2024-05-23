@@ -138,14 +138,13 @@ private extension RecordingJourneyStorage {
               let startTimestamp = self.fetchStartTimeStamp() else {
             return nil
         }
-        return Journey(
-            id: id,
-            title: title,
-            date: (start: startTimestamp, end: nil),
-            coordinates: self.fetchCoordinates(),
-            spots: self.fetchSpots(),
-            playlist: []
-        )
+        return Journey(id: id,
+                       title: title,
+                       date: (start: startTimestamp, end: nil),
+                       coordinates: self.fetchCoordinates(),
+                       spots: self.fetchSpots(),
+                       playlist: [],
+                       isTraveling: true)
     }
     
     func fetchStartTimeStamp() -> Date? {

@@ -19,6 +19,7 @@ public struct Journey: Identifiable {
     public let spots: [Spot]
     public let coordinates: [Coordinate]
     public let playlist: Playlist
+    public let isTraveling: Bool
     
     // MARK: - Initializer
     
@@ -27,13 +28,15 @@ public struct Journey: Identifiable {
                 date: (start: Date, end: Date?),
                 coordinates: [Coordinate],
                 spots: [Spot],
-                playlist: Playlist) {
+                playlist: Playlist,
+                isTraveling: Bool) {
         self.id = id
         self.title = title
         self.date = date
         self.spots = spots
         self.coordinates = coordinates
         self.playlist = playlist
+        self.isTraveling = isTraveling
     }
     
 }
@@ -60,6 +63,7 @@ extension Journey: CustomStringConvertible {
         return """
         Journey
         - title: \(self.title ?? "")
+        - state: \(self.isTraveling ? "🏃‍♂️ Traveling" : "😴 Finished")
         - date:
           - start: \(self.date.start)
           - end: \(self.date.end ?? .distantFuture)

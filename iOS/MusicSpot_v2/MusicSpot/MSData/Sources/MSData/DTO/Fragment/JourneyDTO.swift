@@ -75,7 +75,8 @@ extension JourneyDTO {
                        date: (start: self.metadata.startTimestamp, end: self.metadata.endTimestamp),
                        coordinates: self.coordinates.map { $0.toDomain() },
                        spots: self.spots.map { $0.toDomain() },
-                       playlist: [])
+                       playlist: [],
+                       isTraveling: false)
     }
     
 }

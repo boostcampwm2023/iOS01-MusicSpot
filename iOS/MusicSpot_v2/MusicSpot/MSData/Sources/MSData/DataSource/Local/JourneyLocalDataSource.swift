@@ -19,6 +19,7 @@ final class JourneyLocalDataSource: EntityConvertible {
     var title: String
     var startDate: Date
     var endDate: Date?
+    var isTraveling: Bool
     
     var coordinates: [CoordinateLocalDataSource] = []
     @Relationship(deleteRule: .cascade, inverse: \SpotLocalDataSource.journey)
@@ -28,9 +29,10 @@ final class JourneyLocalDataSource: EntityConvertible {
     
     // MARK: - Initializer
     
-    init(title: String, startDate: Date = .now) {
+    init(title: String, startDate: Date = .now, isTraveling: Bool = true) {
         self.title = title
         self.startDate = startDate
+        self.isTraveling = isTraveling
     }
     
     // MARK: - Entity Convertible
@@ -39,6 +41,7 @@ final class JourneyLocalDataSource: EntityConvertible {
         self.title = entity.title ?? ""
         self.startDate = entity.date.start
         self.endDate = entity.date.end
+        self.isTraveling = entity.isTraveling
     }
     
     public func toEntity() -> Journey {
@@ -48,7 +51,8 @@ final class JourneyLocalDataSource: EntityConvertible {
             date: (start: self.startDate, end: self.endDate),
             coordinates: self.coordinates.map { $0.toEntity() },
             spots: self.spots.map { $0.toEntity() },
-            playlist: self.playlist.map { $0.toEntity() }
+            playlist: self.playlist.map { $0.toEntity() },
+            isTraveling: self.isTraveling
         )
     }
     

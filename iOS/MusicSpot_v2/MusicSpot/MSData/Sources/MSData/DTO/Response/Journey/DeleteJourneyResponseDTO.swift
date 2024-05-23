@@ -57,7 +57,8 @@ extension DeleteJourneyResponseDTO {
                        date: (start: self.metadata.startTimestamp, end: nil),
                        coordinates: self.coordinates.map { $0.toDomain() },
                        spots: self.spots.map { $0.toDomain() },
-                       playlist: [])
+                       playlist: [],
+                       isTraveling: false)
     }
     
 }

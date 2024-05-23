@@ -37,7 +37,8 @@ extension RecordingJourneyDTO {
                        date: (start: self.startTimestamp, end: nil),
                        coordinates: self.coordinates.map { $0.toDomain() },
                        spots: self.spots.map { $0.toDomain() },
-                       playlist: [])
+                       playlist: [],
+                       isTraveling: true)
     }
     
 }
