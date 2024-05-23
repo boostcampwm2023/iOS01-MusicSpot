@@ -7,6 +7,8 @@
 
 import Foundation
 
+public typealias Playlist = [Music]
+
 public struct Music: Identifiable {
     
     // MARK: - Properties
