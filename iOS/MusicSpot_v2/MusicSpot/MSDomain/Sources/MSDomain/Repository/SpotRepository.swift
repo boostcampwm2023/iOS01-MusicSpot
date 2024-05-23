@@ -7,6 +7,8 @@
 
 import Foundation
 
+import Entity
+
 public protocol SpotRepository {
     
     func fetchRecordingSpots() async -> Result<[Spot], Error>

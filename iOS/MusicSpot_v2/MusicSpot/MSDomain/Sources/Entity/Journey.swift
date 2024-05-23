@@ -7,31 +7,33 @@
 
 import Foundation
 
+public typealias Playlist = [Music]
+
 public struct Journey: Identifiable {
     
     // MARK: - Properties
     
     public let id: String
-    public let title: String
-    public let date: (start: Date, end: Date)
+    public let title: String?
+    public let date: (start: Date, end: Date?)
     public let spots: [Spot]
     public let coordinates: [Coordinate]
-    public let music: Music
+    public let playlist: Playlist
     
     // MARK: - Initializer
     
     public init(id: String,
-                title: String,
-                date: (start: Date, end: Date),
-                spots: [Spot],
+                title: String?,
+                date: (start: Date, end: Date?),
                 coordinates: [Coordinate],
-                music: Music) {
+                spots: [Spot],
+                playlist: Playlist) {
         self.id = id
         self.title = title
         self.date = date
         self.spots = spots
         self.coordinates = coordinates
-        self.music = music
+        self.playlist = playlist
     }
     
 }
@@ -57,10 +59,10 @@ extension Journey: CustomStringConvertible {
     public var description: String {
         return """
         Journey
-        - title: \(self.title)
+        - title: \(self.title ?? "")
         - date:
           - start: \(self.date.start)
-          - end: \(self.date.end)
+          - end: \(self.date.end ?? .distantFuture)
         """
     }
     

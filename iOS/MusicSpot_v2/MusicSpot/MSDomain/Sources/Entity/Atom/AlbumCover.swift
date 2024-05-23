@@ -11,15 +11,15 @@ public struct AlbumCover {
     
     // MARK: - Properties
     
-    public let width: Int
-    public let height: Int
+    public let width: UInt32
+    public let height: UInt32
     public let url: URL?
     public let backgroundColor: String?
     
     // MARK: - Initializer
     
-    public init(width: Int,
-                height: Int,
+    public init(width: UInt32,
+                height: UInt32,
                 url: URL?,
                 backgroundColor: String?) {
         self.width = width

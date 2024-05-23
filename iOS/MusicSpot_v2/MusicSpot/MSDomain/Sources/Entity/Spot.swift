@@ -13,16 +13,16 @@ public struct Spot {
     
     public let coordinate: Coordinate
     public let timestamp: Date
-    public let photoURL: URL
+    public let photoURLs: [URL]
     
     // MARK: - Initializer
     
     public init(coordinate: Coordinate,
                 timestamp: Date,
-                photoURL: URL) {
+                photoURLs: [URL]) {
         self.coordinate = coordinate
         self.timestamp = timestamp
-        self.photoURL = photoURL
+        self.photoURLs = photoURLs
     }
     
 }
@@ -63,8 +63,8 @@ extension Spot: CustomStringConvertible {
         Coordinate:
           - latitude: \(self.coordinate.latitude)
           - longitude: \(self.coordinate.longitude)
-        PhotoURL
-          - \(self.photoURL.absoluteString)
+        PhotoURLs
+          - x\(self.photoURLs.count)
         Timestamp
           - \(self.timestamp)
         """

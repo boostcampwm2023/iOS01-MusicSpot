@@ -42,13 +42,16 @@ let package = Package(
     ],
     targets: [
         .target(name: Target.entity),
-        .target(name: Target.msDomain),
+        .target(
+            name: Target.msDomain,
+            dependencies: [
+                .target(name: Target.entity)
+            ]
+        ),
         .target(
             name: Target.usecase,
             dependencies: [
-                .target(
-                    name: Target.entity
-                )
+                .target(name: Target.entity)
             ]
         )
     ]

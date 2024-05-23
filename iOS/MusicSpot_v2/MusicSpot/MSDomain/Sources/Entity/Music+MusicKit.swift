@@ -22,12 +22,12 @@ extension Music {
 extension AlbumCover {
     
     public init?(_ artwork: Artwork?,
-                 width: Int = 500,
-                 height: Int = 500) {
+                 width: UInt32 = 500,
+                 height: UInt32 = 500) {
         guard let artwork else { return nil }
         self.init(width: width,
                   height: height,
-                  url: artwork.url(width: width, height: height),
+                  url: artwork.url(width: Int(width), height: Int(height)),
                   backgroundColor: artwork.backgroundColor?.hexValue)
     }
     

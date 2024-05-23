@@ -13,14 +13,14 @@ public struct Music: Identifiable {
     
     public let id: String
     public let title: String
-    public let artist: String
+    public let artist: String?
     public let albumCover: AlbumCover?
     
     // MARK: - Initializer
     
     public init(id: String,
                 title: String,
-                artist: String,
+                artist: String?,
                 albumCover: AlbumCover?) {
         self.id = id
         self.title = title

@@ -11,8 +11,6 @@ import Entity
 
 public final class JourneyUseCase: JourneyUseCaseProtocol {
     
-    public func fetchJourneyList(in area: Area) {
-        // 
-    }
+    
     
 }

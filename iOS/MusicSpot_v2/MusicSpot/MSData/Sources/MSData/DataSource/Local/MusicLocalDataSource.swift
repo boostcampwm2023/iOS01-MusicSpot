@@ -7,8 +7,11 @@
 
 import SwiftData
 
+import Entity
+
 @Model
-final class MusicLocalDataSource {
+final class MusicLocalDataSource: EntityConvertible {
+    typealias Entity = Music
     
     // MARK: - Relationships
     
@@ -18,12 +21,31 @@ final class MusicLocalDataSource {
     
     var title: String
     var artist: String?
-    var albumCover: AlbumCover?
+    var albumCover: AlbumCoverLocalDataSource?
     
     // MARK: - Initializer
     
     init(title: String) {
         self.title = title
+    }
+    
+    // MARK: - Entity Convertible
+    
+    public init(from entity: Music) {
+        self.title = entity.title
+        self.artist = entity.artist
+        if let albumCover = entity.albumCover {
+            self.albumCover = AlbumCoverLocalDataSource(from: albumCover)
+        }
+    }
+    
+    public func toEntity() -> Music {
+        return Music(
+            id: "",
+            title: self.title,
+            artist: self.artist,
+            albumCover: self.albumCover?.toEntity()
+        )
     }
     
 }

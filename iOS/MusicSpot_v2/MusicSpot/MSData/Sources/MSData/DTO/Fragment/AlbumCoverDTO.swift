@@ -45,6 +45,7 @@ extension AlbumCoverDTO: Codable {
 
 // MARK: - Domain Mapping
 
+import Entity
 import MSDomain
 
 extension AlbumCoverDTO {
@@ -52,15 +53,15 @@ extension AlbumCoverDTO {
     public init?(_ domain: AlbumCover?) {
         guard let domain else { return nil }
         
-        self.width = domain.width
-        self.height = domain.height
+        self.width = Int(domain.width)
+        self.height = Int(domain.height)
         self.url = domain.url
         self.backgroundColor = domain.backgroundColor
     }
     
     public func toDomain() -> AlbumCover {
-        return AlbumCover(width: self.width,
-                          height: self.height,
+        return AlbumCover(width: UInt32(self.width),
+                          height: UInt32(self.height),
                           url: self.url,
                           backgroundColor: self.backgroundColor)
     }

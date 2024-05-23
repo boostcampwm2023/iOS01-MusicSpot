@@ -11,6 +11,6 @@ import Entity
 
 public protocol JourneyUseCaseProtocol {
     
-    func fetchJourneyList(in area: Area)
+    
     
 }

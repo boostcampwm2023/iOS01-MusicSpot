@@ -13,16 +13,16 @@ public struct SpotDTO {
     
     public let coordinate: CoordinateDTO
     public let timestamp: Date
-    public let photoURL: URL
+    public let photoURLs: [URL]
     
     // MARK: - Initializer
     
     public init(coordinate: CoordinateDTO,
                 timestamp: Date,
-                photoURL: URL) {
+                photoURLs: [URL]) {
         self.coordinate = coordinate
         self.timestamp = timestamp
-        self.photoURL = photoURL
+        self.photoURLs = photoURLs
     }
     
 }
@@ -34,13 +34,14 @@ extension SpotDTO: Codable {
     enum CodingKeys: String, CodingKey {
         case coordinate
         case timestamp
-        case photoURL = "photoUrl"
+        case photoURLs = "photoUrls"
     }
     
 }
 
 // MARK: - Domain Mapping
 
+import Entity
 import MSDomain
 
 extension SpotDTO {
@@ -48,13 +49,13 @@ extension SpotDTO {
     public init(_ domain: Spot) {
         self.coordinate = CoordinateDTO(domain.coordinate)
         self.timestamp = domain.timestamp
-        self.photoURL = domain.photoURL
+        self.photoURLs = domain.photoURLs
     }
     
     public func toDomain() -> Spot {
         return Spot(coordinate: self.coordinate.toDomain(),
                     timestamp: self.timestamp,
-                    photoURL: self.photoURL)
+                    photoURLs: self.photoURLs)
     }
     
 }

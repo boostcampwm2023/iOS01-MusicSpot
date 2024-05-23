@@ -16,7 +16,7 @@ public struct JourneyDTO: Identifiable {
     public let title: String
     public let spots: [SpotDTO]
     public let coordinates: [CoordinateDTO]
-    public let song: SongDTO
+    public let playlist: [SongDTO]
     
     // MARK: - Initializer
     
@@ -25,13 +25,13 @@ public struct JourneyDTO: Identifiable {
                 title: String,
                 spots: [SpotDTO],
                 coordinates: [CoordinateDTO],
-                song: SongDTO) {
+                playlist: [SongDTO]) {
         self.id = id
         self.metadata = metadata
         self.title = title
         self.spots = spots
         self.coordinates = coordinates
-        self.song = song
+        self.playlist = playlist
     }
     
 }
@@ -46,13 +46,14 @@ extension JourneyDTO: Codable {
         case title
         case spots
         case coordinates
-        case song
+        case playlist
     }
     
 }
 
 // MARK: - Domain Mapping
 
+import Entity
 import MSDomain
 
 extension JourneyDTO {
@@ -60,20 +61,21 @@ extension JourneyDTO {
     public init(_ domain: Journey) {
         self.id = domain.id
         self.metadata = JourneyMetadataDTO(startTimestamp: domain.date.start,
-                                           endTimestamp: domain.date.end)
-        self.title = domain.title
+                                           endTimestamp: domain.date.end ?? .distantFuture)
+        self.title = domain.title ?? ""
         self.spots = domain.spots.map { SpotDTO($0) }
         self.coordinates = domain.coordinates.map { CoordinateDTO($0) }
-        self.song = SongDTO(domain.music)
+        self.playlist = domain.playlist.map { SongDTO($0) }
     }
     
     public func toDomain() -> Journey {
+        // TODO: 바뀐 Journey 적용
         return Journey(id: self.id,
                        title: self.title,
                        date: (start: self.metadata.startTimestamp, end: self.metadata.endTimestamp),
-                       spots: self.spots.map { $0.toDomain() },
                        coordinates: self.coordinates.map { $0.toDomain() },
-                       music: self.song.toDomain())
+                       spots: self.spots.map { $0.toDomain() },
+                       playlist: [])
     }
     
 }

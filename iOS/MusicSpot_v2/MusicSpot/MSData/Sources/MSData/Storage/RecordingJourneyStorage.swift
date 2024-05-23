@@ -7,6 +7,7 @@
 
 import Foundation
 
+import Entity
 import MSConstants
 import MSDomain
 import MSLogger
@@ -33,7 +34,7 @@ public struct RecordingJourneyStorage {
     }
     
     /// 기록중인 여정 정보
-    public var currentState: RecordingJourney? {
+    public var currentState: Journey? {
         return self.fetchRecordingJourney()
     }
     
@@ -49,7 +50,7 @@ public struct RecordingJourneyStorage {
     
     // MARK: - Functions
     
-    public mutating func start(initialData recordingJourney: RecordingJourney) {
+    public mutating func start(initialData journey: Journey) {
         defer { self.isRecording = true }
         
         // 삭제되지 않은 이전 여정 기록이 남아있다면 삭제
@@ -62,13 +63,13 @@ public struct RecordingJourneyStorage {
             }
         }
         
-        self.recordingJourneyID = recordingJourney.id
+        self.recordingJourneyID = journey.id
         
-        if let startTimestampKey = self.key(recordingJourney.id,
+        if let startTimestampKey = self.key(journey.id,
                                             forProperty: \.startTimestamp) {
-            self.storage.set(value: recordingJourney.startTimestamp,
+            self.storage.set(value: journey.date.start,
                              forKey: startTimestampKey,
-                             subpath: recordingJourney.id)
+                             subpath: journey.id)
         } else {
             MSLogger.make(category: .recordingJourneyStorage)
                 .warning("Start Timestamp에 대한 기록이 실패했습니다.")
@@ -131,15 +132,20 @@ private extension RecordingJourneyStorage {
         }
     }
     
-    func fetchRecordingJourney() -> RecordingJourney? {
+    func fetchRecordingJourney() -> Journey? {
         guard let id = self.id,
+              let title = self.currentState?.title,
               let startTimestamp = self.fetchStartTimeStamp() else {
             return nil
         }
-        return RecordingJourney(id: id,
-                                startTimestamp: startTimestamp,
-                                spots: self.fetchSpots(),
-                                coordinates: self.fetchCoordinates())
+        return Journey(
+            id: id,
+            title: title,
+            date: (start: startTimestamp, end: nil),
+            coordinates: self.fetchCoordinates(),
+            spots: self.fetchSpots(),
+            playlist: []
+        )
     }
     
     func fetchStartTimeStamp() -> Date? {

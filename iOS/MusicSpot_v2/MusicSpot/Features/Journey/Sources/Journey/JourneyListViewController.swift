@@ -8,6 +8,7 @@
 import Combine
 import UIKit
 
+import Entity
 import MSData
 import MSDomain
 import MSUIKit
@@ -164,13 +165,11 @@ extension JourneyListViewController: UICollectionViewDelegate {
     
     private func configureDataSource() -> JourneyListDataSource {
         let cellRegistration = JourneyCellRegistration { cell, indexPath, itemIdentifier in
-            let cellModel = JourneyCellModel(location: itemIdentifier.title,
-                                             date: itemIdentifier.date.start,
-                                             songTitle: itemIdentifier.music.title,
-                                             songArtist: itemIdentifier.music.artist)
+            let cellModel = JourneyCellModel(location: itemIdentifier.title ?? "",
+                                             date: itemIdentifier.date.start)
             cell.update(with: cellModel)
             let photoURLs = itemIdentifier.spots
-                .map { $0.photoURL }
+                .flatMap { $0.photoURLs }
             
             cell.updateImages(with: photoURLs, for: indexPath)
         }
@@ -200,7 +199,7 @@ extension JourneyListViewController: UICollectionViewDelegate {
                                didSelectItemAt indexPath: IndexPath) {
         guard let journey = self.dataSource?.itemIdentifier(for: indexPath) else { return }
         
-        let spotPhotoURLs = journey.spots.map { $0.photoURL }
+        let spotPhotoURLs = journey.spots.flatMap { $0.photoURLs }
 //        self.navigationDelegate?.navigateToRewindJourney(with: spotPhotoURLs, music: journey.music)
     }
     

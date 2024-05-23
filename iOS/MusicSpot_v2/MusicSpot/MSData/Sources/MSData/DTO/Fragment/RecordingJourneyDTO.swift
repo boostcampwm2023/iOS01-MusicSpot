@@ -18,22 +18,26 @@ public struct RecordingJourneyDTO: Codable {
 
 // MARK: - Domain Mapping
 
+import Entity
 import MSDomain
 
 extension RecordingJourneyDTO {
     
-    public init(_ domain: RecordingJourney) {
+    public init(_ domain: Journey) {
         self.id = domain.id
-        self.startTimestamp = domain.startTimestamp
+        self.startTimestamp = domain.date.start
         self.spots = domain.spots.map { SpotDTO($0) }
         self.coordinates = domain.coordinates.map { CoordinateDTO($0) }
     }
     
-    public func toDomain() -> RecordingJourney {
-        return RecordingJourney(id: self.id,
-                                startTimestamp: self.startTimestamp,
-                                spots: self.spots.map { $0.toDomain() },
-                                coordinates: self.coordinates.map { $0.toDomain() })
+    public func toDomain() -> Journey {
+        // TODO: 바뀐 Journey 적용
+        return Journey(id: self.id,
+                       title: "",
+                       date: (start: self.startTimestamp, end: nil),
+                       coordinates: self.coordinates.map { $0.toDomain() },
+                       spots: self.spots.map { $0.toDomain() },
+                       playlist: [])
     }
     
 }

@@ -8,6 +8,7 @@
 import Combine
 import Foundation
 
+import Entity
 import MSDomain
 import MSLogger
 
@@ -40,9 +41,9 @@ public final class JourneyListViewModel {
     public func trigger(_ action: Action) {
         switch action {
         case .viewNeedsLoaded:
-#if DEBUG
+            #if DEBUG
             MSLogger.make(category: .journeyList).debug("View Did Load.")
-#endif
+            #endif
         case .visibleJourneysDidUpdated(let visibleJourneys):
             self.state.journeys.send(visibleJourneys)
         }

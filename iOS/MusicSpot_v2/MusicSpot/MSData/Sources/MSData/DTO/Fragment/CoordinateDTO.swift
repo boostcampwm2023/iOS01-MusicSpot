@@ -51,6 +51,7 @@ extension CoordinateDTO: Codable {
 
 // MARK: - Domain Mapping
 
+import Entity
 import MSDomain
 
 extension CoordinateDTO {

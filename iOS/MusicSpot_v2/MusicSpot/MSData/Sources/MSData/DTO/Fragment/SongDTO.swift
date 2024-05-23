@@ -45,6 +45,7 @@ extension SongDTO: Codable {
 
 // MARK: - Domain Mapping
 
+import Entity
 import MSDomain
 
 extension SongDTO {
@@ -52,7 +53,7 @@ extension SongDTO {
     public init(_ domain: Music) {
         self.id = domain.id
         self.title = domain.title
-        self.artist = domain.artist
+        self.artist = domain.artist ?? ""
         self.albumCover = AlbumCoverDTO(domain.albumCover)
     }
     

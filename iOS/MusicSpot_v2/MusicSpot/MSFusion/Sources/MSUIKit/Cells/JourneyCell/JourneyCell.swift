@@ -64,10 +64,11 @@ public final class JourneyCell: UICollectionViewCell {
     // MARK: - Functions
     
     public func update(with model: JourneyCellModel) {
+        // TODO: 바뀐 Journey 적용
         self.infoView.update(location: model.location,
                              date: model.date,
-                             title: model.song?.title,
-                             artist: model.song?.artist)
+                             title: nil,
+                             artist: nil)
     }
     
     public func updateImages(with photoURLs: [URL], for indexPath: IndexPath) {

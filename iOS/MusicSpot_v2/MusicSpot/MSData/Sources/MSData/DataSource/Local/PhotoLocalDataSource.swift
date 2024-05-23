@@ -8,8 +8,11 @@
 import Foundation
 import SwiftData
 
+import Entity
+
 @Model
-final class PhotoLocalDataSource {
+final class PhotoLocalDataSource: EntityConvertible {
+    typealias Entity = URL
     
     // MARK: - Relationships
     
@@ -23,6 +26,16 @@ final class PhotoLocalDataSource {
     
     init(url: URL) {
         self.url = url
+    }
+    
+    // MARK: - Entity Convertible
+    
+    public init(from entity: URL) {
+        self.url = entity
+    }
+    
+    public func toEntity() -> URL {
+        return self.url
     }
     
 }

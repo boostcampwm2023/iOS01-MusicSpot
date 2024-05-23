@@ -7,6 +7,8 @@
 
 import Foundation
 
+import Entity
+
 public protocol JourneyRepository {
     
     var isRecording: Bool { get }
@@ -15,10 +17,10 @@ public protocol JourneyRepository {
     func fetchJourneyList(userID: UUID,
                           minCoordinate: Coordinate,
                           maxCoordinate: Coordinate) async -> Result<[Journey], Error>
-    func fetchRecordingJourney() -> RecordingJourney?
-    mutating func startJourney(at coordinate: Coordinate, userID: UUID) async -> Result<RecordingJourney, Error>
-    func recordJourney(journeyID: String, at coordinates: [Coordinate]) async -> Result<RecordingJourney, Error>
+    func fetchRecordingJourney() -> Journey?
+    mutating func startJourney(at coordinate: Coordinate, userID: UUID) async -> Result<Journey, Error>
+    func recordJourney(journeyID: String, at coordinates: [Coordinate]) async -> Result<Journey, Error>
     mutating func endJourney(_ journey: Journey) async -> Result<String, Error>
-    mutating func deleteJourney(_ journey: RecordingJourney, userID: UUID) async -> Result<RecordingJourney, Error>
+    mutating func deleteJourney(_ journey: Journey, userID: UUID) async -> Result<Journey, Error>
     
 }
