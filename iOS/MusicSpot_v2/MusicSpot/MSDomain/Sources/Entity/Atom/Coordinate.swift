@@ -22,6 +22,14 @@ public struct Coordinate {
         self.longitude = longitude
     }
     
+    // MARK: - Functions
+    
+    public func distance(from target: Coordinate) -> Double {
+        let latitudeDifference = self.latitude - target.latitude
+        let longitudeDifference = self.longitude - target.longitude
+        return sqrt(pow(latitudeDifference, 2) + pow(longitudeDifference, 2))
+    }
+    
 }
 
 // MARK: - Hashable
