@@ -21,7 +21,7 @@ final class JourneyLocalDataSource: EntityConvertible {
     var endDate: Date?
     var isTraveling: Bool
     
-    var coordinates: [CoordinateLocalDataSource] = []
+    var coordinates: [Coordinate] = []
     @Relationship(deleteRule: .cascade, inverse: \SpotLocalDataSource.journey)
     var spots: [SpotLocalDataSource] = []
     @Relationship(deleteRule: .cascade, inverse: \MusicLocalDataSource.journey)
@@ -49,7 +49,7 @@ final class JourneyLocalDataSource: EntityConvertible {
             id: "",
             title: self.title,
             date: (start: self.startDate, end: self.endDate),
-            coordinates: self.coordinates.map { $0.toEntity() },
+            coordinates: self.coordinates,
             spots: self.spots.map { $0.toEntity() },
             playlist: self.playlist.map { $0.toEntity() },
             isTraveling: self.isTraveling

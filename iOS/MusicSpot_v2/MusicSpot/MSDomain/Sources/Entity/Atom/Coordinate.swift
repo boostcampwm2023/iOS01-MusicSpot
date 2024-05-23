@@ -28,6 +28,11 @@ public struct Coordinate {
 
 extension Coordinate: Hashable { }
 
+// MARK: - Codable
+
+// SwiftData에서 사용되기 위한 Codable 프로토콜 충족
+extension Coordinate: Codable { }
+
 // MARK: - String Convertible
 
 extension Coordinate: CustomStringConvertible {

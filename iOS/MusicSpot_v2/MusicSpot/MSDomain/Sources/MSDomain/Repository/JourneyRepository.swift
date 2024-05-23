@@ -14,8 +14,7 @@ public protocol JourneyRepository {
     var isRecording: Bool { get }
     var recordingJourneyID: String? { get }
     
-    func fetchJourneyList(userID: UUID,
-                          minCoordinate: Coordinate,
+    func fetchJourneyList(minCoordinate: Coordinate,
                           maxCoordinate: Coordinate) async -> Result<[Journey], Error>
     func fetchRecordingJourney() -> Journey?
     mutating func startJourney(at coordinate: Coordinate, userID: UUID) async -> Result<Journey, Error>

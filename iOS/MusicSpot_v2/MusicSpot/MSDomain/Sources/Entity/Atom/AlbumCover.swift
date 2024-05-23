@@ -33,3 +33,7 @@ public struct AlbumCover {
 // MARK: - Hashable
 
 extension AlbumCover: Hashable { }
+
+// MARK: - Codable
+
+extension AlbumCover: Codable { }
