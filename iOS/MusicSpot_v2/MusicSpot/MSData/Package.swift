@@ -6,28 +6,23 @@ import PackageDescription
 // MARK: - Constants
 
 extension String {
-    
     static let package = "MSData"
-    
+
     var testTarget: String {
         return self + "Tests"
     }
-    
+
     var fromRootPath: String {
         return "../" + self
     }
-    
 }
 
 private enum Target {
-    
     static let msData = "MSData"
     static let repository = "Repository"
-    
 }
 
 private enum Dependency {
-    
     static let msDomain = "MSDomain"
     static let msImageFetcher = "MSImageFetcher"
     static let msNetworking = "MSNetworking"
@@ -38,7 +33,6 @@ private enum Dependency {
     static let msLogger = "MSLogger"
     static let msUserDefaults = "MSUserDefaults"
     static let msFoundation = "MSFoundation"
-    
 }
 
 // MARK: - Package
@@ -58,31 +52,43 @@ let package = Package(
         .package(name: Dependency.msCoreKit,
                  path: Dependency.msCoreKit.fromRootPath),
         .package(name: Dependency.msFoundation,
-                 path: Dependency.msFoundation.fromRootPath)
+                 path: Dependency.msFoundation.fromRootPath),
+        .package(
+            url: "https://github.com/realm/SwiftLint.git",
+            from: "0.55.1"
+        )
     ],
     targets: [
-        .target(name: Target.msData,
-                dependencies: [
-                    .product(name: Dependency.msDomain,
-                             package: Dependency.msDomain),
-                    .product(name: Dependency.msImageFetcher,
-                             package: Dependency.msCoreKit),
-                    .product(name: Dependency.msNetworking,
-                             package: Dependency.msCoreKit),
-                    .product(name: Dependency.msKeychainStorage,
-                             package: Dependency.msCoreKit),
-                    .product(name: Dependency.msPersistentStorage,
-                             package: Dependency.msCoreKit),
-                    .product(name: Dependency.msExtension,
-                             package: Dependency.msFoundation),
-                    .product(name: Dependency.msLogger,
-                             package: Dependency.msFoundation),
-                    .product(name: Dependency.msUserDefaults,
-                             package: Dependency.msFoundation)
-                ],
-                resources: [
-                    .process("Resources")
-                ]),
+        .target(
+            name: Target.msData,
+            dependencies: [
+                .product(name: Dependency.msDomain,
+                         package: Dependency.msDomain),
+                .product(name: Dependency.msImageFetcher,
+                         package: Dependency.msCoreKit),
+                .product(name: Dependency.msNetworking,
+                         package: Dependency.msCoreKit),
+                .product(name: Dependency.msKeychainStorage,
+                         package: Dependency.msCoreKit),
+                .product(name: Dependency.msPersistentStorage,
+                         package: Dependency.msCoreKit),
+                .product(name: Dependency.msExtension,
+                         package: Dependency.msFoundation),
+                .product(name: Dependency.msLogger,
+                         package: Dependency.msFoundation),
+                .product(name: Dependency.msUserDefaults,
+                         package: Dependency.msFoundation)
+            ],
+            resources: [
+                .process("Resources")
+            ],
+            plugins: [
+                .plugin(
+                    name: "SwiftLintBuildToolPlugin",
+                    package: "SwiftLint"
+                )
+            ]
+        ),
         .testTarget(name: Target.msData.testTarget,
                     dependencies: [
                         .target(name: Target.msData)
