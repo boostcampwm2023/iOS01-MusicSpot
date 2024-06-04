@@ -8,7 +8,6 @@
 import MSNetworking
 
 extension JourneyRouter {
-    
     public var headers: HTTPHeaders? {
         switch self {
         default:
@@ -17,5 +16,4 @@ extension JourneyRouter {
             ]
         }
     }
-    
 }

@@ -9,15 +9,13 @@ import Combine
 import UIKit
 
 public extension UITextField {
-    
     var textPublisher: AnyPublisher<String, Never> {
         let publisher = NotificationCenter.default.publisher(for: UITextField.textDidChangeNotification,
                                                              object: self)
-        
+
         return publisher
             .compactMap { $0.object as? UITextField }
             .map { $0.text ?? "" }
             .eraseToAnyPublisher()
     }
-    
 }

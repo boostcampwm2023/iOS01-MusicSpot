@@ -10,11 +10,9 @@ import Foundation
 import MSNetworking
 
 extension UserRouter {
-    
     public var queries: [URLQueryItem]? {
         switch self {
         default: return nil
         }
     }
-    
 }

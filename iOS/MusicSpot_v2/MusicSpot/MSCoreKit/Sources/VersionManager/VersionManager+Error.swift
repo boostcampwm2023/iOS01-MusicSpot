@@ -8,12 +8,11 @@
 import Foundation
 
 extension VersionManager {
-    
     public enum VersionManagerError: LocalizedError {
         case invalidURL(String)
         case emptyResults
         case unknownAppVersion
-        
+
         public var errorDescription: String? {
             switch self {
             case .invalidURL(let url):
@@ -25,5 +24,4 @@ extension VersionManager {
             }
         }
     }
-    
 }

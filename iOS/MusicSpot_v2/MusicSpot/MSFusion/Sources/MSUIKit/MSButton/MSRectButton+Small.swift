@@ -8,7 +8,6 @@
 import MSDesignSystem
 
 extension MSRectButton {
-    
     public static func small(isBrandColored: Bool = false) -> MSRectButton {
         let button = MSRectButton()
         button.style = .small
@@ -17,5 +16,4 @@ extension MSRectButton {
         : .msColor(.secondaryButtonBackground).withAlphaComponent(0.8)
         return button
     }
-    
 }

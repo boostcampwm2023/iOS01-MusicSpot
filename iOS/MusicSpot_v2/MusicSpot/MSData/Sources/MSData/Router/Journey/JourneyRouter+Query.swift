@@ -10,7 +10,6 @@ import Foundation
 import MSNetworking
 
 extension JourneyRouter {
-    
     public var queries: [URLQueryItem]? {
         switch self {
         case .checkJourney(let userID, let minCoordinate, let maxCoordinate):
@@ -28,5 +27,4 @@ extension JourneyRouter {
         default: return nil
         }
     }
-    
 }

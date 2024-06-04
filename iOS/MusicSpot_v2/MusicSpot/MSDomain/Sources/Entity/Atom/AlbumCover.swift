@@ -8,16 +8,15 @@
 import Foundation
 
 public struct AlbumCover {
-    
     // MARK: - Properties
-    
+
     public let width: UInt32
     public let height: UInt32
     public let url: URL?
     public let backgroundColor: String?
-    
+
     // MARK: - Initializer
-    
+
     public init(width: UInt32,
                 height: UInt32,
                 url: URL?,
@@ -27,7 +26,6 @@ public struct AlbumCover {
         self.url = url
         self.backgroundColor = backgroundColor
     }
-    
 }
 
 // MARK: - Hashable

@@ -8,15 +8,14 @@
 import Foundation
 
 public struct StartJourneyRequestDTO {
-    
     // MARK: - Properties
-    
+
     public let coordinate: CoordinateDTO
     public let startTimestamp: Date
     public let userID: UUID
-    
+
     // MARK: - Initializer
-    
+
     public init(coordinate: CoordinateDTO,
                 startTimestamp: Date,
                 userID: UUID) {
@@ -24,17 +23,14 @@ public struct StartJourneyRequestDTO {
         self.startTimestamp = startTimestamp
         self.userID = userID
     }
-    
 }
 
 // MARK: - Encodable
 
 extension StartJourneyRequestDTO: Encodable {
-    
     enum CodingKeys: String, CodingKey {
         case coordinate
         case startTimestamp
         case userID = "userId"
     }
-    
 }

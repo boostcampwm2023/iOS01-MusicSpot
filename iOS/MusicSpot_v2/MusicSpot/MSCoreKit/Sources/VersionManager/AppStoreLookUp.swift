@@ -10,12 +10,12 @@ import Foundation
 public struct AppStoreResponse: Decodable {
     let numberOfResults: Int?
     let results: [AppStoreLookUp]
-    
+
     enum CodingKeys: String, CodingKey {
         case numberOfResults = "resultCount"
         case results
     }
-    
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.numberOfResults = try container.decodeIfPresent(Int.self, forKey: .numberOfResults)

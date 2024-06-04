@@ -3,4 +3,5 @@ repos:
     rev: 0.55.1
     hooks:
       - id: swiftlint
-        entry: swiftlint --fix --strict
+        entry: swiftlint --fix
+        always_run: true

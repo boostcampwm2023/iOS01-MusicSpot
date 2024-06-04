@@ -10,9 +10,8 @@ import SwiftUI
 public typealias MSRectPrimaryButton = MSRectButton<MSRectPrimaryButtonStyle>
 
 extension MSRectPrimaryButton {
-    
     // MARK: - Initializer
-    
+
     public init(
         title: String = "",
         image: Image? = nil,
@@ -26,25 +25,16 @@ extension MSRectPrimaryButton {
             action: action
         )
     }
-    
 }
 
 public struct MSRectPrimaryButtonStyle: MSRectButtonStyle {
-    
     // MARK: - Properties
-    
+
     public var colorStyle: SecondaryColors
     public var scale: MSRectButtonScale
-    
-    // MARK: - Initializer
-    
-    init(colorStyle: SecondaryColors, scale: MSRectButtonScale) {
-        self.colorStyle = colorStyle
-        self.scale = scale
-    }
-    
+
     // MARK: - Body
-    
+
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .modifier(
@@ -54,5 +44,4 @@ public struct MSRectPrimaryButtonStyle: MSRectButtonStyle {
             )
             .font(.msFont(.buttonTitle))
     }
-    
 }

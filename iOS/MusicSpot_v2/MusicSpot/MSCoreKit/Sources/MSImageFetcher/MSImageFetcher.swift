@@ -11,28 +11,27 @@ import MSCacheStorage
 import MSLogger
 
 public final class MSImageFetcher {
-    
     typealias CacheTask = Task<Data?, Error>
-    
+
     // MARK: - Singleton
-    
+
     public static let shared = MSImageFetcher()
-    
+
     private init(cache: MSCacheStorage = MSCacheStorage(),
                  session: URLSession = URLSession(configuration: .default)) {
         self.cache = cache
         self.session = session
     }
-    
+
     // MARK: - Properties
-    
+
     private let cache: MSCacheStorage
     private let session: URLSession
-    
+
     private var cacheStorage: Set<UUID> = []
-    
+
     // MARK: - Functions
-    
+
     /// - Parameters:
     ///   - photoURL: 가져올 사진의 URL
     ///   - key: 사진의 캐싱을 처리하기 위한 key 값
@@ -57,14 +56,13 @@ public final class MSImageFetcher {
             MSLogger.make(category: .imageFetcher)
                 .log("이미지 데이터를 네트워크로부터 불러왔습니다: \(data)")
             #endif
-            
+
             // 5. 이미지 데이터를 캐싱합니다.
             self.cache.cache(data, forKey: key)
-            
+
             return data
         }
-        
+
         return nil
     }
-    
 }

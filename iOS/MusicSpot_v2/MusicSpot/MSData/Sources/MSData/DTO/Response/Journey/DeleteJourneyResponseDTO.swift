@@ -8,16 +8,15 @@
 import Foundation
 
 public struct DeleteJourneyResponseDTO: Identifiable {
-    
     // MARK: - Properties
-    
+
     public let id: String
     public let metadata: JourneyMetadataDTO
     public let spots: [SpotDTO]
     public let coordinates: [CoordinateDTO]
-    
+
     // MARK: - Initializer
-    
+
     public init(id: String,
                 metadata: JourneyMetadataDTO,
                 spots: [SpotDTO],
@@ -27,20 +26,17 @@ public struct DeleteJourneyResponseDTO: Identifiable {
         self.spots = spots
         self.coordinates = coordinates
     }
-    
 }
 
 // MARK: - Decodable
 
 extension DeleteJourneyResponseDTO: Decodable {
-    
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case metadata = "journeyMetadata"
         case spots
         case coordinates
     }
-    
 }
 
 // MARK: - Domain Mapping
@@ -49,7 +45,6 @@ import Entity
 import MSDomain
 
 extension DeleteJourneyResponseDTO {
-    
     public func toDomain() -> Journey {
         // TODO: 바뀐 Journey 적용
         return Journey(id: self.id,
@@ -60,5 +55,4 @@ extension DeleteJourneyResponseDTO {
                        playlist: [],
                        isTraveling: false)
     }
-    
 }

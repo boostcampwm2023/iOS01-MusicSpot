@@ -8,7 +8,6 @@
 import UIKit
 
 extension NSCollectionLayoutGroup {
-    
     public static func horizontal(layoutSize: NSCollectionLayoutSize,
                                   item: NSCollectionLayoutItem,
                                   count: Int) -> NSCollectionLayoutGroup {
@@ -22,5 +21,4 @@ extension NSCollectionLayoutGroup {
                                                       count: count)
         }
     }
-    
 }

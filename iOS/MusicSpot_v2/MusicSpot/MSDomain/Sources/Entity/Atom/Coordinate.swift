@@ -8,28 +8,26 @@
 import Foundation
 
 public struct Coordinate {
-    
     // MARK: - Properties
-    
+
     public let latitude: Double
     public let longitude: Double
-    
+
     // MARK: - Initializer
-    
+
     public init(latitude: Double,
                 longitude: Double) {
         self.latitude = latitude
         self.longitude = longitude
     }
-    
+
     // MARK: - Functions
-    
+
     public func distance(from target: Coordinate) -> Double {
         let latitudeDifference = self.latitude - target.latitude
         let longitudeDifference = self.longitude - target.longitude
         return sqrt(pow(latitudeDifference, 2) + pow(longitudeDifference, 2))
     }
-    
 }
 
 // MARK: - Hashable
@@ -44,7 +42,6 @@ extension Coordinate: Codable { }
 // MARK: - String Convertible
 
 extension Coordinate: CustomStringConvertible {
-    
     public var description: String {
         return """
         Coordinate
@@ -52,5 +49,4 @@ extension Coordinate: CustomStringConvertible {
         - longitude: \(self.longitude)
         """
     }
-    
 }

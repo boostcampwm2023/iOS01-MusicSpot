@@ -12,9 +12,8 @@ import SwiftUI
 import MSLocationManager
 
 public struct Home {
-    
     // MARK: - Properties
-    
+
     @State var locationManager = MSLocationManager()
     @State var isUsingStandardMap: Bool = true
     var selectedMapStyle: MapStyle {
@@ -24,12 +23,11 @@ public struct Home {
     }
     @State var isFollowingHead: Bool = false
     @Namespace var mapScope
-    
+
     @State var isPresentingSheet: Bool = true
     @State var sheetHeight: CGFloat = .zero
-    
+
     // MARK: - Initializer
-    
+
     public init() { }
-    
 }

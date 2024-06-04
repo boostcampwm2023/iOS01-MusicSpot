@@ -8,17 +8,14 @@
 import Foundation
 
 public enum MSNetworkError: Error {
-    
     case invalidRouter
     case unknownResponse
     case invalidStatusCode(statusCode: Int, description: String)
     case timeout
     case unknownChildTask
-    
 }
 
 extension MSNetworkError: Equatable {
-    
     public static func == (lhs: MSNetworkError, rhs: MSNetworkError) -> Bool {
         switch (lhs, rhs) {
         case (.invalidRouter, .invalidRouter):
@@ -35,5 +32,4 @@ extension MSNetworkError: Equatable {
             return false
         }
     }
-    
 }

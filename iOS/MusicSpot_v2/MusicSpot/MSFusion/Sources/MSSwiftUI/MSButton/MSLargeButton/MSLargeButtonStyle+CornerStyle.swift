@@ -8,12 +8,11 @@
 import CoreGraphics
 
 extension MSLargeButtonStyle {
-    
     public enum CornerStyle {
         case squared
         case rounded
         case custom(CGFloat)
-        
+
         var cornerRadius: CGFloat {
             switch self {
             case .squared: return 8.0
@@ -22,5 +21,4 @@ extension MSLargeButtonStyle {
             }
         }
     }
-    
 }

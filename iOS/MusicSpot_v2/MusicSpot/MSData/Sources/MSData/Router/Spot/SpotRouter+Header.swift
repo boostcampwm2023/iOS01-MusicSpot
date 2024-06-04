@@ -10,7 +10,6 @@ import Foundation
 import MSNetworking
 
 extension SpotRouter {
-    
     public var headers: HTTPHeaders? {
         switch self {
         case .upload(_, let id):
@@ -24,5 +23,4 @@ extension SpotRouter {
             ]
         }
     }
-    
 }

@@ -10,16 +10,15 @@ import Foundation
 public typealias Playlist = [Music]
 
 public struct Music: Identifiable {
-    
     // MARK: - Properties
-    
+
     public let id: String
     public let title: String
     public let artist: String?
     public let albumCover: AlbumCover?
-    
+
     // MARK: - Initializer
-    
+
     public init(id: String,
                 title: String,
                 artist: String?,
@@ -29,7 +28,6 @@ public struct Music: Identifiable {
         self.artist = artist
         self.albumCover = albumCover
     }
-    
 }
 
 // MARK: - Hashable

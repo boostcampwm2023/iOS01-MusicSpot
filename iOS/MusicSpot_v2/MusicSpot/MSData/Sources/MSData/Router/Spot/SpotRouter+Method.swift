@@ -8,12 +8,10 @@
 import MSNetworking
 
 extension SpotRouter {
-    
     public var method: HTTPMethod {
         switch self {
         case .upload: return .post
         case .downloadSpot: return .get
         }
     }
-    
 }

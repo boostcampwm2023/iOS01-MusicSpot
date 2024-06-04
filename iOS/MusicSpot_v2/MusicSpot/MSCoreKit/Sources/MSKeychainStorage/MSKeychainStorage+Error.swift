@@ -8,13 +8,9 @@
 import Foundation
 
 extension MSKeychainStorage {
-    
     public enum KeychainError: Error {
-        
         case fetchError
         case creationError
         case transactionError
-        
     }
-    
 }

@@ -8,7 +8,5 @@
 import Foundation
 
 public enum ImageFetchError: Error {
-    
     case imageFetchFailed
-    
 }

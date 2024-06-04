@@ -8,18 +8,17 @@
 import Foundation
 
 public struct EndJourneyResponseDTO: Decodable {
-    
     // MARK: - Properties
-    
+
     public let id: String
     /// > Tip: 서버 전송 실패 시 이전 데이터들도 함께 보내기 위해 배열을 사용합니다.
     public let coordinates: [CoordinateDTO]
     public let numberOfCoordinates: Int
     public let endTimestamp: Date
     public let song: SongDTO
-    
+
     // MARK: - Initializer
-    
+
     public init(id: String,
                 coordinates: [CoordinateDTO],
                 numberOfCoordinates: Int,
@@ -31,5 +30,4 @@ public struct EndJourneyResponseDTO: Decodable {
         self.endTimestamp = endTimestamp
         self.song = song
     }
-    
 }

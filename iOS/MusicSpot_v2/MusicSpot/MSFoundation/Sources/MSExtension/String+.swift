@@ -6,9 +6,7 @@
 //
 
 extension String {
-    
     @inlinable public var isNotEmpty: Bool {
         return self.count != .zero
     }
-    
 }

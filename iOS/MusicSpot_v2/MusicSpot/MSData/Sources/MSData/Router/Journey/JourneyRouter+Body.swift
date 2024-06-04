@@ -8,7 +8,6 @@
 import MSNetworking
 
 extension JourneyRouter {
-    
     public var body: HTTPBody? {
         switch self {
         case let .startJourney(dto):
@@ -22,5 +21,4 @@ extension JourneyRouter {
         default: return nil
         }
     }
-    
 }

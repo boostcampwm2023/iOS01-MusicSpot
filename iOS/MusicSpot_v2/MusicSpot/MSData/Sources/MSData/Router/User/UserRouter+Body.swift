@@ -8,12 +8,10 @@
 import MSNetworking
 
 extension UserRouter {
-    
     public var body: HTTPBody? {
         switch self {
         case .newUser(let dto):
             return HTTPBody(content: dto)
         }
     }
-    
 }

@@ -8,8 +8,6 @@
 import SwiftUI
 
 public protocol ColorSet {
-    
     var backgroundColor: Color { get }
     var foregroundColor: Color { get }
-    
 }

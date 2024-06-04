@@ -8,21 +8,18 @@
 import Foundation
 
 public struct JourneyMetadataDTO {
-    
     public let startTimestamp: Date
     public let endTimestamp: Date
-    
 }
 
 // MARK: - Codable
 
 extension JourneyMetadataDTO: Codable {
-    
     enum CodingKeys: String, CodingKey {
         case startTimestamp
         case endTimestamp
     }
-    
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.startTimestamp = try container.decode(Date.self, forKey: .startTimestamp)
@@ -33,5 +30,4 @@ extension JourneyMetadataDTO: Codable {
         }
         self.endTimestamp = try container.decode(Date.self, forKey: .endTimestamp)
     }
-    
 }

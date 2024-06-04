@@ -11,7 +11,6 @@ import UIKit
 import MSLogger
 
 public protocol Router {
-    
     /// 기본 URL
     /// > Tip: `https://www.naver.com`
     var baseURL: String { get }
@@ -30,23 +29,21 @@ public protocol Router {
     /// HTTP Queries
     /// > Tip: `?userId=655efda2fdc81cae36d20650`
     var queries: [URLQueryItem]? { get }
-    
+
     /// 최종적으로 사용되는 `URLRequest`
     func makeRequest(encoder: JSONEncoder) -> URLRequest?
-    
 }
 
 extension Router {
-    
     public func makeRequest(encoder: JSONEncoder) -> URLRequest? {
         var urlString = self.baseURL
-        
+
         if let path = self.pathURL {
             urlString += "/\(path)"
         }
-        
+
         guard var baseURLComponents = URLComponents(string: urlString) else { return nil }
-        
+
         if let queries = self.queries, !queries.isEmpty {
             baseURLComponents.queryItems = self.queries
         }
@@ -66,7 +63,7 @@ extension Router {
         }
         return request
     }
-    
+
     public func fetchBaseURLFromPlist(from bundle: Bundle) -> String? {
         guard let url = bundle.url(forResource: "APIInfo", withExtension: "plist"),
               let data = try? Data(contentsOf: url),
@@ -76,5 +73,4 @@ extension Router {
         let urlString = dict["BaseURL"] as? String
         return urlString
     }
-    
 }
