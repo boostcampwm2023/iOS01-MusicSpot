@@ -10,29 +10,28 @@ import Foundation
 import MSLogger
 
 public struct MultipartData {
-    
     public enum ContentType {
         case string
         case image
     }
-    
+
     // MARK: - Properties
-    
+
     private let type: ContentType
     public let name: String
     public let content: Encodable
     private let imageType: String = "jpeg"
-    
+
     // MARK: - Initializer
-    
+
     public init(type: ContentType = .string, name: String, content: Encodable) {
         self.type = type
         self.name = name
         self.content = content
     }
-    
+
     // MARK: - Functions
-    
+
     public func contentInformation(using encoder: JSONEncoder) -> [Data] {
         var dataStorage: [Data] = []
         switch self.type {
@@ -47,7 +46,7 @@ public struct MultipartData {
             } else {
                 MSLogger.make(category: .network).debug("multipart로 보낼 항목들의 data 반환에 실패하였습니다.")
             }
-            
+
         case .image:
             let dispositionDescript = "Content-Disposition: form-data; name=\"image\"; filename=\"test.png\"\r\n"
             let typeDescript = "Content-Type: image/\(self.imageType)\r\n\r\n"
@@ -64,9 +63,9 @@ public struct MultipartData {
         }
         return dataStorage
     }
-    
+
     // MARK: - Data Convert
-    
+
     private func convertToString(from content: Encodable) -> String? {
         switch content {
         case is String:
@@ -83,5 +82,4 @@ public struct MultipartData {
             return contentString
         }
     }
-    
 }

@@ -8,7 +8,6 @@
 import MSNetworking
 
 extension UserRouter {
-    
     public var headers: HTTPHeaders? {
         switch self {
         default:
@@ -17,5 +16,4 @@ extension UserRouter {
             ]
         }
     }
-    
 }

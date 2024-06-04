@@ -10,7 +10,4 @@ import Foundation
 import Entity
 
 public protocol JourneyUseCaseProtocol {
-    
-    
-    
 }

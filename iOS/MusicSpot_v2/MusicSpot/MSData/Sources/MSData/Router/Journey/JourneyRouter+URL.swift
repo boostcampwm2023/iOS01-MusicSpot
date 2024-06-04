@@ -10,15 +10,14 @@ import Foundation
 import MSNetworking
 
 extension JourneyRouter {
-    
     public var baseURL: String {
         guard let urlString = self.fetchBaseURLFromPlist(from: Bundle.module) else {
             fatalError("APIInfo.plist 파일을 읽을 수 없습니다.")
         }
-        
+
         return urlString + "/journey"
     }
-    
+
     public var pathURL: String? {
         switch self {
         case .startJourney: return "start"
@@ -29,5 +28,4 @@ extension JourneyRouter {
         case .deleteJourney: return nil
         }
     }
-    
 }

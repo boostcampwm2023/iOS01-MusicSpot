@@ -8,15 +8,14 @@
 import Foundation
 
 public struct Spot {
-    
     // MARK: - Properties
-    
+
     public let coordinate: Coordinate
     public let timestamp: Date
     public let photoURLs: [URL]
-    
+
     // MARK: - Initializer
-    
+
     public init(coordinate: Coordinate,
                 timestamp: Date,
                 photoURLs: [URL]) {
@@ -24,20 +23,18 @@ public struct Spot {
         self.timestamp = timestamp
         self.photoURLs = photoURLs
     }
-    
 }
 
 public struct RequestableSpot {
-    
     // MARK: - Properties
-    
+
     public let journeyID: String
     public let coordinate: Coordinate
     public let timestamp: Date
     public let photoData: Data
-    
+
     // MARK: - Initializer
-    
+
     public init(journeyID: String,
                 coordinate: Coordinate,
                 timestamp: Date,
@@ -47,7 +44,6 @@ public struct RequestableSpot {
         self.timestamp = timestamp
         self.photoData = photoData
     }
-    
 }
 
 // MARK: - Hashable
@@ -57,7 +53,6 @@ extension Spot: Hashable { }
 // MARK: - String Convertible
 
 extension Spot: CustomStringConvertible {
-    
     public var description: String {
         return """
         Coordinate:
@@ -69,5 +64,4 @@ extension Spot: CustomStringConvertible {
           - \(self.timestamp)
         """
     }
-    
 }

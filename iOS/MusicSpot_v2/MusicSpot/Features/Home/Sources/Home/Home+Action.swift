@@ -8,12 +8,11 @@
 import Foundation
 
 extension Home {
-    
     enum Action {
         case startButtonDidTap
         case mapButtonDidTap
     }
-    
+
     func perform(_ action: Action) {
         switch action {
         case .startButtonDidTap:
@@ -22,9 +21,7 @@ extension Home {
             self.isUsingStandardMap.toggle()
         }
     }
-    
+
     private func handleStartButtonTap() {
-        
     }
-    
 }

@@ -9,7 +9,6 @@ import Foundation
 import MSNetworking
 
 extension SpotRouter {
-    
     public var body: HTTPBody? {
         switch self {
         case let .upload(dto, id):
@@ -25,5 +24,4 @@ extension SpotRouter {
             return nil
         }
     }
-    
 }

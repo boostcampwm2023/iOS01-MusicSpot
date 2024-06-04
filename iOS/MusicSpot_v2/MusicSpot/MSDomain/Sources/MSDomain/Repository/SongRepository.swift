@@ -9,11 +9,9 @@ import Foundation
 import MusicKit
 
 public protocol SongRepository {
-    
     func fetchSong(withID id: String) async -> Result<Song, Error>
     func fetchSongList(with term: String) async -> Result<MusicItemCollection<Song>, Error>
     func fetchAlbumCoverImage(from photoURL: URL) async -> Data?
     @available(iOS 16.0, *)
     func fetchSongListByRank() async -> Result<MusicItemCollection<Song>, Error>
-    
 }

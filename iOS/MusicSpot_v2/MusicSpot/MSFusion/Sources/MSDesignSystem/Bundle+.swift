@@ -12,7 +12,6 @@ public class MSBundle {
 }
 
 extension Bundle {
-    
     #if SWIFT_PACKAGE
     public static var msDesignSystem: Bundle {
         return .module
@@ -22,5 +21,4 @@ extension Bundle {
         return Bundle(for: MSBundle.self)
     }
     #endif
-    
 }

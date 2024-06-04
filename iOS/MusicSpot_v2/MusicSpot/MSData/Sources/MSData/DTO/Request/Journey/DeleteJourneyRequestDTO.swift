@@ -8,17 +8,15 @@
 import Foundation
 
 public struct DeleteJourneyRequestDTO: Encodable {
-    
     // MARK: - Properties
-    
+
     public let userID: UUID
     public let journeyID: String
-    
+
     // MARK: - Encodable
-    
+
     enum CodingKeys: String, CodingKey {
         case userID = "userId"
         case journeyID = "journeyId"
     }
-    
 }

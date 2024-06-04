@@ -10,11 +10,9 @@ import Foundation
 import MSNetworking
 
 extension SpotRouter {
-    
     public var queries: [URLQueryItem]? {
         switch self {
         default: return nil
         }
     }
-    
 }

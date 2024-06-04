@@ -10,9 +10,7 @@ import SwiftUI
 import MSDesignSystem
 
 extension Color {
-    
     public static func msColor(_ color: MSColor) -> Color {
         return Color(color.rawValue, bundle: .msDesignSystem)
     }
-    
 }

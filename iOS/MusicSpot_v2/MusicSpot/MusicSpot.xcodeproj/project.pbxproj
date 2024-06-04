@@ -7,13 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FD09AF242BDC997C00DDB283 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = FD09AF232BDC997C00DDB283 /* Home */; };
 		FD40A5062BCD55D300518B9F /* MusicSpotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD40A5052BCD55D300518B9F /* MusicSpotApp.swift */; };
 		FD40A50A2BCD55D400518B9F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD40A5092BCD55D400518B9F /* Assets.xcassets */; };
 		FD40A50E2BCD55D400518B9F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD40A50D2BCD55D400518B9F /* Preview Assets.xcassets */; };
-		FDA692222BD0122700069E2E /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = FDA692212BD0122700069E2E /* Home */; };
-		FDA692742BD1655700069E2E /* MSSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = FDA692732BD1655700069E2E /* MSSwiftUI */; };
-		FDA692772BD1663A00069E2E /* MSSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = FDA692762BD1663A00069E2E /* MSSwiftUI */; };
+		FD7EFF1A2C0F3DF300093637 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = FD7EFF192C0F3DF300093637 /* .swiftlint.yml */; };
+		FD7EFF1C2C0F402B00093637 /* .pre-commit-config.yaml in Resources */ = {isa = PBXBuildFile; fileRef = FD7EFF1B2C0F402B00093637 /* .pre-commit-config.yaml */; };
 		FDA6927A2BD1667600069E2E /* MSSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = FDA692792BD1667600069E2E /* MSSwiftUI */; };
 		FDA6927D2BD166A100069E2E /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = FDA6927C2BD166A100069E2E /* Home */; };
 		FDDF38852BCD5D76007D1CD2 /* MSFusion in Resources */ = {isa = PBXBuildFile; fileRef = FDDF38842BCD5D76007D1CD2 /* MSFusion */; };
@@ -31,6 +29,8 @@
 		FD40A5092BCD55D400518B9F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FD40A50B2BCD55D400518B9F /* MusicSpot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MusicSpot.entitlements; sourceTree = "<group>"; };
 		FD40A50D2BCD55D400518B9F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FD7EFF192C0F3DF300093637 /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = .swiftlint.yml; path = ../../.swiftlint.yml; sourceTree = "<group>"; };
+		FD7EFF1B2C0F402B00093637 /* .pre-commit-config.yaml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; name = ".pre-commit-config.yaml"; path = "../../../.pre-commit-config.yaml"; sourceTree = "<group>"; };
 		FDA692282BD0163300069E2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FDDF38842BCD5D76007D1CD2 /* MSFusion */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MSFusion; sourceTree = "<group>"; };
 		FDDF38862BCD5FB0007D1CD2 /* MSCoreKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MSCoreKit; sourceTree = "<group>"; };
@@ -45,11 +45,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FDA6927A2BD1667600069E2E /* MSSwiftUI in Frameworks */,
-				FDA692742BD1655700069E2E /* MSSwiftUI in Frameworks */,
-				FDA692772BD1663A00069E2E /* MSSwiftUI in Frameworks */,
 				FDA6927D2BD166A100069E2E /* Home in Frameworks */,
-				FDA692222BD0122700069E2E /* Home in Frameworks */,
-				FD09AF242BDC997C00DDB283 /* Home in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,6 +55,8 @@
 		FD40A4F92BCD55D300518B9F = {
 			isa = PBXGroup;
 			children = (
+				FD7EFF1B2C0F402B00093637 /* .pre-commit-config.yaml */,
+				FD7EFF192C0F3DF300093637 /* .swiftlint.yml */,
 				FDDF38892BCD5FBC007D1CD2 /* MSData */,
 				FDDF38882BCD5FBC007D1CD2 /* MSDomain */,
 				FDDF388A2BCD5FBC007D1CD2 /* MSFoundation */,
@@ -121,15 +119,12 @@
 			buildRules = (
 			);
 			dependencies = (
+				FD7EFF122C0E154400093637 /* PBXTargetDependency */,
 			);
 			name = MusicSpot;
 			packageProductDependencies = (
-				FDA692212BD0122700069E2E /* Home */,
-				FDA692732BD1655700069E2E /* MSSwiftUI */,
-				FDA692762BD1663A00069E2E /* MSSwiftUI */,
 				FDA692792BD1667600069E2E /* MSSwiftUI */,
 				FDA6927C2BD166A100069E2E /* Home */,
-				FD09AF232BDC997C00DDB283 /* Home */,
 			);
 			productName = MusicSpot;
 			productReference = FD40A5022BCD55D300518B9F /* MusicSpot.app */;
@@ -162,6 +157,7 @@
 			packageReferences = (
 				FDA692782BD1667600069E2E /* XCLocalSwiftPackageReference "MSFusion" */,
 				FD09AF222BDC997C00DDB283 /* XCLocalSwiftPackageReference "Features/Home" */,
+				FD7EFF102C0E149E00093637 /* XCRemoteSwiftPackageReference "SwiftLint" */,
 			);
 			productRefGroup = FD40A5032BCD55D300518B9F /* Products */;
 			projectDirPath = "";
@@ -177,6 +173,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD7EFF1A2C0F3DF300093637 /* .swiftlint.yml in Resources */,
+				FD7EFF1C2C0F402B00093637 /* .pre-commit-config.yaml in Resources */,
 				FD40A50E2BCD55D400518B9F /* Preview Assets.xcassets in Resources */,
 				FDDF38852BCD5D76007D1CD2 /* MSFusion in Resources */,
 				FDDF388D2BCD5FBC007D1CD2 /* MSFoundation in Resources */,
@@ -199,6 +197,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FD7EFF122C0E154400093637 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = FD7EFF112C0E154400093637 /* SwiftLintBuildToolPlugin */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		FD40A50F2BCD55D400518B9F /* Debug */ = {
@@ -439,22 +444,22 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		FD7EFF102C0E149E00093637 /* XCRemoteSwiftPackageReference "SwiftLint" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/SwiftLint";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.55.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
-		FD09AF232BDC997C00DDB283 /* Home */ = {
+		FD7EFF112C0E154400093637 /* SwiftLintBuildToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = Home;
-		};
-		FDA692212BD0122700069E2E /* Home */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Home;
-		};
-		FDA692732BD1655700069E2E /* MSSwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MSSwiftUI;
-		};
-		FDA692762BD1663A00069E2E /* MSSwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MSSwiftUI;
+			package = FD7EFF102C0E149E00093637 /* XCRemoteSwiftPackageReference "SwiftLint" */;
+			productName = "plugin:SwiftLintBuildToolPlugin";
 		};
 		FDA692792BD1667600069E2E /* MSSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;

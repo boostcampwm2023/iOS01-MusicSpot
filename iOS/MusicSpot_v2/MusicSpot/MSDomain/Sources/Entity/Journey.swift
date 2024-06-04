@@ -8,9 +8,8 @@
 import Foundation
 
 public struct Journey: Identifiable {
-    
     // MARK: - Properties
-    
+
     public let id: String
     public let title: String?
     public let date: (start: Date, end: Date?)
@@ -18,9 +17,9 @@ public struct Journey: Identifiable {
     public let coordinates: [Coordinate]
     public let playlist: Playlist
     public let isTraveling: Bool
-    
+
     // MARK: - Initializer
-    
+
     public init(id: String,
                 title: String?,
                 date: (start: Date, end: Date?),
@@ -36,27 +35,23 @@ public struct Journey: Identifiable {
         self.playlist = playlist
         self.isTraveling = isTraveling
     }
-    
 }
 
 // MARK: - Hashable
 
 extension Journey: Hashable {
-    
     public static func == (lhs: Journey, rhs: Journey) -> Bool {
         return lhs.id == rhs.id
     }
-    
+
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.id)
     }
-    
 }
 
 // MARK: - String Convertible
 
 extension Journey: CustomStringConvertible {
-    
     public var description: String {
         return """
         Journey
@@ -67,5 +62,4 @@ extension Journey: CustomStringConvertible {
           - end: \(self.date.end ?? .distantFuture)
         """
     }
-    
 }

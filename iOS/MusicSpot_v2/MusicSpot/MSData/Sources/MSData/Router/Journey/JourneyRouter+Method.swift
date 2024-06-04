@@ -8,7 +8,6 @@
 import MSNetworking
 
 extension JourneyRouter {
-    
     public var method: HTTPMethod {
         switch self {
         case .startJourney: return .post
@@ -19,5 +18,4 @@ extension JourneyRouter {
         case .deleteJourney: return .delete
         }
     }
-    
 }

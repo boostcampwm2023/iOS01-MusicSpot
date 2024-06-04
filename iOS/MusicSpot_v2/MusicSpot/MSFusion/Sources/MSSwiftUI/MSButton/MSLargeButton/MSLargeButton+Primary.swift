@@ -10,7 +10,6 @@ import SwiftUI
 public typealias MSPrimaryButton = MSLargeButton<PrimaryColors>
 
 extension MSPrimaryButton {
-    
     public init(
         title: String = "",
         image: Image? = nil,
@@ -24,7 +23,6 @@ extension MSPrimaryButton {
         self.colorStyle = colorStyle
         self.action = action
     }
-    
 }
 
 #if targetEnvironment(simulator)

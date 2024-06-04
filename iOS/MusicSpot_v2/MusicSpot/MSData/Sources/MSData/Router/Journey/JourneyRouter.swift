@@ -10,7 +10,6 @@ import Foundation
 import MSNetworking
 
 public enum JourneyRouter: Router {
-    
     /// 여정 기록을 시작합니다.
     case startJourney(dto: StartJourneyRequestDTO)
     /// 여정의 각 좌표를 기록합니다.
@@ -23,5 +22,4 @@ public enum JourneyRouter: Router {
     case loadLastJourney(userID: UUID)
     /// 여정 ID에 따른 여정 삭제
     case deleteJourney(dto: DeleteJourneyRequestDTO)
-    
 }

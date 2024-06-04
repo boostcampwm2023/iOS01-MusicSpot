@@ -8,11 +8,9 @@
 import MSNetworking
 
 extension UserRouter {
-    
     public var method: HTTPMethod {
         switch self {
         case .newUser: return .post
         }
     }
-    
 }

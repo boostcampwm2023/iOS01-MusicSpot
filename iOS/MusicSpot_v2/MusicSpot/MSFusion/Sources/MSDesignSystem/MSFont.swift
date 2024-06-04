@@ -18,9 +18,9 @@ public enum MSFont {
     case paragraph
     case boldCaption
     case caption
-    
+
     // MARK: - Functions
-    
+
     package var fontDetails: (fontName: String, size: CGFloat) {
         switch self {
         case .superTitle: return ("Pretendard-Bold", 34.0)
@@ -33,18 +33,18 @@ public enum MSFont {
         case .caption: return ("Pretendard-Regular", 13.0)
         }
     }
-    
+
     fileprivate static func registerFont(bundle: Bundle, fontName: String, fontExtension: String) {
         guard let fontURL = bundle.url(forResource: fontName, withExtension: fontExtension),
               let fontDataProvider = CGDataProvider(url: fontURL as CFURL),
               let font = CGFont(fontDataProvider) else {
             return
         }
-        
+
         var error: Unmanaged<CFError>?
         CTFontManagerRegisterGraphicsFont(font, &error)
     }
-    
+
     public static func registerFonts() {
         [
             "Pretendard-Regular",
@@ -54,5 +54,4 @@ public enum MSFont {
             self.registerFont(bundle: .msDesignSystem, fontName: $0, fontExtension: "otf")
         }
     }
-    
 }

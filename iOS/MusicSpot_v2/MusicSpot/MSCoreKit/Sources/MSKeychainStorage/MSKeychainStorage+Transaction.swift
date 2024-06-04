@@ -10,20 +10,19 @@ import Foundation
 import MSLogger
 
 extension MSKeychainStorage {
-    
     /// Keychain으로부터 데이터를 불러옵니다.
     /// - Parameters:
     ///   - account: 가져올 키체인의 Key (`String`)
     func fetch(account: String) throws -> Data? {
         var result: AnyObject?
-        
+
         let status = SecItemCopyMatching([
             kSecClass: kSecClassGenericPassword,
             kSecAttrAccount: account,
             kSecAttrService: KeychainConstants.service,
             kSecReturnData: true
         ] as NSDictionary, &result)
-        
+
         switch status {
         case errSecSuccess:
             return result as? Data
@@ -33,7 +32,7 @@ extension MSKeychainStorage {
             throw KeychainError.fetchError
         }
     }
-    
+
     /// Keychain에 데이터를 저장합니다.
     /// - Parameters:
     ///   - value: 저장할 값 (`Data`)
@@ -45,12 +44,12 @@ extension MSKeychainStorage {
             kSecValueData: value, // 데이터 밸류
             kSecAttrService: KeychainConstants.service
         ] as NSDictionary, nil)
-        
+
         guard status == errSecSuccess else {
             throw KeychainError.transactionError
         }
     }
-    
+
     /// Keychain에 있는 데이터를 업데이트합니다.
     /// - Parameters:
     ///   - value: 업데이트할 값
@@ -63,12 +62,12 @@ extension MSKeychainStorage {
         ] as NSDictionary, [
             kSecValueData: value
         ] as NSDictionary)
-        
+
         guard status == errSecSuccess else {
             throw KeychainError.transactionError
         }
     }
-    
+
     /// Keychain에 있는 데이터를 삭제합니다.
     /// - Parameters:
     ///   - account: 삭제할 값에 대응되는 Key 값
@@ -78,12 +77,12 @@ extension MSKeychainStorage {
             kSecAttrAccount: account,
             kSecAttrService: KeychainConstants.service
         ] as NSDictionary)
-        
+
         guard status == errSecSuccess else {
             throw KeychainError.transactionError
         }
     }
-    
+
     /// Keychain에 account에 대응되는 값이 존재하는지 확인합니다.
     /// - Parameters:
     ///   - account: 조회할 Key 값
@@ -94,7 +93,7 @@ extension MSKeychainStorage {
             kSecAttrService: KeychainConstants.service,
             kSecReturnData: false
         ] as NSDictionary, nil)
-        
+
         switch status {
         case errSecSuccess:
             MSLogger.make(category: .keychain).log("\(account)의 키체인 값을 찾았습니다.")
@@ -105,5 +104,4 @@ extension MSKeychainStorage {
             throw KeychainError.creationError
         }
     }
-    
 }

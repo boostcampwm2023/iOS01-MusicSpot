@@ -8,15 +8,14 @@
 import Foundation
 
 public struct JourneyCellModel: Hashable {
-    
     // MARK: - Properties
-    
+
     let id: UUID
     let location: String
     let date: Date
-    
+
     // MARK: - Initializer
-    
+
     public init(id: UUID = UUID(),
                 location: String,
                 date: Date) {
@@ -24,19 +23,16 @@ public struct JourneyCellModel: Hashable {
         self.location = location
         self.date = date
     }
-    
 }
 
 // MARK: - Hashable
 
 extension JourneyCellModel {
-    
     public static func == (lhs: JourneyCellModel, rhs: JourneyCellModel) -> Bool {
         return lhs.id == rhs.id
     }
-    
+
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.id)
     }
-    
 }

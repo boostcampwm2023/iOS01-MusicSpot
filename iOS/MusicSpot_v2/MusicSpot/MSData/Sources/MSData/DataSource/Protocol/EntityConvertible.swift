@@ -9,7 +9,7 @@ import Foundation
 
 public protocol EntityConvertible {
     associatedtype Entity
-    
+
     init(from entity: Entity)
     func toEntity() -> Entity
 }
