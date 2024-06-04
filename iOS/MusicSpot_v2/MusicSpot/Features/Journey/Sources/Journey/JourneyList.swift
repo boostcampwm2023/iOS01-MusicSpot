@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import MSData
-
 public struct JourneyList: UIViewControllerRepresentable {
     public init() { }
 

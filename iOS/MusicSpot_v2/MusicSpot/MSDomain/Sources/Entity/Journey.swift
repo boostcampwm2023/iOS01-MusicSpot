@@ -49,6 +49,20 @@ extension Journey: Hashable {
     }
 }
 
+// MARK: - Sample
+
+extension Journey {
+    public static let sample = Journey(
+        id: UUID().uuidString,
+        title: "Sample",
+        date: (start: .now, end: nil),
+        coordinates: [],
+        spots: [],
+        playlist: [],
+        isTraveling: false
+    )
+}
+
 // MARK: - String Convertible
 
 extension Journey: CustomStringConvertible {

@@ -9,8 +9,6 @@ import Combine
 import UIKit
 
 import Entity
-import MSData
-import MSDomain
 import MSUIKit
 
 public final class JourneyListViewController: BaseViewController {

@@ -9,8 +9,8 @@ import Combine
 import Foundation
 
 import Entity
-import MSDomain
 import MSLogger
+import RepositoryProtocol
 
 public final class JourneyListViewModel {
     public enum Action {

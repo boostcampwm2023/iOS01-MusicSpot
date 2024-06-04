@@ -16,7 +16,13 @@ extension String {
 private enum Target {
     static let msDomain = "MSDomain"
     static let entity = "Entity"
+    static let repositoryProtocol = "RepositoryProtocol"
     static let usecase = "UseCase"
+}
+
+private enum Dependency {
+    static let msData = "MSData"
+    static let repository = "Repository"
 }
 
 // MARK: - Package
@@ -28,10 +34,13 @@ let package = Package(
     ],
     products: [
         .library(
+            name: Target.entity,
+            targets: [Target.entity]
+        ),
+        .library(
             name: Target.msDomain,
             targets: [
-                Target.entity,
-                Target.msDomain,
+                Target.repositoryProtocol,
                 Target.usecase
             ]
         )
@@ -45,7 +54,7 @@ let package = Package(
     targets: [
         .target(name: Target.entity),
         .target(
-            name: Target.msDomain,
+            name: Target.repositoryProtocol,
             dependencies: [
                 .target(name: Target.entity)
             ],

@@ -12,8 +12,8 @@
 		FD40A50E2BCD55D400518B9F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD40A50D2BCD55D400518B9F /* Preview Assets.xcassets */; };
 		FD7EFF1A2C0F3DF300093637 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = FD7EFF192C0F3DF300093637 /* .swiftlint.yml */; };
 		FD7EFF1C2C0F402B00093637 /* .pre-commit-config.yaml in Resources */ = {isa = PBXBuildFile; fileRef = FD7EFF1B2C0F402B00093637 /* .pre-commit-config.yaml */; };
-		FDA6927A2BD1667600069E2E /* MSSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = FDA692792BD1667600069E2E /* MSSwiftUI */; };
-		FDA6927D2BD166A100069E2E /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = FDA6927C2BD166A100069E2E /* Home */; };
+		FDAD84D62C0F5713003DB689 /* MSSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = FDAD84D52C0F5713003DB689 /* MSSwiftUI */; };
+		FDAD84D92C0F5721003DB689 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = FDAD84D82C0F5721003DB689 /* Home */; };
 		FDDF38852BCD5D76007D1CD2 /* MSFusion in Resources */ = {isa = PBXBuildFile; fileRef = FDDF38842BCD5D76007D1CD2 /* MSFusion */; };
 		FDDF38872BCD5FB0007D1CD2 /* MSCoreKit in Resources */ = {isa = PBXBuildFile; fileRef = FDDF38862BCD5FB0007D1CD2 /* MSCoreKit */; };
 		FDDF388B2BCD5FBC007D1CD2 /* MSDomain in Resources */ = {isa = PBXBuildFile; fileRef = FDDF38882BCD5FBC007D1CD2 /* MSDomain */; };
@@ -44,8 +44,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FDA6927A2BD1667600069E2E /* MSSwiftUI in Frameworks */,
-				FDA6927D2BD166A100069E2E /* Home in Frameworks */,
+				FDAD84D62C0F5713003DB689 /* MSSwiftUI in Frameworks */,
+				FDAD84D92C0F5721003DB689 /* Home in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,8 +123,8 @@
 			);
 			name = MusicSpot;
 			packageProductDependencies = (
-				FDA692792BD1667600069E2E /* MSSwiftUI */,
-				FDA6927C2BD166A100069E2E /* Home */,
+				FDAD84D52C0F5713003DB689 /* MSSwiftUI */,
+				FDAD84D82C0F5721003DB689 /* Home */,
 			);
 			productName = MusicSpot;
 			productReference = FD40A5022BCD55D300518B9F /* MusicSpot.app */;
@@ -155,9 +155,9 @@
 			);
 			mainGroup = FD40A4F92BCD55D300518B9F;
 			packageReferences = (
-				FDA692782BD1667600069E2E /* XCLocalSwiftPackageReference "MSFusion" */,
-				FD09AF222BDC997C00DDB283 /* XCLocalSwiftPackageReference "Features/Home" */,
 				FD7EFF102C0E149E00093637 /* XCRemoteSwiftPackageReference "SwiftLint" */,
+				FDAD84D42C0F5713003DB689 /* XCLocalSwiftPackageReference "MSFusion" */,
+				FDAD84D72C0F5721003DB689 /* XCLocalSwiftPackageReference "Features/Home" */,
 			);
 			productRefGroup = FD40A5032BCD55D300518B9F /* Products */;
 			projectDirPath = "";
@@ -434,13 +434,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		FD09AF222BDC997C00DDB283 /* XCLocalSwiftPackageReference "Features/Home" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = Features/Home;
-		};
-		FDA692782BD1667600069E2E /* XCLocalSwiftPackageReference "MSFusion" */ = {
+		FDAD84D42C0F5713003DB689 /* XCLocalSwiftPackageReference "MSFusion" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = MSFusion;
+		};
+		FDAD84D72C0F5721003DB689 /* XCLocalSwiftPackageReference "Features/Home" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Features/Home;
 		};
 /* End XCLocalSwiftPackageReference section */
 
@@ -461,11 +461,11 @@
 			package = FD7EFF102C0E149E00093637 /* XCRemoteSwiftPackageReference "SwiftLint" */;
 			productName = "plugin:SwiftLintBuildToolPlugin";
 		};
-		FDA692792BD1667600069E2E /* MSSwiftUI */ = {
+		FDAD84D52C0F5713003DB689 /* MSSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MSSwiftUI;
 		};
-		FDA6927C2BD166A100069E2E /* Home */ = {
+		FDAD84D82C0F5721003DB689 /* Home */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Home;
 		};
