@@ -1,5 +1,5 @@
 //
-//  JourneyUseCaseProtocol.swift
+//  JourneyUseCase.swift
 //  UseCase
 //
 //  Created by 이창준 on 4/27/24.
@@ -9,7 +9,7 @@ import Foundation
 
 import Entity
 
-public protocol JourneyUseCaseProtocol {
+public protocol JourneyUseCase {
     /// 사각형 내부에 존재하는 Journey들의 목록을 불러옵니다.
     /// - Parameters:
     ///   - region: Journey 목록을 불러올 사각형 지역

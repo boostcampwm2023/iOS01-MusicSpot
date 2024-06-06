@@ -1,5 +1,5 @@
 //
-//  JourneyUseCase.swift
+//  AppJourneyUseCase.swift
 //  UseCase
 //
 //  Created by 이창준 on 4/27/24.
@@ -10,7 +10,7 @@ import Foundation
 import Entity
 import RepositoryProtocol
 
-public final class JourneyUseCase: JourneyUseCaseProtocol {
+public final class AppJourneyUseCase: JourneyUseCase {
     // MARK: - Properties
 
     private let journeyRepository: JourneyRepository

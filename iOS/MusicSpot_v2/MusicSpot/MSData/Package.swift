@@ -20,7 +20,7 @@ extension String {
 private enum Target {
     static let msData = "MSData"
     static let dataSource = "DataSource"
-    static let repository = "Repository"
+    static let repository = "AppRepository"
     static let router = "Router"
 }
 
