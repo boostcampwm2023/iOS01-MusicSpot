@@ -7,5 +7,7 @@
 
 import Foundation
 
+import Entity
+
 public protocol UserUseCase {
 }
