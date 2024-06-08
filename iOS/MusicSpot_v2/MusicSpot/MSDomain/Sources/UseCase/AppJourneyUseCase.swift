@@ -8,7 +8,7 @@
 import Foundation
 
 import Entity
-import RepositoryProtocol
+import Repository
 
 public final class AppJourneyUseCase: JourneyUseCase {
     // MARK: - Properties

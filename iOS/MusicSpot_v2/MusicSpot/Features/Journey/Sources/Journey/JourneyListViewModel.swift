@@ -10,7 +10,7 @@ import Foundation
 
 import Entity
 import MSLogger
-import RepositoryProtocol
+import Repository
 
 public final class JourneyListViewModel {
     public enum Action {

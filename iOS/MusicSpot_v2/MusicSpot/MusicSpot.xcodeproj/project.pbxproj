@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FD0C9DB32C1486C900431233 /* MSSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = FD0C9DB22C1486C900431233 /* MSSwiftUI */; };
+		FD0C9DB62C1486D300431233 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = FD0C9DB52C1486D300431233 /* Home */; };
 		FD40A5062BCD55D300518B9F /* MusicSpotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD40A5052BCD55D300518B9F /* MusicSpotApp.swift */; };
 		FD40A50A2BCD55D400518B9F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD40A5092BCD55D400518B9F /* Assets.xcassets */; };
 		FD40A50E2BCD55D400518B9F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD40A50D2BCD55D400518B9F /* Preview Assets.xcassets */; };
@@ -45,6 +47,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				FDAD84D62C0F5713003DB689 /* MSSwiftUI in Frameworks */,
+				FD0C9DB62C1486D300431233 /* Home in Frameworks */,
+				FD0C9DB32C1486C900431233 /* MSSwiftUI in Frameworks */,
 				FDAD84D92C0F5721003DB689 /* Home in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -125,6 +129,8 @@
 			packageProductDependencies = (
 				FDAD84D52C0F5713003DB689 /* MSSwiftUI */,
 				FDAD84D82C0F5721003DB689 /* Home */,
+				FD0C9DB22C1486C900431233 /* MSSwiftUI */,
+				FD0C9DB52C1486D300431233 /* Home */,
 			);
 			productName = MusicSpot;
 			productReference = FD40A5022BCD55D300518B9F /* MusicSpot.app */;
@@ -156,8 +162,8 @@
 			mainGroup = FD40A4F92BCD55D300518B9F;
 			packageReferences = (
 				FD7EFF102C0E149E00093637 /* XCRemoteSwiftPackageReference "SwiftLint" */,
-				FDAD84D42C0F5713003DB689 /* XCLocalSwiftPackageReference "MSFusion" */,
-				FDAD84D72C0F5721003DB689 /* XCLocalSwiftPackageReference "Features/Home" */,
+				FD0C9DB12C1486C900431233 /* XCLocalSwiftPackageReference "MSFusion" */,
+				FD0C9DB42C1486D300431233 /* XCLocalSwiftPackageReference "Features/Home" */,
 			);
 			productRefGroup = FD40A5032BCD55D300518B9F /* Products */;
 			projectDirPath = "";
@@ -434,11 +440,11 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		FDAD84D42C0F5713003DB689 /* XCLocalSwiftPackageReference "MSFusion" */ = {
+		FD0C9DB12C1486C900431233 /* XCLocalSwiftPackageReference "MSFusion" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = MSFusion;
 		};
-		FDAD84D72C0F5721003DB689 /* XCLocalSwiftPackageReference "Features/Home" */ = {
+		FD0C9DB42C1486D300431233 /* XCLocalSwiftPackageReference "Features/Home" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Features/Home;
 		};
@@ -456,6 +462,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		FD0C9DB22C1486C900431233 /* MSSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSSwiftUI;
+		};
+		FD0C9DB52C1486D300431233 /* Home */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Home;
+		};
 		FD7EFF112C0E154400093637 /* SwiftLintBuildToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FD7EFF102C0E149E00093637 /* XCRemoteSwiftPackageReference "SwiftLint" */;
