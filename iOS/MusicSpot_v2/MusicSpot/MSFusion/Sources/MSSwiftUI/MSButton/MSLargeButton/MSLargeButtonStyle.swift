@@ -46,8 +46,7 @@ public struct MSLargeButtonStyle: ButtonStyle {
             .clipShape(RoundedRectangle(cornerRadius: self.cornerStyle.cornerRadius))
             .foregroundStyle(self.colorStyle.foregroundColor)
             .scaleEffect(configuration.isPressed ? Metric.scaleRatio : 1.0)
-            .sensoryFeedback(.impact, trigger: configuration.isPressed) {
-                oldValue, _ in
+            .sensoryFeedback(.impact, trigger: configuration.isPressed) { oldValue, _ in
                 oldValue == false
             }
     }

@@ -165,7 +165,8 @@ extension JourneyListViewController: UICollectionViewDelegate {
             cell.updateImages(with: photoURLs, for: indexPath)
         }
 
-        let headerRegistration = JourneyListHeaderRegistration(elementKind: UICollectionView.elementKindSectionHeader) { header, _, _ in
+        let headerRegistration = JourneyListHeaderRegistration(
+            elementKind: UICollectionView.elementKindSectionHeader) { header, _, _ in
             guard let numberOfItems = self.currentSnapshot?.numberOfItems else { return }
             header.update(numberOfJourneys: numberOfItems)
         }

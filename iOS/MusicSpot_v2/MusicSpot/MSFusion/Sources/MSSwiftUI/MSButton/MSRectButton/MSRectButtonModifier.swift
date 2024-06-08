@@ -46,8 +46,7 @@ internal struct MSRectButtonModifier: ViewModifier {
                 color: self.colorStyle.foregroundColor.opacity(0.3),
                 radius: 2.5, x: .zero, y: 2.0
             )
-            .sensoryFeedback(.impact, trigger: self.isPressed) {
-                oldValue, _ in
+            .sensoryFeedback(.impact, trigger: self.isPressed) { oldValue, _ in
                 oldValue == false
             }
     }
