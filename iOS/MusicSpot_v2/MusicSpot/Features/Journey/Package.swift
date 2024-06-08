@@ -22,10 +22,6 @@ private enum Dependency {
         static let package = "MSDomain"
     }
 
-    enum MSData {
-        static let package = "MSData"
-    }
-
     enum MSFusion {
         static let package = "MSFusion"
         static let msSwiftUI = "MSSwiftUI"
@@ -63,10 +59,6 @@ let package = Package(
             path: Dependency.MSFusion.package.fromRootPath
         ),
         .package(
-            name: Dependency.MSData.package,
-            path: Dependency.MSData.package.fromRootPath
-        ),
-        .package(
             url: "https://github.com/realm/SwiftLint.git",
             from: "0.55.1"
         )
@@ -78,10 +70,6 @@ let package = Package(
                 .product(
                     name: Dependency.MSDomain.package,
                     package: Dependency.MSDomain.package
-                ),
-                .product(
-                    name: Dependency.MSData.package,
-                    package: Dependency.MSData.package
                 ),
                 .product(
                     name: Dependency.MSFusion.msUIKit,
