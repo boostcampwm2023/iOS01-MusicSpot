@@ -8,4 +8,13 @@
 import Foundation
 
 public final class AppUserUseCase: UserUseCase {
+    public var currentUserID: UUID {
+        UUID()
+    }
+
+    public func registerNewUser() async throws -> UUID {
+        UUID()
+    }
+
+    public func disableUser() { }
 }

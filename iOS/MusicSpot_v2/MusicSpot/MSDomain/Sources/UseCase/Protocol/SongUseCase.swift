@@ -35,7 +35,7 @@ public protocol SongUseCase {
 }
 
 extension SongUseCase {
-    func searchSongs(by method: SongFetchMethod? = nil) -> MusicItemCollection<Song> {
+    public func searchSongs(by method: SongFetchMethod? = nil) -> MusicItemCollection<Song> {
         searchSongs(by: method)
     }
 }

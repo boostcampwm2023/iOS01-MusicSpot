@@ -6,6 +6,14 @@
 //
 
 import Foundation
+import MusicKit
 
 public final class AppSongUseCase: SongUseCase {
+    public func searchSongs(by method: SongFetchMethod?) -> MusicItemCollection<Song> {
+        return []
+    }
+
+    public func fetchAlbumCover(from url: String) async throws -> Data {
+        return Data()
+    }
 }
