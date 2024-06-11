@@ -16,6 +16,8 @@
 		FD7EFF1C2C0F402B00093637 /* .pre-commit-config.yaml in Resources */ = {isa = PBXBuildFile; fileRef = FD7EFF1B2C0F402B00093637 /* .pre-commit-config.yaml */; };
 		FDAD84D62C0F5713003DB689 /* MSSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = FDAD84D52C0F5713003DB689 /* MSSwiftUI */; };
 		FDAD84D92C0F5721003DB689 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = FDAD84D82C0F5721003DB689 /* Home */; };
+		FDDA4E022C14AA5B00670AEF /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = FDDA4E012C14AA5B00670AEF /* Home */; };
+		FDDA4E052C14AA6500670AEF /* MSSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = FDDA4E042C14AA6500670AEF /* MSSwiftUI */; };
 		FDDF38852BCD5D76007D1CD2 /* MSFusion in Resources */ = {isa = PBXBuildFile; fileRef = FDDF38842BCD5D76007D1CD2 /* MSFusion */; };
 		FDDF38872BCD5FB0007D1CD2 /* MSCoreKit in Resources */ = {isa = PBXBuildFile; fileRef = FDDF38862BCD5FB0007D1CD2 /* MSCoreKit */; };
 		FDDF388B2BCD5FBC007D1CD2 /* MSDomain in Resources */ = {isa = PBXBuildFile; fileRef = FDDF38882BCD5FBC007D1CD2 /* MSDomain */; };
@@ -49,6 +51,8 @@
 				FDAD84D62C0F5713003DB689 /* MSSwiftUI in Frameworks */,
 				FD0C9DB62C1486D300431233 /* Home in Frameworks */,
 				FD0C9DB32C1486C900431233 /* MSSwiftUI in Frameworks */,
+				FDDA4E022C14AA5B00670AEF /* Home in Frameworks */,
+				FDDA4E052C14AA6500670AEF /* MSSwiftUI in Frameworks */,
 				FDAD84D92C0F5721003DB689 /* Home in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -131,6 +135,8 @@
 				FDAD84D82C0F5721003DB689 /* Home */,
 				FD0C9DB22C1486C900431233 /* MSSwiftUI */,
 				FD0C9DB52C1486D300431233 /* Home */,
+				FDDA4E012C14AA5B00670AEF /* Home */,
+				FDDA4E042C14AA6500670AEF /* MSSwiftUI */,
 			);
 			productName = MusicSpot;
 			productReference = FD40A5022BCD55D300518B9F /* MusicSpot.app */;
@@ -162,8 +168,8 @@
 			mainGroup = FD40A4F92BCD55D300518B9F;
 			packageReferences = (
 				FD7EFF102C0E149E00093637 /* XCRemoteSwiftPackageReference "SwiftLint" */,
-				FD0C9DB12C1486C900431233 /* XCLocalSwiftPackageReference "MSFusion" */,
-				FD0C9DB42C1486D300431233 /* XCLocalSwiftPackageReference "Features/Home" */,
+				FDDA4E002C14AA5B00670AEF /* XCLocalSwiftPackageReference "Features/Home" */,
+				FDDA4E032C14AA6500670AEF /* XCLocalSwiftPackageReference "MSFusion" */,
 			);
 			productRefGroup = FD40A5032BCD55D300518B9F /* Products */;
 			projectDirPath = "";
@@ -440,13 +446,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		FD0C9DB12C1486C900431233 /* XCLocalSwiftPackageReference "MSFusion" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = MSFusion;
-		};
-		FD0C9DB42C1486D300431233 /* XCLocalSwiftPackageReference "Features/Home" */ = {
+		FDDA4E002C14AA5B00670AEF /* XCLocalSwiftPackageReference "Features/Home" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Features/Home;
+		};
+		FDDA4E032C14AA6500670AEF /* XCLocalSwiftPackageReference "MSFusion" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = MSFusion;
 		};
 /* End XCLocalSwiftPackageReference section */
 
@@ -482,6 +488,14 @@
 		FDAD84D82C0F5721003DB689 /* Home */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Home;
+		};
+		FDDA4E012C14AA5B00670AEF /* Home */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Home;
+		};
+		FDDA4E042C14AA6500670AEF /* MSSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MSSwiftUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

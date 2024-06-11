@@ -20,7 +20,7 @@ extension String {
 private enum Target {
     static let msData = "MSData"
     static let dataSource = "DataSource"
-    static let repository = "AppRepository"
+    static let appRepository = "AppRepository"
     static let router = "Router"
 }
 
@@ -54,11 +54,8 @@ let package = Package(
             targets: [Target.dataSource]
         ),
         .library(
-            name: Target.msData,
-            targets: [
-                Target.dataSource,
-                Target.repository
-            ]
+            name: Target.appRepository,
+            targets: [Target.appRepository]
         )
     ],
     dependencies: [
@@ -92,20 +89,18 @@ let package = Package(
             ]
         ),
         .target(
-            name: Target.repository,
+            name: Target.appRepository,
             dependencies: [
+                .product(
+                    name: Dependency.msDomain,
+                    package: Dependency.msDomain
+                )
             ],
             plugins: [
                 .plugin(
                     name: "SwiftLintBuildToolPlugin",
                     package: "SwiftLint"
                 )
-            ]
-        ),
-        .testTarget(
-            name: Target.repository.testTarget,
-            dependencies: [
-                .target(name: Target.repository)
             ]
         )
     ]

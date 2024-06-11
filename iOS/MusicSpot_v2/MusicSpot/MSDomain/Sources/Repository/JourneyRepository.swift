@@ -5,8 +5,9 @@
 //  Created by 이창준 on 2023.12.24.
 //
 
-import Foundation
+import SwiftData
 
 import Entity
 
-public protocol JourneyRepository { }
+public protocol JourneyRepository {
+}
