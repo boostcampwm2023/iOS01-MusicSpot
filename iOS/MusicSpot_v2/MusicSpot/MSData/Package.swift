@@ -74,10 +74,11 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: Target.dataSource,
+            name: Target.appRepository,
             dependencies: [
+                .target(name: Target.dataSource),
                 .product(
-                    name: Dependency.entity,
+                    name: Dependency.msDomain,
                     package: Dependency.msDomain
                 )
             ],
@@ -89,10 +90,10 @@ let package = Package(
             ]
         ),
         .target(
-            name: Target.appRepository,
+            name: Target.dataSource,
             dependencies: [
                 .product(
-                    name: Dependency.msDomain,
+                    name: Dependency.entity,
                     package: Dependency.msDomain
                 )
             ],

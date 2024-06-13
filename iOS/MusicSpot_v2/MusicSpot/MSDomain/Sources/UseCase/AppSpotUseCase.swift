@@ -19,6 +19,6 @@ public final class AppSpotUseCase: SpotUseCase {
     }
 
     public func recordNewSpot(_ spot: Spot) async throws -> Spot {
-        Spot(coordinate: Coordinate(latitude: .zero, longitude: .zero), timestamp: .now, photoURLs: [])
+        Spot(coordinate: Coordinate(x: .zero, y: .zero), timestamp: .now, photoURLs: [])
     }
 }

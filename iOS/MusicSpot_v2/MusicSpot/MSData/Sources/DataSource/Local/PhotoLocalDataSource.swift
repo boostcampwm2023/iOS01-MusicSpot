@@ -11,16 +11,16 @@ import SwiftData
 import Entity
 
 @Model
-final class PhotoLocalDataSource: EntityConvertible {
-    typealias Entity = URL
+public final class PhotoLocalDataSource: EntityConvertible {
+    public typealias Entity = URL
 
     // MARK: - Relationships
 
-    var spot: SpotLocalDataSource?
+    public var spot: SpotLocalDataSource?
 
     // MARK: - Properties
 
-    var url: URL
+    public var url: URL
 
     // MARK: - Initializer
 

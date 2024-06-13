@@ -10,4 +10,5 @@ import SwiftData
 import Entity
 
 public protocol JourneyRepository {
+    func fetchJourneys(in region: Region) async throws -> [Journey]
 }

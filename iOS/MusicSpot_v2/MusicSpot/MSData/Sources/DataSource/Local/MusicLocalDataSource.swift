@@ -10,18 +10,18 @@ import SwiftData
 import Entity
 
 @Model
-final class MusicLocalDataSource: EntityConvertible {
-    typealias Entity = Music
+public final class MusicLocalDataSource: EntityConvertible {
+    public typealias Entity = Music
 
     // MARK: - Relationships
 
-    var journey: JourneyLocalDataSource?
+    public var journey: JourneyLocalDataSource?
 
     // MARK: - Properties
 
-    var title: String
-    var artist: String?
-    var albumCover: AlbumCover?
+    public var title: String
+    public var artist: String?
+    public var albumCover: AlbumCover?
 
     // MARK: - Initializer
 
