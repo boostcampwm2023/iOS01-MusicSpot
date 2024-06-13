@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Icon</key>
+	<string>TemplateIcon</string>
+	<key>SupportsSwiftPackage</key>
+	<true/>
+	<key>Kind</key>
+	<string>Xcode.IDEFoundation.TextSubstitutionFileTemplateKind</string>
+	<key>Description</key>
+	<string>A SwiftUI custom view for MusicSpot project</string>
+	<key>Summary</key>
+	<string>MusicSpot SwiftUI View</string>
+	<key>SortOrder</key>
+	<string>1</string>
+	<key>Platforms</key>
+	<array/>
+	<key>DefaultCompletionName</key>
+	<string>MusicSpotView</string>
+	<key>MainTemplateFile</key>
+	<string>___FILEBASENAME___.swift</string>
+	<key>Options</key>
+	<array>
+		<dict>
+			<key>Identifier</key>
+			<string>productName</string>
+			<key>Name</key>
+			<string>View Name:</string>
+			<key>Required</key>
+			<true/>
+			<key>Description</key>
+			<string>The name for a SwiftUI View using at project MusicSpot</string>
+			<key>Type</key>
+			<string>text</string>
+			<key>NotPersisted</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>splitState</string>
+			<key>Name</key>
+			<string>Divide state from view</string>
+			<key>Description</key>
+			<string>Whether to separate State from View file</string>
+			<key>Type</key>
+			<string>checkbox</string>
+			<key>Default</key>
+			<string>true</string>
+			<key>NotPersisted</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Identifier</key>
+			<string>resultView</string>
+			<key>Name</key>
+			<string>Created View:</string>
+			<key>Description</key>
+			<string>Name of created view</string>
+			<key>Default</key>
+			<string>___VARIABLE_productName:identifier___</string>
+			<key>Required</key>
+			<true/>
+			<key>Type</key>
+			<string>static</string>
+			<key>NotPersisted</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Default</key>
+			<string>___VARIABLE_productName:identifier___+State</string>
+			<key>Identifier</key>
+			<string>resultState</string>
+			<key>Name</key>
+			<string>Created State:</string>
+			<key>Description</key>
+			<string>Name of created state</string>
+			<key>NotPersisted</key>
+			<true/>
+			<key>RequiredOptions</key>
+			<dict>
+				<key>splitState</key>
+				<true/>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>
