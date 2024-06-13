@@ -1,4 +1,11 @@
 
+<a href="https://gitmoji.dev">
+  <img
+    src="https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg?style=flat-square"
+    alt="Gitmoji"
+  />
+</a>
+
 <img src="https://github.com/boostcampwm2023/iOS01-MusicSpot/assets/138548400/90ec7022-ff90-4cfe-9486-44b42c95e5a9" width="1920">
 
 ***
