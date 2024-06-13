@@ -1,8 +1,8 @@
 {
-    "autoAdd": false,
-    "emojiFormat": "code" ,
-    "scopePrompt": false,
-    "messagePrompt": false,
-    "capitalizeTitle": false,
-    "gitmojisUrl": "https://gist.github.com/SwiftyJunnos/7a0b1b143e5bf30ef6307b5353c8a2f3/raw/gitmoji.json"
+  "autoAdd": false,
+  "emojiFormat": "emoji",
+  "scopePrompt": false,
+  "messagePrompt": false,
+  "capitalizeTitle": false,
+  "gitmojisUrl": "https://gist.github.com/SwiftyJunnos/7a0b1b143e5bf30ef6307b5353c8a2f3/raw/gitmoji.json"
 }
