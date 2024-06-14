@@ -1,0 +1,32 @@
+name: '✨ New Feature'
+description: 새로운 기능 추가
+labels: ["✨ 신규 기능"]
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: 📋 설명
+      description: >
+        이슈에서 구현할 내용을 리스트업 해주세요.
+      value: |
+        1. 
+        2. 
+        3. 
+        ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: todos
+    attributes:
+      label: ✅ 진행 상황
+      description: >
+        구현 완료된 기능은 체크해주세요.
+      value: |
+        - [] 
+        - [] 
+        - []
+        ...
+    validations:
+      required: true
