@@ -3,6 +3,16 @@ description: 새로운 기능 추가
 labels: ["✨ 신규 기능"]
 
 body:
+  - type: dropdown
+    id: platform
+    attributes:
+      label: 👨‍💻 파트
+      options:
+        - 🍎 iOS
+        - 💾 BE
+    validations:
+      required: true
+
   - type: textarea
     id: description
     attributes:
