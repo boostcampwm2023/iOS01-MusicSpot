@@ -24,9 +24,9 @@ body:
       description: >
         구현 완료된 기능은 체크해주세요.
       value: |
-        - [] 
-        - [] 
-        - []
+        - [ ] 
+        - [ ] 
+        - [ ]
         ...
     validations:
       required: true
