@@ -10,6 +10,7 @@ import MapKit
 import SwiftUI
 
 import MSLocationManager
+import Store
 
 public struct Home {
     // MARK: - Properties
@@ -26,6 +27,9 @@ public struct Home {
 
     @State var isPresentingSheet: Bool = true
     @State var sheetHeight: CGFloat = .zero
+
+    @Environment(\.appState)
+    var appState: AppState
 
     // MARK: - Initializer
 

@@ -10,9 +10,13 @@ import Foundation
 import Entity
 import MSError
 import Repository
+import Store
 
 public final class AppJourneyUseCase: JourneyUseCase {
     // MARK: - Properties
+
+    @Environment(\.appState)
+    private var appState: AppState
 
     private let journeyRepository: JourneyRepository
 

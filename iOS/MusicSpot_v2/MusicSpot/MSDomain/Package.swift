@@ -17,6 +17,7 @@ private enum Target {
     static let msDomain = "MSDomain"
     static let entity = "Entity"
     static let repository = "Repository"
+    static let store = "Store"
     static let usecase = "UseCase"
 }
 
@@ -42,6 +43,7 @@ let package = Package(
             name: Target.msDomain,
             targets: [
                 Target.repository,
+                Target.store,
                 Target.usecase
             ]
         )
@@ -61,6 +63,22 @@ let package = Package(
         .target(
             name: Target.repository,
             dependencies: [
+                .target(name: Target.entity),
+                .product(
+                    name: Dependency.msFoundation,
+                    package: Dependency.msFoundation
+                )
+            ],
+            plugins: [
+                .plugin(
+                    name: "SwiftLintBuildToolPlugin",
+                    package: "SwiftLint"
+                )
+            ]
+        ),
+        .target(
+            name: Target.store,
+            dependencies: [
                 .target(name: Target.entity)
             ],
             plugins: [
@@ -74,7 +92,8 @@ let package = Package(
             name: Target.usecase,
             dependencies: [
                 .target(name: Target.entity),
-                .target(name: Target.repository)
+                .target(name: Target.repository),
+                .target(name: Target.store),
                 .product(
                     name: Dependency.msFoundation,
                     package: Dependency.msFoundation
