@@ -18,7 +18,7 @@ public protocol JourneyUseCase {
 
     /// 현재 진행중인 여정에 대한 정보를 불러옵니다.
     /// - Returns: 진행 중인 여정 (진행 중인 여정이 없다면 `nil`)
-    func fetchTravelingJourney() -> Journey?
+    func fetchTravelingJourney() async throws -> Journey
 
     /// 새로운 여정을 시작합니다.
     /// - Parameters:

@@ -10,6 +10,7 @@ import SwiftData
 
 import DataSource
 import Entity
+import MSError
 import Repository
 
 public final class AppJourneyRepository: JourneyRepository {
@@ -17,5 +18,13 @@ public final class AppJourneyRepository: JourneyRepository {
 
     public func fetchJourneys(in region: Region) async throws -> [Journey] {
         []
+    }
+
+    public func fetchTravelingJourney() async throws -> Journey {
+        return .sample
+    }
+
+    public func saveJourney(_ journey: Journey) async throws(JourneyError) -> Journey {
+        return .sample
     }
 }
