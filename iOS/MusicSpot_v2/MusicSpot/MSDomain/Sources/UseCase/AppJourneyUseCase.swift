@@ -8,6 +8,7 @@
 import Foundation
 
 import Entity
+import MSError
 import Repository
 
 public final class AppJourneyUseCase: JourneyUseCase {

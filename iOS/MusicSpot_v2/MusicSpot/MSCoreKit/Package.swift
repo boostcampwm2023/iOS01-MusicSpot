@@ -28,7 +28,6 @@ private enum Target {
 }
 
 private enum Dependency {
-    static let msConstants = "MSConstants"
     static let msLogger = "MSLogger"
     static let msFoundation = "MSFoundation"
 }
@@ -57,8 +56,10 @@ let package = Package(
                  targets: [Target.versionManager])
     ],
     dependencies: [
-        .package(name: Dependency.msFoundation,
-                 path: Dependency.msFoundation.fromRootPath),
+        .package(
+            name: Dependency.msFoundation,
+            path: Dependency.msFoundation.fromRootPath
+        ),
         .package(
             url: "https://github.com/realm/SwiftLint.git",
             from: "0.55.1"
@@ -69,8 +70,10 @@ let package = Package(
         .target(
             name: Target.msLocationManager,
             dependencies: [
-                .product(name: Dependency.msLogger,
-                         package: Dependency.msFoundation)
+                .product(
+                    name: Dependency.msLogger,
+                    package: Dependency.msFoundation
+                )
             ],
             plugins: [
                 .plugin(
@@ -83,8 +86,10 @@ let package = Package(
             name: Target.msImageFetcher,
             dependencies: [
                 .target(name: Target.msCacheStorage),
-                .product(name: Dependency.msLogger,
-                         package: Dependency.msFoundation)
+                .product(
+                    name: Dependency.msLogger,
+                    package: Dependency.msFoundation
+                )
             ],
             plugins: [
                 .plugin(
@@ -96,10 +101,14 @@ let package = Package(
         .target(
             name: Target.msPersistentStorage,
             dependencies: [
-                .product(name: Dependency.msLogger,
-                         package: Dependency.msFoundation),
-                .product(name: Dependency.msConstants,
-                         package: Dependency.msFoundation)
+                .product(
+                    name: Dependency.msLogger,
+                    package: Dependency.msFoundation
+                ),
+                .product(
+                    name: Dependency.msFoundation,
+                    package: Dependency.msFoundation
+                )
             ],
             plugins: [
                 .plugin(
@@ -111,8 +120,10 @@ let package = Package(
         .target(
             name: Target.msNetworking,
             dependencies: [
-                .product(name: Dependency.msLogger,
-                         package: Dependency.msFoundation)
+                .product(
+                    name: Dependency.msLogger,
+                    package: Dependency.msFoundation
+                )
             ],
             plugins: [
                 .plugin(
@@ -124,8 +135,10 @@ let package = Package(
         .target(
             name: Target.msCacheStorage,
             dependencies: [
-                .product(name: Dependency.msConstants,
-                         package: Dependency.msFoundation)
+                .product(
+                    name: Dependency.msFoundation,
+                    package: Dependency.msFoundation
+                )
             ],
             plugins: [
                 .plugin(
@@ -137,10 +150,14 @@ let package = Package(
         .target(
             name: Target.msKeychainStorage,
             dependencies: [
-                .product(name: Dependency.msLogger,
-                         package: Dependency.msFoundation),
-                .product(name: Dependency.msConstants,
-                         package: Dependency.msFoundation)
+                .product(
+                    name: Dependency.msLogger,
+                    package: Dependency.msFoundation
+                ),
+                .product(
+                    name: Dependency.msFoundation,
+                    package: Dependency.msFoundation
+                )
             ],
             plugins: [
                 .plugin(
@@ -152,8 +169,10 @@ let package = Package(
         .target(
             name: Target.versionManager,
             dependencies: [
-                .product(name: Dependency.msLogger,
-                         package: Dependency.msFoundation)
+                .product(
+                    name: Dependency.msLogger,
+                    package: Dependency.msFoundation
+                )
             ],
             plugins: [
                 .plugin(
@@ -180,6 +199,5 @@ let package = Package(
                     dependencies: [
                         .target(name: Target.versionManager)
                     ])
-    ],
-    swiftLanguageVersions: [.v5]
+    ]
 )

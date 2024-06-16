@@ -23,6 +23,7 @@ private enum Target {
 private enum Dependency {
     static let msData = "MSData"
     static let repository = "Repository"
+    static let msFoundation = "MSFoundation"
 }
 
 // MARK: - Package
@@ -47,6 +48,10 @@ let package = Package(
     ],
     dependencies: [
         .package(
+            name: Dependency.msFoundation,
+            path: Dependency.msFoundation.fromRootPath
+        ),
+        .package(
             url: "https://github.com/realm/SwiftLint.git",
             from: "0.55.1"
         )
@@ -70,6 +75,10 @@ let package = Package(
             dependencies: [
                 .target(name: Target.entity),
                 .target(name: Target.repository)
+                .product(
+                    name: Dependency.msFoundation,
+                    package: Dependency.msFoundation
+                )
             ],
             plugins: [
                 .plugin(

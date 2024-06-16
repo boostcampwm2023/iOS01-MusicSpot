@@ -35,7 +35,6 @@ private enum Dependency {
     static let msPersistentStorage = "MSPersistentStorage"
     static let msCoreKit = "MSCoreKit"
     // Foundation
-    static let msExtension = "MSExtension"
     static let msLogger = "MSLogger"
     static let msUserDefaults = "MSUserDefaults"
     static let msFoundation = "MSFoundation"
@@ -68,6 +67,10 @@ let package = Package(
             path: Dependency.msCoreKit.fromRootPath
         ),
         .package(
+            name: Dependency.msFoundation,
+            path: Dependency.msFoundation.fromRootPath
+        ),
+        .package(
             url: "https://github.com/realm/SwiftLint.git",
             from: "0.55.1"
         )
@@ -80,6 +83,10 @@ let package = Package(
                 .product(
                     name: Dependency.msDomain,
                     package: Dependency.msDomain
+                ),
+                .product(
+                    name: Dependency.msFoundation,
+                    package: Dependency.msFoundation
                 )
             ],
             plugins: [

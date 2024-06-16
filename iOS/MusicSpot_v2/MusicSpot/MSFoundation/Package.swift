@@ -14,7 +14,9 @@ private extension String {
 }
 
 private enum Target {
+    static let msFoundation = "MSFoundation"
     static let msConstant = "MSConstant"
+    static let msError = "MSError"
     static let msExtension = "MSExtension"
     static let msLogger = "MSLogger"
     static let msUserDefaults = "MSUserDefaults"
@@ -28,10 +30,14 @@ let package = Package(
         .iOS(.v17)
     ],
     products: [
-        .library(name: Target.msConstants,
-                 targets: [Target.msConstants]),
-        .library(name: Target.msExtension,
-                 targets: [Target.msExtension]),
+        .library(
+            name: Target.msFoundation,
+            targets: [
+                Target.msConstant,
+                Target.msError,
+                Target.msExtension
+            ]
+        ),
         .library(name: Target.msLogger,
                  targets: [Target.msLogger]),
         .library(name: Target.msUserDefaults,
@@ -54,6 +60,8 @@ let package = Package(
                 )
             ]
         ),
+        .target(
+            name: Target.msError,
             plugins: [
                 .plugin(
                     name: "SwiftLintBuildToolPlugin",

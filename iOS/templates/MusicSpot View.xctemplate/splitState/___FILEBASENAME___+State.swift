@@ -1,7 +1,6 @@
-//___FILEHEADER___
+// ___FILEHEADER___
 
 struct ___VARIABLE_productName___ {
-    
     // MARK: - Global
     /// Place global states here which are not owned by any particular view.
     /// These states are shared with the whole view tree.

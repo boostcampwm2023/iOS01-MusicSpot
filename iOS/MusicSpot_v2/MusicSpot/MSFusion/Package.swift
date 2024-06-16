@@ -23,7 +23,6 @@ private enum Target {
 private enum Dependency {
     static let msImageFetcher = "MSImageFetcher"
     static let msCoreKit = "MSCoreKit"
-    static let msExtension = "MSExtension"
     static let msLogger = "MSLogger"
     static let msFoundation = "MSFoundation"
 }
@@ -36,16 +35,24 @@ let package = Package(
         .iOS(.v17)
     ],
     products: [
-        .library(name: Target.msSwiftUI,
-                 targets: [Target.msSwiftUI]),
-        .library(name: Target.msUIKit,
-                 targets: [Target.msUIKit])
+        .library(
+            name: Target.msSwiftUI,
+            targets: [Target.msSwiftUI]
+        ),
+        .library(
+            name: Target.msUIKit,
+            targets: [Target.msUIKit]
+        )
     ],
     dependencies: [
-        .package(name: Dependency.msCoreKit,
-                 path: Dependency.msCoreKit.fromRootPath),
-        .package(name: Dependency.msFoundation,
-                 path: Dependency.msFoundation.fromRootPath),
+        .package(
+            name: Dependency.msCoreKit,
+            path: Dependency.msCoreKit.fromRootPath
+        ),
+        .package(
+            name: Dependency.msFoundation,
+            path: Dependency.msFoundation.fromRootPath
+        ),
         .package(
             url: "https://github.com/realm/SwiftLint.git",
             from: "0.55.1"
@@ -77,8 +84,10 @@ let package = Package(
             name: Target.msSwiftUI,
             dependencies: [
                 .target(name: Target.msDesignSystem),
-                .product(name: Dependency.msExtension,
-                         package: Dependency.msFoundation)
+                .product(
+                    name: Dependency.msFoundation,
+                    package: Dependency.msFoundation
+                )
             ],
             plugins: [
                 .plugin(
@@ -92,12 +101,18 @@ let package = Package(
             dependencies: [
                 .target(name: Target.msDesignSystem),
                 .target(name: Target.combineCocoa),
-                .product(name: Dependency.msImageFetcher,
-                         package: Dependency.msCoreKit),
-                .product(name: Dependency.msExtension,
-                         package: Dependency.msFoundation),
-                .product(name: Dependency.msLogger,
-                         package: Dependency.msFoundation)
+                .product(
+                    name: Dependency.msImageFetcher,
+                    package: Dependency.msCoreKit
+                ),
+                .product(
+                    name: Dependency.msFoundation,
+                    package: Dependency.msFoundation
+                ),
+                .product(
+                    name: Dependency.msLogger,
+                    package: Dependency.msFoundation
+                )
             ],
             plugins: [
                 .plugin(
@@ -106,6 +121,5 @@ let package = Package(
                 )
             ]
         )
-    ],
-    swiftLanguageVersions: [.v5]
+    ]
 )
