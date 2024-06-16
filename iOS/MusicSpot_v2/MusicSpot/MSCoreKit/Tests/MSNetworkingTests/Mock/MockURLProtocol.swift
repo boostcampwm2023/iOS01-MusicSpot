@@ -8,27 +8,26 @@
 import Foundation
 
 final class MockURLProtocol: URLProtocol {
-    
     static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse, Data))?
     static var delaySimulation: TimeInterval = 0
     static var requestObserver: ((URLRequest) -> Void)?
-    
+
     override class func canInit(with request: URLRequest) -> Bool {
         MockURLProtocol.requestObserver?(request)
         return true
     }
-    
+
     override class func canonicalRequest(for request: URLRequest) -> URLRequest {
         return request
     }
-    
+
     override func startLoading() {
         DispatchQueue.global().asyncAfter(deadline: .now() + MockURLProtocol.delaySimulation) {
             guard let handler = MockURLProtocol.requestHandler else {
                 assertionFailure("Received unexpected request with no handler set")
                 return
             }
-            
+
             do {
                 let (response, data) = try handler(self.request)
                 self.client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
@@ -39,15 +38,14 @@ final class MockURLProtocol: URLProtocol {
             }
         }
     }
-    
+
     override func stopLoading() { }
-    
+
     static func simulateDelay(_ delay: TimeInterval) {
         self.delaySimulation = delay
     }
-    
+
     static func observeRequests(_ observer: @escaping (URLRequest) -> Void) {
         self.requestObserver = observer
     }
-    
 }

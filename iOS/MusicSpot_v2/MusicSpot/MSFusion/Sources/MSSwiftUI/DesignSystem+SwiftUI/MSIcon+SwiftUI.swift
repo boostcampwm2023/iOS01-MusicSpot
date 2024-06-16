@@ -10,10 +10,8 @@ import SwiftUI
 import MSDesignSystem
 
 extension Image {
-    
     public static func msIcon(_ icon: MSIcon) -> Image? {
         return Image(icon.rawValue, bundle: .msDesignSystem)
             .renderingMode(.template)
     }
-    
 }

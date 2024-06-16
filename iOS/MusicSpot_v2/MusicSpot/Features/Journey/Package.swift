@@ -6,42 +6,32 @@ import PackageDescription
 // MARK: - Constants
 
 extension String {
-    
     static let package = "Journey"
-    
+
     var fromRootPath: String {
         return "../" + self
     }
-    
 }
 
 private enum Target {
-    
     static let journey = "Journey"
-    
 }
 
 private enum Dependency {
-    
     enum MSDomain {
         static let package = "MSDomain"
     }
-    
-    enum MSData {
-        static let package = "MSData"
-    }
-    
+
     enum MSFusion {
         static let package = "MSFusion"
         static let msSwiftUI = "MSSwiftUI"
         static let msUIKit = "MSUIKit"
     }
-    
+
     enum MSCoreKit {
         static let package = "MSCoreKit"
         static let msLocationManager = "MSLocationManager"
     }
-    
 }
 
 // MARK: - Package
@@ -57,7 +47,7 @@ let package = Package(
             targets: [
                 Target.journey
             ]
-        ),
+        )
     ],
     dependencies: [
         .package(
@@ -69,8 +59,8 @@ let package = Package(
             path: Dependency.MSFusion.package.fromRootPath
         ),
         .package(
-            name: Dependency.MSData.package,
-            path: Dependency.MSData.package.fromRootPath
+            url: "https://github.com/realm/SwiftLint.git",
+            from: "0.55.1"
         )
     ],
     targets: [
@@ -82,12 +72,14 @@ let package = Package(
                     package: Dependency.MSDomain.package
                 ),
                 .product(
-                    name: Dependency.MSData.package,
-                    package: Dependency.MSData.package
-                ),
-                .product(
                     name: Dependency.MSFusion.msUIKit,
                     package: Dependency.MSFusion.package
+                )
+            ],
+            plugins: [
+                .plugin(
+                    name: "SwiftLintBuildToolPlugin",
+                    package: "SwiftLint"
                 )
             ]
         )

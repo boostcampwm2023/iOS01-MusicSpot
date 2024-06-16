@@ -8,8 +8,6 @@
 import Foundation
 
 public enum Constants {
-    
     public static let appName = "MusicSpot"
     public static let appBundleIdentifier = "com.overheat.boostcamp8.MusicSpot"
-    
 }

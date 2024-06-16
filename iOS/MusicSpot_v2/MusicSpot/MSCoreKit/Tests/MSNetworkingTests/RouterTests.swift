@@ -9,13 +9,12 @@ import XCTest
 @testable import MSNetworking
 
 final class RouterTests: XCTestCase {
-    
     // MARK: - Properties
-    
+
     private let encoder = JSONEncoder()
-    
+
     // MARK: - Tests
-    
+
     func test_BaseURL만포함하는_Router_생성_성공() {
         struct SUTRouter: Router {
             var baseURL: String { return "https://www.naver.com" }
@@ -25,21 +24,21 @@ final class RouterTests: XCTestCase {
             var headers: HTTPHeaders?
             var queries: [URLQueryItem]?
         }
-        
+
         let sut = SUTRouter()
-        
+
         guard let request = sut.makeRequest(encoder: encoder) else {
             XCTFail("URLRequest를 생성하는데 실패했습니다.")
             return
         }
-        
+
         guard let url = URL(string: "https://www.naver.com") else {
             return
         }
         XCTAssertEqual(request, URLRequest(url: url),
                        "BaseURL만 포함된 Router로 잘못된 URLRequest가 생성되었습니다.")
     }
-    
+
     func test_PathURL을포함하는_Router_생성_성공() {
         struct SUTRouter: Router {
             var baseURL: String { return "https://www.naver.com" }
@@ -49,14 +48,14 @@ final class RouterTests: XCTestCase {
             var headers: HTTPHeaders?
             var queries: [URLQueryItem]?
         }
-        
+
         let sut = SUTRouter()
-        
+
         guard let request = sut.makeRequest(encoder: encoder) else {
             XCTFail("URLRequest를 생성하는데 실패했습니다.")
             return
         }
-        
+
         guard let url = URL(string: "https://www.naver.com/api") else {
             return
         }
@@ -66,7 +65,7 @@ final class RouterTests: XCTestCase {
         """
         XCTAssertEqual(request, URLRequest(url: url), message)
     }
-    
+
     func test_Body를포함하는_Router_생성_성공() throws {
         struct SUTRouter: Router {
             var baseURL: String { return "https://www.naver.com" }
@@ -76,14 +75,14 @@ final class RouterTests: XCTestCase {
             var headers: HTTPHeaders?
             var queries: [URLQueryItem]?
         }
-        
+
         let sut = SUTRouter()
-        
+
         guard let request = sut.makeRequest(encoder: encoder) else {
             XCTFail("URLRequest를 생성하는데 실패했습니다.")
             return
         }
-        
+
         guard let url = URL(string: "https://www.naver.com/api") else {
             return
         }
@@ -96,7 +95,7 @@ final class RouterTests: XCTestCase {
         """
         XCTAssertEqual(request.httpBody, urlRequest.httpBody, message)
     }
-    
+
     func test_Header를포함하는_Router_생성_성공() {
         struct SUTRouter: Router {
             var baseURL: String { return "https://www.naver.com" }
@@ -106,14 +105,14 @@ final class RouterTests: XCTestCase {
             var headers: HTTPHeaders? { return [(key: "boostcamp", value: "WM8")] }
             var queries: [URLQueryItem]?
         }
-        
+
         let sut = SUTRouter()
-        
+
         guard let request = sut.makeRequest(encoder: encoder) else {
             XCTFail("URLRequest를 생성하는데 실패했습니다.")
             return
         }
-        
+
         guard let url = URL(string: "https://www.naver.com/api") else {
             return
         }
@@ -125,7 +124,7 @@ final class RouterTests: XCTestCase {
         """
         XCTAssertEqual(request.allHTTPHeaderFields, urlRequest.allHTTPHeaderFields, message)
     }
-    
+
     func test_Query를포함하는_Router_생성_성공() {
         struct SUTRouter: Router {
             var baseURL: String { return "https://www.naver.com" }
@@ -135,14 +134,14 @@ final class RouterTests: XCTestCase {
             var headers: HTTPHeaders?
             var queries: [URLQueryItem]? { return [URLQueryItem(name: "boostcamp", value: "WM8")] }
         }
-        
+
         let sut = SUTRouter()
-        
+
         guard let request = sut.makeRequest(encoder: encoder) else {
             XCTFail("URLRequest를 생성하는데 실패했습니다.")
             return
         }
-        
+
         guard let url = URL(string: "https://www.naver.com/api?boostcamp=WM8") else {
             return
         }
@@ -152,5 +151,4 @@ final class RouterTests: XCTestCase {
         """
         XCTAssertEqual(request, URLRequest(url: url), message)
     }
-    
 }

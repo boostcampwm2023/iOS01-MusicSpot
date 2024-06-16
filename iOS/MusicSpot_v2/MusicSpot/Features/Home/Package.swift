@@ -6,41 +6,35 @@ import PackageDescription
 // MARK: - Constants
 
 extension String {
-    
     static let package = "Home"
-    
+
     var fromRootPath: String {
         return "../" + self
     }
-    
+
     var fromFeaturePath: String {
         return "../Features/" + self
     }
-    
 }
 
 private enum Target {
-    
     static let home = "Home"
-    
 }
 
 private enum Dependency {
-    
     enum Feature {
         static let journey = "Journey"
     }
-    
+
     enum MSFusion {
         static let package = "MSFusion"
         static let msSwiftUI = "MSSwiftUI"
     }
-    
+
     enum MSCoreKit {
         static let package = "MSCoreKit"
         static let msLocationManager = "MSLocationManager"
     }
-    
 }
 
 // MARK: - Package
@@ -54,7 +48,7 @@ let package = Package(
         .library(
             name: Target.home,
             targets: [Target.home]
-        ),
+        )
     ],
     dependencies: [
         .package(
@@ -68,6 +62,10 @@ let package = Package(
         .package(
             name: Dependency.MSCoreKit.package,
             path: Dependency.MSCoreKit.package.fromRootPath
+        ),
+        .package(
+            url: "https://github.com/realm/SwiftLint.git",
+            from: "0.55.1"
         )
     ],
     targets: [
@@ -85,6 +83,12 @@ let package = Package(
                 .product(
                     name: Dependency.MSCoreKit.msLocationManager,
                     package: Dependency.MSCoreKit.package
+                )
+            ],
+            plugins: [
+                .plugin(
+                    name: "SwiftLintBuildToolPlugin",
+                    package: "SwiftLint"
                 )
             ]
         )

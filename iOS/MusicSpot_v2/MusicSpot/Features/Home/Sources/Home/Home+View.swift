@@ -13,19 +13,18 @@ import MSSwiftUI
 
 @MainActor
 extension Home: View {
-    
     // MARK: - Constants
-    
+
     private enum Typo {
         static let startButtonTitle = "시작하기"
     }
-    
+
     private enum Metric {
         static let startButtonBottomPadding: CGFloat = 15.0
     }
-    
+
     // MARK: - Body
-    
+
     public var body: some View {
         GeometryReader { proxy in
             ZStack(alignment: .topTrailing) {
@@ -36,7 +35,7 @@ extension Home: View {
                     MapScaleView()
                 }
                 .mapStyle(self.selectedMapStyle)
-                
+
                 VStack {
                     MSRectSecondaryButton(image: .msIcon(.map)) {
                         self.perform(.mapButtonDidTap)
@@ -51,7 +50,7 @@ extension Home: View {
                         )
                 }
                 .padding()
-                
+
                 VStack {
                     Spacer()
                     MSPrimaryButton(title: Typo.startButtonTitle, cornerStyle: .rounded) {
@@ -85,7 +84,6 @@ extension Home: View {
             .ignoresSafeArea(.all, edges: .bottom)
         }
     }
-    
 }
 
 // MARK: - Preview

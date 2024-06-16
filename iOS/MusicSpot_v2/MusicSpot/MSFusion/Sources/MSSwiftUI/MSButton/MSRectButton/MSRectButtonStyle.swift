@@ -8,8 +8,6 @@
 import SwiftUI
 
 public protocol MSRectButtonStyle: ButtonStyle {
-    
     var scale: MSRectButtonScale { get set }
     var colorStyle: SecondaryColors { get set }
-    
 }

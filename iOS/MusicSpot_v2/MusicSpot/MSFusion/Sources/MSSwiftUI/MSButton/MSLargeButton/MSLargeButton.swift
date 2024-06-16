@@ -11,23 +11,22 @@ import MSExtension
 
 @MainActor
 public struct MSLargeButton<ColorStyle: ColorSet>: View {
-    
     // MARK: - Constants
-    
+
     private enum Metric {
         static var imagePadding: CGFloat { 8.0 }
     }
-    
+
     // MARK: - Properties
-    
+
     internal let title: String
     internal let image: Image?
     internal let cornerStyle: MSLargeButtonStyle.CornerStyle
     internal let colorStyle: ColorStyle
     internal let action: () -> Void
-    
+
     // MARK: - Body
-    
+
     public var body: some View {
         Button {
             self.action()
@@ -36,7 +35,7 @@ public struct MSLargeButton<ColorStyle: ColorSet>: View {
                 if let image = self.image {
                     image
                 }
-                
+
                 if self.title.isNotEmpty {
                     Text(self.title)
                 }
@@ -49,5 +48,4 @@ public struct MSLargeButton<ColorStyle: ColorSet>: View {
             )
         )
     }
-    
 }

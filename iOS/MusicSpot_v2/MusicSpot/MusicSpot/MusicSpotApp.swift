@@ -13,18 +13,16 @@ import MSDesignSystem
 @main
 struct MusicSpotApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
-    
+
     var body: some Scene {
         WindowGroup {
             Home()
         }
     }
-    
 }
 
 @MainActor
 final class AppDelegate: NSObject, UIApplicationDelegate {
-    
     // Register SceneDelegate to UIScene
     func application(
         _ application: UIApplication,
@@ -37,12 +35,10 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         }
         return configuration
     }
-    
 }
 
 @MainActor
 final class SceneDelegate: NSObject, UIWindowSceneDelegate {
-    
     func scene(
         _ scene: UIScene,
         willConnectTo session: UISceneSession,
@@ -50,5 +46,4 @@ final class SceneDelegate: NSObject, UIWindowSceneDelegate {
     ) {
         MSFont.registerFonts()
     }
-    
 }

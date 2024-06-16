@@ -11,15 +11,14 @@ import XCTest
 @testable import MSNetworking
 
 final class MSCombineNetworkingTests: XCTestCase {
-    
     // MARK: - Properties
-    
+
     private var networking: MSNetworking!
-    
+
     private var cancellables: Set<AnyCancellable> = []
-    
+
     // MARK: - Setup
-    
+
     override func setUp() {
         URLProtocol.registerClass(MockURLProtocol.self)
         let configuration: URLSessionConfiguration = .ephemeral
@@ -27,9 +26,9 @@ final class MSCombineNetworkingTests: XCTestCase {
         let session = URLSession(configuration: configuration)
         self.networking = MSNetworking(session: session)
     }
-    
+
     // MARK: - Tests
-    
+
     func test_MSNetworking_응답코드가_200번대일경우_정상() throws {
         // Arrange
         let router = MockRouter()
@@ -42,9 +41,9 @@ final class MSCombineNetworkingTests: XCTestCase {
                                            headerFields: ["Content-Type": "application/json"])!
             return (response, data)
         }
-        
+
         let expectation = XCTestExpectation()
-        
+
         // Act
         self.networking.request(String.self, router: router)
             .receive(on: self.networking.queue)
@@ -57,11 +56,11 @@ final class MSCombineNetworkingTests: XCTestCase {
                 expectation.fulfill()
             }
             .store(in: &self.cancellables)
-        
+
         // Assert
         wait(for: [expectation], timeout: 5.0)
     }
-    
+
     func test_MSNetworking_응답코드가_200번대가아닐경우_에러() {
         // Arrange
         let router = MockRouter()
@@ -72,9 +71,9 @@ final class MSCombineNetworkingTests: XCTestCase {
                                            headerFields: ["Content-Type": "application/json"])!
             return (response, Data())
         }
-        
+
         let expectation = XCTestExpectation()
-        
+
         // Act
         self.networking.request(String.self, router: router)
             .receive(on: self.networking.queue)
@@ -91,9 +90,8 @@ final class MSCombineNetworkingTests: XCTestCase {
                 XCTFail("200 ~ 299 외의 status code를 포함한 응답은 에러를 발생시켜야 합니다.")
             }
             .store(in: &self.cancellables)
-        
+
         // Assert
         wait(for: [expectation], timeout: 5.0)
     }
-            
 }

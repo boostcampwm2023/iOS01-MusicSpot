@@ -8,8 +8,6 @@
 import Foundation
 
 public enum MSCacheError: Error {
-    
     case memoryFail
     case diskFail
-    
 }

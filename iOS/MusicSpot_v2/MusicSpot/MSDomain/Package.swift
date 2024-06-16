@@ -6,19 +6,23 @@ import PackageDescription
 // MARK: - Constants
 
 extension String {
-    
     static let package = "MSDomain"
-    
+
     var fromRootPath: String {
         return "../" + self
     }
-    
 }
 
 private enum Target {
-    
     static let msDomain = "MSDomain"
-    
+    static let entity = "Entity"
+    static let repository = "Repository"
+    static let usecase = "UseCase"
+}
+
+private enum Dependency {
+    static let msData = "MSData"
+    static let repository = "Repository"
 }
 
 // MARK: - Package
@@ -29,11 +33,50 @@ let package = Package(
         .iOS(.v17)
     ],
     products: [
-        .library(name: Target.msDomain,
-                 targets: [Target.msDomain])
+        .library(
+            name: Target.entity,
+            targets: [Target.entity]
+        ),
+        .library(
+            name: Target.msDomain,
+            targets: [
+                Target.repository,
+                Target.usecase
+            ]
+        )
+    ],
+    dependencies: [
+        .package(
+            url: "https://github.com/realm/SwiftLint.git",
+            from: "0.55.1"
+        )
     ],
     targets: [
-        .target(name: Target.msDomain)
-    ],
-    swiftLanguageVersions: [.v5]
+        .target(name: Target.entity),
+        .target(
+            name: Target.repository,
+            dependencies: [
+                .target(name: Target.entity)
+            ],
+            plugins: [
+                .plugin(
+                    name: "SwiftLintBuildToolPlugin",
+                    package: "SwiftLint"
+                )
+            ]
+        ),
+        .target(
+            name: Target.usecase,
+            dependencies: [
+                .target(name: Target.entity),
+                .target(name: Target.repository)
+            ],
+            plugins: [
+                .plugin(
+                    name: "SwiftLintBuildToolPlugin",
+                    package: "SwiftLint"
+                )
+            ]
+        )
+    ]
 )

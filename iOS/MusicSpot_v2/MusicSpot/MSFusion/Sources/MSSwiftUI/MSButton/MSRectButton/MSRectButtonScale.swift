@@ -10,7 +10,7 @@ import CoreGraphics
 public enum MSRectButtonScale {
     case small
     case large
-    
+
     internal var imageSize: CGSize {
         switch self {
         case .small:
@@ -19,7 +19,7 @@ public enum MSRectButtonScale {
             return CGSize(width: 27.0, height: 27.0)
         }
     }
-    
+
     internal var padding: CGFloat {
         switch self {
         case .small:
@@ -28,7 +28,7 @@ public enum MSRectButtonScale {
             return 42.0
         }
     }
-    
+
     internal var cornerRadius: CGFloat {
         switch self {
         case .small:
@@ -37,5 +37,4 @@ public enum MSRectButtonScale {
             return 30.0
         }
     }
-    
 }

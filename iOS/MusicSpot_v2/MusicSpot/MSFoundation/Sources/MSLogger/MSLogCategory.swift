@@ -8,7 +8,6 @@
 import Foundation
 
 public enum MSLogCategory: String {
-    
     case uiKit = "UI"
     case network
     case imageFetcher = "ImageFetcher"
@@ -19,7 +18,7 @@ public enum MSLogCategory: String {
     case music = "MusicKit"
     case version = "VersionManager"
     case locationManager
-    
+
     case home
     case navigateMap
     case camera
@@ -28,5 +27,4 @@ public enum MSLogCategory: String {
     case saveJourney
     case journeyList
     case rewindJourney
-    
 }

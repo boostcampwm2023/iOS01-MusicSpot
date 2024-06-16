@@ -9,7 +9,6 @@ import Foundation
 
 @propertyWrapper
 public struct UserDefaultsWrapped<T: Codable> {
-
     private let key: String
     private var defaultValue: T
     private let userDefaults: UserDefaults
@@ -23,18 +22,18 @@ public struct UserDefaultsWrapped<T: Codable> {
         self.defaultValue = defaultValue
         self.userDefaults = userDefaults
     }
-    
+
     public var wrappedValue: T {
         get { self.load(forKey: self.key) ?? self.defaultValue }
         set { self.save(newValue) }
     }
-    
+
     private func save(_ newValue: T) {
         if let encoded = try? self.encoder.encode(newValue) {
             self.userDefaults.setValue(encoded, forKey: self.key)
         }
     }
-    
+
     private func load(forKey key: String) -> T? {
         guard let savedData = self.userDefaults.object(forKey: key) as? Data,
               let loadedObject = try? self.decoder.decode(T.self, from: savedData) else {
@@ -42,5 +41,4 @@ public struct UserDefaultsWrapped<T: Codable> {
         }
         return loadedObject
     }
-
 }

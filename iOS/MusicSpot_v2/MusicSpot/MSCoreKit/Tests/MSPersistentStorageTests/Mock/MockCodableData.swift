@@ -8,11 +8,10 @@
 import Foundation
 
 struct MockCodableData: Codable, Equatable {
-    
     let id: UUID
     let title: String
     let content: String
-    
+
     init(id: UUID = UUID(),
          title: String,
          content: String) {
@@ -20,5 +19,4 @@ struct MockCodableData: Codable, Equatable {
         self.title = title
         self.content = content
     }
-    
 }

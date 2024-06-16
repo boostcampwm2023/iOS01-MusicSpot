@@ -8,12 +8,11 @@
 import Foundation
 
 public struct SongListCellModel: Identifiable {
-    
     public let id: String
     let title: String
     let artist: String
     let albumArtURL: URL?
-    
+
     public init(id: String,
                 title: String,
                 artist: String,
@@ -23,5 +22,4 @@ public struct SongListCellModel: Identifiable {
         self.artist = artist
         self.albumArtURL = albumArtURL
     }
-    
 }

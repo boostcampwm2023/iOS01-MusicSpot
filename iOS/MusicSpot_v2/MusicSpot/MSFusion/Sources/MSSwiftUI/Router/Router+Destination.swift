@@ -6,10 +6,8 @@
 //
 
 extension Router {
-    
     /// 목적지 목록. `Hashable`해야 합니다.
     public enum Destination: Hashable {
         case home
     }
-    
 }

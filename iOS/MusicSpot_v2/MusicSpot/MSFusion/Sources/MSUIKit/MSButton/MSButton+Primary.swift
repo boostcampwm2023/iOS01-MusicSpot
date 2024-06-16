@@ -10,17 +10,16 @@ import UIKit
 import MSDesignSystem
 
 extension MSButton {
-    
     public static func primary(isBrandColored: Bool = true) -> MSButton {
         let button = MSButton()
         let haptic = UINotificationFeedbackGenerator()
         defer { button.haptic = haptic }
-        
+
         button.configuration?.baseForegroundColor = .msColor(.primaryButtonTypo)
         button.configuration?.baseBackgroundColor = isBrandColored
         ? .msColor(.musicSpot)
         : .msColor(.primaryButtonBackground)
-        
+
         haptic.prepare()
         button.configurationUpdateHandler = { primaryButton in
             switch primaryButton.state {
@@ -30,8 +29,7 @@ extension MSButton {
                 break
             }
         }
-        
+
         return button
     }
-    
 }

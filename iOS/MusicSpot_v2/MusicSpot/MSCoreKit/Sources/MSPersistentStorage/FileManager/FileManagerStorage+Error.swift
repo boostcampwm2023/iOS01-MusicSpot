@@ -8,9 +8,7 @@
 import Foundation
 
 extension FileManagerStorage {
-    
     public enum StorageError: Error {
         case invalidStorageURL
     }
-    
 }

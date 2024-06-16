@@ -6,21 +6,18 @@ import PackageDescription
 // MARK: - Constants
 
 private extension String {
-    
     static let package = "MSCoreKit"
-    
+
     var testTarget: String {
         return self + "Tests"
     }
-    
+
     var fromRootPath: String {
         return "../" + self
     }
-    
 }
 
 private enum Target {
-    
     static let msCacheStorage = "MSCacheStorage"
     static let msImageFetcher = "MSImageFetcher"
     static let msKeychainStorage = "MSKeychainStorage"
@@ -28,15 +25,12 @@ private enum Target {
     static let msNetworking = "MSNetworking"
     static let msPersistentStorage = "MSPersistentStorage"
     static let versionManager = "VersionManager"
-    
 }
 
 private enum Dependency {
-    
     static let msConstants = "MSConstants"
     static let msLogger = "MSLogger"
     static let msFoundation = "MSFoundation"
-    
 }
 
 // MARK: - Package
@@ -64,51 +58,111 @@ let package = Package(
     ],
     dependencies: [
         .package(name: Dependency.msFoundation,
-                 path: Dependency.msFoundation.fromRootPath)
+                 path: Dependency.msFoundation.fromRootPath),
+        .package(
+            url: "https://github.com/realm/SwiftLint.git",
+            from: "0.55.1"
+        )
     ],
     targets: [
         // Codes
-        .target(name: Target.msLocationManager,
-                dependencies: [
-                    .product(name: Dependency.msLogger,
-                             package: Dependency.msFoundation)
-                ]),
-        .target(name: Target.msImageFetcher,
-                dependencies: [
-                    .target(name: Target.msCacheStorage),
-                    .product(name: Dependency.msLogger,
-                             package: Dependency.msFoundation)
-                ]),
-        .target(name: Target.msPersistentStorage,
-                dependencies: [
-                    .product(name: Dependency.msLogger,
-                             package: Dependency.msFoundation),
-                    .product(name: Dependency.msConstants,
-                             package: Dependency.msFoundation)
-                ]),
-        .target(name: Target.msNetworking,
-                dependencies: [
-                    .product(name: Dependency.msLogger,
-                             package: Dependency.msFoundation)
-                ]),
-        .target(name: Target.msCacheStorage,
-                dependencies: [
-                    .product(name: Dependency.msConstants,
-                             package: Dependency.msFoundation)
-                ]),
-        .target(name: Target.msKeychainStorage,
-                dependencies: [
-                    .product(name: Dependency.msLogger,
-                             package: Dependency.msFoundation),
-                    .product(name: Dependency.msConstants,
-                             package: Dependency.msFoundation)
-                ]),
-        .target(name: Target.versionManager,
-                dependencies: [
-                    .product(name: Dependency.msLogger,
-                             package: Dependency.msFoundation)
-                ]),
-        
+        .target(
+            name: Target.msLocationManager,
+            dependencies: [
+                .product(name: Dependency.msLogger,
+                         package: Dependency.msFoundation)
+            ],
+            plugins: [
+                .plugin(
+                    name: "SwiftLintBuildToolPlugin",
+                    package: "SwiftLint"
+                )
+            ]
+        ),
+        .target(
+            name: Target.msImageFetcher,
+            dependencies: [
+                .target(name: Target.msCacheStorage),
+                .product(name: Dependency.msLogger,
+                         package: Dependency.msFoundation)
+            ],
+            plugins: [
+                .plugin(
+                    name: "SwiftLintBuildToolPlugin",
+                    package: "SwiftLint"
+                )
+            ]
+        ),
+        .target(
+            name: Target.msPersistentStorage,
+            dependencies: [
+                .product(name: Dependency.msLogger,
+                         package: Dependency.msFoundation),
+                .product(name: Dependency.msConstants,
+                         package: Dependency.msFoundation)
+            ],
+            plugins: [
+                .plugin(
+                    name: "SwiftLintBuildToolPlugin",
+                    package: "SwiftLint"
+                )
+            ]
+        ),
+        .target(
+            name: Target.msNetworking,
+            dependencies: [
+                .product(name: Dependency.msLogger,
+                         package: Dependency.msFoundation)
+            ],
+            plugins: [
+                .plugin(
+                    name: "SwiftLintBuildToolPlugin",
+                    package: "SwiftLint"
+                )
+            ]
+        ),
+        .target(
+            name: Target.msCacheStorage,
+            dependencies: [
+                .product(name: Dependency.msConstants,
+                         package: Dependency.msFoundation)
+            ],
+            plugins: [
+                .plugin(
+                    name: "SwiftLintBuildToolPlugin",
+                    package: "SwiftLint"
+                )
+            ]
+        ),
+        .target(
+            name: Target.msKeychainStorage,
+            dependencies: [
+                .product(name: Dependency.msLogger,
+                         package: Dependency.msFoundation),
+                .product(name: Dependency.msConstants,
+                         package: Dependency.msFoundation)
+            ],
+            plugins: [
+                .plugin(
+                    name: "SwiftLintBuildToolPlugin",
+                    package: "SwiftLint"
+                )
+            ]
+        ),
+        .target(
+            name: Target.versionManager,
+            dependencies: [
+                .product(name: Dependency.msLogger,
+                         package: Dependency.msFoundation)
+            ],
+            plugins: [
+                .plugin(
+                    name: "SwiftLintBuildToolPlugin",
+                    package: "SwiftLint"
+                )
+            ]
+        ),
+
         // Tests
         .testTarget(name: Target.msPersistentStorage.testTarget,
                     dependencies: [

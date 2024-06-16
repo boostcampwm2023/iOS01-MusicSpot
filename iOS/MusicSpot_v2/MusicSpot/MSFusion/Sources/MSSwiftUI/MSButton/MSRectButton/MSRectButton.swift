@@ -8,16 +8,15 @@
 import SwiftUI
 
 public struct MSRectButton<Style: MSRectButtonStyle>: View {
-    
     // MARK: - Properties
-    
+
     internal let title: String
     internal let image: Image?
     internal let action: () -> Void
     internal let style: Style
-    
+
     // MARK: - Initializer
-    
+
     internal init(
         title: String = "",
         image: Image? = nil,
@@ -29,9 +28,9 @@ public struct MSRectButton<Style: MSRectButtonStyle>: View {
         self.style = style
         self.action = action
     }
-    
+
     // MARK: - Body
-    
+
     public var body: some View {
         Button {
             self.action()
@@ -48,14 +47,13 @@ public struct MSRectButton<Style: MSRectButtonStyle>: View {
         }
         .buttonStyle(self.style)
     }
-    
 }
 
 #if targetEnvironment(simulator)
 import MSDesignSystem
 #Preview {
     MSFont.registerFonts()
-    
+
     return VStack(spacing: 50) {
         HStack(spacing: 20.0) {
             MSRectPrimaryButton(title: "스팟!", colorStyle: .brand) {
@@ -65,7 +63,7 @@ import MSDesignSystem
                 print("Hi")
             }
         }
-        
+
         HStack(spacing: 20.0) {
             MSRectPrimaryButton(image: .msIcon(.location), colorStyle: .brand) {
                 print("Hi")
@@ -74,7 +72,7 @@ import MSDesignSystem
                 print("Hi")
             }
         }
-        
+
         HStack(spacing: 20.0) {
             MSRectSecondaryButton(image: .msIcon(.location), colorStyle: .brand) {
                 print("Hi")

@@ -10,12 +10,10 @@ import UIKit
 import MSDesignSystem
 
 extension MSButton {
-    
     public static func secondary() -> MSButton {
         let button = MSButton()
         button.configuration?.baseForegroundColor = .msColor(.secondaryButtonTypo)
         button.configuration?.baseBackgroundColor = .msColor(.secondaryButtonBackground)
         return button
     }
-    
 }

@@ -11,23 +11,22 @@ import MSLogger
 import UIKit
 
 public struct HTTPBody {
-    
     // MARK: - Status
-    
+
     public enum BodyType {
         case normal
         case multipart
     }
-    
+
     // MARK: - Properties
-    
+
     public let type: BodyType
     private let boundary: String?
     var content: Encodable?
     private var allOfMultipartData: [MultipartData]?
-    
+
     // MARK: - Initializer
-    
+
     public init(type: BodyType = .normal,
                 boundary: String? = nil,
                 content: Encodable? = nil,
@@ -37,9 +36,9 @@ public struct HTTPBody {
         self.content = content
         self.allOfMultipartData = multipartData
     }
-    
+
     // MARK: - Functions
-    
+
     func data(encoder: JSONEncoder) -> Data? {
         switch self.type {
         case .normal:
@@ -49,7 +48,7 @@ public struct HTTPBody {
                 return nil
             }
             return data
-            
+
         case .multipart:
             guard let boundary,
                   let delimiter: Data = "\r\n--\(boundary)\r\n".data(using: .utf8),
@@ -68,5 +67,4 @@ public struct HTTPBody {
             return data
         }
     }
-    
 }
