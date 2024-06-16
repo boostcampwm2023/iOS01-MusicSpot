@@ -14,7 +14,7 @@ private extension String {
 }
 
 private enum Target {
-    static let msConstants = "MSConstants"
+    static let msConstant = "MSConstant"
     static let msExtension = "MSExtension"
     static let msLogger = "MSLogger"
     static let msUserDefaults = "MSUserDefaults"
@@ -46,7 +46,14 @@ let package = Package(
     targets: [
         // Codes
         .target(
-            name: Target.msConstants,
+            name: Target.msConstant,
+            plugins: [
+                .plugin(
+                    name: "SwiftLintBuildToolPlugin",
+                    package: "SwiftLint"
+                )
+            ]
+        ),
             plugins: [
                 .plugin(
                     name: "SwiftLintBuildToolPlugin",
