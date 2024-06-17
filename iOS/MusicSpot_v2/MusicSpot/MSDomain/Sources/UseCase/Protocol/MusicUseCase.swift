@@ -12,7 +12,7 @@ import Entity
 
 public enum MusicFetchMethod {
     case term(String)
-    case rank
+    case rank(Genre)
 }
 
 public protocol MusicUseCase {
@@ -25,17 +25,23 @@ public protocol MusicUseCase {
     /// 현재 국가의 **Top100** 음악을 검색합니다.
     /// - Parameters:
     ///   - method: 음악을 불러오는 방식
-    func searchMusics(by method: MusicFetchMethod?) -> MusicItemCollection<Song>
+    func searchMusics(by method: MusicFetchMethod) -> MusicItemCollection<Song>
+
+    /// 주어진 앨범의 앨범 커버 이미지를 불러옵니다.
+    /// - Parameters:
+    ///   - album: 커버 이미지를 불러올 앨범에 대한 정보
+    /// - Returns: 앨범 커버 이미지 데이터
+    func fetchAlbumCover(of album: Album) async throws -> Data
 
     /// 주어진 URL로부터 앨범 커버 이미지를 불러옵니다.
     /// - Parameters:
     ///   - url: 앨범 커버 이미지 URL
     /// - Returns: 앨범 커버 이미지 데이터
-    func fetchAlbumCover(from url: String) async throws -> Data
-}
+    func fetchAlbumCover(from url: URL) async throws -> Data
 
-extension MusicUseCase {
-    public func searchMusics(by method: MusicFetchMethod? = nil) -> MusicItemCollection<Song> {
-        searchMusics(by: method)
-    }
+    /// 주어진 URL로부터 앨범 커버 이미지를 불러옵니다.
+    /// - Parameters:
+    ///   - url: 앨범 커버 이미지 URL 형태의 String
+    /// - Returns: 앨범 커버 이미지 데이터
+    func fetchAlbumCover(from url: String) async throws -> Data
 }

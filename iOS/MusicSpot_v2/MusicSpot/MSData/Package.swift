@@ -85,6 +85,10 @@ let package = Package(
                     package: Dependency.msDomain
                 ),
                 .product(
+                    name: Dependency.msImageFetcher,
+                    package: Dependency.msCoreKit
+                ),
+                .product(
                     name: Dependency.msFoundation,
                     package: Dependency.msFoundation
                 )

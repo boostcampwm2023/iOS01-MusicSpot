@@ -23,7 +23,6 @@ private enum Target {
 
 private enum Dependency {
     static let msData = "MSData"
-    static let repository = "Repository"
     static let msFoundation = "MSFoundation"
 }
 
