@@ -10,4 +10,6 @@ import Foundation
 import Entity
 
 public protocol SpotRepository {
+    func addSpot(_ spot: Spot, to journey: Journey)
+    func fetchPhotos(of spot: Spot) -> AsyncStream<(Spot, Data)>
 }

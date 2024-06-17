@@ -8,17 +8,33 @@
 import Foundation
 
 import Entity
+import Repository
 
 public final class AppSpotUseCase: SpotUseCase {
-    public func fetchSpots(of journey: Journey) async throws -> [Spot] {
-        []
+    // MARK: - Properties
+
+    private let spotRepository: SpotRepository
+    private let journeyRepository: JourneyRepository
+
+    // MARK: - Initializer
+
+    init(spotRepository: SpotRepository, journeyRepository: JourneyRepository) {
+        self.spotRepository = spotRepository
+        self.journeyRepository = journeyRepository
     }
 
-    public func fetchPhotos(of spot: Spot) async throws -> AsyncStream<(Spot, Data)> {
-        .init { _ in }
+    // MARK: - Functions
+
+    public func fetchPhotos(of spot: Spot) throws -> AsyncStream<(Spot, Data)> {
+        return self.spotRepository.fetchPhotos(of: spot)
     }
 
+    @discardableResult
     public func recordNewSpot(_ spot: Spot) async throws -> Spot {
-        Spot(coordinate: Coordinate(x: .zero, y: .zero), timestamp: .now, photoURLs: [])
+        let travelingJourney = try await self.journeyRepository.fetchTravelingJourney()
+
+        self.spotRepository.addSpot(spot, to: consume travelingJourney)
+
+        return spot
     }
 }

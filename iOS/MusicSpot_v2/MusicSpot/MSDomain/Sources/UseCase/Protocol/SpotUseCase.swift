@@ -10,12 +10,6 @@ import Foundation
 import Entity
 
 public protocol SpotUseCase {
-    /// Journey에 해당되는 Spot들의 정보를 불러옵니다.
-    /// - Parameters:
-    ///   - journey: Spot 정보를 불러올 Journey
-    /// - Returns: 주어진 Journey의 Spot 목록
-    func fetchSpots(of journey: Journey) async throws -> [Spot]
-
     /// Spot의 이미지들을 불러옵니다.
     /// - Parameters:
     ///   - spot: 이미지를 불러올 Spot
