@@ -23,6 +23,7 @@ private enum Target {
 
 private enum Dependency {
     static let msData = "MSData"
+    static let msUserDefaults = "MSUserDefaults"
     static let msFoundation = "MSFoundation"
 }
 
@@ -78,7 +79,11 @@ let package = Package(
         .target(
             name: Target.store,
             dependencies: [
-                .target(name: Target.entity)
+                .target(name: Target.entity),
+                .product(
+                    name: Dependency.msUserDefaults,
+                    package: Dependency.msFoundation
+                )
             ],
             plugins: [
                 .plugin(

@@ -16,8 +16,7 @@ import Store
 public final class AppJourneyUseCase: JourneyUseCase {
     // MARK: - Properties
 
-    @Environment(\.appState)
-    private var appState: AppState
+    private let appState = AppState.default
 
     private let journeyRepository: JourneyRepository
 

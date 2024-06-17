@@ -14,13 +14,14 @@ extension String {
 }
 
 private enum Target {
+    static let combineCocoa = "CombineCocoa"
     static let msDesignSystem = "MSDesignSystem"
     static let msSwiftUI = "MSSwiftUI"
     static let msUIKit = "MSUIKit"
-    static let combineCocoa = "CombineCocoa"
 }
 
 private enum Dependency {
+    static let msDomain = "MSDomain"
     static let msImageFetcher = "MSImageFetcher"
     static let msCoreKit = "MSCoreKit"
     static let msLogger = "MSLogger"
@@ -45,6 +46,10 @@ let package = Package(
         )
     ],
     dependencies: [
+        .package(
+            name: Dependency.msDomain,
+            path: Dependency.msDomain.fromRootPath
+        ),
         .package(
             name: Dependency.msCoreKit,
             path: Dependency.msCoreKit.fromRootPath
@@ -84,6 +89,10 @@ let package = Package(
             name: Target.msSwiftUI,
             dependencies: [
                 .target(name: Target.msDesignSystem),
+                .product(
+                    name: Dependency.msDomain,
+                    package: Dependency.msDomain
+                ),
                 .product(
                     name: Dependency.msFoundation,
                     package: Dependency.msFoundation
