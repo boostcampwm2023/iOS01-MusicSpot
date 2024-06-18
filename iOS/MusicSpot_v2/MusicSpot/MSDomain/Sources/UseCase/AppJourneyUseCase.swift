@@ -11,12 +11,12 @@ import SwiftUI
 import Entity
 import MSError
 import Repository
-import Store
+import SSOT
 
 public final class AppJourneyUseCase: JourneyUseCase {
     // MARK: - Properties
 
-    private let appState = AppState.default
+    private let appState = StateContainer.default.appState
 
     private let journeyRepository: JourneyRepository
 

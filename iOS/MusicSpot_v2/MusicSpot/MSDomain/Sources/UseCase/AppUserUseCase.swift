@@ -11,13 +11,12 @@ import SwiftUI
 import Entity
 import MSError
 import Repository
-import Store
+import SSOT
 
 public final class AppUserUseCase: UserUseCase {
-
     // MARK: - Properties
 
-    private var appState = AppState.default
+    private var userState: UserState = StateContainer.default.userState
 
     private let userRepository: UserRepository
 
@@ -30,13 +29,13 @@ public final class AppUserUseCase: UserUseCase {
     // MARK: - Functions
 
     public var currentUserID: String {
-        return self.appState.currentUserID
+        return self.userState.currentUserID
     }
 
     @discardableResult
     public func registerNewUser() async throws(UserError) -> String {
         // 사용중인 유저 존재 여부 확인
-        guard !self.appState.isUserLoggedIn else {
+        guard !self.userState.isUserLoggedIn else {
             throw .userAlreadyExists
         }
 
@@ -44,7 +43,7 @@ public final class AppUserUseCase: UserUseCase {
         let newUserID = UUID().uuidString
 
         // AppState 및 UserDefaults에 등록
-        self.appState.userState = .enabledFromEarth(newUserID)
+        self.userState.state = .localAuthenticated
 
         return newUserID
     }
@@ -54,7 +53,13 @@ public final class AppUserUseCase: UserUseCase {
         throw .userUpdateFailed
     }
 
-    public func disableUser() { }
+    public func disableUser() throws(UserError) {
+        guard self.userState.isUserLoggedIn else {
+            throw .userNotFound
+        }
+
+        self.userState.state = .disabled
+    }
 }
 
 // MARK: - Privates

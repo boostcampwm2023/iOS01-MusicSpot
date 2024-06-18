@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-import Store
+import SSOT
 
 /**
  `@Environment`와 함께 사용할 수 있도록 `EnvironmentValues`를 확장해주었습니다.
@@ -22,12 +22,21 @@ import Store
 
 extension EnvironmentValues {
     @Entry
-    public var appState = AppState.default
+    public var states = StateContainer.default
 }
 
 extension View {
-    func inject(_ appState: AppState) -> some View {
+    public func inject(_ states: StateContainer) -> some View {
         return self
-            .environment(\.appState, appState)
+            .environment(\.states, states)
+    }
+
+    public func inject(
+        appState: AppState = .shared,
+        userState: UserState = .shared
+    ) -> some View {
+        let container = StateContainer(appState: appState, userState: userState)
+        return self
+            .environment(\.states, container)
     }
 }

@@ -17,7 +17,7 @@ private enum Target {
     static let msDomain = "MSDomain"
     static let entity = "Entity"
     static let repository = "Repository"
-    static let store = "Store"
+    static let singleSource = "SSOT"
     static let usecase = "UseCase"
 }
 
@@ -43,7 +43,7 @@ let package = Package(
             name: Target.msDomain,
             targets: [
                 Target.repository,
-                Target.store,
+                Target.singleSource,
                 Target.usecase
             ]
         )
@@ -77,7 +77,7 @@ let package = Package(
             ]
         ),
         .target(
-            name: Target.store,
+            name: Target.singleSource,
             dependencies: [
                 .target(name: Target.entity),
                 .product(
@@ -97,7 +97,7 @@ let package = Package(
             dependencies: [
                 .target(name: Target.entity),
                 .target(name: Target.repository),
-                .target(name: Target.store),
+                .target(name: Target.singleSource),
                 .product(
                     name: Dependency.msFoundation,
                     package: Dependency.msFoundation
