@@ -30,7 +30,7 @@ public final class AppUserUseCase: UserUseCase {
     // MARK: - Functions
 
     public var currentUserID: String {
-        return self.appState.userData.userID
+        return self.appState.currentUserID
     }
 
     @discardableResult
@@ -44,7 +44,7 @@ public final class AppUserUseCase: UserUseCase {
         let newUserID = UUID().uuidString
 
         // AppState 및 UserDefaults에 등록
-        self.appState.userData.state = .enabledFromEarth(newUserID)
+        self.appState.userState = .enabledFromEarth(newUserID)
 
         return newUserID
     }

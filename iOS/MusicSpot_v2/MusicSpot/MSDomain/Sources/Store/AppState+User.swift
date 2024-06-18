@@ -12,10 +12,12 @@ extension AppState {
         /// 등록되어 사용 중인 User의 ID \
         /// UserDefaults를 사용합니다.
         @UserDefaultsWrapped("userID", defaultValue: "")
-        public private(set) var userID: String
+        private var userID: String
 
         /// 등록되어 사용 중인 User의 상태
-        public var state: UserState = .disabled
+        var state: UserState = .disabled {
+            willSet { self.userID = newValue.userID }
+        }
 
         public static func == (lhs: AppState.UserData, rhs: AppState.UserData) -> Bool {
             return lhs.userID == rhs.userID && lhs.state == rhs.state
@@ -28,5 +30,14 @@ extension AppState {
         case enabledFromEarth(String)
         /// Remote UserID를 사용하는 경우
         case enabledFromAlien(String)
+
+        var userID: String {
+            switch self {
+            case .disabled:
+                return ""
+            case .enabledFromEarth(let userID), .enabledFromAlien(let userID):
+                return userID
+            }
+        }
     }
 }
