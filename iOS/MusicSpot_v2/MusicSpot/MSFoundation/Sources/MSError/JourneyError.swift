@@ -7,4 +7,5 @@
 
 public enum JourneyError: Error {
     case emptyTravelingJourney
+    case multipleTravelingJourneys
 }

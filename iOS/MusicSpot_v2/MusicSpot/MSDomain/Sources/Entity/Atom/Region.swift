@@ -8,3 +8,9 @@
 import MapKit
 
 public typealias Region = MKMapRect
+
+extension Region {
+    public func containsAny(of points: [MKMapPoint]) -> Bool {
+        return points.contains { self.contains($0) }
+    }
+}
