@@ -10,7 +10,7 @@ import UIKit
 import MSCacheStorage
 import MSImageFetcher
 
-extension UIImageView: MSImageFetcherCompatible { }
+extension UIImageView: @retroactive MSImageFetcherCompatible { }
 
 extension MSImageFetcherWrapper where Base: UIImageView {
     /// URL로부터 이미지를 가져와 설정합니다.
