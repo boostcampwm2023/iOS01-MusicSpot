@@ -9,7 +9,7 @@ import Foundation
 
 public struct Timestamp {
     public let start: Date
-    public let end: Date?
+    public package(set) var end: Date?
 
     public init(start: Date, end: Date? = nil) {
         self.start = start

@@ -11,12 +11,12 @@ public struct Journey: Identifiable {
     // MARK: - Properties
 
     public let id: String
-    public let title: String?
-    public let date: Timestamp
-    public let spots: [Spot]
-    public let coordinates: [Coordinate]
-    public let playlist: [Music]
-    public let isTraveling: Bool
+    public private(set) var title: String?
+    public private(set) var date: Timestamp
+    public private(set) var spots: [Spot]
+    public private(set) var coordinates: [Coordinate]
+    public private(set) var playlist: [Music]
+    public private(set) var isTraveling: Bool
 
     // MARK: - Initializer
 
@@ -34,6 +34,19 @@ public struct Journey: Identifiable {
         self.coordinates = coordinates
         self.playlist = playlist
         self.isTraveling = isTraveling
+    }
+}
+
+// MARK: - Mutating Functions
+
+extension Journey {
+    public mutating func appendCoordinates(_ coordinates: [Coordinate]) {
+        self.coordinates = self.coordinates + coordinates
+    }
+
+    public mutating func finish() {
+        self.date.end = .now
+        self.isTraveling = false
     }
 }
 
