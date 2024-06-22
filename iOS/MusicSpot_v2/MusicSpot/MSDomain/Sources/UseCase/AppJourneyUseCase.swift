@@ -55,13 +55,13 @@ public final class AppJourneyUseCase: JourneyUseCase {
     @discardableResult
     public func recordNewCoordinates(_ coordinates: [Coordinate]) async throws(JourneyError) -> Journey {
         // 진행중인 여정 조회
-        let travelingJourney = try await self.fetchTravelingJourney()
+        var travelingJourney = try await self.fetchTravelingJourney()
 
         // 진행중인 여정에 새로운 좌표들을 추가한 여정 생성
-        let updatedJourney = travelingJourney.appended(consume coordinates)
+        travelingJourney.appendCoordinates(consume coordinates)
 
         // 업데이트 된 Journey를 DataSource에 적용
-        let savedJourney = try await self.journeyRepository.updateJourney(consume updatedJourney)
+        let savedJourney = try await self.journeyRepository.updateJourney(consume travelingJourney)
 
         return savedJourney
     }
@@ -77,9 +77,10 @@ public final class AppJourneyUseCase: JourneyUseCase {
             throw .emptyTravelingJourney
         }
 
-        let travelingJourney = try await self.fetchTravelingJourney()
+        var travelingJourney = try await self.fetchTravelingJourney()
+        travelingJourney.finish()
 
-        let endedJourney = try await self.journeyRepository.endJourney(consume travelingJourney)
+        let endedJourney = try await self.journeyRepository.updateJourney(consume travelingJourney)
         return endedJourney
     }
 
@@ -91,7 +92,7 @@ public final class AppJourneyUseCase: JourneyUseCase {
 
         let travelingJourney = try await self.fetchTravelingJourney()
 
-        let cancelledJourney = try await self.journeyRepository.endJourney(consume travelingJourney, isCancelled: true)
+        let cancelledJourney = try await self.journeyRepository.deleteJourney(consume travelingJourney)
         return cancelledJourney
     }
 
@@ -115,21 +116,5 @@ private extension AppJourneyUseCase {
             isTraveling: true
         )
         return journey
-    }
-}
-
-// MARK: - Extension: Journey
-
-private extension Journey {
-    func appended(_ coordinates: [Coordinate]) -> Self {
-        Journey(
-            id: self.id,
-            title: self.title,
-            date: self.date,
-            coordinates: self.coordinates + coordinates,
-            spots: self.spots,
-            playlist: self.playlist,
-            isTraveling: self.isTraveling
-        )
     }
 }
