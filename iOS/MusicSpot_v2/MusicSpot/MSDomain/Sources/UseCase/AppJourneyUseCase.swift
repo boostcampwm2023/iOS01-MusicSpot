@@ -108,7 +108,7 @@ private extension AppJourneyUseCase {
         let journey = Journey(
             id: UUID().uuidString,
             title: nil,
-            date: .startNow(),
+            date: Timestamp(start: .now),
             coordinates: [coordinate],
             spots: [],
             playlist: [],

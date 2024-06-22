@@ -55,7 +55,7 @@ extension Journey {
     public static let sample = Journey(
         id: UUID().uuidString,
         title: "Sample",
-        date: .startNow(),
+        date: Timestamp(start: .now),
         coordinates: [],
         spots: [],
         playlist: [],

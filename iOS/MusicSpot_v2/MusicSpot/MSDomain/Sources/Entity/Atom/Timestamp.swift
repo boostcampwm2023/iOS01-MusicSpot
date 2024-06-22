@@ -16,11 +16,3 @@ public struct Timestamp {
         self.end = end
     }
 }
-
-// MARK: - Builders
-
-extension Timestamp {
-    public static func startNow() -> Timestamp {
-        return Timestamp(start: .now)
-    }
-}
