@@ -27,25 +27,23 @@ public final class AppJourneyRepository: JourneyRepository {
     // MARK: - Functions
 
     public func fetchJourneys(in region: Region) async throws -> [Journey] {
-        let predicate = #Predicate<JourneyLocalDataSource> { journey in
-            return consume region.containsAny(of: journey.coordinates)
+        let result = try self.journeysFromContext { journey in
+            return region.containsAny(of: journey.coordinates)
         }
-        let descriptor = FetchDescriptor(predicate: consume predicate)
-        let result = try self.context.fetch(consume descriptor)
         return result.map { $0.toEntity() }
     }
 
     public func fetchTravelingJourney() async throws(JourneyError) -> Journey {
-        let predicate = #Predicate<JourneyLocalDataSource> { journey in
+        let results = try? self.journeysFromContext { journey in
             return journey.isTraveling
         }
-        let descriptor = FetchDescriptor(predicate: consume predicate)
-        guard let results = try? self.context.fetch(consume descriptor),
-              results.count == 1 else {
+
+        // TODO: 진행 중인 여정이 여러개 일 때 부가 처리
+        guard results?.count == 1 else {
             throw .multipleTravelingJourneys
         }
 
-        guard let result = results.first else {
+        guard let result = results?.first else {
             throw .multipleTravelingJourneys
         }
 
@@ -67,5 +65,19 @@ public final class AppJourneyRepository: JourneyRepository {
     // swiftlint:disable:next identifier_name
     public func deleteJourney(_ journey: Journey) async throws(JourneyError) -> Journey {
         .sample
+    }
+}
+
+// MARK: - Privates
+
+private extension AppJourneyRepository {
+    // TODO: Generic 사용한 SwiftData extension으로 추가
+    func journeysFromContext(_ predicate: (JourneyLocalDataSource) -> Bool) throws -> [JourneyLocalDataSource] {
+        let predicate = #Predicate<JourneyLocalDataSource> { journey in
+            return consume predicate(journey)
+        }
+        let descriptor = FetchDescriptor(predicate: consume predicate)
+        let result = try self.context.fetch(consume descriptor)
+        return result
     }
 }
