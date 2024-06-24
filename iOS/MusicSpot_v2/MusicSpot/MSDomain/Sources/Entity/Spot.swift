@@ -10,15 +10,20 @@ import Foundation
 public struct Spot {
     // MARK: - Properties
 
+    public let id: String
     public let coordinate: Coordinate
     public let timestamp: Date
     public let photoURLs: [URL]
 
     // MARK: - Initializer
 
-    public init(coordinate: Coordinate,
-                timestamp: Date,
-                photoURLs: [URL]) {
+    public init(
+        id: String,
+        coordinate: Coordinate,
+        timestamp: Date,
+        photoURLs: [URL]
+    ) {
+        self.id = id
         self.coordinate = coordinate
         self.timestamp = timestamp
         self.photoURLs = photoURLs

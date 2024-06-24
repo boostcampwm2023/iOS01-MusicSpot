@@ -20,6 +20,7 @@ public final class SpotLocalDataSource: EntityConvertible {
 
     // MARK: - Properties
 
+    public let spotID: String
     public var coordinate: Coordinate
     public var timestamp: Date
     @Relationship(deleteRule: .cascade, inverse: \PhotoLocalDataSource.spot)
@@ -28,6 +29,7 @@ public final class SpotLocalDataSource: EntityConvertible {
     // MARK: - Entity Convertible
 
     public init(from entity: Spot) {
+        self.spotID = entity.id
         self.coordinate = entity.coordinate
         self.timestamp = entity.timestamp
         self.photos = entity.photoURLs.map { PhotoLocalDataSource(from: $0) }
@@ -35,6 +37,7 @@ public final class SpotLocalDataSource: EntityConvertible {
 
     public func toEntity() -> Spot {
         return Spot(
+            id: self.spotID,
             coordinate: self.coordinate,
             timestamp: self.timestamp,
             photoURLs: self.photos.map { $0.toEntity() }
