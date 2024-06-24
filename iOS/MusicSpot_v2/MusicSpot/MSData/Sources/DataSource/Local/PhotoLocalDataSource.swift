@@ -37,4 +37,8 @@ public final class PhotoLocalDataSource: EntityConvertible {
     public func toEntity() -> URL {
         return self.url
     }
+
+    public func isEqual(to entity: URL) -> Bool {
+        return self.url == entity
+    }
 }

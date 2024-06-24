@@ -12,4 +12,5 @@ public protocol EntityConvertible {
 
     init(from entity: Entity)
     func toEntity() -> Entity
+    func isEqual(to entity: Entity) -> Bool
 }

@@ -55,4 +55,8 @@ public final class JourneyLocalDataSource: EntityConvertible {
             isTraveling: self.isTraveling
         )
     }
+
+    public func isEqual(to entity: Journey) -> Bool {
+        return self.journeyID == entity.id
+    }
 }

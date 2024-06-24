@@ -45,4 +45,8 @@ public final class MusicLocalDataSource: EntityConvertible {
             albumCover: self.albumCover
         )
     }
+
+    public func isEqual(to entity: Music) -> Bool {
+        return self.musicID == entity.id
+    }
 }

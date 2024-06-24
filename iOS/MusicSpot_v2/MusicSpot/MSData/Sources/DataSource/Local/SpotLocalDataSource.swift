@@ -43,4 +43,8 @@ public final class SpotLocalDataSource: EntityConvertible {
             photoURLs: self.photos.map { $0.toEntity() }
         )
     }
+
+    public func isEqual(to entity: Spot) -> Bool {
+        return self.spotID == entity.id
+    }
 }
