@@ -6,6 +6,7 @@
 //
 
 public enum JourneyError: Error {
+    case failedContextTransaction(String)
     case emptyTravelingJourney
     case multipleTravelingJourneys
 }
