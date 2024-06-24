@@ -63,3 +63,17 @@ public final class JourneyLocalDataSource: EntityConvertible {
         return self.journeyID == entity.id
     }
 }
+
+// MARK: - Updatable
+
+extension JourneyLocalDataSource: Updatable {
+    package func update(to dataSource: JourneyLocalDataSource) {
+        self.title = dataSource.title
+        self.startDate = dataSource.startDate
+        self.endDate = dataSource.endDate
+        self.isTraveling = dataSource.isTraveling
+        self.coordinates = dataSource.coordinates
+        self.spots = dataSource.spots
+        self.playlist = dataSource.playlist
+    }
+}
