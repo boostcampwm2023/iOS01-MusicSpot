@@ -16,6 +16,7 @@ public final class JourneyLocalDataSource: EntityConvertible {
 
     // MARK: - Properties
 
+    public let journeyID: String
     public var title: String
     public var startDate: Date
     public var endDate: Date?
@@ -29,7 +30,8 @@ public final class JourneyLocalDataSource: EntityConvertible {
 
     // MARK: - Initializer
 
-    init(title: String, startDate: Date = .now, isTraveling: Bool = true) {
+    init(journeyID: String, title: String, startDate: Date = .now, isTraveling: Bool = true) {
+        self.journeyID = journeyID
         self.title = title
         self.startDate = startDate
         self.isTraveling = isTraveling
@@ -38,6 +40,7 @@ public final class JourneyLocalDataSource: EntityConvertible {
     // MARK: - Entity Convertible
 
     public init(from entity: Journey) {
+        self.journeyID = entity.id
         self.title = entity.title ?? ""
         self.startDate = entity.date.start
         self.endDate = entity.date.end
@@ -46,9 +49,9 @@ public final class JourneyLocalDataSource: EntityConvertible {
 
     public func toEntity() -> Journey {
         return Journey(
-            id: "",
+            id: self.journeyID,
             title: self.title,
-            date: (start: self.startDate, end: self.endDate),
+            date: Timestamp(start: self.startDate, end: self.endDate),
             coordinates: self.coordinates,
             spots: self.spots.map { $0.toEntity() },
             playlist: self.playlist.map { $0.toEntity() },

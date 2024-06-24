@@ -19,19 +19,22 @@ public final class MusicLocalDataSource: EntityConvertible {
 
     // MARK: - Properties
 
+    public let musicID: String
     public var title: String
     public var artist: String?
     public var albumCover: AlbumCover?
 
     // MARK: - Initializer
 
-    init(title: String) {
+    init(musicID: String, title: String) {
+        self.musicID = musicID
         self.title = title
     }
 
     // MARK: - Entity Convertible
 
     public init(from entity: Music) {
+        self.musicID = entity.id
         self.title = entity.title
         self.artist = entity.artist
         self.albumCover = entity.albumCover
@@ -39,7 +42,7 @@ public final class MusicLocalDataSource: EntityConvertible {
 
     public func toEntity() -> Music {
         return Music(
-            id: "",
+            id: self.musicID,
             title: self.title,
             artist: self.artist,
             albumCover: self.albumCover
