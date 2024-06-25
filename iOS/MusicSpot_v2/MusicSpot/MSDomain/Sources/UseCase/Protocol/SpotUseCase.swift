@@ -21,5 +21,5 @@ public protocol SpotUseCase {
     ///   - spot: 추가할 새로운 Spot
     /// - Returns: 추가된 Spot 정보를 담은 인스턴스
     @discardableResult
-    func recordNewSpot(_ spot: Spot) async throws -> Spot
+    func recordNewSpot(_ spot: Spot, to journey: Journey) async throws -> Spot
 }

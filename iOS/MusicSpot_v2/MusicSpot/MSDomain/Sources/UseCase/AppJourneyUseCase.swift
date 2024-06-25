@@ -28,8 +28,12 @@ public final class AppJourneyUseCase: JourneyUseCase {
 
     // MARK: - Functions
 
-    public func fetchJourneys(in region: Region) async throws -> [Journey] {
-        try await self.journeyRepository.fetchJourneys(in: region)
+    public func fetchJourneys(in region: Region) async throws(JourneyError) -> [Journey] {
+        do {
+            return try await self.journeyRepository.fetchJourneys(in: region)
+        } catch {
+            throw .repositoryFailure(error)
+        }
     }
 
     public func fetchTravelingJourney() async throws(JourneyError) -> Journey {
@@ -37,8 +41,12 @@ public final class AppJourneyUseCase: JourneyUseCase {
             throw .emptyTravelingJourney
         }
 
-        let journey = try await self.journeyRepository.fetchTravelingJourney()
-        return journey
+        do {
+            let journey = try await self.journeyRepository.fetchTravelingJourney()
+            return journey
+        } catch {
+            throw .repositoryFailure(error)
+        }
     }
 
     @discardableResult
@@ -61,13 +69,16 @@ public final class AppJourneyUseCase: JourneyUseCase {
         travelingJourney.appendCoordinates(consume coordinates)
 
         // 업데이트 된 Journey를 DataSource에 적용
-        let savedJourney = try await self.journeyRepository.updateJourney(consume travelingJourney)
-
-        return savedJourney
+        do {
+            let savedJourney = try await self.journeyRepository.updateJourney(consume travelingJourney)
+            return savedJourney
+        } catch {
+            throw .repositoryFailure(error)
+        }
     }
 
     @discardableResult
-    public func recordNewCoordinates(_ coordinates: Coordinate...) async throws -> Journey {
+    public func recordNewCoordinates(_ coordinates: Coordinate...) async throws(JourneyError) -> Journey {
         return try await self.recordNewCoordinates(Array(consume coordinates))
     }
 
@@ -80,8 +91,12 @@ public final class AppJourneyUseCase: JourneyUseCase {
         var travelingJourney = try await self.fetchTravelingJourney()
         travelingJourney.finish()
 
-        let endedJourney = try await self.journeyRepository.updateJourney(consume travelingJourney)
-        return endedJourney
+        do {
+            let endedJourney = try await self.journeyRepository.updateJourney(consume travelingJourney)
+            return endedJourney
+        } catch {
+            throw .repositoryFailure(error)
+        }
     }
 
     @discardableResult
@@ -92,13 +107,21 @@ public final class AppJourneyUseCase: JourneyUseCase {
 
         let travelingJourney = try await self.fetchTravelingJourney()
 
-        let cancelledJourney = try await self.journeyRepository.deleteJourney(consume travelingJourney)
-        return cancelledJourney
+        do {
+            let cancelledJourney = try await self.journeyRepository.deleteJourney(consume travelingJourney)
+            return cancelledJourney
+        } catch {
+            throw .repositoryFailure(error)
+        }
     }
 
     @discardableResult
-    public func deleteJourney(_ journey: Journey) async throws -> Journey {
-        return try await self.journeyRepository.deleteJourney(journey)
+    public func deleteJourney(_ journey: Journey) async throws(JourneyError) -> Journey {
+        do {
+            return try await self.journeyRepository.deleteJourney(journey)
+        } catch {
+            throw .repositoryFailure(error)
+        }
     }
 }
 

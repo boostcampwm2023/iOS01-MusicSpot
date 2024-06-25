@@ -33,25 +33,25 @@ public final class AppJourneyRepository: JourneyRepository {
         return result.map { $0.toEntity() }
     }
 
-    public func fetchTravelingJourney() async throws(JourneyError) -> Journey {
+    public func fetchTravelingJourney() async throws -> Journey {
         let results = try? self.journeysFromContext { journey in
             return journey.isTraveling
         }
 
         // TODO: 진행 중인 여정이 여러개 일 때 부가 처리
         guard results?.count == 1 else {
-            throw .multipleTravelingJourneys
+            throw JourneyError.multipleTravelingJourneys
         }
 
         guard let result = results?.first else {
-            throw .multipleTravelingJourneys
+            throw JourneyError.multipleTravelingJourneys
         }
 
         return result.toEntity()
     }
 
     @discardableResult
-    public func updateJourney(_ journey: Journey) async throws(JourneyError) -> Journey {
+    public func updateJourney(_ journey: Journey) async throws -> Journey {
         do {
             var targetJourney = try self.singleJourneyFromContext { dataSource in
                 return dataSource.isEqual(to: journey)
@@ -63,7 +63,7 @@ public final class AppJourneyRepository: JourneyRepository {
             // Journey가 없을 경우 새로 생성
             self.context.insert(JourneyLocalDataSource(from: journey))
         } catch {
-            throw .failedContextTransaction(error.localizedDescription)
+            throw error
         }
 
         if self.context.hasChanges {
@@ -78,7 +78,7 @@ public final class AppJourneyRepository: JourneyRepository {
     @discardableResult
     // TODO: SwiftLint Swift 6 적용 후 삭제
     // swiftlint:disable:next identifier_name
-    public func deleteJourney(_ journey: Journey) async throws(JourneyError) -> Journey {
+    public func deleteJourney(_ journey: Journey) async throws -> Journey {
         let predicate = #Predicate<JourneyLocalDataSource> { dataSource in
             return dataSource.isEqual(to: journey)
         }
@@ -86,7 +86,7 @@ public final class AppJourneyRepository: JourneyRepository {
         do {
             try self.context.delete(model: JourneyLocalDataSource.self, where: consume predicate)
         } catch {
-            throw .failedContextTransaction(error.localizedDescription)
+            throw error
         }
     }
 }

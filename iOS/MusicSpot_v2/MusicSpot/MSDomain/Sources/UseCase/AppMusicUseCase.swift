@@ -34,11 +34,19 @@ public final class AppMusicUseCase: MusicUseCase {
     }
 
     public func fetchAlbumCover(of album: Album) async throws(MusicError) -> Data {
-        return try await self.musicRepository.fetchAlbumCover(of: album)
+        do {
+            return try await self.musicRepository.fetchAlbumCover(of: album)
+        } catch {
+            throw .repositoryFailure(error)
+        }
     }
 
     public func fetchAlbumCover(from url: URL) async throws(MusicError) -> Data {
-        return try await self.musicRepository.fetchAlbumCover(url)
+        do {
+            return try await self.musicRepository.fetchAlbumCover(url)
+        } catch {
+            throw .repositoryFailure(error)
+        }
     }
 
     public func fetchAlbumCover(from url: String) async throws(MusicError) -> Data {
@@ -46,6 +54,10 @@ public final class AppMusicUseCase: MusicUseCase {
             throw .invalidURL
         }
 
-        return try await self.musicRepository.fetchAlbumCover(url)
+        do {
+            return try await self.musicRepository.fetchAlbumCover(url)
+        } catch {
+            throw .repositoryFailure(error)
+        }
     }
 }

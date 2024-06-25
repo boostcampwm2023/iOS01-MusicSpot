@@ -64,10 +64,6 @@ let package = Package(
             name: Target.repository,
             dependencies: [
                 .target(name: Target.entity),
-                .product(
-                    name: Dependency.msFoundation,
-                    package: Dependency.msFoundation
-                )
             ],
             plugins: [
                 .plugin(

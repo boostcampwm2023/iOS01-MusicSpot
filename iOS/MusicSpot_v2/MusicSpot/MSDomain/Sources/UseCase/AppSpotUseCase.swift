@@ -8,19 +8,18 @@
 import Foundation
 
 import Entity
+import MSError
 import Repository
 
 public final class AppSpotUseCase: SpotUseCase {
     // MARK: - Properties
 
     private let spotRepository: SpotRepository
-    private let journeyRepository: JourneyRepository
 
     // MARK: - Initializer
 
-    init(spotRepository: SpotRepository, journeyRepository: JourneyRepository) {
+    init(spotRepository: SpotRepository) {
         self.spotRepository = spotRepository
-        self.journeyRepository = journeyRepository
     }
 
     // MARK: - Functions
@@ -30,10 +29,8 @@ public final class AppSpotUseCase: SpotUseCase {
     }
 
     @discardableResult
-    public func recordNewSpot(_ spot: Spot) async throws -> Spot {
-        let travelingJourney = try await self.journeyRepository.fetchTravelingJourney()
-
-        self.spotRepository.addSpot(spot, to: consume travelingJourney)
+    public func recordNewSpot(_ spot: Spot, to journey: Journey) async throws(SpotError) -> Spot {
+        self.spotRepository.addSpot(spot, to: consume journey)
 
         return spot
     }
