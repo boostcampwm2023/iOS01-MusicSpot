@@ -63,7 +63,7 @@ let package = Package(
         .target(
             name: Target.repository,
             dependencies: [
-                .target(name: Target.entity),
+                .target(name: Target.entity)
             ],
             plugins: [
                 .plugin(
