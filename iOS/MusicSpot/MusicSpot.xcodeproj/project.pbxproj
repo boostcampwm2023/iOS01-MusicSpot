@@ -16,15 +16,15 @@
 		FDAD84D92C0F5721003DB689 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = FDAD84D82C0F5721003DB689 /* Home */; };
 		FDDA4E022C14AA5B00670AEF /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = FDDA4E012C14AA5B00670AEF /* Home */; };
 		FDDA4E052C14AA6500670AEF /* MSSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = FDDA4E042C14AA6500670AEF /* MSSwiftUI */; };
-		FDDF38852BCD5D76007D1CD2 /* MSFusion in Resources */ = {isa = PBXBuildFile; fileRef = FDDF38842BCD5D76007D1CD2 /* MSFusion */; };
-		FDDF38872BCD5FB0007D1CD2 /* MSCoreKit in Resources */ = {isa = PBXBuildFile; fileRef = FDDF38862BCD5FB0007D1CD2 /* MSCoreKit */; };
-		FDDF388B2BCD5FBC007D1CD2 /* MSDomain in Resources */ = {isa = PBXBuildFile; fileRef = FDDF38882BCD5FBC007D1CD2 /* MSDomain */; };
-		FDDF388C2BCD5FBC007D1CD2 /* MSData in Resources */ = {isa = PBXBuildFile; fileRef = FDDF38892BCD5FBC007D1CD2 /* MSData */; };
-		FDDF388D2BCD5FBC007D1CD2 /* MSFoundation in Resources */ = {isa = PBXBuildFile; fileRef = FDDF388A2BCD5FBC007D1CD2 /* MSFoundation */; };
 		FDED74082C2BF5990076CBC6 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = FDED74072C2BF5990076CBC6 /* Home */; };
 		FDED740B2C2BF5AE0076CBC6 /* MSSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = FDED740A2C2BF5AE0076CBC6 /* MSSwiftUI */; };
 		FDED740D2C2BF6150076CBC6 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = FDED740C2C2BF6150076CBC6 /* .swiftlint.yml */; };
 		FDED740F2C2BF6240076CBC6 /* .pre-commit-config.yaml in Resources */ = {isa = PBXBuildFile; fileRef = FDED740E2C2BF6240076CBC6 /* .pre-commit-config.yaml */; };
+		FDED74152C2C15BF0076CBC6 /* MSCoreKit in Resources */ = {isa = PBXBuildFile; fileRef = FDED74102C2C15BF0076CBC6 /* MSCoreKit */; };
+		FDED74162C2C15BF0076CBC6 /* MSData in Resources */ = {isa = PBXBuildFile; fileRef = FDED74112C2C15BF0076CBC6 /* MSData */; };
+		FDED74172C2C15BF0076CBC6 /* MSDomain in Resources */ = {isa = PBXBuildFile; fileRef = FDED74122C2C15BF0076CBC6 /* MSDomain */; };
+		FDED74182C2C15BF0076CBC6 /* MSFoundation in Resources */ = {isa = PBXBuildFile; fileRef = FDED74132C2C15BF0076CBC6 /* MSFoundation */; };
+		FDED74192C2C15BF0076CBC6 /* MSFusion in Resources */ = {isa = PBXBuildFile; fileRef = FDED74142C2C15BF0076CBC6 /* MSFusion */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,13 +36,13 @@
 		FD40A50B2BCD55D400518B9F /* MusicSpot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MusicSpot.entitlements; sourceTree = "<group>"; };
 		FD40A50D2BCD55D400518B9F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		FDA692282BD0163300069E2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		FDDF38842BCD5D76007D1CD2 /* MSFusion */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MSFusion; sourceTree = "<group>"; };
-		FDDF38862BCD5FB0007D1CD2 /* MSCoreKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MSCoreKit; sourceTree = "<group>"; };
-		FDDF38882BCD5FBC007D1CD2 /* MSDomain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MSDomain; sourceTree = "<group>"; };
-		FDDF38892BCD5FBC007D1CD2 /* MSData */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MSData; sourceTree = "<group>"; };
-		FDDF388A2BCD5FBC007D1CD2 /* MSFoundation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MSFoundation; sourceTree = "<group>"; };
 		FDED740C2C2BF6150076CBC6 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; name = .swiftlint.yml; path = ../.swiftlint.yml; sourceTree = "<group>"; };
 		FDED740E2C2BF6240076CBC6 /* .pre-commit-config.yaml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; name = ".pre-commit-config.yaml"; path = "../../.pre-commit-config.yaml"; sourceTree = "<group>"; };
+		FDED74102C2C15BF0076CBC6 /* MSCoreKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MSCoreKit; sourceTree = "<group>"; };
+		FDED74112C2C15BF0076CBC6 /* MSData */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MSData; sourceTree = "<group>"; };
+		FDED74122C2C15BF0076CBC6 /* MSDomain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MSDomain; sourceTree = "<group>"; };
+		FDED74132C2C15BF0076CBC6 /* MSFoundation */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MSFoundation; sourceTree = "<group>"; };
+		FDED74142C2C15BF0076CBC6 /* MSFusion */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MSFusion; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,11 +69,11 @@
 			children = (
 				FDED740E2C2BF6240076CBC6 /* .pre-commit-config.yaml */,
 				FDED740C2C2BF6150076CBC6 /* .swiftlint.yml */,
-				FDDF38892BCD5FBC007D1CD2 /* MSData */,
-				FDDF38882BCD5FBC007D1CD2 /* MSDomain */,
-				FDDF388A2BCD5FBC007D1CD2 /* MSFoundation */,
-				FDDF38862BCD5FB0007D1CD2 /* MSCoreKit */,
-				FDDF38842BCD5D76007D1CD2 /* MSFusion */,
+				FDED74102C2C15BF0076CBC6 /* MSCoreKit */,
+				FDED74112C2C15BF0076CBC6 /* MSData */,
+				FDED74122C2C15BF0076CBC6 /* MSDomain */,
+				FDED74132C2C15BF0076CBC6 /* MSFoundation */,
+				FDED74142C2C15BF0076CBC6 /* MSFusion */,
 				FDD0C7FE2BCD5B73004FB9C0 /* Features */,
 				FD40A5042BCD55D300518B9F /* MusicSpot */,
 				FD40A5032BCD55D300518B9F /* Products */,
@@ -191,15 +191,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FDED74152C2C15BF0076CBC6 /* MSCoreKit in Resources */,
+				FDED74162C2C15BF0076CBC6 /* MSData in Resources */,
+				FDED74172C2C15BF0076CBC6 /* MSDomain in Resources */,
+				FDED74182C2C15BF0076CBC6 /* MSFoundation in Resources */,
+				FDED74192C2C15BF0076CBC6 /* MSFusion in Resources */,
 				FDED740D2C2BF6150076CBC6 /* .swiftlint.yml in Resources */,
 				FDED740F2C2BF6240076CBC6 /* .pre-commit-config.yaml in Resources */,
 				FD40A50E2BCD55D400518B9F /* Preview Assets.xcassets in Resources */,
-				FDDF38852BCD5D76007D1CD2 /* MSFusion in Resources */,
-				FDDF388D2BCD5FBC007D1CD2 /* MSFoundation in Resources */,
-				FDDF388C2BCD5FBC007D1CD2 /* MSData in Resources */,
-				FDDF38872BCD5FB0007D1CD2 /* MSCoreKit in Resources */,
 				FD40A50A2BCD55D400518B9F /* Assets.xcassets in Resources */,
-				FDDF388B2BCD5FBC007D1CD2 /* MSDomain in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
