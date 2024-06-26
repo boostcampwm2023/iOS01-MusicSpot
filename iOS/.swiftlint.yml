@@ -2,8 +2,7 @@ excluded:
   - ${PWD}/Carthage
   - ${PWD}/Pods
   - ${PWD}/DerivedData
-  - ${PWD}/Features
-  - ${PWD}/MusicSpot
+  - ${PWD}/_legacy
 
 disabled_rules:
   - discarded_notification_center_observer
