@@ -9,13 +9,13 @@ update_git: move_hook
 
 move_hook: pre-commit_apply
 	@echo "Moving pre-commit hook to iOS/.githooks/"
-	mv -f ../.git/hooks/pre-commit ./.githooks/pre-commit
+	mv -f ../../.git/hooks/pre-commit ../.githooks/pre-commit
 
 pre-commit_apply: install_pre-commit
 	@echo "Installing pre-commit hooks at default path"
-	@if [ -f ../.git/hooks/pre-commit ]; then \
+	@if [ -f ../../.git/hooks/pre-commit ]; then \
 		echo "pre-commit hook already exists, removing it for new one..."; \
-		rm ../.git/hooks/pre-commit; \
+		rm ../../.git/hooks/pre-commit; \
 	fi
 
 	@if git config --unset $(GIT_HOOKPATH_KEY); then \
