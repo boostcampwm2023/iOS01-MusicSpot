@@ -10,8 +10,6 @@ import Foundation
 import Entity
 
 public protocol SpotRepository {
-    func fetchRecordingSpots() async -> Result<[Spot], Error>
-    func upload(spot: RequestableSpot) async -> Result<Spot, Error>
-    @discardableResult
-    func fetchSpotPhoto(from photoURL: URL) async -> Data?
+    func addSpot(_ spot: Spot, to journey: Journey)
+    func fetchPhotos(of spot: Spot) -> AsyncStream<(Spot, Data)>
 }

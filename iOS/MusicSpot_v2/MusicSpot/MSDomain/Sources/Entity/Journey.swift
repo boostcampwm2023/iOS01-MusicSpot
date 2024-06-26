@@ -12,20 +12,20 @@ public struct Journey: Identifiable {
 
     public let id: String
     public let title: String?
-    public let date: (start: Date, end: Date?)
+    public let date: Timestamp
     public let spots: [Spot]
     public let coordinates: [Coordinate]
-    public let playlist: Playlist
+    public let playlist: [Music]
     public let isTraveling: Bool
 
     // MARK: - Initializer
 
     public init(id: String,
                 title: String?,
-                date: (start: Date, end: Date?),
+                date: Timestamp,
                 coordinates: [Coordinate],
                 spots: [Spot],
-                playlist: Playlist,
+                playlist: [Music],
                 isTraveling: Bool) {
         self.id = id
         self.title = title
@@ -55,7 +55,7 @@ extension Journey {
     public static let sample = Journey(
         id: UUID().uuidString,
         title: "Sample",
-        date: (start: .now, end: nil),
+        date: .startNow(),
         coordinates: [],
         spots: [],
         playlist: [],

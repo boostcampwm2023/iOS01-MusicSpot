@@ -11,21 +11,21 @@ import SwiftData
 import Entity
 
 @Model
-final class JourneyLocalDataSource: EntityConvertible {
-    typealias Entity = Journey
+public final class JourneyLocalDataSource: EntityConvertible {
+    public typealias Entity = Journey
 
     // MARK: - Properties
 
-    var title: String
-    var startDate: Date
-    var endDate: Date?
-    var isTraveling: Bool
+    public var title: String
+    public var startDate: Date
+    public var endDate: Date?
+    public var isTraveling: Bool
 
-    var coordinates: [Coordinate] = []
+    public var coordinates: [Coordinate] = []
     @Relationship(deleteRule: .cascade, inverse: \SpotLocalDataSource.journey)
-    var spots: [SpotLocalDataSource] = []
+    public var spots: [SpotLocalDataSource] = []
     @Relationship(deleteRule: .cascade, inverse: \MusicLocalDataSource.journey)
-    var playlist: [MusicLocalDataSource] = []
+    public var playlist: [MusicLocalDataSource] = []
 
     // MARK: - Initializer
 

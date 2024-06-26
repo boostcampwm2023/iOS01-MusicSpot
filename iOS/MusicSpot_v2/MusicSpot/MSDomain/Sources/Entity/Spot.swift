@@ -46,10 +46,6 @@ public struct RequestableSpot {
     }
 }
 
-// MARK: - Hashable
-
-extension Spot: Hashable { }
-
 // MARK: - String Convertible
 
 extension Spot: CustomStringConvertible {

@@ -20,7 +20,7 @@ extension String {
 private enum Target {
     static let msData = "MSData"
     static let dataSource = "DataSource"
-    static let repository = "AppRepository"
+    static let appRepository = "AppRepository"
     static let router = "Router"
 }
 
@@ -35,7 +35,6 @@ private enum Dependency {
     static let msPersistentStorage = "MSPersistentStorage"
     static let msCoreKit = "MSCoreKit"
     // Foundation
-    static let msExtension = "MSExtension"
     static let msLogger = "MSLogger"
     static let msUserDefaults = "MSUserDefaults"
     static let msFoundation = "MSFoundation"
@@ -54,11 +53,8 @@ let package = Package(
             targets: [Target.dataSource]
         ),
         .library(
-            name: Target.msData,
-            targets: [
-                Target.dataSource,
-                Target.repository
-            ]
+            name: Target.appRepository,
+            targets: [Target.appRepository]
         )
     ],
     dependencies: [
@@ -71,11 +67,39 @@ let package = Package(
             path: Dependency.msCoreKit.fromRootPath
         ),
         .package(
+            name: Dependency.msFoundation,
+            path: Dependency.msFoundation.fromRootPath
+        ),
+        .package(
             url: "https://github.com/realm/SwiftLint.git",
             from: "0.55.1"
         )
     ],
     targets: [
+        .target(
+            name: Target.appRepository,
+            dependencies: [
+                .target(name: Target.dataSource),
+                .product(
+                    name: Dependency.msDomain,
+                    package: Dependency.msDomain
+                ),
+                .product(
+                    name: Dependency.msImageFetcher,
+                    package: Dependency.msCoreKit
+                ),
+                .product(
+                    name: Dependency.msFoundation,
+                    package: Dependency.msFoundation
+                )
+            ],
+            plugins: [
+                .plugin(
+                    name: "SwiftLintBuildToolPlugin",
+                    package: "SwiftLint"
+                )
+            ]
+        ),
         .target(
             name: Target.dataSource,
             dependencies: [
@@ -89,23 +113,6 @@ let package = Package(
                     name: "SwiftLintBuildToolPlugin",
                     package: "SwiftLint"
                 )
-            ]
-        ),
-        .target(
-            name: Target.repository,
-            dependencies: [
-            ],
-            plugins: [
-                .plugin(
-                    name: "SwiftLintBuildToolPlugin",
-                    package: "SwiftLint"
-                )
-            ]
-        ),
-        .testTarget(
-            name: Target.repository.testTarget,
-            dependencies: [
-                .target(name: Target.repository)
             ]
         )
     ]

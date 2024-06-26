@@ -12,7 +12,8 @@ import MSDesignSystem
 
 @main
 struct MusicSpotApp: App {
-    @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
+    @UIApplicationDelegateAdaptor
+    private var appDelegate: AppDelegate
 
     var body: some Scene {
         WindowGroup {

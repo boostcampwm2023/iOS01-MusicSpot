@@ -11,19 +11,19 @@ import SwiftData
 import Entity
 
 @Model
-final class SpotLocalDataSource: EntityConvertible {
-    typealias Entity = Spot
+public final class SpotLocalDataSource: EntityConvertible {
+    public typealias Entity = Spot
 
     // MARK: - Relationships
 
-    var journey: JourneyLocalDataSource?
+    public var journey: JourneyLocalDataSource?
 
     // MARK: - Properties
 
-    var coordinate: Coordinate
-    var timestamp: Date
+    public var coordinate: Coordinate
+    public var timestamp: Date
     @Relationship(deleteRule: .cascade, inverse: \PhotoLocalDataSource.spot)
-    var photos: [PhotoLocalDataSource] = []
+    public var photos: [PhotoLocalDataSource] = []
 
     // MARK: - Entity Convertible
 

@@ -7,7 +7,7 @@
 
 import Foundation
 
-import MSConstants
+import MSConstant
 
 public final class MSCacheStorage: CacheStorage {
     public typealias Key = String
