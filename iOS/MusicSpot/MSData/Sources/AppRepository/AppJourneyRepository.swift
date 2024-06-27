@@ -27,15 +27,12 @@ public final class AppJourneyRepository: JourneyRepository {
     // MARK: - Functions
 
     public func fetchJourneys(in region: Region) async throws -> [Journey] {
+        let (rectMinX, rectMaxX) = (region.origin.x, region.origin.x + region.width)
+        let (rectMinY, rectMaxY) = (region.origin.y, region.origin.y + region.height)
+        
         let predicate = #Predicate<JourneyLocalDataSource> { dataSource in
             return dataSource.coordinates.contains { coordinate in
-                let (rectMinX, rectMaxX) = (region.origin.x, region.origin.x + region.width)
-                let (rectMinY, rectMaxY) = (region.origin.y, region.origin.y + region.height)
-                
-                let isWithinXBounds = (coordinate.x >= rectMinX) && (coordinate.x <= rectMaxX)
-                let isWithinYBounds = (coordinate.y >= rectMinY) && (coordinate.y <= rectMaxY)
-                
-                return isWithinXBounds && isWithinYBounds
+                return (coordinate.x >= rectMinX) && (coordinate.x <= rectMaxX) && (coordinate.y >= rectMinY) && (coordinate.y <= rectMaxY)
             }
         }
         let descriptor = FetchDescriptor(predicate: consume predicate)
@@ -70,7 +67,7 @@ public final class AppJourneyRepository: JourneyRepository {
         do {
             let id = journey.id
             let predicate = #Predicate<JourneyLocalDataSource> { dataSource in
-                return dataSource.journeyID == id
+                return dataSource.journeyID == consume id
             }
             let descriptor = FetchDescriptor(predicate: consume predicate)
 
@@ -88,12 +85,15 @@ public final class AppJourneyRepository: JourneyRepository {
             throw error
         }
 
-        if self.context.hasChanges {
-            do {
-                try self.context.save()
-            } catch {
-                throw JourneyError.repositoryFailure(error)
-            }
+        guard self.context.hasChanges else {
+            throw JourneyError.noLocalUpdate
+        }
+        
+        do {
+            try self.context.save()
+            return journey
+        } catch {
+            throw JourneyError.repositoryError(error)
         }
     }
 
@@ -108,6 +108,7 @@ public final class AppJourneyRepository: JourneyRepository {
         
         do {
             try self.context.delete(model: JourneyLocalDataSource.self, where: consume predicate)
+            return journey
         } catch {
             throw error
         }
