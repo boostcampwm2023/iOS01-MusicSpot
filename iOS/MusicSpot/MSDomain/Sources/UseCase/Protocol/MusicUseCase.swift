@@ -25,7 +25,7 @@ public protocol MusicUseCase {
     /// 현재 국가의 **Top100** 음악을 검색합니다.
     /// - Parameters:
     ///   - method: 음악을 불러오는 방식
-    func searchMusics(by method: MusicFetchMethod) -> MusicItemCollection<Song>
+    func searchMusics(by method: MusicFetchMethod) async throws -> MusicItemCollection<Song>
 
     /// 주어진 앨범의 앨범 커버 이미지를 불러옵니다.
     /// - Parameters:

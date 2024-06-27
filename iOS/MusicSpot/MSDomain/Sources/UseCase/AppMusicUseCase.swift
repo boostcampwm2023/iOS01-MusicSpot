@@ -24,12 +24,16 @@ public final class AppMusicUseCase: MusicUseCase {
 
     // MARK: - Functions
 
-    public func searchMusics(by method: MusicFetchMethod) -> MusicItemCollection<Song> {
-        switch method {
-        case .term(let term):
-            return self.musicRepository.searchMusic(term: term)
-        case .rank(let genre):
-            return self.musicRepository.fetchTopRanking(genre)
+    public func searchMusics(by method: MusicFetchMethod) async throws(MusicError) -> MusicItemCollection<Song> {
+        do {
+            switch method {
+            case .term(let term):
+                return try await self.musicRepository.searchMusic(term: term)
+            case .rank(let genre):
+                return try await self.musicRepository.fetchTopRanking(genre)
+            }
+        } catch {
+            throw .repositoryFailure(error)
         }
     }
 
