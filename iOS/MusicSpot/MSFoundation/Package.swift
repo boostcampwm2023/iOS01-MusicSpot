@@ -38,10 +38,14 @@ let package = Package(
                 Target.msExtension
             ]
         ),
-        .library(name: Target.msLogger,
-                 targets: [Target.msLogger]),
-        .library(name: Target.msUserDefaults,
-                 targets: [Target.msUserDefaults])
+        .library(
+            name: Target.msLogger,
+            targets: [Target.msLogger]
+        ),
+        .library(
+            name: Target.msUserDefaults,
+            targets: [Target.msUserDefaults]
+        )
     ],
     dependencies: [
         .package(
@@ -98,14 +102,17 @@ let package = Package(
         ),
 
         // Tests
-        .testTarget(name: Target.msLogger.testTarget,
-                    dependencies: [
-                        .target(name: Target.msLogger)
-                    ]),
-        .testTarget(name: Target.msUserDefaults.testTarget,
-                    dependencies: [
-                        .target(name: Target.msUserDefaults)
-                    ])
-    ],
-    swiftLanguageVersions: [.v5]
+        .testTarget(
+            name: Target.msLogger.testTarget,
+            dependencies: [
+                .target(name: Target.msLogger)
+            ]
+        ),
+        .testTarget(
+            name: Target.msUserDefaults.testTarget,
+            dependencies: [
+                .target(name: Target.msUserDefaults)
+            ]
+        )
+    ]
 )
