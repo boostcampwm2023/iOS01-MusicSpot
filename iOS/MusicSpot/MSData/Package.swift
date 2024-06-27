@@ -116,7 +116,10 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: Target.appRepository.testTarget
+            name: Target.appRepository.testTarget,
+            dependencies: [
+                .target(name: Target.appRepository)
+            ]
         )
     ]
 )
