@@ -76,12 +76,12 @@ public final class AppJourneyRepository: JourneyRepository {
 
             let fetchedValues = try self.context.fetch(consume descriptor, batchSize: 1)
             guard let targetJourney = fetchedValues.first else {
-                throw JourneyError.emptyTravelingJourney
+                throw JourneyError.noTravelingJourney
             }
             
             // Journey가 존재할 경우 targetJourney를 주어진 journey 값으로 업데이트
             targetJourney.update(to: journey)
-        } catch JourneyError.emptyTravelingJourney {
+        } catch JourneyError.noTravelingJourney {
             // Journey가 없을 경우 새로 생성
             self.context.insert(JourneyLocalDataSource(from: journey))
         } catch {

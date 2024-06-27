@@ -37,7 +37,7 @@ public final class AppSpotRepository: SpotRepository {
         let fetchedValues = try context.fetch(consume descriptor)
         
         guard let targetJourney = fetchedValues.first else {
-            throw JourneyError.emptyTravelingJourney
+            throw JourneyError.noTravelingJourney
         }
 
         targetJourney.spots.append(SpotLocalDataSource(from: spot))
