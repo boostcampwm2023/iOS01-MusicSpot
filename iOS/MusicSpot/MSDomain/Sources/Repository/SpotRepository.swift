@@ -10,6 +10,8 @@ import Foundation
 import Entity
 
 public protocol SpotRepository {
-    func addSpot(_ spot: Spot, to journey: Journey)
-    func fetchPhotos(of spot: Spot) -> AsyncStream<(Spot, Data)>
+    typealias PhotoWithSpot = (spot: Spot, photoData: Data)
+
+    func addSpot(_ spot: Spot, to journey: Journey) throws
+    func fetchPhotos(of spot: Spot) -> AsyncThrowingStream<PhotoWithSpot, Error>
 }

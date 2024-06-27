@@ -30,8 +30,11 @@ public final class AppSpotUseCase: SpotUseCase {
 
     @discardableResult
     public func recordNewSpot(_ spot: Spot, to journey: Journey) async throws(SpotError) -> Spot {
-        self.spotRepository.addSpot(spot, to: consume journey)
-
-        return spot
+        do {
+            try self.spotRepository.addSpot(spot, to: consume journey)
+            return spot
+        } catch {
+            throw .repositoryFailure(error)
+        }
     }
 }

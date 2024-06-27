@@ -6,12 +6,12 @@
 //
 
 import XCTest
-@testable import MSData
+@testable import AppRepository
 
 final class SpotRepositoryTests: XCTestCase {
     // MARK: - Properties
 
-    private let sut = SpotRepositoryImplementation()
+    private let sut = AppSpotRepository()
 
     // MARK: - Tests
 
