@@ -6,4 +6,5 @@
 //
 
 public enum SpotError: Error {
+    case repositoryFailure(Error)
 }

@@ -24,14 +24,17 @@ public final class AppSpotUseCase: SpotUseCase {
 
     // MARK: - Functions
 
-    public func fetchPhotos(of spot: Spot) throws -> AsyncStream<(Spot, Data)> {
+    public func fetchPhotos(of spot: Spot) throws -> AsyncThrowingStream<(spot: Spot, photoData: Data), Error> {
         return self.spotRepository.fetchPhotos(of: spot)
     }
 
     @discardableResult
     public func recordNewSpot(_ spot: Spot, to journey: Journey) async throws(SpotError) -> Spot {
-        self.spotRepository.addSpot(spot, to: consume journey)
-
-        return spot
+        do {
+            try self.spotRepository.addSpot(spot, to: consume journey)
+            return spot
+        } catch {
+            throw .repositoryFailure(error)
+        }
     }
 }
