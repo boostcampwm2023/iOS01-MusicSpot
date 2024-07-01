@@ -14,7 +14,7 @@ public protocol SpotUseCase {
     /// - Parameters:
     ///   - spot: 이미지를 불러올 Spot
     /// - Returns: Spot에 기록된 이미지 데이터와 Spot 자체에 대한 데이터 묶음
-    func fetchPhotos(of spot: Spot) async throws -> AsyncStream<(Spot, Data)>
+    func fetchPhotos(of spot: Spot) async throws -> AsyncThrowingStream<(spot: Spot, photoData: Data), Error>
 
     /// 새로운 Spot을 추가합니다.
     /// - Parameters:

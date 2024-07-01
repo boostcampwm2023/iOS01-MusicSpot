@@ -24,7 +24,7 @@ public final class AppSpotUseCase: SpotUseCase {
 
     // MARK: - Functions
 
-    public func fetchPhotos(of spot: Spot) throws -> AsyncStream<(Spot, Data)> {
+    public func fetchPhotos(of spot: Spot) throws -> AsyncThrowingStream<(spot: Spot, photoData: Data), Error> {
         return self.spotRepository.fetchPhotos(of: spot)
     }
 

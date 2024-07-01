@@ -126,6 +126,7 @@ let package = Package(
                     name: "Testing",
                     package: "swift-testing"
                 )
+                .target(name: Target.appRepository)
             ]
         )
     ]

@@ -27,23 +27,35 @@ public final class AppJourneyRepository: JourneyRepository {
     // MARK: - Functions
 
     public func fetchJourneys(in region: Region) async throws -> [Journey] {
-        let result = try self.journeysFromContext { journey in
-            return region.containsAny(of: journey.coordinates)
+        let (rectMinX, rectMaxX) = (region.origin.x, region.origin.x + region.width)
+        let (rectMinY, rectMaxY) = (region.origin.y, region.origin.y + region.height)
+        
+        let predicate = #Predicate<JourneyLocalDataSource> { dataSource in
+            return dataSource.coordinates.contains { coordinate in
+                return (coordinate.x >= rectMinX) && (coordinate.x <= rectMaxX) && (coordinate.y >= rectMinY) && (coordinate.y <= rectMaxY)
+            }
         }
+        let descriptor = FetchDescriptor(predicate: consume predicate)
+        
+        let result = try self.context.fetch(consume descriptor)
+        
         return result.map { $0.toEntity() }
     }
 
     public func fetchTravelingJourney() async throws -> Journey {
-        let results = try? self.journeysFromContext { journey in
+        let predicate = #Predicate<JourneyLocalDataSource> { journey in
             return journey.isTraveling
         }
+        let descriptor = FetchDescriptor(predicate: consume predicate)
+        
+        let results = try self.context.fetch(consume descriptor)
 
         // TODO: 진행 중인 여정이 여러개 일 때 부가 처리
-        guard results?.count == 1 else {
+        guard results.count == 1 else {
             throw JourneyError.multipleTravelingJourneys
         }
 
-        guard let result = results?.first else {
+        guard let result = results.first else {
             throw JourneyError.multipleTravelingJourneys
         }
 
@@ -53,25 +65,35 @@ public final class AppJourneyRepository: JourneyRepository {
     @discardableResult
     public func updateJourney(_ journey: Journey) async throws -> Journey {
         do {
-            var targetJourney = try self.singleJourneyFromContext { dataSource in
-                return dataSource.isEqual(to: journey)
+            let id = journey.id
+            let predicate = #Predicate<JourneyLocalDataSource> { dataSource in
+                return dataSource.journeyID == consume id
+            }
+            let descriptor = FetchDescriptor(predicate: consume predicate)
+
+            let fetchedValues = try self.context.fetch(consume descriptor, batchSize: 1)
+            guard let targetJourney = fetchedValues.first else {
+                throw JourneyError.noTravelingJourney
             }
             
             // Journey가 존재할 경우 targetJourney를 주어진 journey 값으로 업데이트
             targetJourney.update(to: journey)
-        } catch JourneyError.emptyTravelingJourney {
+        } catch JourneyError.noTravelingJourney {
             // Journey가 없을 경우 새로 생성
             self.context.insert(JourneyLocalDataSource(from: journey))
         } catch {
             throw error
         }
 
-        if self.context.hasChanges {
-            do {
-                try self.context.save()
-            } catch {
-                throw JourneyError.repositoryFailure(error)
-            }
+        guard self.context.hasChanges else {
+            throw JourneyError.noLocalUpdate
+        }
+        
+        do {
+            try self.context.save()
+            return journey
+        } catch {
+            throw JourneyError.repositoryError(error)
         }
     }
 
@@ -79,47 +101,16 @@ public final class AppJourneyRepository: JourneyRepository {
     // TODO: SwiftLint Swift 6 적용 후 삭제
     // swiftlint:disable:next identifier_name
     public func deleteJourney(_ journey: Journey) async throws -> Journey {
+        let id = journey.id
         let predicate = #Predicate<JourneyLocalDataSource> { dataSource in
-            return dataSource.isEqual(to: journey)
+            return dataSource.journeyID == id
         }
         
         do {
             try self.context.delete(model: JourneyLocalDataSource.self, where: consume predicate)
+            return journey
         } catch {
             throw error
-        }
-    }
-}
-
-// MARK: - Privates
-
-private extension AppJourneyRepository {
-    // TODO: Generic 사용한 SwiftData extension으로 추가
-    func singleJourneyFromContext(matching predicate: @escaping (JourneyLocalDataSource) -> Bool) throws -> JourneyLocalDataSource {
-        let predicate = #Predicate<JourneyLocalDataSource> { journey in
-            return consume predicate(journey)
-        }
-        let descriptor = FetchDescriptor(predicate: consume predicate)
-
-        let fetchedValues = try self.context.fetch(consume descriptor, batchSize: 1)
-        guard let result = fetchedValues.first else {
-            throw JourneyError.emptyTravelingJourney
-        }
-        return result
-    }
-
-    func journeysFromContext(count: Int? = nil, matching predicate: @escaping (JourneyLocalDataSource) -> Bool) throws -> [JourneyLocalDataSource] {
-        let predicate = #Predicate<JourneyLocalDataSource> { journey in
-            return consume predicate(journey)
-        }
-        let descriptor = FetchDescriptor(predicate: consume predicate)
-
-        if let count {
-            let result = try self.context.fetch(consume descriptor, batchSize: count)
-            return result.map { $0 }
-        } else {
-            let result = try self.context.fetch(consume descriptor)
-            return result
         }
     }
 }

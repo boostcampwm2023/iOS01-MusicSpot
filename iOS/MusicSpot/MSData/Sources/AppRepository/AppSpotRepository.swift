@@ -28,8 +28,16 @@ public final class AppSpotRepository: SpotRepository {
     // MARK: - Functions
 
     public func addSpot(_ spot: Spot, to journey: Journey) throws {
-        let targetJourney = try self.singleJourneyFromContext { dataSource in
-            return dataSource.isEqual(to: journey)
+        let id = journey.id
+        let predicate = #Predicate<JourneyLocalDataSource> { dataSource in
+            return dataSource.journeyID == id
+        }
+        let descriptor = FetchDescriptor(predicate: consume predicate)
+
+        let fetchedValues = try context.fetch(consume descriptor)
+        
+        guard let targetJourney = fetchedValues.first else {
+            throw JourneyError.noTravelingJourney
         }
 
         targetJourney.spots.append(SpotLocalDataSource(from: spot))

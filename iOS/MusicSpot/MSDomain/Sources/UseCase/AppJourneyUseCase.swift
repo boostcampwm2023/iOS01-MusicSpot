@@ -32,20 +32,20 @@ public final class AppJourneyUseCase: JourneyUseCase {
         do {
             return try await self.journeyRepository.fetchJourneys(in: region)
         } catch {
-            throw .repositoryFailure(error)
+            throw .repositoryError(error)
         }
     }
 
     public func fetchTravelingJourney() async throws(JourneyError) -> Journey {
         guard self.appState.isTraveling else {
-            throw .emptyTravelingJourney
+            throw .noTravelingJourney
         }
 
         do {
             let journey = try await self.journeyRepository.fetchTravelingJourney()
             return journey
         } catch {
-            throw .repositoryFailure(error)
+            throw .repositoryError(error)
         }
     }
 
@@ -73,7 +73,7 @@ public final class AppJourneyUseCase: JourneyUseCase {
             let savedJourney = try await self.journeyRepository.updateJourney(consume travelingJourney)
             return savedJourney
         } catch {
-            throw .repositoryFailure(error)
+            throw .repositoryError(error)
         }
     }
 
@@ -85,7 +85,7 @@ public final class AppJourneyUseCase: JourneyUseCase {
     @discardableResult
     public func endJourney() async throws(JourneyError) -> Journey {
         guard self.appState.isTraveling else {
-            throw .emptyTravelingJourney
+            throw .noTravelingJourney
         }
 
         var travelingJourney = try await self.fetchTravelingJourney()
@@ -95,14 +95,14 @@ public final class AppJourneyUseCase: JourneyUseCase {
             let endedJourney = try await self.journeyRepository.updateJourney(consume travelingJourney)
             return endedJourney
         } catch {
-            throw .repositoryFailure(error)
+            throw .repositoryError(error)
         }
     }
 
     @discardableResult
     public func cancelJourney() async throws(JourneyError) -> Journey {
         guard self.appState.isTraveling else {
-            throw .emptyTravelingJourney
+            throw .noTravelingJourney
         }
 
         let travelingJourney = try await self.fetchTravelingJourney()
@@ -111,7 +111,7 @@ public final class AppJourneyUseCase: JourneyUseCase {
             let cancelledJourney = try await self.journeyRepository.deleteJourney(consume travelingJourney)
             return cancelledJourney
         } catch {
-            throw .repositoryFailure(error)
+            throw .repositoryError(error)
         }
     }
 
@@ -120,7 +120,7 @@ public final class AppJourneyUseCase: JourneyUseCase {
         do {
             return try await self.journeyRepository.deleteJourney(journey)
         } catch {
-            throw .repositoryFailure(error)
+            throw .repositoryError(error)
         }
     }
 }

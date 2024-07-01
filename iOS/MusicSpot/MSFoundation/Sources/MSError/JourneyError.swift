@@ -6,7 +6,8 @@
 //
 
 public enum JourneyError: Error {
-    case emptyTravelingJourney
+    case noTravelingJourney
     case multipleTravelingJourneys
-    case repositoryFailure(Error)
+    case noLocalUpdate
+    case repositoryError(Error)
 }
