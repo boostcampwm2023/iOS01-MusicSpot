@@ -21,6 +21,8 @@ private enum Target {
     static let msData = "MSData"
     static let dataSource = "DataSource"
     static let appRepository = "AppRepository"
+    static let remoteRepository = "RemoteRepository"
+    static let repository = "Repository"
     static let router = "Router"
 }
 
@@ -53,8 +55,11 @@ let package = Package(
             targets: [Target.dataSource]
         ),
         .library(
-            name: Target.appRepository,
-            targets: [Target.appRepository]
+            name: Target.repository,
+            targets: [
+                Target.appRepository,
+                Target.remoteRepository
+            ]
         )
     ],
     dependencies: [
@@ -91,6 +96,21 @@ let package = Package(
                 .product(
                     name: Dependency.msFoundation,
                     package: Dependency.msFoundation
+                )
+            ],
+            plugins: [
+                .plugin(
+                    name: "SwiftLintBuildToolPlugin",
+                    package: "SwiftLint"
+                )
+            ]
+        ),
+        .target(
+            name: Target.remoteRepository,
+            dependencies: [
+                .product(
+                    name: Dependency.msDomain,
+                    package: Dependency.msDomain
                 )
             ],
             plugins: [

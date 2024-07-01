@@ -7,4 +7,8 @@
 
 public struct User {
     let id: String
+
+    public init(id: String) {
+        self.id = id
+    }
 }
