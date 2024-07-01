@@ -71,10 +71,6 @@ let package = Package(
             path: Dependency.msFoundation.fromRootPath
         ),
         .package(
-            url: "https://github.com/apple/swift-testing.git",
-            branch: "main"
-        ),
-        .package(
             url: "https://github.com/realm/SwiftLint.git",
             from: "0.55.1"
         )
@@ -122,10 +118,6 @@ let package = Package(
         .testTarget(
             name: Target.appRepository.testTarget,
             dependencies: [
-                .product(
-                    name: "Testing",
-                    package: "swift-testing"
-                )
                 .target(name: Target.appRepository)
             ]
         )
