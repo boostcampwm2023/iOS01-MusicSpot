@@ -98,8 +98,6 @@ public final class AppJourneyRepository: JourneyRepository {
     }
 
     @discardableResult
-    // TODO: SwiftLint Swift 6 적용 후 삭제
-    // swiftlint:disable:next identifier_name
     public func deleteJourney(_ journey: Journey) async throws -> Journey {
         let id = journey.id
         let predicate = #Predicate<JourneyLocalDataSource> { dataSource in
