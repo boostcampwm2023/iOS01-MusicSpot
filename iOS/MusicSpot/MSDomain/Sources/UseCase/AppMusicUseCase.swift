@@ -33,7 +33,7 @@ public final class AppMusicUseCase: MusicUseCase {
                 return try await self.musicRepository.fetchTopRanking(genre)
             }
         } catch {
-            throw .repositoryFailure(error)
+            throw .repositoryError(error)
         }
     }
 
@@ -41,7 +41,7 @@ public final class AppMusicUseCase: MusicUseCase {
         do {
             return try await self.musicRepository.fetchAlbumCover(of: album)
         } catch {
-            throw .repositoryFailure(error)
+            throw .repositoryError(error)
         }
     }
 
@@ -49,7 +49,7 @@ public final class AppMusicUseCase: MusicUseCase {
         do {
             return try await self.musicRepository.fetchAlbumCover(url)
         } catch {
-            throw .repositoryFailure(error)
+            throw .repositoryError(error)
         }
     }
 
@@ -61,7 +61,7 @@ public final class AppMusicUseCase: MusicUseCase {
         do {
             return try await self.musicRepository.fetchAlbumCover(url)
         } catch {
-            throw .repositoryFailure(error)
+            throw .repositoryError(error)
         }
     }
 }

@@ -34,7 +34,7 @@ public final class AppSpotUseCase: SpotUseCase {
             try self.spotRepository.addSpot(spot, to: consume journey)
             return spot
         } catch {
-            throw .repositoryFailure(error)
+            throw .repositoryError(error)
         }
     }
 }

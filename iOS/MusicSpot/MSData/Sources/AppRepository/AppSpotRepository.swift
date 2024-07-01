@@ -46,7 +46,7 @@ public final class AppSpotRepository: SpotRepository {
             do {
                 try self.context.save()
             } catch {
-                throw SpotError.repositoryFailure(error)
+                throw SpotError.repositoryError(error)
             }
         }
     }
@@ -83,7 +83,7 @@ private extension AppSpotRepository {
 
         let fetchedValues = try self.context.fetch(consume descriptor, batchSize: 1)
         guard let result = fetchedValues.first else {
-            throw JourneyError.emptyTravelingJourney
+            throw JourneyError.noTravelingJourney
         }
         return result
     }
