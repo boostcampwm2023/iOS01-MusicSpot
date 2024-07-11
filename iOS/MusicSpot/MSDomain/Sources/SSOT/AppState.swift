@@ -1,6 +1,6 @@
 //
 //  AppState.swift
-//  Store
+//  SSOT
 //
 //  Created by 이창준 on 6/13/24.
 //

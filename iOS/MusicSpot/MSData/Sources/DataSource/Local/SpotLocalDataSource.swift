@@ -1,6 +1,6 @@
 //
 //  SpotLocalDataSource.swift
-//  MSData
+//  DataSource
 //
 //  Created by 이창준 on 5/18/24.
 //
