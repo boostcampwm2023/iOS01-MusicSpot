@@ -51,7 +51,6 @@ public final class AppSpotRepository: SpotRepository {
         }
     }
     
-    // 이거 맞나....
     public func fetchPhotos(of spot: Spot) -> AsyncThrowingStream<PhotoWithSpot, Error> {
         var stream = AsyncStream<URL> { continuation in
             for photoURL in spot.photoURLs {
