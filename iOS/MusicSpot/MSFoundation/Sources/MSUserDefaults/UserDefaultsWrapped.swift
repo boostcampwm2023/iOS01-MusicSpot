@@ -15,9 +15,11 @@ public struct UserDefaultsWrapped<T: Codable> {
     private let decoder = JSONDecoder()
     private let encoder = JSONEncoder()
 
-    public init(_ key: String,
-                defaultValue: T,
-                userDefaults: UserDefaults = .standard) {
+    public init(
+        _ key: String,
+        defaultValue: T,
+        userDefaults: UserDefaults = .standard
+    ) {
         self.key = key
         self.defaultValue = defaultValue
         self.userDefaults = userDefaults

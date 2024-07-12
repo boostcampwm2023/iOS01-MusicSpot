@@ -79,6 +79,10 @@ let package = Package(
                 .product(
                     name: Dependency.msUserDefaults,
                     package: Dependency.msFoundation
+                ),
+                .product(
+                    name: Dependency.msFoundation,
+                    package: Dependency.msFoundation
                 )
             ],
             plugins: [

@@ -20,14 +20,14 @@ final class SpotRepositoryTests: XCTestCase {
     // MARK: - Tests
 
     private var sut: AppSpotRepository!
-    
+
     // MARK: - Setup
-    
+
     override func setUp() async throws {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: SpotLocalDataSource.self, configurations: config)
         let context = ModelContext(container)
-        
+
         self.sut = AppSpotRepository(context: context)
     }
 
@@ -47,7 +47,7 @@ final class SpotRepositoryTests: XCTestCase {
             ]
         )
         let stream = self.sut.fetchPhotos(of: spot)
-        
+
         for try await (spot, photoData) in stream {
             print(spot)
             print("Size: \(photoData.count)")

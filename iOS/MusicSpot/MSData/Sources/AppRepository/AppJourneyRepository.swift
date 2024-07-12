@@ -29,16 +29,16 @@ public final class AppJourneyRepository: JourneyRepository {
     public func fetchJourneys(in region: Region) async throws -> [Journey] {
         let (rectMinX, rectMaxX) = (region.origin.x, region.origin.x + region.width)
         let (rectMinY, rectMaxY) = (region.origin.y, region.origin.y + region.height)
-        
+
         let predicate = #Predicate<JourneyLocalDataSource> { dataSource in
             return dataSource.coordinates.contains { coordinate in
                 return (coordinate.x >= rectMinX) && (coordinate.x <= rectMaxX) && (coordinate.y >= rectMinY) && (coordinate.y <= rectMaxY)
             }
         }
         let descriptor = FetchDescriptor(predicate: consume predicate)
-        
+
         let result = try self.context.fetch(consume descriptor)
-        
+
         return result.map { $0.toEntity() }
     }
 
@@ -47,7 +47,7 @@ public final class AppJourneyRepository: JourneyRepository {
             return journey.isTraveling
         }
         let descriptor = FetchDescriptor(predicate: consume predicate)
-        
+
         let results = try self.context.fetch(consume descriptor)
 
         // TODO: 진행 중인 여정이 여러개 일 때 부가 처리
@@ -88,7 +88,7 @@ public final class AppJourneyRepository: JourneyRepository {
         guard self.context.hasChanges else {
             throw JourneyError.noLocalUpdate
         }
-        
+
         do {
             try self.context.save()
             return journey
@@ -103,7 +103,7 @@ public final class AppJourneyRepository: JourneyRepository {
         let predicate = #Predicate<JourneyLocalDataSource> { dataSource in
             return dataSource.journeyID == id
         }
-        
+
         do {
             try self.context.delete(model: JourneyLocalDataSource.self, where: consume predicate)
             return journey

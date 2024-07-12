@@ -14,4 +14,5 @@ public enum UserError: Error {
     case userUpdateFailed
     case userInfoFetchFailed
     case userTokenFetchFailed
+    case repositoryError(Error)
 }

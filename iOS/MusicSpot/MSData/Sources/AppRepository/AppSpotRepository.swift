@@ -35,13 +35,13 @@ public final class AppSpotRepository: SpotRepository {
         let descriptor = FetchDescriptor(predicate: consume predicate)
 
         let fetchedValues = try context.fetch(consume descriptor)
-        
+
         guard let targetJourney = fetchedValues.first else {
             throw JourneyError.noTravelingJourney
         }
 
         targetJourney.spots.append(SpotLocalDataSource(from: spot))
-        
+
         if self.context.hasChanges {
             do {
                 try self.context.save()
@@ -50,7 +50,7 @@ public final class AppSpotRepository: SpotRepository {
             }
         }
     }
-    
+
     public func fetchPhotos(of spot: Spot) -> AsyncThrowingStream<PhotoWithSpot, Error> {
         var stream = AsyncStream<URL> { continuation in
             for photoURL in spot.photoURLs {

@@ -16,12 +16,13 @@ public final class RemoteUserRepository: UserRepository {
         case login
     }
 
-    /// 로그인 유저를 등록합니다.
-    public func activate() -> User {
-        return User(id: UUID().uuidString)
+    @discardableResult
+    public func activate(newUserID: String) throws -> User {
+        // TODO: - 회원가입 / 로그인 구현
+        return User(id: newUserID)
     }
-    
-    public func deactivate() {
-        //
+
+    public func deactivate(userID: String) throws {
+        // TODO: - 로그아웃 / 회원탈퇴 구현
     }
 }
