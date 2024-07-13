@@ -12,15 +12,8 @@ import Entity
 
 @Model
 public final class PhotoLocalDataSource: EntityConvertible {
-    public typealias Entity = URL
 
-    // MARK: - Relationships
-
-    public var spot: SpotLocalDataSource?
-
-    // MARK: - Properties
-
-    public var url: URL
+    // MARK: Lifecycle
 
     // MARK: - Initializer
 
@@ -31,14 +24,26 @@ public final class PhotoLocalDataSource: EntityConvertible {
     // MARK: - Entity Convertible
 
     public init(from entity: URL) {
-        self.url = entity
+        url = entity
     }
 
+    // MARK: Public
+
+    public typealias Entity = URL
+
+    // MARK: - Relationships
+
+    public var spot: SpotLocalDataSource?
+
+    // MARK: - Properties
+
+    public var url: URL
+
     public func toEntity() -> URL {
-        return self.url
+        url
     }
 
     public func isEqual(to entity: URL) -> Bool {
-        return self.url == entity
+        url == entity
     }
 }

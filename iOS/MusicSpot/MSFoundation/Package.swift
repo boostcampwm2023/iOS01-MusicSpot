@@ -5,13 +5,15 @@ import PackageDescription
 
 // MARK: - Constants
 
-private extension String {
-    static let package = "MSFoundation"
+extension String {
+    fileprivate static let package = "MSFoundation"
 
-    var testTarget: String {
-        return self + "Tests"
+    fileprivate var testTarget: String {
+        self + "Tests"
     }
 }
+
+// MARK: - Target
 
 private enum Target {
     static let msFoundation = "MSFoundation"
@@ -27,7 +29,7 @@ private enum Target {
 let package = Package(
     name: .package,
     platforms: [
-        .iOS(.v17)
+        .iOS(.v17),
     ],
     products: [
         .library(
@@ -35,23 +37,19 @@ let package = Package(
             targets: [
                 Target.msConstant,
                 Target.msError,
-                Target.msExtension
-            ]
-        ),
+                Target.msExtension,
+            ]),
         .library(
             name: Target.msLogger,
-            targets: [Target.msLogger]
-        ),
+            targets: [Target.msLogger]),
         .library(
             name: Target.msUserDefaults,
-            targets: [Target.msUserDefaults]
-        )
+            targets: [Target.msUserDefaults]),
     ],
     dependencies: [
         .package(
             url: "https://github.com/realm/SwiftLint.git",
-            from: "0.55.1"
-        )
+            from: "0.55.1"),
     ],
     targets: [
         // Codes
@@ -60,59 +58,46 @@ let package = Package(
             plugins: [
                 .plugin(
                     name: "SwiftLintBuildToolPlugin",
-                    package: "SwiftLint"
-                )
-            ]
-        ),
+                    package: "SwiftLint"),
+            ]),
         .target(
             name: Target.msError,
             plugins: [
                 .plugin(
                     name: "SwiftLintBuildToolPlugin",
-                    package: "SwiftLint"
-                )
-            ]
-        ),
+                    package: "SwiftLint"),
+            ]),
         .target(
             name: Target.msExtension,
             plugins: [
                 .plugin(
                     name: "SwiftLintBuildToolPlugin",
-                    package: "SwiftLint"
-                )
-            ]
-        ),
+                    package: "SwiftLint"),
+            ]),
         .target(
             name: Target.msLogger,
             plugins: [
                 .plugin(
                     name: "SwiftLintBuildToolPlugin",
-                    package: "SwiftLint"
-                )
-            ]
-        ),
+                    package: "SwiftLint"),
+            ]),
         .target(
             name: Target.msUserDefaults,
             plugins: [
                 .plugin(
                     name: "SwiftLintBuildToolPlugin",
-                    package: "SwiftLint"
-                )
-            ]
-        ),
+                    package: "SwiftLint"),
+            ]),
 
         // Tests
         .testTarget(
             name: Target.msLogger.testTarget,
             dependencies: [
-                .target(name: Target.msLogger)
-            ]
-        ),
+                .target(name: Target.msLogger),
+            ]),
         .testTarget(
             name: Target.msUserDefaults.testTarget,
             dependencies: [
-                .target(name: Target.msUserDefaults)
-            ]
-        )
-    ]
-)
+                .target(name: Target.msUserDefaults),
+            ]),
+    ])

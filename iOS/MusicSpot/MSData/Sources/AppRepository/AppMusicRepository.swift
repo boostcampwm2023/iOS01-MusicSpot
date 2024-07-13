@@ -8,13 +8,13 @@
 import Foundation
 import MusicKit
 
+import MSError
 import MSImageFetcher
 import Repository
 
 public final class AppMusicRepository: MusicRepository {
-    private enum Metric {
-        static let imageSize: Int = 120
-    }
+
+    // MARK: Public
 
     public func searchMusic(term: String) async throws -> MusicItemCollection<Song> {
         var searchRequest = MusicCatalogSearchRequest(term: term, types: [Song.self])
@@ -25,11 +25,15 @@ public final class AppMusicRepository: MusicRepository {
         return searchResponse.songs
     }
 
-    public func fetchTopRanking(_ genre: Genre) async throws -> MusicItemCollection<Song> {
+    public func fetchTopRanking(_: Genre) async throws -> MusicItemCollection<Song> {
         let request = MusicCatalogChartsRequest(kinds: [.cityTop], types: [Song.self])
 
         let searchResponse = try await request.response()
-        return searchResponse.songCharts.first!.items
+
+        guard let musicItems = searchResponse.songCharts.first?.items else {
+            throw MusicError.musicChartFetchFailed
+        }
+        return musicItems
     }
 
     public func fetchAlbumCover(of album: Album) async throws -> Data {
@@ -37,7 +41,7 @@ public final class AppMusicRepository: MusicRepository {
             throw ImageFetchError.imageFetchFailed
         }
 
-        return try await self.fetchAlbumCover(imageURL)
+        return try await fetchAlbumCover(imageURL)
     }
 
     public func fetchAlbumCover(_ url: URL) async throws -> Data {
@@ -46,4 +50,11 @@ public final class AppMusicRepository: MusicRepository {
         }
         return imageData
     }
+
+    // MARK: Private
+
+    private enum Metric {
+        static let imageSize = 120
+    }
+
 }

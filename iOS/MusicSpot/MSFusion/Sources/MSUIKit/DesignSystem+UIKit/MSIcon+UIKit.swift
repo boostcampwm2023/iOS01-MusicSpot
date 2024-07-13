@@ -11,7 +11,7 @@ import MSDesignSystem
 
 extension UIImage {
     public static func msIcon(_ icon: MSIcon) -> UIImage? {
-        return UIImage(named: icon.rawValue, in: .msDesignSystem, compatibleWith: .current)?
+        UIImage(named: icon.rawValue, in: .msDesignSystem, compatibleWith: .current)?
             .withRenderingMode(.alwaysTemplate)
     }
 }

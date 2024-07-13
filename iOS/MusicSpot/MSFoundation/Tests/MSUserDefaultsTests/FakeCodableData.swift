@@ -19,6 +19,6 @@ struct FakeCodableData: Codable, Equatable {
     }
 
     func isEqual(to data: FakeCodableData) -> Bool {
-        return name == data.name && number == data.number
+        name == data.name && number == data.number
     }
 }

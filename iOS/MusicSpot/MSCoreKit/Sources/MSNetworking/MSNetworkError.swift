@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - MSNetworkError
+
 public enum MSNetworkError: Error {
     case invalidRouter
     case unknownResponse
@@ -15,21 +17,23 @@ public enum MSNetworkError: Error {
     case unknownChildTask
 }
 
+// MARK: Equatable
+
 extension MSNetworkError: Equatable {
     public static func == (lhs: MSNetworkError, rhs: MSNetworkError) -> Bool {
         switch (lhs, rhs) {
         case (.invalidRouter, .invalidRouter):
-            return true
+            true
         case (.unknownResponse, .unknownResponse):
-            return true
-        case let (.invalidStatusCode(lhsStatusCode, _), .invalidStatusCode(rhsStatusCode, _)):
-            return lhsStatusCode == rhsStatusCode
+            true
+        case (.invalidStatusCode(let lhsStatusCode, _), .invalidStatusCode(let rhsStatusCode, _)):
+            lhsStatusCode == rhsStatusCode
         case (.timeout, .timeout):
-            return true
+            true
         case (.unknownChildTask, .unknownChildTask):
-            return true
+            true
         default:
-            return false
+            false
         }
     }
 }

@@ -11,6 +11,27 @@ import Entity
 
 @Model
 public final class MusicLocalDataSource: EntityConvertible {
+
+    // MARK: Lifecycle
+
+    // MARK: - Initializer
+
+    init(musicID: String, title: String) {
+        self.musicID = musicID
+        self.title = title
+    }
+
+    // MARK: - Entity Convertible
+
+    public init(from entity: Music) {
+        musicID = entity.id
+        title = entity.title
+        artist = entity.artist
+        albumCover = entity.albumCover
+    }
+
+    // MARK: Public
+
     public typealias Entity = Music
 
     // MARK: - Relationships
@@ -24,32 +45,15 @@ public final class MusicLocalDataSource: EntityConvertible {
     public var artist: String?
     public var albumCover: AlbumCover?
 
-    // MARK: - Initializer
-
-    init(musicID: String, title: String) {
-        self.musicID = musicID
-        self.title = title
-    }
-
-    // MARK: - Entity Convertible
-
-    public init(from entity: Music) {
-        self.musicID = entity.id
-        self.title = entity.title
-        self.artist = entity.artist
-        self.albumCover = entity.albumCover
-    }
-
     public func toEntity() -> Music {
-        return Music(
-            id: self.musicID,
-            title: self.title,
-            artist: self.artist,
-            albumCover: self.albumCover
-        )
+        Music(
+            id: musicID,
+            title: title,
+            artist: artist,
+            albumCover: albumCover)
     }
 
     public func isEqual(to entity: Music) -> Bool {
-        return self.musicID == entity.id
+        musicID == entity.id
     }
 }

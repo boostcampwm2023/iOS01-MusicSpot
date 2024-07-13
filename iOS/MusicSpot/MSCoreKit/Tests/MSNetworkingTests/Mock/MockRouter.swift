@@ -10,13 +10,13 @@ import Foundation
 
 struct MockRouter: Router {
     var baseURL: String {
-        return "https://www.naver.com"
+        "https://www.naver.com"
     }
 
     var pathURL: String?
 
     var method: HTTPMethod {
-        return .get
+        .get
     }
 
     var body: HTTPBody?

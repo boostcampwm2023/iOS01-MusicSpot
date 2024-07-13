@@ -10,30 +10,34 @@ import MusicKit
 
 extension Music {
     public init(_ song: Song) {
-        self.init(id: song.id.rawValue,
-                  title: song.title,
-                  artist: song.artistName,
-                  albumCover: AlbumCover(song.artwork))
+        self.init(
+            id: song.id.rawValue,
+            title: song.title,
+            artist: song.artistName,
+            albumCover: AlbumCover(song.artwork))
     }
 }
 
 extension AlbumCover {
-    public init?(_ artwork: Artwork?,
-                 width: UInt32 = 500,
-                 height: UInt32 = 500) {
+    public init?(
+        _ artwork: Artwork?,
+        width: UInt32 = 500,
+        height: UInt32 = 500)
+    {
         guard let artwork else { return nil }
-        self.init(width: width,
-                  height: height,
-                  url: artwork.url(width: Int(width), height: Int(height)),
-                  backgroundColor: artwork.backgroundColor?.hexValue)
+        self.init(
+            width: width,
+            height: height,
+            url: artwork.url(width: Int(width), height: Int(height)),
+            backgroundColor: artwork.backgroundColor?.hexValue)
     }
 }
 
 import CoreGraphics
 
-private extension CGColor {
-    var hexValue: String? {
-        guard let components = self.components else {
+extension CGColor {
+    fileprivate var hexValue: String? {
+        guard let components else {
             return nil
         }
 

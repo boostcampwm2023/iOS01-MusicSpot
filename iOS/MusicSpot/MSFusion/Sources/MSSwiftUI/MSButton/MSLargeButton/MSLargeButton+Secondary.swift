@@ -15,8 +15,8 @@ extension MSSecondaryButton {
         image: Image? = nil,
         cornerStyle: MSLargeButtonStyle.CornerStyle = .squared,
         colorStyle: ColorStyle = .default,
-        action: @escaping () -> Void
-    ) {
+        action: @escaping () -> Void)
+    {
         self.title = title
         self.image = image
         self.cornerStyle = cornerStyle
@@ -34,9 +34,9 @@ import MSDesignSystem
         title: "재생",
         image: .msIcon(.play),
         cornerStyle: .rounded,
-        colorStyle: .default
-    ) {
-        print("Play")
+        colorStyle: .default)
+    {
+        print("Play") // swiftlint:disable:this no_direct_standard_out_logs
     }
 }
 #endif

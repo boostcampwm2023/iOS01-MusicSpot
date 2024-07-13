@@ -8,6 +8,9 @@
 import Foundation
 
 extension Home {
+
+    // MARK: Internal
+
     enum Action {
         case startButtonDidTap
         case mapButtonDidTap
@@ -16,12 +19,13 @@ extension Home {
     func perform(_ action: Action) {
         switch action {
         case .startButtonDidTap:
-            self.handleStartButtonTap()
+            handleStartButtonTap()
         case .mapButtonDidTap:
-            self.isUsingStandardMap.toggle()
+            isUsingStandardMap.toggle()
         }
     }
 
-    private func handleStartButtonTap() {
-    }
+    // MARK: Private
+
+    private func handleStartButtonTap() { }
 }

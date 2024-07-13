@@ -7,13 +7,11 @@
 
 import Foundation
 
-public struct Spot {
-    // MARK: - Properties
+// MARK: - Spot
 
-    public let id: String
-    public let coordinate: Coordinate
-    public let timestamp: Date
-    public let photoURLs: [URL]
+public struct Spot {
+
+    // MARK: Lifecycle
 
     // MARK: - Initializer
 
@@ -21,16 +19,47 @@ public struct Spot {
         id: String,
         coordinate: Coordinate,
         timestamp: Date,
-        photoURLs: [URL]
-    ) {
+        photoURLs: [URL])
+    {
         self.id = id
         self.coordinate = coordinate
         self.timestamp = timestamp
         self.photoURLs = photoURLs
     }
+
+    // MARK: Public
+
+    // MARK: - Properties
+
+    public let id: String
+    public let coordinate: Coordinate
+    public let timestamp: Date
+    public let photoURLs: [URL]
+
 }
 
+// MARK: - RequestableSpot
+
 public struct RequestableSpot {
+
+    // MARK: Lifecycle
+
+    // MARK: - Initializer
+
+    public init(
+        journeyID: String,
+        coordinate: Coordinate,
+        timestamp: Date,
+        photoData: Data)
+    {
+        self.journeyID = journeyID
+        self.coordinate = coordinate
+        self.timestamp = timestamp
+        self.photoData = photoData
+    }
+
+    // MARK: Public
+
     // MARK: - Properties
 
     public let journeyID: String
@@ -38,31 +67,20 @@ public struct RequestableSpot {
     public let timestamp: Date
     public let photoData: Data
 
-    // MARK: - Initializer
-
-    public init(journeyID: String,
-                coordinate: Coordinate,
-                timestamp: Date,
-                photoData: Data) {
-        self.journeyID = journeyID
-        self.coordinate = coordinate
-        self.timestamp = timestamp
-        self.photoData = photoData
-    }
 }
 
-// MARK: - String Convertible
+// MARK: - Spot + CustomStringConvertible
 
 extension Spot: CustomStringConvertible {
     public var description: String {
-        return """
+        """
         Coordinate:
-          - latitude: \(self.coordinate.latitude)
-          - longitude: \(self.coordinate.longitude)
+          - latitude: \(coordinate.latitude)
+          - longitude: \(coordinate.longitude)
         PhotoURLs
-          - x\(self.photoURLs.count)
+          - x\(photoURLs.count)
         Timestamp
-          - \(self.timestamp)
+          - \(timestamp)
         """
     }
 }

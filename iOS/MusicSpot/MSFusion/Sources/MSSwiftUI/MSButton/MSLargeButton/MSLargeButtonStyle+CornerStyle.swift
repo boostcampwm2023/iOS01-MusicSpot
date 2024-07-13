@@ -15,9 +15,9 @@ extension MSLargeButtonStyle {
 
         var cornerRadius: CGFloat {
             switch self {
-            case .squared: return 8.0
-            case .rounded: return 25.0
-            case .custom(let cornerRadius): return cornerRadius
+            case .squared: 8.0
+            case .rounded: 25.0
+            case .custom(let cornerRadius): cornerRadius
             }
         }
     }

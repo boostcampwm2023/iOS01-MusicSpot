@@ -15,9 +15,8 @@ import MSImageFetcher
 import Repository
 
 public final class AppSpotRepository: SpotRepository {
-    // MARK: - Properties
 
-    private let context: ModelContext
+    // MARK: Lifecycle
 
     // MARK: - Initializer
 
@@ -25,12 +24,14 @@ public final class AppSpotRepository: SpotRepository {
         self.context = context
     }
 
+    // MARK: Public
+
     // MARK: - Functions
 
     public func addSpot(_ spot: Spot, to journey: Journey) throws {
         let id = journey.id
         let predicate = #Predicate<JourneyLocalDataSource> { dataSource in
-            return dataSource.journeyID == id
+            return dataSource.journeyID == consume id
         }
         let descriptor = FetchDescriptor(predicate: consume predicate)
 
@@ -42,9 +43,9 @@ public final class AppSpotRepository: SpotRepository {
 
         targetJourney.spots.append(SpotLocalDataSource(from: spot))
 
-        if self.context.hasChanges {
+        if context.hasChanges {
             do {
-                try self.context.save()
+                try context.save()
             } catch {
                 throw SpotError.repositoryError(error)
             }
@@ -62,28 +63,18 @@ public final class AppSpotRepository: SpotRepository {
                 throw ImageFetchError.imageFetchFailed
             }
 
-            let photoWithSpot = (spot: spot, photoData: photoData)
-            return photoWithSpot
+            return (spot: spot, photoData: photoData)
         }.makeAsyncIterator()
 
         return AsyncThrowingStream {
             try await stream.next()
         }
     }
-}
 
-private extension AppSpotRepository {
-    // TODO: Generic 사용한 SwiftData extension으로 추가
-    func singleJourneyFromContext(matching predicate: @escaping (JourneyLocalDataSource) -> Bool) throws -> JourneyLocalDataSource {
-        let predicate = #Predicate<JourneyLocalDataSource> { journey in
-            return consume predicate(journey)
-        }
-        let descriptor = FetchDescriptor(predicate: consume predicate)
+    // MARK: Private
 
-        let fetchedValues = try self.context.fetch(consume descriptor, batchSize: 1)
-        guard let result = fetchedValues.first else {
-            throw JourneyError.noTravelingJourney
-        }
-        return result
-    }
+    // MARK: - Properties
+
+    private let context: ModelContext
+
 }

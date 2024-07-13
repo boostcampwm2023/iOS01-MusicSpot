@@ -12,51 +12,63 @@ import SwiftUI
 
 import MSLogger
 
+// MARK: - MSLocationManager
+
 @Observable
 public final class MSLocationManager: NSObject {
-    // MARK: - Properties
 
-    private let locationManager = CLLocationManager()
-
-    public var position: MapCameraPosition = .userLocation(fallback: .automatic)
+    // MARK: Lifecycle
 
     // MARK: - Initializer
 
     public override init() {
         super.init()
-        self.locationManager.delegate = self
-        self.setUp()
+        locationManager.delegate = self
+        setUp()
     }
+
+    // MARK: Public
+
+    public var position: MapCameraPosition = .userLocation(fallback: .automatic)
+
+    // MARK: Private
+
+    // MARK: - Properties
+
+    private let locationManager = CLLocationManager()
 
     // MARK: - Functions
 
     private func setUp() {
-        switch self.locationManager.authorizationStatus {
+        switch locationManager.authorizationStatus {
         case .notDetermined:
             MSLogger.make(category: .locationManager).info("위치 권한 요청 필요")
-            self.locationManager.requestWhenInUseAuthorization()
-            self.locationManager.startUpdatingLocation()
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.startUpdatingLocation()
+
         case .authorized, .authorizedAlways, .authorizedWhenInUse:
-            self.locationManager.startUpdatingLocation()
+            locationManager.startUpdatingLocation()
+
         case .restricted, .denied:
             MSLogger.make(category: .locationManager).warning("위치 권한 거절")
+
         @unknown default:
             MSLogger.make(category: .locationManager).error("알 수 없는 위치 권한 상태")
         }
     }
 }
 
+// MARK: CLLocationManagerDelegate
+
 extension MSLocationManager: CLLocationManagerDelegate {
     public func locationManager(
-        _ manager: CLLocationManager,
-        didFailWithError error: any Error
-    ) {
+        _: CLLocationManager,
+        didFailWithError error: any Error)
+    {
         MSLogger.make(category: .locationManager).error("\(error.localizedDescription)")
     }
 
     public func locationManager(
-        _ manager: CLLocationManager,
-        didUpdateLocations locations: [CLLocation]
-    ) {
-    }
+        _: CLLocationManager,
+        didUpdateLocations _: [CLLocation]) { }
 }

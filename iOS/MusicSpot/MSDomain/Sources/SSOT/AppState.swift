@@ -13,7 +13,7 @@ public struct AppState {
     // MARK: - Properties
 
     /// 진행중인 여정이 있는 지 여부
-    public var isTraveling: Bool = false
+    public var isTraveling = false
 
     // MARK: - Shared
 

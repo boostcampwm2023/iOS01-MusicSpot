@@ -12,6 +12,20 @@ import Entity
 
 @Model
 public final class SpotLocalDataSource: EntityConvertible {
+
+    // MARK: Lifecycle
+
+    // MARK: - Entity Convertible
+
+    public init(from entity: Spot) {
+        spotID = entity.id
+        coordinate = entity.coordinate
+        timestamp = entity.timestamp
+        photos = entity.photoURLs.map { PhotoLocalDataSource(from: $0) }
+    }
+
+    // MARK: Public
+
     public typealias Entity = Spot
 
     // MARK: - Relationships
@@ -26,25 +40,15 @@ public final class SpotLocalDataSource: EntityConvertible {
     @Relationship(deleteRule: .cascade, inverse: \PhotoLocalDataSource.spot)
     public var photos: [PhotoLocalDataSource] = []
 
-    // MARK: - Entity Convertible
-
-    public init(from entity: Spot) {
-        self.spotID = entity.id
-        self.coordinate = entity.coordinate
-        self.timestamp = entity.timestamp
-        self.photos = entity.photoURLs.map { PhotoLocalDataSource(from: $0) }
-    }
-
     public func toEntity() -> Spot {
-        return Spot(
-            id: self.spotID,
-            coordinate: self.coordinate,
-            timestamp: self.timestamp,
-            photoURLs: self.photos.map { $0.toEntity() }
-        )
+        Spot(
+            id: spotID,
+            coordinate: coordinate,
+            timestamp: timestamp,
+            photoURLs: photos.map { $0.toEntity() })
     }
 
     public func isEqual(to entity: Spot) -> Bool {
-        return self.spotID == entity.id
+        spotID == entity.id
     }
 }

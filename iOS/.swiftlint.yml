@@ -1,107 +1,62 @@
-excluded:
-  - ${PWD}/Carthage
-  - ${PWD}/Pods
-  - ${PWD}/DerivedData
-  - ${PWD}/_legacy
-
-disabled_rules:
-  - discarded_notification_center_observer
-  - notification_center_detachment
-  - orphaned_doc_comment
-  - todo
-  - unused_capture_list
-
-analyzer_rules:
-  - unused_import
-
-opt_in_rules:
-  - array_init
-  - attributes
-  - closure_end_indentation
-  - closure_spacing
-  - collection_alignment
-  - colon # promote to error
-  - convenience_type
-  - discouraged_object_literal
-  - empty_collection_literal
-  - empty_count
-  - empty_string
-  - enum_case_associated_values_count
+only_rules:
+  - colon
   - fatal_error_message
-  - first_where
-  - force_unwrapping
   - implicitly_unwrapped_optional
-  - indentation_width
-  - last_where
-  - legacy_random
-  - literal_expression_end_indentation
-  - multiline_arguments
-  - multiline_function_chains
-  - multiline_literal_brackets
-  - multiline_parameters
-  - multiline_parameters_brackets
+  - legacy_cggeometry_functions
+  - legacy_constant
+  - legacy_constructor
+  - legacy_nsgeometry_functions
   - operator_usage_whitespace
-  - overridden_super_call
-  - pattern_matching_keywords
-  - prefer_self_type_over_type_of_self
-  - redundant_nil_coalescing
-  - redundant_type_annotation
-  - strict_fileprivate
-  - toggle_bool
-  - trailing_closure
-  - unneeded_parentheses_in_closure_argument
-  - vertical_whitespace_closing_braces
-  - vertical_whitespace_opening_braces
-  - yoda_condition
+  - return_arrow_whitespace
+  - trailing_newline
+  - unused_optional_binding
+  - vertical_whitespace
+  - void_return
+  - unowned_variable_capture
+  - custom_rules
+
+excluded:
+  - Carthage
+  - Pods
+  - .build
+
+colon:
+  apply_to_dictionaries: false
+
+indentation: 4
 
 custom_rules:
-  array_constructor:
-    name: "Array/Dictionary initializer"
-    regex: '[let,var] .+ = (\[.+\]\(\))'
-    capture_group: 1
-    message: "Use explicit type annotation when initializing empty arrays and dictionaries"
-    severity: warning
-
-attributes:
-  always_on_same_line:
-    - "@IBSegueAction"
-    - "@IBAction"
-    - "@NSManaged"
-    - "@objc"
-
-force_cast: warning
-force_try: warning
-function_body_length:
-  warning: 60
-
-legacy_hashing: error
-
-identifier_name:
-  excluded:
-    - i
-    - id
-    - x
-    - y
-    - z
-
-indentation_width:
-  indentation_width: 4
-
-line_length:
-  ignores_urls: true
-  ignores_function_declarations: true
-  ignores_comments: true
-
-multiline_arguments:
-  first_argument_location: next_line
-  only_enforce_after_first_closure_on_first_line: true
-
-private_over_fileprivate:
-  validate_extensions: true
-
-trailing_whitespace:
-  ignores_empty_lines: true
-  ignores_comments: true
-
-vertical_whitespace:
-  max_empty_lines: 2
+  no_objcMembers:
+    name: "@objcMembers"
+    regex: "@objcMembers"
+    message: "Explicitly use @objc on each member you want to expose to Objective-C"
+    severity: error
+  no_direct_standard_out_logs:
+    name: "Writing log messages directly to standard out is disallowed"
+    regex: "(\\bprint|\\bdebugPrint|\\bdump|Swift\\.print|Swift\\.debugPrint|Swift\\.dump)\\s*\\("
+    match_kinds:
+    - identifier
+    message: "Don't commit `print(…)`, `debugPrint(…)`, or `dump(…)` as they write to standard out in release. Either log to a dedicated logging system or silence this warning in debug-only scenarios explicitly using `// swiftlint:disable:next no_direct_standard_out_logs`"
+    severity: error
+  no_file_literal:
+    name: "#file is disallowed"
+    regex: "(\\b#file\\b)"
+    match_kinds:
+    - identifier
+    message: "Instead of #file, use #fileID"
+    severity: error
+  no_filepath_literal:
+    name: "#filePath is disallowed"
+    regex: "(\\b#filePath\\b)"
+    match_kinds:
+    - identifier
+    message: "Instead of #filePath, use #fileID."
+    severity: error
+  no_unchecked_sendable:
+    name: "`@unchecked Sendable` is discouraged."
+    regex: "@unchecked Sendable"
+    match_kinds:
+    - attribute.builtin
+    - typeidentifier
+    message: "Instead of using `@unchecked Sendable`, consider a safe alternative like a standard `Sendable` conformance or using `@preconcurrency import`. If you really must use `@unchecked Sendable`, you can add a `// swiftlint:disable:next no_unchecked_sendable` annotation with an explanation for how we know the type is thread-safe, and why we have to use @unchecked Sendable instead of Sendable. More explanation and suggested safe alternatives are available at https://github.com/airbnb/swift#unchecked-sendable."
+    severity: error

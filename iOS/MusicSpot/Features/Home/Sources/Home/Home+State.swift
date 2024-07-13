@@ -13,25 +13,31 @@ import MSLocationManager
 import SSOT
 
 public struct Home {
-    // MARK: - Properties
 
-    @State var locationManager = MSLocationManager()
-    @State var isUsingStandardMap: Bool = true
-    var selectedMapStyle: MapStyle {
-        return self.isUsingStandardMap
-        ? .standard(elevation: .realistic)
-        : .hybrid(elevation: .realistic)
-    }
-    @State var isFollowingHead: Bool = false
-    @Namespace var mapScope
-
-    @State var isPresentingSheet: Bool = true
-    @State var sheetHeight: CGFloat = .zero
-
-    @Environment(\.states)
-    var states: StateContainer
+    // MARK: Lifecycle
 
     // MARK: - Initializer
 
     public init() { }
+
+    // MARK: Internal
+
+    // MARK: - Properties
+
+    @State var locationManager = MSLocationManager()
+    @State var isUsingStandardMap = true
+    @State var isFollowingHead = false
+    @Namespace var mapScope
+
+    @State var isPresentingSheet = true
+    @State var sheetHeight: CGFloat = .zero
+
+    @Environment(\.states) var states: StateContainer
+
+    var selectedMapStyle: MapStyle {
+        isUsingStandardMap
+            ? .standard(elevation: .realistic)
+            : .hybrid(elevation: .realistic)
+    }
+
 }

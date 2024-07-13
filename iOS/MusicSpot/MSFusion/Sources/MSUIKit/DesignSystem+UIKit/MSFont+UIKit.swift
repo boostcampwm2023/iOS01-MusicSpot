@@ -11,13 +11,13 @@ import MSDesignSystem
 
 extension MSFont {
     fileprivate func font() -> UIFont? {
-        let details = self.fontDetails
+        let details = fontDetails
         return UIFont(name: details.fontName, size: details.size)
     }
 }
 
-public extension UIFont {
-    static func msFont(_ font: MSFont) -> UIFont? {
-        return font.font()
+extension UIFont {
+    public static func msFont(_ font: MSFont) -> UIFont? {
+        font.font()
     }
 }

@@ -16,16 +16,17 @@ extension MSRectPrimaryButton {
         title: String = "",
         image: Image? = nil,
         colorStyle: SecondaryColors,
-        action: @escaping () -> Void
-    ) {
+        action: @escaping () -> Void)
+    {
         self.init(
             title: title,
             image: image,
             style: MSRectPrimaryButtonStyle(colorStyle: colorStyle, scale: .large),
-            action: action
-        )
+            action: action)
     }
 }
+
+// MARK: - MSRectPrimaryButtonStyle
 
 public struct MSRectPrimaryButtonStyle: MSRectButtonStyle {
     // MARK: - Properties
@@ -38,10 +39,10 @@ public struct MSRectPrimaryButtonStyle: MSRectButtonStyle {
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .modifier(
-                MSRectButtonModifier(isPressed: configuration.isPressed,
-                                     scale: self.scale,
-                                     colorStyle: self.colorStyle)
-            )
+                MSRectButtonModifier(
+                    isPressed: configuration.isPressed,
+                    scale: scale,
+                    colorStyle: colorStyle))
             .font(.msFont(.buttonTitle))
     }
 }

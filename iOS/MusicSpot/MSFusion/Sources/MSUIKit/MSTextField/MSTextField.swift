@@ -9,7 +9,77 @@ import UIKit
 
 import MSDesignSystem
 
+// MARK: - MSTextField
+
 public class MSTextField: UITextField {
+
+    // MARK: Lifecycle
+
+    // MARK: - Initializer
+
+    private override init(frame: CGRect) {
+        super.init(frame: frame)
+        configureStyles()
+        configureLayout()
+    }
+
+    required init?(coder _: NSCoder) {
+        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
+    }
+
+    // MARK: Public
+
+    public enum ImageStyle {
+        case none
+        case search
+        case pin
+        case calender
+        case lock
+
+        // MARK: Internal
+
+        var leftImage: UIImage? {
+            switch self {
+            case .none:
+                nil
+            case .search:
+                ImageBox.magnifyingglass
+            case .pin:
+                .msIcon(.location)
+            case .calender:
+                .msIcon(.calendar)
+            case .lock:
+                .msIcon(.lock)
+            }
+        }
+
+        var rightImage: UIImage? {
+            switch self {
+            case .none, .search:
+                nil
+            default:
+                .msIcon(.arrowRight)
+            }
+        }
+    }
+
+    public var imageStyle: ImageStyle = .none {
+        didSet {
+            configureImageStyle()
+            configureLayout()
+        }
+    }
+
+    public override var text: String? {
+        didSet { convertMode() }
+    }
+
+    public override var placeholder: String? {
+        didSet { configurePlaceholder() }
+    }
+
+    // MARK: Private
+
     // MARK: - Constants
 
     private enum Metric {
@@ -28,177 +98,118 @@ public class MSTextField: UITextField {
         static let close = UIImage(systemName: "multiply.circle.fill")
     }
 
-    public enum ImageStyle {
-        case none
-        case search
-        case pin
-        case calender
-        case lock
-
-        var leftImage: UIImage? {
-            switch self {
-            case .none:
-                return nil
-            case .search:
-                return ImageBox.magnifyingglass
-            case .pin:
-                return .msIcon(.location)
-            case .calender:
-                return .msIcon(.calendar)
-            case .lock:
-                return .msIcon(.lock)
-            }
-        }
-
-        var rightImage: UIImage? {
-            switch self {
-            case .none, .search:
-                return nil
-            default:
-                return .msIcon(.arrowRight)
-            }
-        }
-    }
-
     // MARK: - Properties
 
     private var leftImage = UIImageView()
     private var rightImage = UIImageView()
 
-    public var imageStyle: ImageStyle = .none {
-        didSet {
-            self.configureImageStyle()
-            self.configureLayout()
-        }
-    }
-
-    public override var text: String? {
-        didSet { self.convertMode() }
-    }
-
-    public override var placeholder: String? {
-        didSet { self.configurePlaceholder() }
-    }
-
-    // MARK: - Initializer
-
-    private override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.configureStyles()
-        self.configureLayout()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
-    }
-
     // MARK: - UI Configuration
 
     private func configureStyles() {
-        self.font = .msFont(.caption)
+        font = .msFont(.caption)
 
-        self.layer.cornerRadius = Metric.cornerRadius
-        self.backgroundColor = .msColor(.textFieldBackground)
+        layer.cornerRadius = Metric.cornerRadius
+        backgroundColor = .msColor(.textFieldBackground)
 
-        self.configureImageStyle()
+        configureImageStyle()
     }
 
     private func configureLayout() {
-        self.translatesAutoresizingMaskIntoConstraints = false
+        translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.heightAnchor.constraint(equalToConstant: Metric.height)
+            heightAnchor.constraint(equalToConstant: Metric.height),
         ])
-        self.configurePlaceholderLayout()
+        configurePlaceholderLayout()
 
-        self.addSubview(self.leftImage)
-        self.addSubview(self.rightImage)
+        addSubview(leftImage)
+        addSubview(rightImage)
 
-        self.configureLeftImageLayout()
-        self.configureRightImageLayout()
+        configureLeftImageLayout()
+        configureRightImageLayout()
     }
 
     private func configurePlaceholderLayout() {
-        self.configureLeftPlaceholderLayout()
-        self.configureRightPlaceholderLayout()
+        configureLeftPlaceholderLayout()
+        configureRightPlaceholderLayout()
     }
 
     private func configureLeftPlaceholderLayout() {
-        let extraInset: CGFloat = self.imageStyle == .none ? 0.0 : Metric.imageWidth + Metric.imageInset
-        self.leftView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: Metric.leftInset + extraInset, height: 0.0))
-        self.leftViewMode = .always
+        let extraInset: CGFloat = imageStyle == .none ? 0.0 : Metric.imageWidth + Metric.imageInset
+        leftView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: Metric.leftInset + extraInset, height: 0.0))
+        leftViewMode = .always
     }
 
     private func configureRightPlaceholderLayout() {
-        let extraInset: CGFloat = self.hasText ? Metric.imageWidth + Metric.imageInset : 0.0
-        self.rightView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: Metric.rightInset + extraInset, height: 0.0))
-        self.rightViewMode = .always
+        let extraInset: CGFloat = hasText ? Metric.imageWidth + Metric.imageInset : 0.0
+        rightView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: Metric.rightInset + extraInset, height: 0.0))
+        rightViewMode = .always
     }
 
     private func configureLeftImageLayout() {
-        self.leftImage.translatesAutoresizingMaskIntoConstraints = false
+        leftImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.leftImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Metric.leftInset),
-            self.leftImage.heightAnchor.constraint(equalToConstant: Metric.imageHeight),
-            self.leftImage.widthAnchor.constraint(equalToConstant: Metric.imageWidth),
-            self.leftImage.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            leftImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Metric.leftInset),
+            leftImage.heightAnchor.constraint(equalToConstant: Metric.imageHeight),
+            leftImage.widthAnchor.constraint(equalToConstant: Metric.imageWidth),
+            leftImage.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
     }
 
     private func configureRightImageLayout() {
-        self.rightImage.translatesAutoresizingMaskIntoConstraints = false
+        rightImage.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.rightImage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Metric.imageInset),
-            self.rightImage.heightAnchor.constraint(equalToConstant: Metric.imageHeight),
-            self.rightImage.widthAnchor.constraint(equalToConstant: Metric.imageWidth),
-            self.rightImage.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            rightImage.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Metric.imageInset),
+            rightImage.heightAnchor.constraint(equalToConstant: Metric.imageHeight),
+            rightImage.widthAnchor.constraint(equalToConstant: Metric.imageWidth),
+            rightImage.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
     }
 
     private func configurePlaceholder() {
         var container = AttributeContainer()
         container.font = .msFont(.caption)
-        let attributedString = AttributedString(self.placeholder ?? "", attributes: container)
-        self.attributedPlaceholder = NSAttributedString(attributedString)
+        let attributedString = AttributedString(placeholder ?? "", attributes: container)
+        attributedPlaceholder = NSAttributedString(attributedString)
     }
 }
 
 // MARK: - Edit/Non-Edit Mode Functions
 
-public extension MSTextField {
-    func convertMode() {
-        self.configureRightImageStyle()
-        self.configureRightImageLayout()
+extension MSTextField {
+    public func convertMode() {
+        configureRightImageStyle()
+        configureRightImageLayout()
     }
 }
 
 // MARK: - Private Configuration Functions
 
-private extension MSTextField {
+extension MSTextField {
     private func configureImageStyle() {
-        self.configureLeftImageStyle()
-        self.configureRightImageStyle()
+        configureLeftImageStyle()
+        configureRightImageStyle()
     }
 
     private func configureLeftImageStyle() {
-        if let leftImage = self.imageStyle.leftImage {
+        if let leftImage = imageStyle.leftImage {
             self.leftImage.image = leftImage
         }
-        self.leftImage.tintColor = .msColor(.textFieldTypo)
+        leftImage.tintColor = .msColor(.textFieldTypo)
     }
 
     private func configureRightImageStyle() {
-        if let rightImage = self.imageStyle.rightImage {
+        if let rightImage = imageStyle.rightImage {
             self.rightImage.image = rightImage
         }
 
-        if self.hasText {
-            self.rightImage.image = ImageBox.close
+        if hasText {
+            rightImage.image = ImageBox.close
         }
-        self.rightImage.tintColor = .msColor(.textFieldTypo)
+        rightImage.tintColor = .msColor(.textFieldTypo)
     }
 
     private func configureImages(color: UIColor) {
-        self.leftImage.tintColor = color
-        self.rightImage.tintColor = color
+        leftImage.tintColor = color
+        rightImage.tintColor = color
     }
 }

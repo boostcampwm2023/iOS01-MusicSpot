@@ -10,6 +10,8 @@ import UIKit
 
 import MSLogger
 
+// MARK: - Router
+
 public protocol Router {
     /// 기본 URL
     /// > Tip: `https://www.naver.com`
@@ -36,15 +38,15 @@ public protocol Router {
 
 extension Router {
     public func makeRequest(encoder: JSONEncoder) -> URLRequest? {
-        var urlString = self.baseURL
+        var urlString = baseURL
 
-        if let path = self.pathURL {
+        if let path = pathURL {
             urlString += "/\(path)"
         }
 
         guard var baseURLComponents = URLComponents(string: urlString) else { return nil }
 
-        if let queries = self.queries, !queries.isEmpty {
+        if let queries, !queries.isEmpty {
             baseURLComponents.queryItems = self.queries
         }
         #if DEBUG
@@ -52,25 +54,26 @@ extension Router {
         #endif
         guard let url = baseURLComponents.url else { return nil }
         var request = URLRequest(url: url)
-        request.httpMethod = self.method.rawValue
-        if let headers = self.headers {
-            headers.forEach { key, value in
+        request.httpMethod = method.rawValue
+        if let headers {
+            for (key, value) in headers {
                 request.addValue(value, forHTTPHeaderField: key)
             }
         }
-        if let body = self.body {
+        if let body {
             request.httpBody = body.data(encoder: encoder)
         }
         return request
     }
 
     public func fetchBaseURLFromPlist(from bundle: Bundle) -> String? {
-        guard let url = bundle.url(forResource: "APIInfo", withExtension: "plist"),
-              let data = try? Data(contentsOf: url),
-              let dict = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any] else {
+        guard
+            let url = bundle.url(forResource: "APIInfo", withExtension: "plist"),
+            let data = try? Data(contentsOf: url),
+            let dict = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any]
+        else {
             return nil
         }
-        let urlString = dict["BaseURL"] as? String
-        return urlString
+        return dict["BaseURL"] as? String
     }
 }

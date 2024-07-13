@@ -15,8 +15,8 @@ extension MSPrimaryButton {
         image: Image? = nil,
         cornerStyle: MSLargeButtonStyle.CornerStyle = .squared,
         colorStyle: ColorStyle = .brand,
-        action: @escaping () -> Void
-    ) {
+        action: @escaping () -> Void)
+    {
         self.title = title
         self.image = image
         self.cornerStyle = cornerStyle
@@ -33,9 +33,9 @@ import MSDesignSystem
     return MSPrimaryButton(
         title: "재생",
         image: .msIcon(.play),
-        cornerStyle: .rounded
-    ) {
-        print("Play")
+        cornerStyle: .rounded)
+    {
+        print("Play") // swiftlint:disable:this no_direct_standard_out_logs
     }
 }
 #endif

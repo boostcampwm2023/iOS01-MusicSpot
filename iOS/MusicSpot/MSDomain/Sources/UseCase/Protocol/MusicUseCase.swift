@@ -10,10 +10,14 @@ import MusicKit
 
 import Entity
 
+// MARK: - MusicFetchMethod
+
 public enum MusicFetchMethod {
     case term(String)
     case rank(Genre)
 }
+
+// MARK: - MusicUseCase
 
 public protocol MusicUseCase {
     /// 주어진 방식에 따라 음악을 검색합니다.

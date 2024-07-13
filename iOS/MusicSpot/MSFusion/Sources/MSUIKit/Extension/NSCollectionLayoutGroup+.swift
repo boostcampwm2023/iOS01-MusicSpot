@@ -8,17 +8,22 @@
 import UIKit
 
 extension NSCollectionLayoutGroup {
-    public static func horizontal(layoutSize: NSCollectionLayoutSize,
-                                  item: NSCollectionLayoutItem,
-                                  count: Int) -> NSCollectionLayoutGroup {
+    public static func horizontal(
+        layoutSize: NSCollectionLayoutSize,
+        item: NSCollectionLayoutItem,
+        count: Int)
+        -> NSCollectionLayoutGroup
+    {
         if #available(iOS 16.0, *) {
-            return NSCollectionLayoutGroup.horizontal(layoutSize: layoutSize,
-                                                      repeatingSubitem: item,
-                                                      count: count)
+            NSCollectionLayoutGroup.horizontal(
+                layoutSize: layoutSize,
+                repeatingSubitem: item,
+                count: count)
         } else {
-            return NSCollectionLayoutGroup.horizontal(layoutSize: layoutSize,
-                                                      subitem: item,
-                                                      count: count)
+            NSCollectionLayoutGroup.horizontal(
+                layoutSize: layoutSize,
+                subitem: item,
+                count: count)
         }
     }
 }

@@ -11,9 +11,8 @@ import XCTest
 @testable import VersionManager
 
 final class VersionManagerTests: XCTestCase {
-    // MARK: - Properties
 
-    private var versionManager = VersionManager()
+    // MARK: Internal
 
     // MARK: - Tests
 
@@ -26,4 +25,11 @@ final class VersionManagerTests: XCTestCase {
             XCTFail("Bundle에서 앱 버전을 가져오는데 실패했습니다.")
         }
     }
+
+    // MARK: Private
+
+    // MARK: - Properties
+
+    private var versionManager = VersionManager()
+
 }

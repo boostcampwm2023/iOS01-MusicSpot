@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - CacheStorage
+
 public protocol CacheStorage {
     associatedtype Key = String
     associatedtype Value
@@ -20,6 +22,8 @@ public protocol CacheStorage {
 
     func clean(_ target: CacheStorageTarget) throws
 }
+
+// MARK: - CacheStorageTarget
 
 public enum CacheStorageTarget {
     case all

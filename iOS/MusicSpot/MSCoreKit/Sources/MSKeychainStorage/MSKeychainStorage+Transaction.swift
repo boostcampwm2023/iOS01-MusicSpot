@@ -20,7 +20,7 @@ extension MSKeychainStorage {
             kSecClass: kSecClassGenericPassword,
             kSecAttrAccount: account,
             kSecAttrService: KeychainConstants.service,
-            kSecReturnData: true
+            kSecReturnData: true,
         ] as NSDictionary, &result)
 
         switch status {
@@ -42,7 +42,7 @@ extension MSKeychainStorage {
             kSecClass: kSecClassGenericPassword, // 데이터 종류
             kSecAttrAccount: account, // 데이터 키
             kSecValueData: value, // 데이터 밸류
-            kSecAttrService: KeychainConstants.service
+            kSecAttrService: KeychainConstants.service,
         ] as NSDictionary, nil)
 
         guard status == errSecSuccess else {
@@ -58,9 +58,9 @@ extension MSKeychainStorage {
         let status = SecItemUpdate([
             kSecClass: kSecClassGenericPassword,
             kSecAttrAccount: account,
-            kSecAttrService: KeychainConstants.service
+            kSecAttrService: KeychainConstants.service,
         ] as NSDictionary, [
-            kSecValueData: value
+            kSecValueData: value,
         ] as NSDictionary)
 
         guard status == errSecSuccess else {
@@ -75,7 +75,7 @@ extension MSKeychainStorage {
         let status = SecItemDelete([
             kSecClass: kSecClassGenericPassword,
             kSecAttrAccount: account,
-            kSecAttrService: KeychainConstants.service
+            kSecAttrService: KeychainConstants.service,
         ] as NSDictionary)
 
         guard status == errSecSuccess else {
@@ -91,15 +91,17 @@ extension MSKeychainStorage {
             kSecClass: kSecClassGenericPassword,
             kSecAttrAccount: account,
             kSecAttrService: KeychainConstants.service,
-            kSecReturnData: false
+            kSecReturnData: false,
         ] as NSDictionary, nil)
 
         switch status {
         case errSecSuccess:
             MSLogger.make(category: .keychain).log("\(account)의 키체인 값을 찾았습니다.")
             return true
+
         case errSecItemNotFound:
             return false
+
         default:
             throw KeychainError.creationError
         }

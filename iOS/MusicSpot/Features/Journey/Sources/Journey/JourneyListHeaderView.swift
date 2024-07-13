@@ -10,16 +10,44 @@ import UIKit
 import MSDesignSystem
 import MSUIKit
 
+// MARK: - JourneyListHeaderView
+
 public final class JourneyListHeaderView: UICollectionReusableView {
+
+    // MARK: Lifecycle
+
+    // MARK: - Initializer
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        configureStyles()
+        configureLayout()
+    }
+
+    public required init?(coder _: NSCoder) {
+        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
+    }
+
+    // MARK: Internal
+
     // MARK: - Constants
 
-    static let elementKind: String = "JourneyListHeaderView"
+    static let elementKind = "JourneyListHeaderView"
     static let estimatedHight: CGFloat = 46.0 + Metric.verticalInset
 
+    // MARK: - Functions
+
+    @MainActor
+    func update(numberOfJourneys: Int) {
+        subtitleLabel.text = Typo.subtitle(numberOfJourneys: numberOfJourneys)
+    }
+
+    // MARK: Private
+
     private enum Typo {
-        static let title: String = "지난 여정"
+        static let title = "지난 여정"
         static func subtitle(numberOfJourneys: Int) -> String {
-            return "현재 위치에 \(numberOfJourneys)개의 여정이 있습니다."
+            "현재 위치에 \(numberOfJourneys)개의 여정이 있습니다."
         }
     }
 
@@ -55,54 +83,39 @@ public final class JourneyListHeaderView: UICollectionReusableView {
         return label
     }()
 
-    // MARK: - Initializer
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.configureStyles()
-        self.configureLayout()
-    }
-
-    public required init?(coder: NSCoder) {
-        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
-    }
-
-    // MARK: - Functions
-
-    @MainActor
-    func update(numberOfJourneys: Int) {
-        self.subtitleLabel.text = Typo.subtitle(numberOfJourneys: numberOfJourneys)
-    }
 }
 
 // MARK: - UI Configuration
 
-private extension JourneyListHeaderView {
-    func configureStyles() {
-        self.backgroundColor = .msColor(.primaryBackground)
+extension JourneyListHeaderView {
+    private func configureStyles() {
+        backgroundColor = .msColor(.primaryBackground)
     }
 
-    func configureLayout() {
-        self.addSubview(self.titleStack)
+    private func configureLayout() {
+        addSubview(titleStack)
 
         [
-            self.titleLabel,
-            self.subtitleLabel
+            titleLabel,
+            subtitleLabel,
         ].forEach {
             self.titleStack.addArrangedSubview($0)
         }
-        self.titleStack.translatesAutoresizingMaskIntoConstraints = false
+        titleStack.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            self.heightAnchor.constraint(equalToConstant: JourneyListHeaderView.estimatedHight),
+            heightAnchor.constraint(equalToConstant: JourneyListHeaderView.estimatedHight),
 
-            self.titleStack.topAnchor.constraint(equalTo: self.topAnchor),
-            self.titleStack.leadingAnchor.constraint(equalTo: self.leadingAnchor,
-                                                     constant: Metric.horizontalInset),
-            self.titleStack.bottomAnchor.constraint(lessThanOrEqualTo: self.bottomAnchor,
-                                                    constant: -Metric.verticalInset),
-            self.titleStack.trailingAnchor.constraint(equalTo: self.trailingAnchor,
-                                                      constant: Metric.horizontalInset)
+            titleStack.topAnchor.constraint(equalTo: topAnchor),
+            titleStack.leadingAnchor.constraint(
+                equalTo: leadingAnchor,
+                constant: Metric.horizontalInset),
+            titleStack.bottomAnchor.constraint(
+                lessThanOrEqualTo: bottomAnchor,
+                constant: -Metric.verticalInset),
+            titleStack.trailingAnchor.constraint(
+                equalTo: trailingAnchor,
+                constant: Metric.horizontalInset),
         ])
     }
 }

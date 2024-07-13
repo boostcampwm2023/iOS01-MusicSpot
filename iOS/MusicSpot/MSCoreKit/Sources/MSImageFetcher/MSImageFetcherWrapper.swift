@@ -7,6 +7,8 @@
 
 import MSCacheStorage
 
+// MARK: - MSImageFetcherWrapper
+
 public struct MSImageFetcherWrapper<Base> {
     // MARK: - Properties
 
@@ -19,14 +21,14 @@ public struct MSImageFetcherWrapper<Base> {
     }
 }
 
-// MARK: - Compatible
+// MARK: - MSImageFetcherCompatible
 
 public protocol MSImageFetcherCompatible: AnyObject { }
 
 extension MSImageFetcherCompatible {
     // swiftlint: disable identifier_name
     public var ms: MSImageFetcherWrapper<Self> {
-        return MSImageFetcherWrapper(base: self)
+        MSImageFetcherWrapper(base: self)
     }
     // swiftlint: enable identifier_name
 

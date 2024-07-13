@@ -8,14 +8,14 @@
 import Foundation
 
 public struct MSKeychainStorage {
-    // MARK: - Properties
 
-    private let encoder = JSONEncoder()
-    private let decoder = JSONDecoder()
+    // MARK: Lifecycle
 
     // MARK: - Initializer
 
     public init() { }
+
+    // MARK: Public
 
     // MARK: - Functions
 
@@ -26,12 +26,12 @@ public struct MSKeychainStorage {
     /// - Parameters:
     ///   - value: Keychain에 저장할 데이터 (`Data`)
     ///   - account: Keychain에 저장할 데이터에 대응되는 Key (`String`)
-    public func set<T: Codable>(value: T, account: String) throws {
-        let encodedValue = try self.encoder.encode(value)
-        if try self.exists(account: account) {
-            try self.update(value: encodedValue, account: account)
+    public func set(value: some Codable, account: String) throws {
+        let encodedValue = try encoder.encode(value)
+        if try exists(account: account) {
+            try update(value: encodedValue, account: account)
         } else {
-            try self.add(value: encodedValue, account: account)
+            try add(value: encodedValue, account: account)
         }
     }
 
@@ -42,12 +42,12 @@ public struct MSKeychainStorage {
     /// - Parameters:
     ///   - account: Keychain에서 조회할 데이터에 대응되는 Key (`String`)
     /// - Returns: Keychain에 저장된 데이터
-    public func get<T: Codable>(_ type: T.Type, account: String) throws -> T? {
-        if try self.exists(account: account) {
-            guard let value = try self.fetch(account: account) else {
+    public func get<T: Codable>(_: T.Type, account: String) throws -> T? {
+        if try exists(account: account) {
+            guard let value = try fetch(account: account) else {
                 return nil
             }
-            return try self.decoder.decode(T.self, from: value)
+            return try decoder.decode(T.self, from: value)
         } else {
             throw KeychainError.transactionError
         }
@@ -58,8 +58,8 @@ public struct MSKeychainStorage {
     /// - Parameters:
     ///   - account: Keychain에서 삭제할 값에 대응되는 Key (`String`)
     public func delete(account: String) throws {
-        if try self.exists(account: account) {
-            return try self.remove(account: account)
+        if try exists(account: account) {
+            return try remove(account: account)
         } else {
             throw KeychainError.transactionError
         }
@@ -67,8 +67,16 @@ public struct MSKeychainStorage {
 
     /// Keychain에 저장된 모든 데이터를 삭제합니다.
     public func deleteAll() throws {
-        for account in Accounts.allCases where try self.exists(account: account.rawValue) {
+        for account in Accounts.allCases where try exists(account: account.rawValue) {
             try self.delete(account: account.rawValue)
         }
     }
+
+    // MARK: Private
+
+    // MARK: - Properties
+
+    private let encoder = JSONEncoder()
+    private let decoder = JSONDecoder()
+
 }

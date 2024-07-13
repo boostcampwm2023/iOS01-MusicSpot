@@ -9,9 +9,11 @@ extension String {
     static let package = "MSFusion"
 
     var fromRootPath: String {
-        return "../" + self
+        "../" + self
     }
 }
+
+// MARK: - Target
 
 private enum Target {
     static let combineCocoa = "CombineCocoa"
@@ -19,6 +21,8 @@ private enum Target {
     static let msSwiftUI = "MSSwiftUI"
     static let msUIKit = "MSUIKit"
 }
+
+// MARK: - Dependency
 
 private enum Dependency {
     static let msDomain = "MSDomain"
@@ -33,78 +37,64 @@ private enum Dependency {
 let package = Package(
     name: .package,
     platforms: [
-        .iOS(.v17)
+        .iOS(.v17),
     ],
     products: [
         .library(
             name: Target.msSwiftUI,
-            targets: [Target.msSwiftUI]
-        ),
+            targets: [Target.msSwiftUI]),
         .library(
             name: Target.msUIKit,
-            targets: [Target.msUIKit]
-        )
+            targets: [Target.msUIKit]),
     ],
     dependencies: [
         .package(
             name: Dependency.msDomain,
-            path: Dependency.msDomain.fromRootPath
-        ),
+            path: Dependency.msDomain.fromRootPath),
         .package(
             name: Dependency.msCoreKit,
-            path: Dependency.msCoreKit.fromRootPath
-        ),
+            path: Dependency.msCoreKit.fromRootPath),
         .package(
             name: Dependency.msFoundation,
-            path: Dependency.msFoundation.fromRootPath
-        ),
+            path: Dependency.msFoundation.fromRootPath),
         .package(
             url: "https://github.com/realm/SwiftLint.git",
-            from: "0.55.1"
-        )
+            from: "0.55.1"),
     ],
     targets: [
         .target(
             name: Target.msDesignSystem,
             resources: [
-                .process("../\(Target.msDesignSystem)/Resources")
+                .process("../\(Target.msDesignSystem)/Resources"),
             ],
             plugins: [
                 .plugin(
                     name: "SwiftLintBuildToolPlugin",
-                    package: "SwiftLint"
-                )
-            ]
-        ),
+                    package: "SwiftLint"),
+            ]),
         .target(
             name: Target.combineCocoa,
             plugins: [
                 .plugin(
                     name: "SwiftLintBuildToolPlugin",
-                    package: "SwiftLint"
-                )
-            ]
-        ),
+                    package: "SwiftLint"),
+            ]),
         .target(
             name: Target.msSwiftUI,
             dependencies: [
                 .target(name: Target.msDesignSystem),
                 .product(
                     name: Dependency.msDomain,
-                    package: Dependency.msDomain
-                ),
+                    package: Dependency.msDomain),
                 .product(
                     name: Dependency.msFoundation,
-                    package: Dependency.msFoundation
-                )
+                    package: Dependency.msFoundation),
             ],
             plugins: [
                 .plugin(
                     name: "SwiftLintBuildToolPlugin",
-                    package: "SwiftLint"
-                )
-            ]
-        ),
+                    package: "SwiftLint"),
+            ]),
         .target(
             name: Target.msUIKit,
             dependencies: [
@@ -112,23 +102,17 @@ let package = Package(
                 .target(name: Target.combineCocoa),
                 .product(
                     name: Dependency.msImageFetcher,
-                    package: Dependency.msCoreKit
-                ),
+                    package: Dependency.msCoreKit),
                 .product(
                     name: Dependency.msFoundation,
-                    package: Dependency.msFoundation
-                ),
+                    package: Dependency.msFoundation),
                 .product(
                     name: Dependency.msLogger,
-                    package: Dependency.msFoundation
-                )
+                    package: Dependency.msFoundation),
             ],
             plugins: [
                 .plugin(
                     name: "SwiftLintBuildToolPlugin",
-                    package: "SwiftLint"
-                )
-            ]
-        )
-    ]
-)
+                    package: "SwiftLint"),
+            ]),
+    ])

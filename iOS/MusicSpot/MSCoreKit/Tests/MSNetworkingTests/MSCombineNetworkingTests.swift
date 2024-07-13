@@ -11,11 +11,8 @@ import XCTest
 @testable import MSNetworking
 
 final class MSCombineNetworkingTests: XCTestCase {
-    // MARK: - Properties
 
-    private var networking: MSNetworking!
-
-    private var cancellables: Set<AnyCancellable> = []
+    // MARK: Internal
 
     // MARK: - Setup
 
@@ -24,7 +21,7 @@ final class MSCombineNetworkingTests: XCTestCase {
         let configuration: URLSessionConfiguration = .ephemeral
         configuration.protocolClasses?.insert(MockURLProtocol.self, at: .zero)
         let session = URLSession(configuration: configuration)
-        self.networking = MSNetworking(session: session)
+        networking = MSNetworking(session: session)
     }
 
     // MARK: - Tests
@@ -35,18 +32,19 @@ final class MSCombineNetworkingTests: XCTestCase {
         let response = "Success"
         let data = try JSONEncoder().encode(response)
         MockURLProtocol.requestHandler = { _ in
-            let response = HTTPURLResponse(url: URL(string: "https://api.codesquad.kr/api")!,
-                                           statusCode: 200,
-                                           httpVersion: nil,
-                                           headerFields: ["Content-Type": "application/json"])!
+            let response = HTTPURLResponse(
+                url: URL(string: "https://api.codesquad.kr/api")!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: ["Content-Type": "application/json"])!
             return (response, data)
         }
 
         let expectation = XCTestExpectation()
 
         // Act
-        self.networking.request(String.self, router: router)
-            .receive(on: self.networking.queue)
+        networking.request(String.self, router: router)
+            .receive(on: networking.queue)
             .sink { completion in
                 if case .failure = completion {
                     XCTFail("200 번대 status code를 포함한 응답은 성공해야 합니다.")
@@ -55,7 +53,7 @@ final class MSCombineNetworkingTests: XCTestCase {
                 XCTAssertEqual("Success", value, "응답 값이 일치하지 않습니다.")
                 expectation.fulfill()
             }
-            .store(in: &self.cancellables)
+            .store(in: &cancellables)
 
         // Assert
         wait(for: [expectation], timeout: 5.0)
@@ -65,33 +63,44 @@ final class MSCombineNetworkingTests: XCTestCase {
         // Arrange
         let router = MockRouter()
         MockURLProtocol.requestHandler = { _ in
-            let response = HTTPURLResponse(url: URL(string: "https://api.codesquad.kr/api")!,
-                                           statusCode: 404,
-                                           httpVersion: nil,
-                                           headerFields: ["Content-Type": "application/json"])!
+            let response = HTTPURLResponse(
+                url: URL(string: "https://api.codesquad.kr/api")!,
+                statusCode: 404,
+                httpVersion: nil,
+                headerFields: ["Content-Type": "application/json"])!
             return (response, Data())
         }
 
         let expectation = XCTestExpectation()
 
         // Act
-        self.networking.request(String.self, router: router)
-            .receive(on: self.networking.queue)
+        networking.request(String.self, router: router)
+            .receive(on: networking.queue)
             .sink { completion in
                 if case .failure(let error) = completion {
                     // swiftlint: disable force_cast
-                    XCTAssertEqual(error as! MSNetworkError,
-                                   MSNetworkError.invalidStatusCode(statusCode: 404, description: ""),
-                                   "404 status code 응답은 invalidStatusCode 에러를 발생시켜야 합니다.")
+                    XCTAssertEqual(
+                        error as! MSNetworkError,
+                        MSNetworkError.invalidStatusCode(statusCode: 404, description: ""),
+                        "404 status code 응답은 invalidStatusCode 에러를 발생시켜야 합니다.")
                     // swiftlint: enable force_cast
                     expectation.fulfill()
                 }
             } receiveValue: { _ in
                 XCTFail("200 ~ 299 외의 status code를 포함한 응답은 에러를 발생시켜야 합니다.")
             }
-            .store(in: &self.cancellables)
+            .store(in: &cancellables)
 
         // Assert
         wait(for: [expectation], timeout: 5.0)
     }
+
+    // MARK: Private
+
+    // MARK: - Properties
+
+    private var networking: MSNetworking!
+
+    private var cancellables: Set<AnyCancellable> = []
+
 }

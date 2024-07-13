@@ -10,6 +10,89 @@ import UIKit
 import MSDesignSystem
 
 open class MSAlertViewController: UIViewController {
+
+    // MARK: Open
+
+    // MARK: - Properties
+
+    open var cancelButtonAction: UIAction? {
+        didSet {
+            guard let action = cancelButtonAction else { return }
+            cancelButton.addAction(action, for: .touchUpInside)
+        }
+    }
+
+    open var doneButtonAction: UIAction? {
+        didSet {
+            guard let action = doneButtonAction else { return }
+            doneButton.addAction(action, for: .touchUpInside)
+        }
+    }
+
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        configureStyles()
+        configureLayout()
+    }
+
+    open override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        animatePresentView()
+    }
+
+    // MARK: - Helpers
+
+    @objc
+    open func dismissBottomSheet() {
+        animateDismissView()
+    }
+
+    // MARK: - UI Configuration
+
+    open func configureStyles() {
+        view.backgroundColor = .clear
+        dimmedView.addGestureRecognizer(tapGesture)
+        containerView.addGestureRecognizer(panGesture)
+    }
+
+    open func configureLayout() {
+        configureSubviews()
+        configureConstraints()
+    }
+
+    // MARK: Public
+
+    // MARK: - UI Components
+
+    /// Base
+    public let containerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .msColor(.modalBackground)
+        view.layer.cornerRadius = Metric.containerViewCornerRadius
+        view.clipsToBounds = true
+        return view
+    }()
+
+    // MARK: - Functions
+
+    public func updateTitle(_ title: String) {
+        titleLabel.text = title
+    }
+
+    public func updateSubtitle(_ subtitle: String) {
+        subtitleLabel.text = subtitle
+    }
+
+    public func updateDoneButton(isEnabled: Bool) {
+        doneButton.isEnabled = isEnabled
+    }
+
+    public func updateDoneButtonLoadingState(to isLoading: Bool) {
+        doneButton.configuration?.showsActivityIndicator = isLoading
+    }
+
+    // MARK: Private
+
     // MARK: - Constants
 
     private enum Typo {
@@ -39,17 +122,6 @@ open class MSAlertViewController: UIViewController {
         static let gestureVelocity: CGFloat = 750.0
     }
 
-    // MARK: - UI Components
-
-    // Base
-    public let containerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .msColor(.modalBackground)
-        view.layer.cornerRadius = Metric.containerViewCornerRadius
-        view.clipsToBounds = true
-        return view
-    }()
-
     private let dimmedView: UIView = {
         let view = UIView()
         view.backgroundColor = .black
@@ -65,7 +137,7 @@ open class MSAlertViewController: UIViewController {
         return view
     }()
 
-    // Title
+    /// Title
     private let titleStack: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -87,7 +159,7 @@ open class MSAlertViewController: UIViewController {
         return label
     }()
 
-    // Button
+    /// Button
     private let buttonStack: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .horizontal
@@ -100,10 +172,11 @@ open class MSAlertViewController: UIViewController {
         let button = MSButton.secondary()
         button.cornerStyle = .squared
         button.title = Typo.cancelButtonTitle
-        button.configuration?.contentInsets = NSDirectionalEdgeInsets(top: Metric.cancelButtonVerticalInset,
-                                                                      leading: Metric.cancelButtonHorizontalInset,
-                                                                      bottom: Metric.cancelButtonVerticalInset,
-                                                                      trailing: Metric.cancelButtonHorizontalInset)
+        button.configuration?.contentInsets = NSDirectionalEdgeInsets(
+            top: Metric.cancelButtonVerticalInset,
+            leading: Metric.cancelButtonHorizontalInset,
+            bottom: Metric.cancelButtonVerticalInset,
+            trailing: Metric.cancelButtonHorizontalInset)
         return button
     }()
 
@@ -115,16 +188,15 @@ open class MSAlertViewController: UIViewController {
         return button
     }()
 
-    // Gesture
-    private lazy var tapGesture: UITapGestureRecognizer = {
-        let tagGesture = UITapGestureRecognizer(target: self,
-                                                action: #selector(self.dismissBottomSheet))
-        return tagGesture
-    }()
+    /// Gesture
+    private lazy var tapGesture = UITapGestureRecognizer(
+        target: self,
+        action: #selector(self.dismissBottomSheet))
 
     private lazy var panGesture: UIPanGestureRecognizer = {
-        let panGesture = UIPanGestureRecognizer(target: self,
-                                                action: #selector(self.handlePanGesture(_:)))
+        let panGesture = UIPanGestureRecognizer(
+            target: self,
+            action: #selector(self.handlePanGesture(_:)))
         panGesture.delaysTouchesBegan = false
         panGesture.delaysTouchesEnded = false
         return panGesture
@@ -134,65 +206,33 @@ open class MSAlertViewController: UIViewController {
     private var containerViewBottomInset: NSLayoutConstraint?
 
     private var keyboardLayoutHeight: CGFloat {
-        self.view.keyboardLayoutGuide.layoutFrame.height
-    }
-
-    // MARK: - Properties
-
-    open var cancelButtonAction: UIAction? {
-        didSet {
-            guard let action = self.cancelButtonAction else { return }
-            self.cancelButton.addAction(action, for: .touchUpInside)
-        }
-    }
-
-    open var doneButtonAction: UIAction? {
-        didSet {
-            guard let action = self.doneButtonAction else { return }
-            self.doneButton.addAction(action, for: .touchUpInside)
-        }
-    }
-
-    // MARK: - Life Cycle
-
-    open override func viewDidLoad() {
-        super.viewDidLoad()
-        self.configureStyles()
-        self.configureLayout()
-    }
-
-    open override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.animatePresentView()
-    }
-
-    // MARK: - Helpers
-
-    @objc
-    open func dismissBottomSheet() {
-        self.animateDismissView()
+        view.keyboardLayoutGuide.layoutFrame.height
     }
 
     @objc
     private func handlePanGesture(_ sender: UIPanGestureRecognizer) {
-        let translation = sender.translation(in: self.containerView)
-        let velocity = sender.velocity(in: self.containerView)
+        let translation = sender.translation(in: containerView)
+        let velocity = sender.velocity(in: containerView)
         let updatedBottomInset = Metric.verticalInset + translation.y
 
         switch sender.state {
         case .changed where updatedBottomInset > Metric.verticalInset:
-            self.containerViewBottomInset?.constant = updatedBottomInset - self.keyboardLayoutHeight
-            self.view.layoutIfNeeded()
+            containerViewBottomInset?.constant = updatedBottomInset - keyboardLayoutHeight
+            view.layoutIfNeeded()
+
         case .ended:
-            if translation.y > Metric.bottomSheetHeight * (1 - Metric.dismissingHeightRatio)
-                || velocity.y > Metric.gestureVelocity {
-                self.animateDismissView()
+            if
+                translation.y > Metric.bottomSheetHeight * (1 - Metric.dismissingHeightRatio)
+                || velocity.y > Metric.gestureVelocity
+            {
+                animateDismissView()
             } else {
                 UIView.animate(withDuration: 0.4) {
                     self.containerViewBottomInset?.constant = Metric.verticalInset - self.keyboardLayoutHeight
                     self.view.layoutIfNeeded()
                 }
             }
+
         default:
             break
         }
@@ -204,7 +244,7 @@ open class MSAlertViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
 
-        self.dimmedView.alpha = .zero
+        dimmedView.alpha = .zero
         UIView.animate(withDuration: 0.4) {
             self.dimmedView.alpha = Metric.dimmedViewMaximumAlpha
         }
@@ -216,7 +256,7 @@ open class MSAlertViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
 
-        self.dimmedView.alpha = Metric.dimmedViewMaximumAlpha
+        dimmedView.alpha = Metric.dimmedViewMaximumAlpha
         UIView.animate(withDuration: 0.4) {
             self.dimmedView.alpha = .zero
         } completion: { _ in
@@ -224,97 +264,77 @@ open class MSAlertViewController: UIViewController {
         }
     }
 
-    // MARK: - UI Configuration
-
-    open func configureStyles() {
-        self.view.backgroundColor = .clear
-        self.dimmedView.addGestureRecognizer(self.tapGesture)
-        self.containerView.addGestureRecognizer(self.panGesture)
-    }
-
-    open func configureLayout() {
-        self.configureSubviews()
-        self.configureConstraints()
-    }
-
     private func configureSubviews() {
-        [self.dimmedView, self.containerView].forEach {
-            self.view.addSubview($0)
-            $0.translatesAutoresizingMaskIntoConstraints = false
+        for item in [dimmedView, containerView] {
+            view.addSubview(item)
+            item.translatesAutoresizingMaskIntoConstraints = false
         }
 
-        [self.resizeIndicator, self.titleStack, self.buttonStack].forEach {
-            self.containerView.addSubview($0)
-            $0.translatesAutoresizingMaskIntoConstraints = false
+        for item in [resizeIndicator, titleStack, buttonStack] {
+            containerView.addSubview(item)
+            item.translatesAutoresizingMaskIntoConstraints = false
         }
 
-        [self.titleLabel, self.subtitleLabel].forEach {
-            self.titleStack.addArrangedSubview($0)
+        for item in [titleLabel, subtitleLabel] {
+            titleStack.addArrangedSubview(item)
         }
 
-        [self.cancelButton, self.doneButton].forEach {
-            self.buttonStack.addArrangedSubview($0)
+        for item in [cancelButton, doneButton] {
+            buttonStack.addArrangedSubview(item)
         }
     }
 
     private func configureConstraints() {
-        let bottomInset = self.containerView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor,
-                                                                     constant: Metric.bottomSheetHeight)
-        let heightConstraint = self.containerView.heightAnchor.constraint(equalToConstant: Metric.bottomSheetHeight)
+        let bottomInset = containerView.bottomAnchor.constraint(
+            equalTo: view.keyboardLayoutGuide.topAnchor,
+            constant: Metric.bottomSheetHeight)
+        let heightConstraint = containerView.heightAnchor.constraint(equalToConstant: Metric.bottomSheetHeight)
         NSLayoutConstraint.activate([
-            self.dimmedView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.dimmedView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.dimmedView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            self.dimmedView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            dimmedView.topAnchor.constraint(equalTo: view.topAnchor),
+            dimmedView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            dimmedView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            dimmedView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
-            self.containerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor,
-                                                        constant: Metric.horizontalInset),
+            containerView.leadingAnchor.constraint(
+                equalTo: view.leadingAnchor,
+                constant: Metric.horizontalInset),
             bottomInset,
-            self.containerView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor,
-                                                         constant: -Metric.horizontalInset),
-            heightConstraint
+            containerView.trailingAnchor.constraint(
+                equalTo: view.trailingAnchor,
+                constant: -Metric.horizontalInset),
+            heightConstraint,
         ])
-        self.containerViewBottomInset = bottomInset
-        self.containerViewHeight = heightConstraint
+        containerViewBottomInset = bottomInset
+        containerViewHeight = heightConstraint
 
         NSLayoutConstraint.activate([
-            self.resizeIndicator.widthAnchor.constraint(equalToConstant: Metric.ResizeIndicator.width),
-            self.resizeIndicator.heightAnchor.constraint(equalToConstant: Metric.ResizeIndicator.height),
-            self.resizeIndicator.centerXAnchor.constraint(equalTo: self.containerView.centerXAnchor),
-            self.resizeIndicator.topAnchor.constraint(equalTo: self.containerView.topAnchor,
-                                                      constant: Metric.ResizeIndicator.topSpacing),
+            resizeIndicator.widthAnchor.constraint(equalToConstant: Metric.ResizeIndicator.width),
+            resizeIndicator.heightAnchor.constraint(equalToConstant: Metric.ResizeIndicator.height),
+            resizeIndicator.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+            resizeIndicator.topAnchor.constraint(
+                equalTo: containerView.topAnchor,
+                constant: Metric.ResizeIndicator.topSpacing),
 
-            self.titleStack.topAnchor.constraint(equalTo: self.containerView.topAnchor,
-                                                 constant: Metric.verticalInset),
-            self.titleStack.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor,
-                                                     constant: Metric.horizontalInset),
-            self.titleStack.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor,
-                                                      constant: -Metric.horizontalInset),
+            titleStack.topAnchor.constraint(
+                equalTo: containerView.topAnchor,
+                constant: Metric.verticalInset),
+            titleStack.leadingAnchor.constraint(
+                equalTo: containerView.leadingAnchor,
+                constant: Metric.horizontalInset),
+            titleStack.trailingAnchor.constraint(
+                equalTo: containerView.trailingAnchor,
+                constant: -Metric.horizontalInset),
 
-            self.buttonStack.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor,
-                                                      constant: Metric.horizontalInset),
-            self.buttonStack.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor,
-                                                     constant: -Metric.verticalInset / 2),
-            self.buttonStack.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor,
-                                                       constant: -Metric.horizontalInset)
+            buttonStack.leadingAnchor.constraint(
+                equalTo: containerView.leadingAnchor,
+                constant: Metric.horizontalInset),
+            buttonStack.bottomAnchor.constraint(
+                equalTo: containerView.bottomAnchor,
+                constant: -Metric.verticalInset / 2),
+            buttonStack.trailingAnchor.constraint(
+                equalTo: containerView.trailingAnchor,
+                constant: -Metric.horizontalInset),
         ])
     }
 
-    // MARK: - Functions
-
-    public func updateTitle(_ title: String) {
-        self.titleLabel.text = title
-    }
-
-    public func updateSubtitle(_ subtitle: String) {
-        self.subtitleLabel.text = subtitle
-    }
-
-    public func updateDoneButton(isEnabled: Bool) {
-        self.doneButton.isEnabled = isEnabled
-    }
-
-    public func updateDoneButtonLoadingState(to isLoading: Bool) {
-        self.doneButton.configuration?.showsActivityIndicator = isLoading
-    }
 }

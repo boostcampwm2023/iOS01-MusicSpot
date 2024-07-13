@@ -9,17 +9,16 @@ import XCTest
 @testable import MSNetworking
 
 final class RouterTests: XCTestCase {
-    // MARK: - Properties
 
-    private let encoder = JSONEncoder()
+    // MARK: Internal
 
     // MARK: - Tests
 
     func test_BaseURL만포함하는_Router_생성_성공() {
         struct SUTRouter: Router {
-            var baseURL: String { return "https://www.naver.com" }
+            var baseURL: String { "https://www.naver.com" }
             var pathURL: String?
-            var method: HTTPMethod { return .get }
+            var method: HTTPMethod { .get }
             var body: HTTPBody?
             var headers: HTTPHeaders?
             var queries: [URLQueryItem]?
@@ -35,15 +34,17 @@ final class RouterTests: XCTestCase {
         guard let url = URL(string: "https://www.naver.com") else {
             return
         }
-        XCTAssertEqual(request, URLRequest(url: url),
-                       "BaseURL만 포함된 Router로 잘못된 URLRequest가 생성되었습니다.")
+        XCTAssertEqual(
+            request,
+            URLRequest(url: url),
+            "BaseURL만 포함된 Router로 잘못된 URLRequest가 생성되었습니다.")
     }
 
     func test_PathURL을포함하는_Router_생성_성공() {
         struct SUTRouter: Router {
-            var baseURL: String { return "https://www.naver.com" }
-            var pathURL: String? { return "api" }
-            var method: HTTPMethod { return .get }
+            var baseURL: String { "https://www.naver.com" }
+            var pathURL: String? { "api" }
+            var method: HTTPMethod { .get }
             var body: HTTPBody?
             var headers: HTTPHeaders?
             var queries: [URLQueryItem]?
@@ -60,18 +61,18 @@ final class RouterTests: XCTestCase {
             return
         }
         let message = """
-        BaseURL만 포함된 Router로 잘못된 URLRequest가 생성되었습니다. \
-        생성된 URL: \(url)
-        """
+            BaseURL만 포함된 Router로 잘못된 URLRequest가 생성되었습니다. \
+            생성된 URL: \(url)
+            """
         XCTAssertEqual(request, URLRequest(url: url), message)
     }
 
     func test_Body를포함하는_Router_생성_성공() throws {
         struct SUTRouter: Router {
-            var baseURL: String { return "https://www.naver.com" }
-            var pathURL: String? { return "api" }
-            var method: HTTPMethod { return .get }
-            var body: HTTPBody? { return HTTPBody(content: "Data") }
+            var baseURL: String { "https://www.naver.com" }
+            var pathURL: String? { "api" }
+            var method: HTTPMethod { .get }
+            var body: HTTPBody? { HTTPBody(content: "Data") }
             var headers: HTTPHeaders?
             var queries: [URLQueryItem]?
         }
@@ -90,19 +91,19 @@ final class RouterTests: XCTestCase {
         let data = try JSONEncoder().encode("Data")
         urlRequest.httpBody = data
         let message = """
-        BaseURL만 포함된 Router로 잘못된 URLRequest가 생성되었습니다. \
-        생성된 URL: \(url)
-        """
+            BaseURL만 포함된 Router로 잘못된 URLRequest가 생성되었습니다. \
+            생성된 URL: \(url)
+            """
         XCTAssertEqual(request.httpBody, urlRequest.httpBody, message)
     }
 
     func test_Header를포함하는_Router_생성_성공() {
         struct SUTRouter: Router {
-            var baseURL: String { return "https://www.naver.com" }
-            var pathURL: String? { return "api" }
-            var method: HTTPMethod { return .get }
+            var baseURL: String { "https://www.naver.com" }
+            var pathURL: String? { "api" }
+            var method: HTTPMethod { .get }
             var body: HTTPBody?
-            var headers: HTTPHeaders? { return [(key: "boostcamp", value: "WM8")] }
+            var headers: HTTPHeaders? { [(key: "boostcamp", value: "WM8")] }
             var queries: [URLQueryItem]?
         }
 
@@ -119,20 +120,20 @@ final class RouterTests: XCTestCase {
         var urlRequest = URLRequest(url: url)
         urlRequest.addValue("WM8", forHTTPHeaderField: "boostcamp")
         let message = """
-        BaseURL만 포함된 Router로 잘못된 URLRequest가 생성되었습니다. \
-        생성된 URL: \(url)
-        """
+            BaseURL만 포함된 Router로 잘못된 URLRequest가 생성되었습니다. \
+            생성된 URL: \(url)
+            """
         XCTAssertEqual(request.allHTTPHeaderFields, urlRequest.allHTTPHeaderFields, message)
     }
 
     func test_Query를포함하는_Router_생성_성공() {
         struct SUTRouter: Router {
-            var baseURL: String { return "https://www.naver.com" }
-            var pathURL: String? { return "api" }
-            var method: HTTPMethod { return .get }
+            var baseURL: String { "https://www.naver.com" }
+            var pathURL: String? { "api" }
+            var method: HTTPMethod { .get }
             var body: HTTPBody?
             var headers: HTTPHeaders?
-            var queries: [URLQueryItem]? { return [URLQueryItem(name: "boostcamp", value: "WM8")] }
+            var queries: [URLQueryItem]? { [URLQueryItem(name: "boostcamp", value: "WM8")] }
         }
 
         let sut = SUTRouter()
@@ -146,9 +147,16 @@ final class RouterTests: XCTestCase {
             return
         }
         let message = """
-        BaseURL만 포함된 Router로 잘못된 URLRequest가 생성되었습니다. \
-        생성된 URL: \(url)
-        """
+            BaseURL만 포함된 Router로 잘못된 URLRequest가 생성되었습니다. \
+            생성된 URL: \(url)
+            """
         XCTAssertEqual(request, URLRequest(url: url), message)
     }
+
+    // MARK: Private
+
+    // MARK: - Properties
+
+    private let encoder = JSONEncoder()
+
 }

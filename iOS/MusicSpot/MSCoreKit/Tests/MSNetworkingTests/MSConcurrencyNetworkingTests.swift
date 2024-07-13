@@ -9,9 +9,8 @@ import XCTest
 @testable import MSNetworking
 
 final class MSConcurrencyNetworkingTests: XCTestCase {
-    // MARK: - Properties
 
-    private var networking: MSNetworking!
+    // MARK: Internal
 
     // MARK: - Setup
 
@@ -20,7 +19,7 @@ final class MSConcurrencyNetworkingTests: XCTestCase {
         let configuration: URLSessionConfiguration = .ephemeral
         configuration.protocolClasses?.insert(MockURLProtocol.self, at: .zero)
         let session = URLSession(configuration: configuration)
-        self.networking = MSNetworking(session: session)
+        networking = MSNetworking(session: session)
     }
 
     // MARK: - Tests
@@ -31,22 +30,24 @@ final class MSConcurrencyNetworkingTests: XCTestCase {
         let response = "Success"
         let data = try JSONEncoder().encode(response)
         MockURLProtocol.requestHandler = { _ in
-            let response = HTTPURLResponse(url: URL(string: "https://api.codesquad.kr")!,
-                                           statusCode: 200,
-                                           httpVersion: nil,
-                                           headerFields: ["Content-Type": "application/json"])!
+            let response = HTTPURLResponse(
+                url: URL(string: "https://api.codesquad.kr")!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: ["Content-Type": "application/json"])!
             return (response, data)
         }
 
         let expectation = XCTestExpectation()
 
         // Act
-        let result = await self.networking.request(String.self, router: router)
+        let result = await networking.request(String.self, router: router)
 
         switch result {
         case .success(let value):
             XCTAssertEqual("Success", value, "응답 값이 일치하지 않습니다.")
             expectation.fulfill()
+
         case .failure:
             XCTFail("200 번대 status code를 포함한 응답은 성공해야 합니다.")
         }
@@ -59,17 +60,18 @@ final class MSConcurrencyNetworkingTests: XCTestCase {
         // Arrange
         let router = MockRouter()
         MockURLProtocol.requestHandler = { _ in
-            let response = HTTPURLResponse(url: URL(string: "https://api.codesquad.kr")!,
-                                           statusCode: 404,
-                                           httpVersion: nil,
-                                           headerFields: ["Content-Type": "application/json"])!
+            let response = HTTPURLResponse(
+                url: URL(string: "https://api.codesquad.kr")!,
+                statusCode: 404,
+                httpVersion: nil,
+                headerFields: ["Content-Type": "application/json"])!
             return (response, Data())
         }
 
         let expectation = XCTestExpectation()
 
         // Act
-        let result = await self.networking.request(String.self, router: router)
+        let result = await networking.request(String.self, router: router)
 
         switch result {
         case .success:
@@ -81,4 +83,11 @@ final class MSConcurrencyNetworkingTests: XCTestCase {
         // Assert
         await fulfillment(of: [expectation], timeout: 5.0)
     }
+
+    // MARK: Private
+
+    // MARK: - Properties
+
+    private var networking: MSNetworking!
+
 }

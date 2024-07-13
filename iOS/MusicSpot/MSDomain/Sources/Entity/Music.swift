@@ -7,7 +7,28 @@
 
 import Foundation
 
+// MARK: - Music
+
 public struct Music: Identifiable {
+
+    // MARK: Lifecycle
+
+    // MARK: - Initializer
+
+    public init(
+        id: String,
+        title: String,
+        artist: String?,
+        albumCover: AlbumCover?)
+    {
+        self.id = id
+        self.title = title
+        self.artist = artist
+        self.albumCover = albumCover
+    }
+
+    // MARK: Public
+
     // MARK: - Properties
 
     public let id: String
@@ -15,19 +36,8 @@ public struct Music: Identifiable {
     public let artist: String?
     public let albumCover: AlbumCover?
 
-    // MARK: - Initializer
-
-    public init(id: String,
-                title: String,
-                artist: String?,
-                albumCover: AlbumCover?) {
-        self.id = id
-        self.title = title
-        self.artist = artist
-        self.albumCover = albumCover
-    }
 }
 
-// MARK: - Hashable
+// MARK: Hashable
 
 extension Music: Hashable { }

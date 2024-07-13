@@ -14,14 +14,14 @@ import MSUserDefaults
 import Repository
 
 public final class AppUserRepository: UserRepository {
-    // MARK: - Properties
 
-    @UserDefaultsWrapped("activeUser", defaultValue: nil)
-    private var activeUser: UserLocalDataSource?
+    // MARK: Lifecycle
 
     // MARK: - Initializer
 
     public init() { }
+
+    // MARK: Public
 
     // MARK: - Functions
 
@@ -30,9 +30,9 @@ public final class AppUserRepository: UserRepository {
     @discardableResult
     public func activate(newUserID: String) throws -> User {
         let newUser = User(id: newUserID)
-        self.activeUser = UserLocalDataSource(from: newUser)
+        activeUser = UserLocalDataSource(from: newUser)
 
-        guard self.activeUser != nil else {
+        guard activeUser != nil else {
             throw UserError.userNotFound
         }
 
@@ -40,11 +40,19 @@ public final class AppUserRepository: UserRepository {
     }
 
     /// 로컬 유저를 삭제합니다.
-    public func deactivate(userID: String) throws {
-        guard self.activeUser != nil else {
+    public func deactivate(userID _: String) throws {
+        guard activeUser != nil else {
             throw UserError.userNotFound
         }
 
-        self.activeUser = nil
+        activeUser = nil
     }
+
+    // MARK: Private
+
+    // MARK: - Properties
+
+    @UserDefaultsWrapped("activeUser", defaultValue: nil)
+    private var activeUser: UserLocalDataSource?
+
 }
