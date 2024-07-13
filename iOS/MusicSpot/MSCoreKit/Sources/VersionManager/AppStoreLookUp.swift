@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - AppStoreResponse
+
 public struct AppStoreResponse: Decodable {
     let numberOfResults: Int?
     let results: [AppStoreLookUp]
@@ -18,10 +20,12 @@ public struct AppStoreResponse: Decodable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.numberOfResults = try container.decodeIfPresent(Int.self, forKey: .numberOfResults)
-        self.results = try container.decodeIfPresent([AppStoreLookUp].self, forKey: .results) ?? []
+        numberOfResults = try container.decodeIfPresent(Int.self, forKey: .numberOfResults)
+        results = try container.decodeIfPresent([AppStoreLookUp].self, forKey: .results) ?? []
     }
 }
+
+// MARK: - AppStoreLookUp
 
 public struct AppStoreLookUp: Decodable {
     let releaseNote: String?

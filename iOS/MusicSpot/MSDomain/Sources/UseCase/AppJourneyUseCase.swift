@@ -13,12 +13,11 @@ import MSError
 import Repository
 import SSOT
 
+// MARK: - AppJourneyUseCase
+
 public final class AppJourneyUseCase: JourneyUseCase {
-    // MARK: - Properties
 
-    private let appState = StateContainer.default.appState
-
-    private let journeyRepository: JourneyRepository
+    // MARK: Lifecycle
 
     // MARK: - Initializer
 
@@ -26,24 +25,25 @@ public final class AppJourneyUseCase: JourneyUseCase {
         self.journeyRepository = journeyRepository
     }
 
+    // MARK: Public
+
     // MARK: - Functions
 
-    public func fetchJourneys(in region: Region) async throws(JourneyError) -> [Journey] {
+    public func fetchJourneys(in region: Region) async throws(JourneyError) -> [Journey] { // swiftlint:disable:this all
         do {
-            return try await self.journeyRepository.fetchJourneys(in: region)
+            return try await journeyRepository.fetchJourneys(in: region)
         } catch {
             throw .repositoryError(error)
         }
     }
 
-    public func fetchTravelingJourney() async throws(JourneyError) -> Journey {
-        guard self.appState.isTraveling else {
+    public func fetchTravelingJourney() async throws(JourneyError) -> Journey { // swiftlint:disable:this all
+        guard appState.isTraveling else {
             throw .noTravelingJourney
         }
 
         do {
-            let journey = try await self.journeyRepository.fetchTravelingJourney()
-            return journey
+            return try await journeyRepository.fetchTravelingJourney()
         } catch {
             throw .repositoryError(error)
         }
@@ -52,92 +52,96 @@ public final class AppJourneyUseCase: JourneyUseCase {
     @discardableResult
     public func beginJourney(startAt coordinate: Coordinate) async throws -> Journey {
         // 새로운 여정 생성
-        let journey = self.createNewJourney(startingAt: consume coordinate)
+        let journey = createNewJourney(startingAt: consume coordinate)
 
         // 생성된 여정 로컬에 저장
-        let savedJourney = try await self.journeyRepository.updateJourney(consume journey)
-
-        return savedJourney
+        return try await journeyRepository.updateJourney(consume journey)
     }
 
     @discardableResult
-    public func recordNewCoordinates(_ coordinates: [Coordinate]) async throws(JourneyError) -> Journey {
+    public func recordNewCoordinates(_ coordinates: [Coordinate]) async throws(JourneyError)
+        -> Journey
+    { // swiftlint:disable:this all
         // 진행중인 여정 조회
-        var travelingJourney = try await self.fetchTravelingJourney()
+        var travelingJourney = try await fetchTravelingJourney()
 
         // 진행중인 여정에 새로운 좌표들을 추가한 여정 생성
         travelingJourney.appendCoordinates(consume coordinates)
 
         // 업데이트 된 Journey를 DataSource에 적용
         do {
-            let savedJourney = try await self.journeyRepository.updateJourney(consume travelingJourney)
-            return savedJourney
+            return try await journeyRepository.updateJourney(consume travelingJourney)
         } catch {
             throw .repositoryError(error)
         }
     }
 
     @discardableResult
-    public func recordNewCoordinates(_ coordinates: Coordinate...) async throws(JourneyError) -> Journey {
-        return try await self.recordNewCoordinates(Array(consume coordinates))
+    public func recordNewCoordinates(_ coordinates: Coordinate...) async throws(JourneyError)
+        -> Journey
+    { // swiftlint:disable:this all
+        try await recordNewCoordinates(Array(consume coordinates))
     }
 
     @discardableResult
-    public func endJourney() async throws(JourneyError) -> Journey {
-        guard self.appState.isTraveling else {
+    public func endJourney() async throws(JourneyError) -> Journey { // swiftlint:disable:this all
+        guard appState.isTraveling else {
             throw .noTravelingJourney
         }
 
-        var travelingJourney = try await self.fetchTravelingJourney()
+        var travelingJourney = try await fetchTravelingJourney()
         travelingJourney.finish()
 
         do {
-            let endedJourney = try await self.journeyRepository.updateJourney(consume travelingJourney)
-            return endedJourney
+            return try await journeyRepository.updateJourney(consume travelingJourney)
         } catch {
             throw .repositoryError(error)
         }
     }
 
     @discardableResult
-    public func cancelJourney() async throws(JourneyError) -> Journey {
-        guard self.appState.isTraveling else {
+    public func cancelJourney() async throws(JourneyError) -> Journey { // swiftlint:disable:this all
+        guard appState.isTraveling else {
             throw .noTravelingJourney
         }
 
-        let travelingJourney = try await self.fetchTravelingJourney()
+        let travelingJourney = try await fetchTravelingJourney()
 
         do {
-            let cancelledJourney = try await self.journeyRepository.deleteJourney(consume travelingJourney)
-            return cancelledJourney
+            return try await journeyRepository.deleteJourney(consume travelingJourney)
         } catch {
             throw .repositoryError(error)
         }
     }
 
     @discardableResult
-    public func deleteJourney(_ journey: Journey) async throws(JourneyError) -> Journey {
+    public func deleteJourney(_ journey: Journey) async throws(JourneyError) -> Journey { // swiftlint:disable:this all
         do {
-            return try await self.journeyRepository.deleteJourney(journey)
+            return try await journeyRepository.deleteJourney(journey)
         } catch {
             throw .repositoryError(error)
         }
     }
+
+    // MARK: Private
+
+    // MARK: - Properties
+
+    private let appState = StateContainer.default.appState
+    private let journeyRepository: JourneyRepository
 }
 
 // MARK: - Privates
 
-private extension AppJourneyUseCase {
-    func createNewJourney(startingAt coordinate: Coordinate) -> Journey {
-        let journey = Journey(
+extension AppJourneyUseCase {
+    private func createNewJourney(startingAt coordinate: Coordinate) -> Journey {
+        Journey(
             id: UUID().uuidString,
             title: nil,
             date: Timestamp(start: .now),
             coordinates: [coordinate],
             spots: [],
             playlist: [],
-            isTraveling: true
-        )
-        return journey
+            isTraveling: true)
     }
 }

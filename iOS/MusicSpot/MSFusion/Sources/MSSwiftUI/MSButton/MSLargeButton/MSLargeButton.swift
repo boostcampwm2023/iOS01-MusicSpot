@@ -11,41 +11,47 @@ import MSExtension
 
 @MainActor
 public struct MSLargeButton<ColorStyle: ColorSet>: View {
+
+    // MARK: Public
+
+    // MARK: - Body
+
+    public var body: some View {
+        Button {
+            action()
+        } label: {
+            HStack(spacing: Metric.imagePadding) {
+                if let image {
+                    image
+                }
+
+                if title.isNotEmpty {
+                    Text(title)
+                }
+            }
+        }
+        .buttonStyle(
+            MSLargeButtonStyle(
+                cornerStyle: cornerStyle,
+                colorStyle: colorStyle))
+    }
+
+    // MARK: Internal
+
+    // MARK: - Properties
+
+    let title: String
+    let image: Image?
+    let cornerStyle: MSLargeButtonStyle.CornerStyle
+    let colorStyle: ColorStyle
+    let action: () -> Void
+
+    // MARK: Private
+
     // MARK: - Constants
 
     private enum Metric {
         static var imagePadding: CGFloat { 8.0 }
     }
 
-    // MARK: - Properties
-
-    internal let title: String
-    internal let image: Image?
-    internal let cornerStyle: MSLargeButtonStyle.CornerStyle
-    internal let colorStyle: ColorStyle
-    internal let action: () -> Void
-
-    // MARK: - Body
-
-    public var body: some View {
-        Button {
-            self.action()
-        } label: {
-            HStack(spacing: Metric.imagePadding) {
-                if let image = self.image {
-                    image
-                }
-
-                if self.title.isNotEmpty {
-                    Text(self.title)
-                }
-            }
-        }
-        .buttonStyle(
-            MSLargeButtonStyle(
-                cornerStyle: self.cornerStyle,
-                colorStyle: self.colorStyle
-            )
-        )
-    }
 }

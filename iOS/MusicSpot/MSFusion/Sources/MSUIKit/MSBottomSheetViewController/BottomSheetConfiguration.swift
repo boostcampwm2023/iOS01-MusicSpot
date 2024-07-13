@@ -10,10 +10,29 @@ import Foundation
 
 extension MSBottomSheetViewController {
     public struct Configuration {
+
+        // MARK: Lifecycle
+
+        // MARK: - Initializer
+
+        public init(
+            fullDimension: Dimension,
+            detentDimension: Dimension,
+            minimizedDimension: Dimension)
+        {
+            self.fullDimension = fullDimension
+            self.detentDimension = detentDimension
+            self.minimizedDimension = minimizedDimension
+        }
+
+        // MARK: Public
+
         public enum Dimension {
             case fractional(CGFloat)
             case absolute(CGFloat)
         }
+
+        // MARK: Internal
 
         // MARK: - Properties
 
@@ -24,39 +43,31 @@ extension MSBottomSheetViewController {
         let minimizedDimension: Dimension
 
         var fullHeight: CGFloat {
-            return self.calculateHeight(for: self.fullDimension)
+            calculateHeight(for: fullDimension)
         }
 
         var detentHeight: CGFloat {
-            return self.calculateHeight(for: self.detentDimension)
+            calculateHeight(for: detentDimension)
         }
 
         var minimizedHeight: CGFloat {
-            return self.calculateHeight(for: self.minimizedDimension)
+            calculateHeight(for: minimizedDimension)
         }
 
         var fullDetentDiff: CGFloat {
-            return self.fullHeight - self.detentHeight
+            fullHeight - detentHeight
         }
 
         var detentMinimizedDiff: CGFloat {
-            return self.detentHeight - self.minimizedHeight
+            detentHeight - minimizedHeight
         }
 
-        // MARK: - Initializer
-
-        public init(fullDimension: Dimension,
-                    detentDimension: Dimension,
-                    minimizedDimension: Dimension) {
-            self.fullDimension = fullDimension
-            self.detentDimension = detentDimension
-            self.minimizedDimension = minimizedDimension
-        }
+        // MARK: Private
 
         // MARK: - Helpers
 
         private func calculateHeight(for dimension: Dimension) -> CGFloat {
-            guard let standardMetric = standardMetric else { return .zero }
+            guard let standardMetric else { return .zero }
 
             switch dimension {
             case .fractional(let fractionalDimension):

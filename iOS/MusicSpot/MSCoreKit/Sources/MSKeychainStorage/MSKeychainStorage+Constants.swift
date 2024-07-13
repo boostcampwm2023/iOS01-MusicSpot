@@ -8,11 +8,17 @@
 import MSConstants
 
 extension MSKeychainStorage {
-    enum KeychainConstants {
-        static let service: String = "\(Constants.appBundleIdentifier).keychainManager"
-    }
+
+    // MARK: Public
 
     public enum Accounts: String, CaseIterable {
         case userID = "MusicSpotUser.v1"
     }
+
+    // MARK: Internal
+
+    enum KeychainConstants {
+        static let service = "\(Constants.appBundleIdentifier).keychainManager"
+    }
+
 }

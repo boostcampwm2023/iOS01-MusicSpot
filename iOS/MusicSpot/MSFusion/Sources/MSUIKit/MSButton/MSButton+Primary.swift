@@ -17,8 +17,8 @@ extension MSButton {
 
         button.configuration?.baseForegroundColor = .msColor(.primaryButtonTypo)
         button.configuration?.baseBackgroundColor = isBrandColored
-        ? .msColor(.musicSpot)
-        : .msColor(.primaryButtonBackground)
+            ? .msColor(.musicSpot)
+            : .msColor(.primaryButtonBackground)
 
         haptic.prepare()
         button.configurationUpdateHandler = { primaryButton in

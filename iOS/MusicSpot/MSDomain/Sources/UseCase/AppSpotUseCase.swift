@@ -12,9 +12,8 @@ import MSError
 import Repository
 
 public final class AppSpotUseCase: SpotUseCase {
-    // MARK: - Properties
 
-    private let spotRepository: SpotRepository
+    // MARK: Lifecycle
 
     // MARK: - Initializer
 
@@ -22,19 +21,27 @@ public final class AppSpotUseCase: SpotUseCase {
         self.spotRepository = spotRepository
     }
 
+    // MARK: Public
+
     // MARK: - Functions
 
     public func fetchPhotos(of spot: Spot) throws -> AsyncThrowingStream<(spot: Spot, photoData: Data), Error> {
-        return self.spotRepository.fetchPhotos(of: spot)
+        spotRepository.fetchPhotos(of: spot)
     }
 
     @discardableResult
-    public func recordNewSpot(_ spot: Spot, to journey: Journey) async throws(SpotError) -> Spot {
+    public func recordNewSpot(_ spot: Spot, to journey: Journey) async throws(SpotError) -> Spot { // swiftlint:disable:this all
         do {
-            try self.spotRepository.addSpot(spot, to: consume journey)
+            try spotRepository.addSpot(spot, to: consume journey)
             return spot
         } catch {
             throw .repositoryError(error)
         }
     }
+
+    // MARK: Private
+
+    // MARK: - Properties
+
+    private let spotRepository: SpotRepository
 }

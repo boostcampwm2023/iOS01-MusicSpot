@@ -10,9 +10,14 @@ import UIKit
 import MSCacheStorage
 import MSImageFetcher
 
+// MARK: - UIImageView + MSImageFetcherCompatible
+
 extension UIImageView: @retroactive MSImageFetcherCompatible { }
 
 extension MSImageFetcherWrapper where Base: UIImageView {
+
+    // MARK: Public
+
     /// URL로부터 이미지를 가져와 설정합니다.
     /// - Parameters:
     ///   - imageURL: `UIImageView`에 설정할 이미지의 URL
@@ -27,16 +32,20 @@ extension MSImageFetcherWrapper where Base: UIImageView {
         }
     }
 
+    // MARK: Private
+
     // MARK: - Helpers
 
-    private func fetchImage(with imageURL: URL,
-                            forKey key: String) async -> Data? {
-        let imageData = await MSImageFetcher.shared.fetchImage(from: imageURL, forKey: key)
-        return imageData
+    private func fetchImage(
+        with imageURL: URL,
+        forKey key: String)
+        async -> Data?
+    {
+        await MSImageFetcher.shared.fetchImage(from: imageURL, forKey: key)
     }
 
     @MainActor
     private func updateImage(_ imageData: Data) {
-        self.base.image = UIImage(data: imageData)
+        base.image = UIImage(data: imageData)
     }
 }

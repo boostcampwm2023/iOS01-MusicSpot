@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - JourneyCellModel
+
 public struct JourneyCellModel: Hashable {
     // MARK: - Properties
 
@@ -16,9 +18,11 @@ public struct JourneyCellModel: Hashable {
 
     // MARK: - Initializer
 
-    public init(id: UUID = UUID(),
-                location: String,
-                date: Date) {
+    public init(
+        id: UUID = UUID(),
+        location: String,
+        date: Date)
+    {
         self.id = id
         self.location = location
         self.date = date
@@ -29,10 +33,10 @@ public struct JourneyCellModel: Hashable {
 
 extension JourneyCellModel {
     public static func == (lhs: JourneyCellModel, rhs: JourneyCellModel) -> Bool {
-        return lhs.id == rhs.id
+        lhs.id == rhs.id
     }
 
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(self.id)
+        hasher.combine(id)
     }
 }

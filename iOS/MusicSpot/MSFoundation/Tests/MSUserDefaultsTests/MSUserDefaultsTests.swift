@@ -5,12 +5,12 @@
 //  Created by 이창준 on 11/14/23.
 //
 
-import XCTest
 import MSUserDefaults
+import XCTest
 
 final class MSUserDefaultsTests: XCTestCase {
-    @UserDefaultsWrapped("sut", defaultValue: FakeCodableData(name: "Fake", number: 0))
-    private var sut: FakeCodableData
+
+    // MARK: Internal
 
     override func setUp() {
         UserDefaults.standard.removeObject(forKey: "sut")
@@ -20,7 +20,14 @@ final class MSUserDefaultsTests: XCTestCase {
         let fake = FakeCodableData(name: "MusicSpot", number: 231215)
         sut = fake
 
-        XCTAssertTrue(sut.isEqual(to: fake),
-                      "UserDefaults로 저장한 값과 로드한 값이 일치하지 않습니다.")
+        XCTAssertTrue(
+            sut.isEqual(to: fake),
+            "UserDefaults로 저장한 값과 로드한 값이 일치하지 않습니다.")
     }
+
+    // MARK: Private
+
+    @UserDefaultsWrapped("sut", defaultValue: FakeCodableData(name: "Fake", number: 0))
+    private var sut: FakeCodableData
+
 }

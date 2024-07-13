@@ -9,7 +9,47 @@ import UIKit
 
 import MSDesignSystem
 
+// MARK: - JourneyInfoView
+
 final class JourneyInfoView: UIView {
+
+    // MARK: Lifecycle
+
+    // MARK: - Initializer
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        configureLayout()
+    }
+
+    required init?(coder _: NSCoder) {
+        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
+    }
+
+    // MARK: Internal
+
+    // MARK: - Functions
+
+    func update(
+        location: String,
+        date: Date,
+        w3w: String = "",
+        title: String?,
+        artist: String?)
+    {
+        titleLabel.text = location
+        dateLabel.text = date.formatted(date: .abbreviated, time: .omitted)
+        w3wLabel.text = w3w
+        if let title, let artist {
+            musicInfoView.update(artist: artist, title: title)
+            musicInfoView.isHidden = false
+        } else {
+            musicInfoView.isHidden = true
+        }
+    }
+
+    // MARK: Private
+
     // MARK: - Constants
 
     private enum Metric {
@@ -70,57 +110,29 @@ final class JourneyInfoView: UIView {
 
     private let musicInfoView = MusicInfoView()
 
-    // MARK: - Initializer
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.configureLayout()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
-    }
-
-    // MARK: - Functions
-
-    func update(location: String,
-                date: Date,
-                w3w: String = "",
-                title: String?,
-                artist: String?) {
-        self.titleLabel.text = location
-        self.dateLabel.text = date.formatted(date: .abbreviated, time: .omitted)
-        self.w3wLabel.text = w3w
-        if let title, let artist {
-            self.musicInfoView.update(artist: artist, title: title)
-            self.musicInfoView.isHidden = false
-        } else {
-            self.musicInfoView.isHidden = true
-        }
-    }
 }
 
 // MARK: - UI Configuration
 
-private extension JourneyInfoView {
-    func configureLayout() {
-        self.addSubview(self.contentStack)
-        self.contentStack.translatesAutoresizingMaskIntoConstraints = false
+extension JourneyInfoView {
+    private func configureLayout() {
+        addSubview(contentStack)
+        contentStack.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.contentStack.topAnchor.constraint(equalTo: self.topAnchor),
-            self.contentStack.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            self.contentStack.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            self.contentStack.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            contentStack.topAnchor.constraint(equalTo: topAnchor),
+            contentStack.leadingAnchor.constraint(equalTo: leadingAnchor),
+            contentStack.trailingAnchor.constraint(equalTo: trailingAnchor),
+            contentStack.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
-        self.contentStack.addArrangedSubview(self.titleLabelStack)
-        self.contentStack.addArrangedSubview(self.musicInfoView)
+        contentStack.addArrangedSubview(titleLabelStack)
+        contentStack.addArrangedSubview(musicInfoView)
 
-        self.titleLabelStack.addArrangedSubview(self.titleLabel)
-        self.titleLabelStack.addArrangedSubview(self.subLabelStack)
+        titleLabelStack.addArrangedSubview(titleLabel)
+        titleLabelStack.addArrangedSubview(subLabelStack)
 
-        self.subLabelStack.addArrangedSubview(self.dateLabel)
-        self.subLabelStack.addArrangedSubview(self.w3wLabel)
+        subLabelStack.addArrangedSubview(dateLabel)
+        subLabelStack.addArrangedSubview(w3wLabel)
     }
 }
 
@@ -129,6 +141,5 @@ private extension JourneyInfoView {
 @available(iOS 17.0, *)
 #Preview(traits: .fixedLayout(width: 341.0, height: 73.0)) {
     MSFont.registerFonts()
-    let header = JourneyInfoView()
-    return header
+    return JourneyInfoView()
 }

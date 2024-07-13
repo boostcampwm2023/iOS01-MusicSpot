@@ -19,10 +19,10 @@ public final class RemoteUserRepository: UserRepository {
     @discardableResult
     public func activate(newUserID: String) throws -> User {
         // TODO: - 회원가입 / 로그인 구현
-        return User(id: newUserID)
+        User(id: newUserID)
     }
 
-    public func deactivate(userID: String) throws {
+    public func deactivate(userID _: String) throws {
         // TODO: - 로그아웃 / 회원탈퇴 구현
     }
 }

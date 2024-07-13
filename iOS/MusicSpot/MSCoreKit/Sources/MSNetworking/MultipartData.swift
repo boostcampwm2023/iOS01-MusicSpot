@@ -10,17 +10,8 @@ import Foundation
 import MSLogger
 
 public struct MultipartData {
-    public enum ContentType {
-        case string
-        case image
-    }
 
-    // MARK: - Properties
-
-    private let type: ContentType
-    public let name: String
-    public let content: Encodable
-    private let imageType: String = "jpeg"
+    // MARK: Lifecycle
 
     // MARK: - Initializer
 
@@ -30,16 +21,28 @@ public struct MultipartData {
         self.content = content
     }
 
+    // MARK: Public
+
+    public enum ContentType {
+        case string
+        case image
+    }
+
+    public let name: String
+    public let content: Encodable
+
     // MARK: - Functions
 
-    public func contentInformation(using encoder: JSONEncoder) -> [Data] {
+    public func contentInformation(using _: JSONEncoder) -> [Data] {
         var dataStorage: [Data] = []
-        switch self.type {
+        switch type {
         case .string:
-            let dispositionDescript = "Content-Disposition: form-data; name=\"\(self.name)\"\r\n\r\n"
-            if let disposition = dispositionDescript.data(using: .utf8),
-               let contentString = self.convertToString(from: self.content),
-               let contentData = contentString.data(using: .utf8) {
+            let dispositionDescript = "Content-Disposition: form-data; name=\"\(name)\"\r\n\r\n"
+            if
+                let disposition = dispositionDescript.data(using: .utf8),
+                let contentString = convertToString(from: content),
+                let contentData = contentString.data(using: .utf8)
+            {
                 dataStorage.append(disposition)
                 dataStorage.append(contentData)
                 MSLogger.make(category: .network).debug("\(contentData): multipart로 보낼 항목들이 성공적으로 변환되었습니다.")
@@ -49,10 +52,12 @@ public struct MultipartData {
 
         case .image:
             let dispositionDescript = "Content-Disposition: form-data; name=\"image\"; filename=\"test.png\"\r\n"
-            let typeDescript = "Content-Type: image/\(self.imageType)\r\n\r\n"
-            if let disposition = dispositionDescript.data(using: .utf8),
-               let type = typeDescript.data(using: .utf8),
-               let contentData = self.content as? Data {
+            let typeDescript = "Content-Type: image/\(imageType)\r\n\r\n"
+            if
+                let disposition = dispositionDescript.data(using: .utf8),
+                let type = typeDescript.data(using: .utf8),
+                let contentData = content as? Data
+            {
                 dataStorage.append(disposition)
                 dataStorage.append(type)
                 dataStorage.append(contentData)
@@ -64,21 +69,31 @@ public struct MultipartData {
         return dataStorage
     }
 
+    // MARK: Private
+
+    // MARK: - Properties
+
+    private let type: ContentType
+    private let imageType = "jpeg"
+
     // MARK: - Data Convert
 
     private func convertToString(from content: Encodable) -> String? {
         switch content {
         case is String:
             return content as? String
+
         case is Date:
             guard let contentDate = content as? Date else { return nil }
             let dateFormatter = ISO8601DateFormatter()
             dateFormatter.formatOptions.insert(.withFractionalSeconds)
-            let dateString = dateFormatter.string(from: contentDate)
-            return dateString
+            return dateFormatter.string(from: contentDate)
+
         default:
-            guard let contentData = try? JSONEncoder().encode(content),
-                  let contentString = String(data: contentData, encoding: .utf8) else { return nil }
+            guard
+                let contentData = try? JSONEncoder().encode(content),
+                let contentString = String(data: contentData, encoding: .utf8)
+            else { return nil }
             return contentString
         }
     }

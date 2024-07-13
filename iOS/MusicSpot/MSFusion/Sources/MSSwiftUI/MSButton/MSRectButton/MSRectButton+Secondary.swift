@@ -13,16 +13,17 @@ extension MSRectSecondaryButton {
     public init(
         image: Image?,
         colorStyle: SecondaryColors = .default,
-        action: @escaping () -> Void
-    ) {
+        action: @escaping () -> Void)
+    {
         self.init(
             title: "",
             image: image,
             style: MSRectSecondaryButtonStyle(colorStyle: colorStyle, scale: .small),
-            action: action
-        )
+            action: action)
     }
 }
+
+// MARK: - MSRectSecondaryButtonStyle
 
 public struct MSRectSecondaryButtonStyle: MSRectButtonStyle {
     // MARK: - Properties
@@ -35,9 +36,9 @@ public struct MSRectSecondaryButtonStyle: MSRectButtonStyle {
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .modifier(
-                MSRectButtonModifier(isPressed: configuration.isPressed,
-                                     scale: self.scale,
-                                     colorStyle: self.colorStyle)
-            )
+                MSRectButtonModifier(
+                    isPressed: configuration.isPressed,
+                    scale: scale,
+                    colorStyle: colorStyle))
     }
 }

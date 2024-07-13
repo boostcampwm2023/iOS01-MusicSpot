@@ -9,7 +9,26 @@ import UIKit
 
 import MSDesignSystem
 
+// MARK: - MSButton
+
 public class MSButton: UIButton {
+
+    // MARK: Lifecycle
+
+    // MARK: - Initializer
+
+    private override init(frame: CGRect) {
+        super.init(frame: frame)
+        configureStyles()
+        configureLayout()
+    }
+
+    required init?(coder _: NSCoder) {
+        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
+    }
+
+    // MARK: Public
+
     public enum CornerStyle {
         case squared
         case rounded
@@ -17,12 +36,32 @@ public class MSButton: UIButton {
 
         var cornerRadius: CGFloat {
             switch self {
-            case .squared: return 8.0
-            case .rounded: return 25.0
-            case .custom(let cornerRadius): return cornerRadius
+            case .squared: 8.0
+            case .rounded: 25.0
+            case .custom(let cornerRadius): cornerRadius
             }
         }
     }
+
+    // MARK: - Properties
+
+    public var title: String? {
+        didSet { configureTitle(title) }
+    }
+
+    public var image: UIImage? {
+        didSet { configureIcon(image) }
+    }
+
+    public var cornerStyle: CornerStyle = .squared {
+        didSet { configureCornerStyle(cornerStyle) }
+    }
+
+    // MARK: Internal
+
+    var haptic: UIFeedbackGenerator?
+
+    // MARK: Private
 
     // MARK: - Constants
 
@@ -33,42 +72,15 @@ public class MSButton: UIButton {
         static let imagePadding: CGFloat = 8.0
     }
 
-    // MARK: - Properties
-
-    public var title: String? {
-        didSet { self.configureTitle(self.title) }
-    }
-
-    public var image: UIImage? {
-        didSet { self.configureIcon(self.image) }
-    }
-
-    public var cornerStyle: CornerStyle = .squared {
-        didSet { self.configureCornerStyle(self.cornerStyle) }
-    }
-
-    var haptic: UIFeedbackGenerator?
-
-    // MARK: - Initializer
-
-    private override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.configureStyles()
-        self.configureLayout()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
-    }
-
     // MARK: - UI Configuration
 
     private func configureStyles() {
         var configuration = UIButton.Configuration.filled()
-        configuration.contentInsets = NSDirectionalEdgeInsets(top: Metric.verticalEdgeInsets,
-                                                              leading: Metric.horizontalEdgeInsets,
-                                                              bottom: Metric.verticalEdgeInsets,
-                                                              trailing: Metric.horizontalEdgeInsets)
+        configuration.contentInsets = NSDirectionalEdgeInsets(
+            top: Metric.verticalEdgeInsets,
+            leading: Metric.horizontalEdgeInsets,
+            bottom: Metric.verticalEdgeInsets,
+            trailing: Metric.horizontalEdgeInsets)
         configuration.imagePlacement = .leading
         configuration.imagePadding = Metric.imagePadding
         configuration.titleAlignment = .center
@@ -77,28 +89,28 @@ public class MSButton: UIButton {
     }
 
     private func configureLayout() {
-        self.translatesAutoresizingMaskIntoConstraints = false
+        translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.heightAnchor.constraint(equalToConstant: Metric.height)
+            heightAnchor.constraint(equalToConstant: Metric.height),
         ])
     }
 }
 
 // MARK: - Private Configuration Functions
 
-private extension MSButton {
+extension MSButton {
     private func configureTitle(_ title: String?) {
         var container = AttributeContainer()
         container.font = .msFont(.buttonTitle)
-        self.configuration?.attributedTitle = AttributedString(title ?? "", attributes: container)
+        configuration?.attributedTitle = AttributedString(title ?? "", attributes: container)
     }
 
     private func configureIcon(_ icon: UIImage?) {
-        self.configuration?.image = icon
+        configuration?.image = icon
     }
 
     private func configureCornerStyle(_ cornerStyle: CornerStyle) {
-        self.layer.cornerRadius = cornerStyle.cornerRadius
-        self.clipsToBounds = true
+        layer.cornerRadius = cornerStyle.cornerRadius
+        clipsToBounds = true
     }
 }

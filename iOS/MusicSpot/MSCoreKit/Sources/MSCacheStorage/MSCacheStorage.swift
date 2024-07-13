@@ -9,22 +9,26 @@ import Foundation
 
 import MSConstant
 
+// MARK: - MSCacheStorage
+
 public final class MSCacheStorage: CacheStorage {
-    public typealias Key = String
-    public typealias Value = Data
 
-    // MARK: - Properties
-
-    private let memory: Cache
-    private let disk: FileManager
+    // MARK: Lifecycle
 
     // MARK: - Initializer
 
-    public init(cache: Cache = Cache(),
-                fileManager: FileManager = .default) {
-        self.memory = cache
-        self.disk = fileManager
+    public init(
+        cache: Cache = Cache(),
+        fileManager: FileManager = .default)
+    {
+        memory = cache
+        disk = fileManager
     }
+
+    // MARK: Public
+
+    public typealias Key = String
+    public typealias Value = Data
 
     // MARK: - Read
 
@@ -36,13 +40,15 @@ public final class MSCacheStorage: CacheStorage {
     /// - Returns: 캐싱된 데이터를 반환합니다. 데이터가 없을 경우 `nil` 값을 반환합니다.
     public func data(forKey key: Key) -> Value? {
         // Memory Cache
-        if let memoryData = self.memory.object(forKey: key as NSString) { // memory hit
+        if let memoryData = memory.object(forKey: key as NSString) { // memory hit
             return memoryData as Data
         }
 
         // Disk Cache
-        if let cacheURL = self.cacheURL(forCache: key),
-           let diskData = self.disk.contents(atPath: cacheURL.path) { // disk hit
+        if
+            let cacheURL = cacheURL(forCache: key),
+            let diskData = disk.contents(atPath: cacheURL.path)
+        { // disk hit
             return diskData
         }
 
@@ -63,24 +69,25 @@ public final class MSCacheStorage: CacheStorage {
     @discardableResult
     public func cache(_ value: Value, forKey key: Key) -> Result<Value, MSCacheError> {
         // Memory Cache
-        self.memory.setObject(value as NSData,
-                              forKey: key as NSString,
-                              cost: value.count)
-        if self.memory.object(forKey: key as NSString) == nil {
+        memory.setObject(
+            value as NSData,
+            forKey: key as NSString,
+            cost: value.count)
+        if memory.object(forKey: key as NSString) == nil {
             return .failure(.memoryFail)
         }
 
         // Disk Cache
-        guard let cacheURL = self.cacheURL(forCache: key) else {
+        guard let cacheURL = cacheURL(forCache: key) else {
             return .failure(.diskFail)
         }
-        let cacheURLString: String
-        if #available(iOS 16.0, *) {
-            cacheURLString = cacheURL.path()
-        } else {
-            cacheURLString = cacheURL.path
-        }
-        if self.disk.createFile(atPath: cacheURLString, contents: value) == false {
+        let cacheURLString: String =
+            if #available(iOS 16.0, *) {
+                cacheURL.path()
+            } else {
+                cacheURL.path
+            }
+        if disk.createFile(atPath: cacheURLString, contents: value) == false {
             return .failure(.diskFail)
         }
 
@@ -97,17 +104,17 @@ public final class MSCacheStorage: CacheStorage {
     /// 디스크 캐싱 중 오류가 발생할 경우 `.diskFail` 에러를 throw 합니다.
     public func remove(forKey key: Key) throws {
         // Memory Cache
-        self.memory.removeObject(forKey: key as NSString)
-        if self.memory.object(forKey: key as NSString) != nil {
+        memory.removeObject(forKey: key as NSString)
+        if memory.object(forKey: key as NSString) != nil {
             throw MSCacheError.memoryFail
         }
 
         // Disk Cache
-        guard let cacheURL = self.cacheURL(forCache: key) else {
+        guard let cacheURL = cacheURL(forCache: key) else {
             throw MSCacheError.diskFail
         }
         do {
-            try self.disk.removeItem(at: cacheURL)
+            try disk.removeItem(at: cacheURL)
         } catch {
             throw MSCacheError.diskFail
         }
@@ -124,45 +131,53 @@ public final class MSCacheStorage: CacheStorage {
     public func clean(_ target: CacheStorageTarget) throws {
         switch target {
         case .all:
-            try self.cleanAll()
+            try cleanAll()
         case .memory:
-            self.cleanMemory()
+            cleanMemory()
         case .disk:
-            try self.cleanDisk()
+            try cleanDisk()
         }
     }
 
+    // MARK: Private
+
+    // MARK: - Properties
+
+    private let memory: Cache
+    private let disk: FileManager
+
     private func cleanAll() throws {
-        self.cleanMemory()
-        try self.cleanDisk()
+        cleanMemory()
+        try cleanDisk()
     }
 
     private func cleanMemory() {
-        self.memory.removeAllObjects()
+        memory.removeAllObjects()
     }
 
     private func cleanDisk() throws {
-        if let path = self.cacheDirectoryURL?.path {
-            try self.disk.removeItem(atPath: path)
+        if let path = cacheDirectoryURL?.path {
+            try disk.removeItem(atPath: path)
         }
     }
 }
 
 // MARK: - URLs
 
-private extension MSCacheStorage {
-    var cacheDirectoryURL: URL? {
+extension MSCacheStorage {
+    private var cacheDirectoryURL: URL? {
         let directoryURL: URL?
 
         if #available(iOS 16.0, *) {
-            let cacheDirectoryURL = try? self.disk.url(for: .cachesDirectory,
-                                                       in: .userDomainMask,
-                                                       appropriateFor: .cachesDirectory,
-                                                       create: false)
+            let cacheDirectoryURL = try? self.disk.url(
+                for: .cachesDirectory,
+                in: .userDomainMask,
+                appropriateFor: .cachesDirectory,
+                create: false)
             directoryURL = cacheDirectoryURL?
                 .appending(path: Constants.appBundleIdentifier, directoryHint: .isDirectory)
         } else {
-            let cacheDirectoryURL = self.disk
+            let cacheDirectoryURL = disk
                 .urls(for: .cachesDirectory, in: .userDomainMask)
                 .first
             directoryURL = cacheDirectoryURL?
@@ -171,7 +186,7 @@ private extension MSCacheStorage {
 
         guard let directoryURL else { return nil }
         do {
-            try self.disk.createDirectory(at: directoryURL, withIntermediateDirectories: true)
+            try disk.createDirectory(at: directoryURL, withIntermediateDirectories: true)
         } catch {
             return nil
         }
@@ -179,13 +194,13 @@ private extension MSCacheStorage {
         return directoryURL
     }
 
-    func cacheURL(forCache cache: String, fileExtension: String = "cache") -> URL? {
+    private func cacheURL(forCache cache: String, fileExtension: String = "cache") -> URL? {
         if #available(iOS 16.0, *) {
-            return self.cacheDirectoryURL?
+            self.cacheDirectoryURL?
                 .appending(component: cache, directoryHint: .notDirectory)
                 .appendingPathExtension(fileExtension)
         } else {
-            return self.cacheDirectoryURL?
+            cacheDirectoryURL?
                 .appendingPathComponent(cache)
                 .appendingPathExtension(fileExtension)
         }

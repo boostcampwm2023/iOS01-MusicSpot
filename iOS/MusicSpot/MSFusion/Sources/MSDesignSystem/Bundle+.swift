@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - MSBundle
+
 public class MSBundle {
     public static let bundle = Bundle(for: MSBundle.self)
 }
@@ -14,11 +16,11 @@ public class MSBundle {
 extension Bundle {
     #if SWIFT_PACKAGE
     public static var msDesignSystem: Bundle {
-        return .module
+        .module
     }
     #else
     public static var msDesignSystem: Bundle {
-        return Bundle(for: MSBundle.self)
+        Bundle(for: MSBundle.self)
     }
     #endif
 }

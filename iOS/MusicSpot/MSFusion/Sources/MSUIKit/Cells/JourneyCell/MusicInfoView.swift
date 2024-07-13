@@ -7,7 +7,34 @@
 
 import UIKit
 
+// MARK: - MusicInfoView
+
 final class MusicInfoView: UIView {
+
+    // MARK: Lifecycle
+
+    // MARK: - Initializer
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        configureLayout()
+    }
+
+    required init?(coder _: NSCoder) {
+        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
+    }
+
+    // MARK: Internal
+
+    // MARK: - Functions
+
+    func update(artist: String?, title: String?) {
+        artistLabel.text = artist
+        titleLabel.text = title
+    }
+
+    // MARK: Private
+
     // MARK: - Constants
 
     private enum Metric {
@@ -61,55 +88,38 @@ final class MusicInfoView: UIView {
         return label
     }()
 
-    // MARK: - Initializer
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.configureLayout()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
-    }
-
-    // MARK: - Functions
-
-    func update(artist: String?, title: String?) {
-        self.artistLabel.text = artist
-        self.titleLabel.text = title
-    }
 }
 
 // MARK: - UI Configuration
 
-private extension MusicInfoView {
-    func configureLayout() {
-        self.addSubview(self.stackView)
-        self.stackView.translatesAutoresizingMaskIntoConstraints = false
+extension MusicInfoView {
+    private func configureLayout() {
+        addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.stackView.topAnchor.constraint(equalTo: self.topAnchor),
-            self.stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            self.stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            self.stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
         [
             Spacer(.horizontal),
-            self.iconImageView,
-            self.musicInfoStackView
+            iconImageView,
+            musicInfoStackView,
         ].forEach {
             self.stackView.addArrangedSubview($0)
         }
-        self.iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.iconImageView.widthAnchor.constraint(equalToConstant: Metric.iconSize),
-            self.iconImageView.heightAnchor.constraint(equalToConstant: Metric.iconSize)
+            iconImageView.widthAnchor.constraint(equalToConstant: Metric.iconSize),
+            iconImageView.heightAnchor.constraint(equalToConstant: Metric.iconSize),
         ])
 
         [
-            self.titleLabel,
-            self.dividerLabel,
-            self.artistLabel
+            titleLabel,
+            dividerLabel,
+            artistLabel,
         ].forEach {
             self.musicInfoStackView.addArrangedSubview($0)
         }
@@ -122,6 +132,5 @@ import MSDesignSystem
 @available(iOS 17.0, *)
 #Preview(traits: .fixedLayout(width: 341.0, height: 24.0)) {
     MSFont.registerFonts()
-    let musicInfoView = MusicInfoView()
-    return musicInfoView
+    return MusicInfoView()
 }

@@ -13,27 +13,30 @@ import MSLogger
 import Repository
 
 public final class JourneyListViewModel {
-    public enum Action {
-        case viewNeedsLoaded
-        case visibleJourneysDidUpdated([Journey])
-    }
 
-    public struct State {
-        // CurrentValue
-        public var journeys = CurrentValueSubject<[Journey], Never>([])
-    }
-
-    // MARK: - Properties
-
-    public var state = State()
-
-    private let repository: JourneyRepository
+    // MARK: Lifecycle
 
     // MARK: - Initializer
 
     public init(repository: JourneyRepository) {
         self.repository = repository
     }
+
+    // MARK: Public
+
+    public enum Action {
+        case viewNeedsLoaded
+        case visibleJourneysDidUpdated([Journey])
+    }
+
+    public struct State {
+        /// CurrentValue
+        public var journeys = CurrentValueSubject<[Journey], Never>([])
+    }
+
+    // MARK: - Properties
+
+    public var state = State()
 
     // MARK: - Functions
 
@@ -43,8 +46,14 @@ public final class JourneyListViewModel {
             #if DEBUG
             MSLogger.make(category: .journeyList).debug("View Did Load.")
             #endif
+
         case .visibleJourneysDidUpdated(let visibleJourneys):
-            self.state.journeys.send(visibleJourneys)
+            state.journeys.send(visibleJourneys)
         }
     }
+
+    // MARK: Private
+
+    private let repository: JourneyRepository
+
 }

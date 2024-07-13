@@ -9,25 +9,66 @@ import UIKit
 
 import MSDesignSystem
 
+// MARK: - MSRectButton
+
 public final class MSRectButton: UIButton {
-    internal enum Style {
+
+    // MARK: Lifecycle
+
+    // MARK: - Initializer
+
+    private override init(frame: CGRect) {
+        super.init(frame: frame)
+        configureStyles()
+        configureLayout()
+        haptic.prepare()
+    }
+
+    required init?(coder _: NSCoder) {
+        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
+    }
+
+    // MARK: Public
+
+    // MARK: - Properties
+
+    public var title: String? {
+        didSet { configureTitle(title) }
+    }
+
+    public var image: UIImage? {
+        didSet { configureIcon(image) }
+    }
+
+    // MARK: Internal
+
+    enum Style {
         case small
         case large
 
         var size: CGSize {
             switch self {
-            case .small: return CGSize(width: 52.0, height: 56.0)
-            case .large: return CGSize(width: 120.0, height: 120.0)
+            case .small: CGSize(width: 52.0, height: 56.0)
+            case .large: CGSize(width: 120.0, height: 120.0)
             }
         }
 
         var cornerRadius: CGFloat {
             switch self {
-            case .small: return 8.0
-            case .large: return 30.0
+            case .small: 8.0
+            case .large: 30.0
             }
         }
     }
+
+    var style: Style = .small {
+        didSet {
+            configureSize(by: style)
+            configureCornerStyle(by: style)
+        }
+    }
+
+    // MARK: Private
 
     // MARK: - Constants
 
@@ -35,52 +76,23 @@ public final class MSRectButton: UIButton {
         static let edgeInsets: CGFloat = 10.0
     }
 
-    // MARK: - Properties
-
-    public var title: String? {
-        didSet { self.configureTitle(self.title) }
-    }
-
-    public var image: UIImage? {
-        didSet { self.configureIcon(self.image) }
-    }
-
-    internal var style: Style = .small {
-        didSet {
-            self.configureSize(by: self.style)
-            self.configureCornerStyle(by: self.style)
-        }
-    }
-
     private let haptic = UIImpactFeedbackGenerator(style: .medium)
-
-    // MARK: - Initializer
-
-    private override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.configureStyles()
-        self.configureLayout()
-        self.haptic.prepare()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("MusicSpot은 code-based로만 작업 중입니다.")
-    }
 
     // MARK: - UI Configuration
 
     private func configureStyles() {
         var configuration = UIButton.Configuration.filled()
         configuration.baseForegroundColor = .msColor(.primaryTypo)
-        configuration.contentInsets = NSDirectionalEdgeInsets(top: Metric.edgeInsets,
-                                                              leading: Metric.edgeInsets,
-                                                              bottom: Metric.edgeInsets,
-                                                              trailing: Metric.edgeInsets)
+        configuration.contentInsets = NSDirectionalEdgeInsets(
+            top: Metric.edgeInsets,
+            leading: Metric.edgeInsets,
+            bottom: Metric.edgeInsets,
+            trailing: Metric.edgeInsets)
         configuration.imagePlacement = .leading
         configuration.titleAlignment = .center
         self.configuration = configuration
 
-        self.configurationUpdateHandler = { button in
+        configurationUpdateHandler = { button in
             switch button.state {
             case .highlighted:
                 self.haptic.impactOccurred()
@@ -91,34 +103,34 @@ public final class MSRectButton: UIButton {
     }
 
     private func configureLayout() {
-        self.translatesAutoresizingMaskIntoConstraints = false
+        translatesAutoresizingMaskIntoConstraints = false
     }
 }
 
 // MARK: - Private Configuration Functions
 
-private extension MSRectButton {
+extension MSRectButton {
     private func configureTitle(_ title: String?) {
-        self.configuration?.image = nil
+        configuration?.image = nil
         var container = AttributeContainer()
-        container.font = self.style == .large ? .msFont(.duperTitle) : .msFont(.buttonTitle)
-        self.configuration?.attributedTitle = AttributedString(title ?? "", attributes: container)
+        container.font = style == .large ? .msFont(.duperTitle) : .msFont(.buttonTitle)
+        configuration?.attributedTitle = AttributedString(title ?? "", attributes: container)
     }
 
     private func configureIcon(_ icon: UIImage?) {
-        self.configuration?.attributedTitle = nil
-        self.configuration?.image = icon
+        configuration?.attributedTitle = nil
+        configuration?.image = icon
     }
 
     private func configureSize(by style: Style) {
         NSLayoutConstraint.activate([
-            self.widthAnchor.constraint(equalToConstant: style.size.width),
-            self.heightAnchor.constraint(equalToConstant: style.size.height)
+            widthAnchor.constraint(equalToConstant: style.size.width),
+            heightAnchor.constraint(equalToConstant: style.size.height),
         ])
     }
 
     private func configureCornerStyle(by style: Style) {
-        self.layer.cornerRadius = style.cornerRadius
-        self.clipsToBounds = true
+        layer.cornerRadius = style.cornerRadius
+        clipsToBounds = true
     }
 }

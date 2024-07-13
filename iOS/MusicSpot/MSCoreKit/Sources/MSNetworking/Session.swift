@@ -7,9 +7,13 @@
 
 import Foundation
 
+// MARK: - Session
+
 public protocol Session {
     func dataTaskPublisher(for request: URLRequest) -> URLSession.DataTaskPublisher
     func data(for request: URLRequest, delegate: URLSessionTaskDelegate?) async throws -> (Data, URLResponse)
 }
+
+// MARK: - URLSession + Session
 
 extension URLSession: Session { }

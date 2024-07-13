@@ -12,6 +12,7 @@
 		FD40A5062BCD55D300518B9F /* MusicSpotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD40A5052BCD55D300518B9F /* MusicSpotApp.swift */; };
 		FD40A50A2BCD55D400518B9F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD40A5092BCD55D400518B9F /* Assets.xcassets */; };
 		FD40A50E2BCD55D400518B9F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD40A50D2BCD55D400518B9F /* Preview Assets.xcassets */; };
+		FD93FDFB2C421B2B00BDCDE1 /* .swiftformat in Resources */ = {isa = PBXBuildFile; fileRef = FD93FDFA2C421B2B00BDCDE1 /* .swiftformat */; };
 		FDAD84D62C0F5713003DB689 /* MSSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = FDAD84D52C0F5713003DB689 /* MSSwiftUI */; };
 		FDAD84D92C0F5721003DB689 /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = FDAD84D82C0F5721003DB689 /* Home */; };
 		FDDA4E022C14AA5B00670AEF /* Home in Frameworks */ = {isa = PBXBuildFile; productRef = FDDA4E012C14AA5B00670AEF /* Home */; };
@@ -35,6 +36,7 @@
 		FD40A5092BCD55D400518B9F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FD40A50B2BCD55D400518B9F /* MusicSpot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MusicSpot.entitlements; sourceTree = "<group>"; };
 		FD40A50D2BCD55D400518B9F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FD93FDFA2C421B2B00BDCDE1 /* .swiftformat */ = {isa = PBXFileReference; lastKnownFileType = text; name = .swiftformat; path = ../.swiftformat; sourceTree = "<group>"; };
 		FDA692282BD0163300069E2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FDED740C2C2BF6150076CBC6 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; name = .swiftlint.yml; path = ../.swiftlint.yml; sourceTree = "<group>"; };
 		FDED740E2C2BF6240076CBC6 /* .pre-commit-config.yaml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; name = ".pre-commit-config.yaml"; path = "../../.pre-commit-config.yaml"; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 			isa = PBXGroup;
 			children = (
 				FDED740E2C2BF6240076CBC6 /* .pre-commit-config.yaml */,
+				FD93FDFA2C421B2B00BDCDE1 /* .swiftformat */,
 				FDED740C2C2BF6150076CBC6 /* .swiftlint.yml */,
 				FDED74102C2C15BF0076CBC6 /* MSCoreKit */,
 				FDED74112C2C15BF0076CBC6 /* MSData */,
@@ -191,6 +194,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD93FDFB2C421B2B00BDCDE1 /* .swiftformat in Resources */,
 				FDED74152C2C15BF0076CBC6 /* MSCoreKit in Resources */,
 				FDED74162C2C15BF0076CBC6 /* MSData in Resources */,
 				FDED74172C2C15BF0076CBC6 /* MSDomain in Resources */,

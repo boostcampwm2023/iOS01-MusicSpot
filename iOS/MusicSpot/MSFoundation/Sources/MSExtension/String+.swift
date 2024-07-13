@@ -6,7 +6,8 @@
 //
 
 extension String {
-    @inlinable public var isNotEmpty: Bool {
-        return self.count != .zero
+    @inlinable
+    public var isNotEmpty: Bool {
+        count != .zero
     }
 }

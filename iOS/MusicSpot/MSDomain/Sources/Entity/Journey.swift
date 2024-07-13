@@ -7,7 +7,34 @@
 
 import Foundation
 
+// MARK: - Journey
+
 public struct Journey: Identifiable {
+
+    // MARK: Lifecycle
+
+    // MARK: - Initializer
+
+    public init(
+        id: String,
+        title: String?,
+        date: Timestamp,
+        coordinates: [Coordinate],
+        spots: [Spot],
+        playlist: [Music],
+        isTraveling: Bool)
+    {
+        self.id = id
+        self.title = title
+        self.date = date
+        self.spots = spots
+        self.coordinates = coordinates
+        self.playlist = playlist
+        self.isTraveling = isTraveling
+    }
+
+    // MARK: Public
+
     // MARK: - Properties
 
     public let id: String
@@ -18,23 +45,6 @@ public struct Journey: Identifiable {
     public private(set) var playlist: [Music]
     public private(set) var isTraveling: Bool
 
-    // MARK: - Initializer
-
-    public init(id: String,
-                title: String?,
-                date: Timestamp,
-                coordinates: [Coordinate],
-                spots: [Spot],
-                playlist: [Music],
-                isTraveling: Bool) {
-        self.id = id
-        self.title = title
-        self.date = date
-        self.spots = spots
-        self.coordinates = coordinates
-        self.playlist = playlist
-        self.isTraveling = isTraveling
-    }
 }
 
 // MARK: - Mutating Functions
@@ -45,20 +55,20 @@ extension Journey {
     }
 
     public mutating func finish() {
-        self.date.end = .now
-        self.isTraveling = false
+        date.end = .now
+        isTraveling = false
     }
 }
 
-// MARK: - Hashable
+// MARK: Hashable
 
 extension Journey: Hashable {
     public static func == (lhs: Journey, rhs: Journey) -> Bool {
-        return lhs.id == rhs.id
+        lhs.id == rhs.id
     }
 
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(self.id)
+        hasher.combine(id)
     }
 }
 
@@ -72,21 +82,20 @@ extension Journey {
         coordinates: [],
         spots: [],
         playlist: [],
-        isTraveling: false
-    )
+        isTraveling: false)
 }
 
-// MARK: - String Convertible
+// MARK: CustomStringConvertible
 
 extension Journey: CustomStringConvertible {
     public var description: String {
-        return """
+        """
         Journey
-        - title: \(self.title ?? "")
-        - state: \(self.isTraveling ? "🏃‍♂️ Traveling" : "😴 Finished")
+        - title: \(title ?? "")
+        - state: \(isTraveling ? "🏃‍♂️ Traveling" : "😴 Finished")
         - date:
-          - start: \(self.date.start)
-          - end: \(self.date.end ?? .distantFuture)
+          - start: \(date.start)
+          - end: \(date.end ?? .distantFuture)
         """
     }
 }

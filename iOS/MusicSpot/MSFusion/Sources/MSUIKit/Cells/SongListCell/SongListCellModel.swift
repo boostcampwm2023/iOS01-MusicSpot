@@ -13,10 +13,12 @@ public struct SongListCellModel: Identifiable {
     let artist: String
     let albumArtURL: URL?
 
-    public init(id: String,
-                title: String,
-                artist: String,
-                albumArtURL: URL?) {
+    public init(
+        id: String,
+        title: String,
+        artist: String,
+        albumArtURL: URL?)
+    {
         self.id = id
         self.title = title
         self.artist = artist

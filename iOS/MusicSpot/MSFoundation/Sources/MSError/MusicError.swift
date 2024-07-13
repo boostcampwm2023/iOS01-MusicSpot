@@ -7,5 +7,6 @@
 
 public enum MusicError: Error {
     case invalidURL
+    case musicChartFetchFailed
     case repositoryError(Error)
 }

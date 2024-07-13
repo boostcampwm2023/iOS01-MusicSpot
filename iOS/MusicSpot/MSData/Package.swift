@@ -9,13 +9,15 @@ extension String {
     static let package = "MSData"
 
     var testTarget: String {
-        return self + "Tests"
+        self + "Tests"
     }
 
     var fromRootPath: String {
-        return "../" + self
+        "../" + self
     }
 }
+
+// MARK: - Target
 
 private enum Target {
     static let msData = "MSData"
@@ -25,6 +27,8 @@ private enum Target {
     static let repository = "Repository"
     static let router = "Router"
 }
+
+// MARK: - Dependency
 
 private enum Dependency {
     // MSDomain
@@ -47,38 +51,32 @@ private enum Dependency {
 let package = Package(
     name: .package,
     platforms: [
-        .iOS(.v17)
+        .iOS(.v17),
     ],
     products: [
         .library(
             name: Target.dataSource,
-            targets: [Target.dataSource]
-        ),
+            targets: [Target.dataSource]),
         .library(
             name: Target.repository,
             targets: [
                 Target.appRepository,
-                Target.remoteRepository
-            ]
-        )
+                Target.remoteRepository,
+            ]),
     ],
     dependencies: [
         .package(
             name: Dependency.msDomain,
-            path: Dependency.msDomain.fromRootPath
-        ),
+            path: Dependency.msDomain.fromRootPath),
         .package(
             name: Dependency.msCoreKit,
-            path: Dependency.msCoreKit.fromRootPath
-        ),
+            path: Dependency.msCoreKit.fromRootPath),
         .package(
             name: Dependency.msFoundation,
-            path: Dependency.msFoundation.fromRootPath
-        ),
+            path: Dependency.msFoundation.fromRootPath),
         .package(
             url: "https://github.com/realm/SwiftLint.git",
-            from: "0.55.1"
-        )
+            from: "0.55.1"),
     ],
     targets: [
         .target(
@@ -87,63 +85,49 @@ let package = Package(
                 .target(name: Target.dataSource),
                 .product(
                     name: Dependency.msDomain,
-                    package: Dependency.msDomain
-                ),
+                    package: Dependency.msDomain),
                 .product(
                     name: Dependency.msImageFetcher,
-                    package: Dependency.msCoreKit
-                ),
+                    package: Dependency.msCoreKit),
                 .product(
                     name: Dependency.msUserDefaults,
-                    package: Dependency.msFoundation
-                ),
+                    package: Dependency.msFoundation),
                 .product(
                     name: Dependency.msFoundation,
-                    package: Dependency.msFoundation
-                )
+                    package: Dependency.msFoundation),
             ],
             plugins: [
                 .plugin(
                     name: "SwiftLintBuildToolPlugin",
-                    package: "SwiftLint"
-                )
-            ]
-        ),
+                    package: "SwiftLint"),
+            ]),
         .target(
             name: Target.remoteRepository,
             dependencies: [
                 .product(
                     name: Dependency.msDomain,
-                    package: Dependency.msDomain
-                )
+                    package: Dependency.msDomain),
             ],
             plugins: [
                 .plugin(
                     name: "SwiftLintBuildToolPlugin",
-                    package: "SwiftLint"
-                )
-            ]
-        ),
+                    package: "SwiftLint"),
+            ]),
         .target(
             name: Target.dataSource,
             dependencies: [
                 .product(
                     name: Dependency.entity,
-                    package: Dependency.msDomain
-                )
+                    package: Dependency.msDomain),
             ],
             plugins: [
                 .plugin(
                     name: "SwiftLintBuildToolPlugin",
-                    package: "SwiftLint"
-                )
-            ]
-        ),
+                    package: "SwiftLint"),
+            ]),
         .testTarget(
             name: Target.appRepository.testTarget,
             dependencies: [
-                .target(name: Target.appRepository)
-            ]
-        )
-    ]
-)
+                .target(name: Target.appRepository),
+            ]),
+    ])

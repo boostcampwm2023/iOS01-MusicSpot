@@ -13,12 +13,11 @@ import MSError
 import Repository
 import SSOT
 
+// MARK: - AppUserUseCase
+
 public final class AppUserUseCase: UserUseCase {
-    // MARK: - Properties
 
-    private var userState: UserState = StateContainer.default.userState
-
-    private let userRepository: UserRepository
+    // MARK: Lifecycle
 
     // MARK: - Initializer
 
@@ -26,16 +25,19 @@ public final class AppUserUseCase: UserUseCase {
         self.userRepository = userRepository
     }
 
+    // MARK: Public
+
     // MARK: - Functions
 
     public var currentUserID: String {
-        return self.userState.currentUserID
+        userState.currentUserID
     }
 
+
     @discardableResult
-    public func registerNewUser() async throws(UserError) -> String { // swiftlint:disable:this
+    public func registerNewUser() async throws(UserError) -> String { // swiftlint:disable:this all
         // 사용중인 유저 존재 여부 확인
-        guard !self.userState.isUserActivated else {
+        guard !userState.isUserActivated else {
             throw .userAlreadyExists
         }
 
@@ -44,10 +46,10 @@ public final class AppUserUseCase: UserUseCase {
 
         do {
             // 1. UserDefaults에 등록 (Repository)
-            try self.userRepository.activate(newUserID: newUserID)
+            try userRepository.activate(newUserID: newUserID)
 
             // 2. AppState에 등록 (SSOT)
-            self.userState.authState = .localAuthenticated
+            userState.authState = .localAuthenticated
         } catch {
             throw .repositoryError(error)
         }
@@ -56,24 +58,31 @@ public final class AppUserUseCase: UserUseCase {
     }
 
     // TODO: 서버 구성하며 로그인 기능 구현
-    public func authenticate() async throws(UserError) -> User { // swiftlint:disable:this
+    public func authenticate() async throws(UserError) -> User { // swiftlint:disable:this all
         throw .userUpdateFailed
     }
 
-    public func disableUser() throws(UserError) { // swiftlint:disable:this
-        guard self.userState.isUserActivated else {
+    public func disableUser() throws(UserError) { // swiftlint:disable:this all
+        guard userState.isUserActivated else {
             throw .userNotFound
         }
 
-        self.userState.authState = .disabled
+        userState.authState = .disabled
     }
+
+    // MARK: Private
+
+    // MARK: - Properties
+
+    private var userState: UserState = StateContainer.default.userState
+    private let userRepository: UserRepository
 }
 
 // MARK: - Privates
 
-private extension AppUserUseCase {
+extension AppUserUseCase {
     // TODO: 로컬 User 데이터와 서버 데이터의 일치성 검사 구현
-    func validateUser(_ user: User) -> Bool {
-        return true
+    private func validateUser(_: User) -> Bool {
+        true
     }
 }

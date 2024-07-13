@@ -14,13 +14,13 @@ public enum SecondaryColors: ColorSet {
     public var backgroundColor: Color {
         switch self {
         case .default:
-            return .msColor(.secondaryButtonBackground)
+            .msColor(.secondaryButtonBackground)
         case .brand:
-            return .msColor(.musicSpot)
+            .msColor(.musicSpot)
         }
     }
 
     public var foregroundColor: Color {
-        return .msColor(.secondaryButtonTypo)
+        .msColor(.secondaryButtonTypo)
     }
 }
