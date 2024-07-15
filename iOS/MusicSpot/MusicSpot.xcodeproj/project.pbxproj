@@ -37,6 +37,7 @@
 		FD40A50B2BCD55D400518B9F /* MusicSpot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MusicSpot.entitlements; sourceTree = "<group>"; };
 		FD40A50D2BCD55D400518B9F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		FD93FDFA2C421B2B00BDCDE1 /* .swiftformat */ = {isa = PBXFileReference; lastKnownFileType = text; name = .swiftformat; path = ../.swiftformat; sourceTree = "<group>"; };
+		FD95E6532C454F24005914D0 /* Rewind */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Rewind; sourceTree = "<group>"; };
 		FDA692282BD0163300069E2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FDED740C2C2BF6150076CBC6 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; name = .swiftlint.yml; path = ../.swiftlint.yml; sourceTree = "<group>"; };
 		FDED740E2C2BF6240076CBC6 /* .pre-commit-config.yaml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; name = ".pre-commit-config.yaml"; path = "../../.pre-commit-config.yaml"; sourceTree = "<group>"; };
@@ -114,6 +115,7 @@
 		FDD0C7FE2BCD5B73004FB9C0 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				FD95E6532C454F24005914D0 /* Rewind */,
 				FD09AF252BDC9A8000DDB283 /* Journey */,
 				FD09AF212BDC996100DDB283 /* Home */,
 			);
