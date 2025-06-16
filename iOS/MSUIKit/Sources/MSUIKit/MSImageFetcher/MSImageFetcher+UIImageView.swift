@@ -10,7 +10,7 @@ import UIKit
 import MSCacheStorage
 import MSImageFetcher
 
-extension UIImageView: MSImageFetcherCompatible { }
+extension UIImageView: @retroactive MSImageFetcherCompatible { }
 
 extension MSImageFetcherWrapper where Base: UIImageView {
     

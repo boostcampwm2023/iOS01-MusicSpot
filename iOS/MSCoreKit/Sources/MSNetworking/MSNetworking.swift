@@ -98,7 +98,7 @@ public struct MSNetworking {
     ///   - router: 네트워킹에 대한 정보를 담은 ``Router``
     ///   - timeoutInterval: 네트워킹에 대한 타임아웃 시간
     /// - Returns: 결과값과 에러를 담은 Result
-    public func request<T: Decodable>(_ type: T.Type,
+    public func request<T: Decodable & Sendable>(_ type: T.Type,
                                       router: Router,
                                       timeoutInterval: TimeoutInterval = .seconds(3)) async -> Result<T, Error> {
         guard let request = router.makeRequest(encoder: self.encoder) else {
