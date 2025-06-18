@@ -70,7 +70,7 @@
 ### 💾 BE
 | 키워드 | 제목 |
 | :-: | :- |
-| `NoSQL` | [ NoSQL이 뭐야?](https://www.notion.so/musicspot/NoSQL-16c8fa4b1ff84f86a321c87aa66e1504) |
+| `NoSQL` | [ NoSQL이 뭐야?(DB 선택 이유)](https://www.notion.so/musicspot/NoSQL-16c8fa4b1ff84f86a321c87aa66e1504) |
 | `DocumentDB`, `MongoDB` | [ 너무 자유로운 구조는 초보 개발자를 불안하게 해요!](https://www.notion.so/musicspot/03e6b9a70d7f4097b3256c19b8098b85) |
 | `CI/CD`, `Docker` | [ Docker(???: 이미지 저장하는거 아니야?) ](https://www.notion.so/musicspot/Docker-121ba909e2e240dc94f25ac88c38a516) |
 | `CI/CD`,`Docker` | [ Docker와 친해지기 ](https://www.notion.so/musicspot/Docker-6a845439466f431ea4281fc09d938648) |
